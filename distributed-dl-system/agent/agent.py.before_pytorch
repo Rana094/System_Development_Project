@@ -1,0 +1,738 @@
+import socket
+import time
+import subprocess
+import threading
+import os
+import json
+
+import psutil
+from flask import Flask, jsonify, request
+
+
+app = Flask(__name__)
+
+INTERFACE = "eth0"
+
+BASE_DIR = os.path.expanduser(
+    "~/distributed-dl-system"
+)
+
+CHECKPOINT_DIR = os.path.join(
+    BASE_DIR,
+    "checkpoints"
+)
+
+JOB_SCRIPT = os.path.join(
+    BASE_DIR,
+    "training",
+    "demo_job.py"
+)
+
+
+last_network = None
+last_network_time = None
+
+
+# ==========================================
+# Job state
+# ==========================================
+
+job_lock = threading.Lock()
+
+current_job = None
+job_process = None
+job_history = {}
+
+# ==========================================
+# Network
+# ==========================================
+
+def get_ip_address():
+
+    interfaces = psutil.net_if_addrs()
+
+    if INTERFACE not in interfaces:
+        return None
+
+    for address in interfaces[INTERFACE]:
+
+        if address.family == socket.AF_INET:
+            return address.address
+
+    return None
+
+
+def get_temperature():
+
+    try:
+
+        with open(
+            "/sys/class/thermal/thermal_zone0/temp",
+            "r"
+        ) as file:
+
+            value = float(
+                file.read().strip()
+            )
+
+        return round(
+            value / 1000,
+            2
+        )
+
+    except Exception:
+
+        return None
+
+
+def get_network_speed():
+
+    global last_network
+    global last_network_time
+
+    counters = psutil.net_io_counters(
+        pernic=True
+    )
+
+    if INTERFACE not in counters:
+
+        return {
+            "upload_mbps": 0,
+            "download_mbps": 0
+        }
+
+    current = counters[INTERFACE]
+
+    current_time = time.monotonic()
+
+
+    if last_network is None:
+
+        last_network = current
+        last_network_time = current_time
+
+        return {
+            "upload_mbps": 0,
+            "download_mbps": 0
+        }
+
+
+    elapsed = (
+        current_time -
+        last_network_time
+    )
+
+
+    sent_difference = (
+        current.bytes_sent -
+        last_network.bytes_sent
+    )
+
+    received_difference = (
+        current.bytes_recv -
+        last_network.bytes_recv
+    )
+
+
+    upload_mbps = (
+        sent_difference *
+        8 /
+        elapsed /
+        1_000_000
+    )
+
+
+    download_mbps = (
+        received_difference *
+        8 /
+        elapsed /
+        1_000_000
+    )
+
+
+    last_network = current
+    last_network_time = current_time
+
+
+    return {
+        "upload_mbps":
+            round(upload_mbps, 3),
+
+        "download_mbps":
+            round(download_mbps, 3)
+    }
+
+
+# ==========================================
+# Job watcher
+# ==========================================
+
+def watch_job(
+    process,
+    job_id,
+    log_file
+):
+
+    global current_job
+    global job_process
+    global job_history
+
+
+    process.wait()
+
+    log_file.close()
+
+
+    with job_lock:
+
+        status = (
+            "COMPLETED"
+            if process.returncode == 0
+            else "FAILED"
+        )
+
+
+        if current_job:
+
+            current_job[
+                "status"
+            ] = status
+
+            current_job[
+                "return_code"
+            ] = process.returncode
+
+            current_job[
+                "finished_at"
+            ] = time.time()
+
+
+            job_history[
+                job_id
+            ] = current_job.copy()
+
+
+        job_process = None
+
+
+# ==========================================
+# Health
+# ==========================================
+
+@app.route("/health")
+
+def health():
+
+    return jsonify({
+
+        "node":
+            socket.gethostname(),
+
+        "status":
+            "ONLINE"
+
+    })
+
+
+# ==========================================
+# Resource information
+# ==========================================
+
+@app.route("/resources")
+
+def resources():
+
+    memory = psutil.virtual_memory()
+
+    disk = psutil.disk_usage("/")
+
+    cpu_frequency = psutil.cpu_freq()
+
+    network = get_network_speed()
+
+
+    with job_lock:
+
+        job_info = (
+            current_job.copy()
+            if current_job
+            else None
+        )
+
+
+    node_status = (
+        "BUSY"
+        if (
+            job_info and
+            job_info["status"] == "RUNNING"
+        )
+        else "IDLE"
+    )
+
+
+    return jsonify({
+
+        "node":
+            socket.gethostname(),
+
+        "ip":
+            get_ip_address(),
+
+        "status":
+            "ONLINE",
+
+        "node_state":
+            node_status,
+
+        "cpu": {
+
+            "usage_percent":
+                psutil.cpu_percent(
+                    interval=0.2
+                ),
+
+            "logical_cores":
+                psutil.cpu_count(
+                    logical=True
+                ),
+
+            "physical_cores":
+                psutil.cpu_count(
+                    logical=False
+                ),
+
+            "frequency_mhz":
+                round(
+                    cpu_frequency.current,
+                    2
+                )
+                if cpu_frequency
+                else None
+
+        },
+
+        "memory": {
+
+            "total_gb":
+                round(
+                    memory.total /
+                    (1024 ** 3),
+                    2
+                ),
+
+            "available_gb":
+                round(
+                    memory.available /
+                    (1024 ** 3),
+                    2
+                ),
+
+            "used_gb":
+                round(
+                    memory.used /
+                    (1024 ** 3),
+                    2
+                ),
+
+            "usage_percent":
+                memory.percent
+
+        },
+
+        "disk": {
+
+            "total_gb":
+                round(
+                    disk.total /
+                    (1024 ** 3),
+                    2
+                ),
+
+            "free_gb":
+                round(
+                    disk.free /
+                    (1024 ** 3),
+                    2
+                ),
+
+            "usage_percent":
+                disk.percent
+        },
+
+        "network": {
+
+            "interface":
+                INTERFACE,
+
+            "upload_mbps":
+                network[
+                    "upload_mbps"
+                ],
+
+            "download_mbps":
+                network[
+                    "download_mbps"
+                ]
+        },
+
+        "temperature_c":
+            get_temperature(),
+
+        "current_job":
+            job_info,
+
+        "timestamp":
+            time.time()
+
+    })
+
+
+# ==========================================
+# Start job
+# ==========================================
+
+@app.route(
+    "/jobs/start",
+    methods=["POST"]
+)
+
+def start_job():
+
+    global current_job
+    global job_process
+
+
+    data = request.get_json(
+        silent=True
+    ) or {}
+
+
+    job_id = data.get("job_id")
+
+    duration = data.get(
+        "duration",
+        20
+    )
+
+
+    checkpoint_data = data.get(
+    "checkpoint"
+)
+
+    if not job_id:
+
+        return jsonify({
+            "error":
+                "job_id is required"
+        }), 400
+
+
+    try:
+
+        duration = int(duration)
+
+    except ValueError:
+
+        return jsonify({
+            "error":
+                "duration must be integer"
+        }), 400
+
+
+    if duration < 1 or duration > 300:
+
+        return jsonify({
+            "error":
+                "duration must be 1-300 seconds"
+        }), 400
+
+
+    with job_lock:
+
+        if (
+            job_process is not None and
+            job_process.poll() is None
+        ):
+
+            return jsonify({
+
+                "error":
+                    "Node is already busy",
+
+                "current_job":
+                    current_job
+
+            }), 409
+
+
+        logs_directory = os.path.join(
+            BASE_DIR,
+            "logs"
+        )
+
+        os.makedirs(
+            logs_directory,
+            exist_ok=True
+        )
+
+
+        log_path = os.path.join(
+            logs_directory,
+            f"{job_id}.log"
+        )
+
+
+        log_file = open(
+            log_path,
+            "w"
+        )
+
+        os.makedirs(
+            CHECKPOINT_DIR,
+            exist_ok=True
+        )
+
+        checkpoint_path = os.path.join(
+            CHECKPOINT_DIR,
+            f"{job_id}.json"
+        )
+
+        if checkpoint_data:
+
+            with open(
+                checkpoint_path,
+                "w"
+            ) as file:
+
+                json.dump(
+                    checkpoint_data,
+                    file,
+                    indent=2
+                )       
+
+
+        command = [
+
+            os.path.join(
+                BASE_DIR,
+                ".venv",
+                "bin",
+                "python"
+            ),
+
+            JOB_SCRIPT,
+
+            "--job-id",
+            job_id,
+
+            "--duration",
+            str(duration),
+
+            "--checkpoint",
+            checkpoint_path,
+
+            "--checkpoint-interval",
+            "5"
+
+        ]
+
+
+        job_process = subprocess.Popen(
+
+            command,
+
+            stdout=log_file,
+
+            stderr=subprocess.STDOUT,
+
+            cwd=BASE_DIR
+
+        )
+
+
+        current_job = {
+
+            "job_id":
+                job_id,
+
+            "status":
+                "RUNNING",
+
+            "pid":
+                job_process.pid,
+
+            "started_at":
+                time.time(),
+
+            "duration":
+                duration,
+
+            "checkpoint":
+                checkpoint_path,
+
+            "log":
+                log_path
+
+        }
+
+        job_history[
+            job_id
+                    ] = current_job.copy()
+
+
+        watcher = threading.Thread(
+
+            target=watch_job,
+
+            args=(
+                job_process,
+                job_id,
+                log_file
+            ),
+
+            daemon=True
+
+        )
+
+        watcher.start()
+
+
+        return jsonify({
+
+            "message":
+                "Job started",
+
+            "node":
+                socket.gethostname(),
+
+            "job":
+                current_job
+
+        })
+
+
+# ==========================================
+# Job status
+# ==========================================
+
+@app.route("/jobs/status")
+
+def job_status():
+
+    with job_lock:
+
+        if current_job is None:
+
+            return jsonify({
+                "current_job": None
+            })
+
+        return jsonify({
+            "current_job":
+                current_job
+        })
+
+    
+@app.route(
+    "/jobs/<job_id>",
+    methods=["GET"]
+)
+
+def get_job(job_id):
+
+    with job_lock:
+
+        if (
+            current_job
+            and current_job[
+                "job_id"
+            ] == job_id
+        ):
+
+            return jsonify({
+                "job":
+                    current_job
+            })
+
+
+        if job_id in job_history:
+
+            return jsonify({
+                "job":
+                    job_history[
+                        job_id
+                    ]
+            })
+
+
+    return jsonify({
+        "error":
+            "Job not found"
+    }), 404
+
+@app.route(
+    "/jobs/<job_id>/checkpoint",
+    methods=["GET"]
+)
+
+def get_checkpoint(job_id):
+
+    checkpoint_path = os.path.join(
+        CHECKPOINT_DIR,
+        f"{job_id}.json"
+    )
+
+
+    if not os.path.exists(
+        checkpoint_path
+    ):
+
+        return jsonify({
+            "error":
+                "Checkpoint not found"
+        }), 404
+
+
+    try:
+
+        with open(
+            checkpoint_path,
+            "r"
+        ) as file:
+
+            data = json.load(file)
+
+
+        return jsonify({
+            "checkpoint":
+                data
+        })
+
+
+    except Exception as error:
+
+        return jsonify({
+            "error":
+                str(error)
+        }), 500
+
+# ==========================================
+# Main
+# ==========================================
+
+if __name__ == "__main__":
+
+    print(
+        f"Starting Node Agent: "
+        f"{socket.gethostname()}"
+    )
+
+    app.run(
+
+        host="0.0.0.0",
+
+        port=5000,
+
+        debug=False
+
+    )

@@ -1,0 +1,247 @@
+# ============================================================
+# Python
+# ============================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.python-version
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+.controller-venv/
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+
+# ============================================================
+# IDE / Editor
+# ============================================================
+
+.vscode/
+.idea/
+
+*.swp
+*.swo
+*~
+
+# VS Code local workspace files
+*.code-workspace
+
+
+# ============================================================
+# OS files
+# ============================================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# ============================================================
+# Logs
+# ============================================================
+
+logs/*
+!logs/.gitkeep
+
+*.log
+*.pid
+*.out
+nohup.out
+
+
+# ============================================================
+# Runtime job files
+# ============================================================
+
+jobs/*
+!jobs/.gitkeep
+
+
+# ============================================================
+# Checkpoints / Model Weights
+# ============================================================
+
+checkpoints/*
+!checkpoints/.gitkeep
+
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+
+# ============================================================
+# Datasets
+# ============================================================
+
+data/*
+!data/.gitkeep
+!data/README.md
+
+datasets/
+dataset/
+
+*.csv
+*.tsv
+
+# Add exceptions manually if you intentionally want
+# a small example CSV committed.
+
+
+# ============================================================
+# Experiment Outputs
+# ============================================================
+
+results/*
+!results/.gitkeep
+
+experiments/**/output/
+experiments/**/outputs/
+experiments/**/logs/
+experiments/**/checkpoints/
+
+runs/
+wandb/
+lightning_logs/
+
+
+# ============================================================
+# Temporary Files
+# ============================================================
+
+tmp/*
+!tmp/.gitkeep
+
+temp/
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+
+# ============================================================
+# Jupyter
+# ============================================================
+
+.ipynb_checkpoints/
+
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+
+.env
+.env.*
+!.env.example
+
+secrets/
+*.pem
+*.key
+*.crt
+
+credentials.json
+secrets.json
+
+
+# ============================================================
+# Local Node Configuration
+# ============================================================
+
+# Real cluster configuration may contain local IPs/settings.
+config/nodes.json
+config/scheduler.json
+
+# Commit example configs instead:
+# config/nodes.example.json
+# config/scheduler.example.json
+
+
+# ============================================================
+# Resource-monitor generated files
+# ============================================================
+
+resources.json
+resource_data.json
+resource_history.json
+metrics.json
+metrics.csv
+
+
+# ============================================================
+# Network / Benchmark Generated Data
+# ============================================================
+
+iperf*.json
+iperf*.txt
+benchmark_results/
+benchmark_output/
+
+
+# ============================================================
+# PyTorch / ML caches
+# ============================================================
+
+torch_cache/
+.torch/
+model_cache/
+
+# Hugging Face cache if used later
+.huggingface/
+hf_cache/
+
+
+# ============================================================
+# Distributed Training Temporary Files
+# ============================================================
+
+*.rank
+*.lock
+
+torchrun_logs/
+ddp_logs/
+
+
+# ============================================================
+# Core dumps / crash files
+# ============================================================
+
+core
+core.*
+*.core
+
+
+# ============================================================
+# Backup Files
+# ============================================================
+
+*.bak
+*.backup
+*.old
+*.orig
+
+
+# ============================================================
+# Local shell files
+# ============================================================
+
+.history
+.bash_history
+.zsh_history

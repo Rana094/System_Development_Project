@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python3" "$0" "$@"
+'''exec' "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re

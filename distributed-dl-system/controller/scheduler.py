@@ -1,16 +1,19 @@
+"""Choose an eligible idle worker by lowest CPU usage, then greatest available RAM."""
+
 import json
 import requests
-
 
 CONFIG_FILE = "config/nodes.json"
 
 
 def load_nodes():
+    """Read the configured worker inventory used by this process."""
     with open(CONFIG_FILE, "r") as file:
         return json.load(file)["nodes"]
 
 
 def get_resources(node):
+    """Fetch a worker snapshot; an unreachable worker is ineligible for this scheduling pass."""
     url = f"http://{node['ip']}:{node['port']}/resources"
 
     try:
@@ -23,9 +26,10 @@ def get_resources(node):
 
 
 def select_best_node(
-    excluded_nodes=None
+    excluded_nodes=None,
+    allowed_nodes=None,
 ):
-
+    """Filter unavailable, busy or excluded nodes, then rank the remaining resources."""
     if excluded_nodes is None:
         excluded_nodes = set()
 
@@ -33,16 +37,16 @@ def select_best_node(
     candidates = []
 
     for node in nodes:
+        # Optional placement constraints keep benchmark hardware comparable.
+        if allowed_nodes is not None and node["id"] not in allowed_nodes:
+            continue
 
         if node["id"] in excluded_nodes:
 
-            print(
-                f"{node['id']} skipped "
-                "(temporarily unhealthy)"
-            )
+            print(f"{node['id']} skipped " "(temporarily unhealthy)")
 
             continue
-        
+
         resources = get_resources(node)
 
         if resources is None:
@@ -50,28 +54,27 @@ def select_best_node(
             continue
 
         if resources["node_state"] != "IDLE":
-            print(
-                f"{node['id']} skipped "
-                f"({resources['node_state']})"
-            )
+            print(f"{node['id']} skipped " f"({resources['node_state']})")
             continue
 
-        candidates.append({
-            "node": node,
-            "cpu": resources["cpu"]["usage_percent"],
-            "ram": resources["memory"]["available_gb"],
-            "temperature": resources["temperature_c"]
-        })
+        print(
+            f"[SCHEDULER] candidate={node['id']} "
+            f"cpu={resources['cpu']['usage_percent']}% "
+            f"available_ram={resources['memory']['available_gb']}GB"
+        )
+        candidates.append(
+            {
+                "node": node,
+                "cpu": resources["cpu"]["usage_percent"],
+                "ram": resources["memory"]["available_gb"],
+                "temperature": resources["temperature_c"],
+            }
+        )
 
     if not candidates:
         return None
 
-    candidates.sort(
-        key=lambda item: (
-            item["cpu"],
-            -item["ram"]
-        )
-    )
+    candidates.sort(key=lambda item: (item["cpu"], -item["ram"]))
 
     return candidates[0]
 
@@ -91,4 +94,3 @@ if __name__ == "__main__":
         print("CPU usage:", selected["cpu"], "%")
         print("Available RAM:", selected["ram"], "GB")
         print("Temperature:", selected["temperature"], "C")
-

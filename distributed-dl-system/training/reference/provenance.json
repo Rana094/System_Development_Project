@@ -1,0 +1,22 @@
+{
+  "equation": {
+    "source": "/home/rana/System/System/distML/equation/train_worker.py",
+    "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+  },
+  "logistic": {
+    "source": "/home/rana/System/System/distML/lregression/benchmark_worker.py",
+    "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+  },
+  "numpy_mlp": {
+    "source": "/home/rana/System/System/distML/neural_network/benchmark_worker.py",
+    "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+  },
+  "resnet18": {
+    "source": "/home/rana/System/System/distML/pretrained_ddp/benchmark_node.py",
+    "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+  },
+  "tiny_cnn": {
+    "source": "/home/rana/System/System/distML/yolo_distributed/benchmark_node.py",
+    "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+  }
+}

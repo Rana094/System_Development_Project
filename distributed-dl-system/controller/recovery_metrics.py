@@ -1,24 +1,26 @@
+"""Append timestamped recovery events for later measurement and troubleshooting."""
+
 import argparse
 import json
 import sqlite3
 import time
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "jobs.db"
 
 
 def get_connection():
+    """Open the local database with the connection settings used by this module."""
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     return connection
 
 
 def init_table():
+    """Create the append-only recovery event table and its lookup index if missing."""
     with get_connection() as connection:
-        connection.execute(
-            """
+        connection.execute("""
             CREATE TABLE IF NOT EXISTS recovery_events (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
 
@@ -32,16 +34,13 @@ def init_table():
 
                 details_json TEXT NOT NULL DEFAULT '{}'
             )
-            """
-        )
+            """)
 
-        connection.execute(
-            """
+        connection.execute("""
             CREATE INDEX IF NOT EXISTS
             idx_recovery_events_job
             ON recovery_events(job_id)
-            """
-        )
+            """)
 
         connection.commit()
 
@@ -53,6 +52,7 @@ def log_event(
     details=None,
     event_time=None,
 ):
+    """Append a controller observation or explicit injected-failure timestamp."""
     init_table()
 
     if event_time is None:
@@ -88,6 +88,7 @@ def log_event(
 
 
 def get_events(job_id):
+    """Read a logical job's event history in time order."""
     init_table()
 
     with get_connection() as connection:
@@ -105,6 +106,7 @@ def get_events(job_id):
 
 
 def show_events(job_id):
+    """Print raw event details before deriving any recovery metrics."""
     events = get_events(job_id)
 
     print()
@@ -128,6 +130,7 @@ def show_events(job_id):
 
 
 def main():
+    """Expose table initialization, explicit event recording and inspection commands."""
     parser = argparse.ArgumentParser()
 
     subparsers = parser.add_subparsers(
@@ -137,43 +140,27 @@ def main():
 
     subparsers.add_parser("init")
 
-    show_parser = subparsers.add_parser(
-        "show"
-    )
+    show_parser = subparsers.add_parser("show")
 
-    show_parser.add_argument(
-        "job_id"
-    )
+    show_parser.add_argument("job_id")
 
-    record_parser = subparsers.add_parser(
-        "record"
-    )
+    record_parser = subparsers.add_parser("record")
 
-    record_parser.add_argument(
-        "job_id"
-    )
+    record_parser.add_argument("job_id")
 
-    record_parser.add_argument(
-        "event_type"
-    )
+    record_parser.add_argument("event_type")
 
-    record_parser.add_argument(
-        "--node"
-    )
+    record_parser.add_argument("--node")
 
     args = parser.parse_args()
 
     if args.command == "init":
         init_table()
 
-        print(
-            "recovery_events table ready."
-        )
+        print("recovery_events table ready.")
 
     elif args.command == "show":
-        show_events(
-            args.job_id
-        )
+        show_events(args.job_id)
 
     elif args.command == "record":
         timestamp = log_event(
@@ -182,10 +169,7 @@ def main():
             node_id=args.node,
         )
 
-        print(
-            f"{args.event_type}: "
-            f"{timestamp:.6f}"
-        )
+        print(f"{args.event_type}: " f"{timestamp:.6f}")
 
 
 if __name__ == "__main__":

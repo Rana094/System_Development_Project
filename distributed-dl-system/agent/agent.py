@@ -1,7 +1,11 @@
+"""Worker HTTP API: report resources, launch one process at a time, and transfer checkpoints."""
+
 import json
+import math
 import os
 import re
 import socket
+import signal
 import subprocess
 import sys
 import threading
@@ -11,14 +15,8 @@ from pathlib import Path
 import psutil
 from flask import Flask, jsonify, request, send_file
 
-
 app = Flask(__name__)
-
-
-# ==========================================
 # Configuration
-# ==========================================
-
 INTERFACE = "eth0"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,12 +29,7 @@ PYTORCH_JOB_SCRIPT = TRAINING_DIR / "pytorch_job.py"
 
 CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
 LOG_DIR.mkdir(parents=True, exist_ok=True)
-
-
-# ==========================================
 # Runtime state
-# ==========================================
-
 last_network = None
 last_network_time = None
 
@@ -47,10 +40,7 @@ job_process = None
 job_history = {}
 
 
-# ==========================================
 # Helpers
-# ==========================================
-
 def valid_job_id(job_id):
     """
     Allow only safe filename-friendly job IDs.
@@ -64,6 +54,7 @@ def valid_job_id(job_id):
 
 
 def checkpoint_path_for(job_id, job_type):
+    """Select the local file extension used by the job type."""
     extension = ".pt" if job_type == "pytorch" else ".json"
     return CHECKPOINT_DIR / f"{job_id}{extension}"
 
@@ -123,10 +114,7 @@ def resolve_job_type(job_id):
     Resolve the known type for a job, then fall back to existing files.
     """
     with job_lock:
-        if (
-            current_job
-            and current_job.get("job_id") == job_id
-        ):
+        if current_job and current_job.get("job_id") == job_id:
             job_type = current_job.get("job_type")
 
             if job_type in {"dummy", "pytorch"}:
@@ -150,6 +138,7 @@ def resolve_job_type(job_id):
 
 
 def get_ip_address():
+    """Report the worker address observed by its outbound socket."""
     interfaces = psutil.net_if_addrs()
 
     if INTERFACE not in interfaces:
@@ -163,6 +152,7 @@ def get_ip_address():
 
 
 def get_temperature():
+    """Read the Pi thermal sensor when available, otherwise report no temperature."""
     try:
         with open(
             "/sys/class/thermal/thermal_zone0/temp",
@@ -178,6 +168,7 @@ def get_temperature():
 
 
 def get_network_speed():
+    """Convert counter differences since the previous sample into measured Mbps."""
     global last_network
     global last_network_time
 
@@ -212,19 +203,9 @@ def get_network_speed():
     sent_difference = current.bytes_sent - last_network.bytes_sent
     received_difference = current.bytes_recv - last_network.bytes_recv
 
-    upload_mbps = (
-        sent_difference
-        * 8
-        / elapsed
-        / 1_000_000
-    )
+    upload_mbps = sent_difference * 8 / elapsed / 1_000_000
 
-    download_mbps = (
-        received_difference
-        * 8
-        / elapsed
-        / 1_000_000
-    )
+    download_mbps = received_difference * 8 / elapsed / 1_000_000
 
     last_network = current
     last_network_time = current_time
@@ -235,11 +216,9 @@ def get_network_speed():
     }
 
 
-# ==========================================
 # Job watcher
-# ==========================================
-
 def watch_job(process, job_id, log_file):
+    """Wait for the child to exit, then release the busy slot and preserve its final status."""
     global current_job
     global job_process
     global job_history
@@ -248,11 +227,7 @@ def watch_job(process, job_id, log_file):
     log_file.close()
 
     with job_lock:
-        status = (
-            "COMPLETED"
-            if process.returncode == 0
-            else "FAILED"
-        )
+        status = "COMPLETED" if process.returncode == 0 else "FAILED"
 
         if (
             current_job
@@ -269,108 +244,90 @@ def watch_job(process, job_id, log_file):
             job_process = None
 
 
-# ==========================================
 # Health
-# ==========================================
-
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({
-        "node": socket.gethostname(),
-        "status": "ONLINE",
-    })
+    """Provide a minimal liveness response that does not launch work."""
+    return jsonify(
+        {
+            "node": socket.gethostname(),
+            "status": "ONLINE",
+        }
+    )
 
 
-# ==========================================
 # Resource information
-# ==========================================
-
 @app.route("/resources", methods=["GET"])
 def resources():
+    """Return machine load and a lock-protected snapshot of current worker state."""
     memory = psutil.virtual_memory()
     disk = psutil.disk_usage("/")
     cpu_frequency = psutil.cpu_freq()
     network = get_network_speed()
 
     with job_lock:
-        job_info = (
-            current_job.copy()
-            if current_job
-            else None
-        )
+        job_info = current_job.copy() if current_job else None
 
     node_status = (
-        "BUSY"
-        if (
-            job_info
-            and job_info.get("status") == "RUNNING"
-        )
-        else "IDLE"
+        "BUSY" if (job_info and job_info.get("status") == "RUNNING") else "IDLE"
     )
 
-    return jsonify({
-        "node": socket.gethostname(),
-        "ip": get_ip_address(),
-        "status": "ONLINE",
-        "node_state": node_status,
-
-        "cpu": {
-            "usage_percent": psutil.cpu_percent(interval=0.2),
-            "logical_cores": psutil.cpu_count(logical=True),
-            "physical_cores": psutil.cpu_count(logical=False),
-            "frequency_mhz": (
-                round(cpu_frequency.current, 2)
-                if cpu_frequency
-                else None
-            ),
-        },
-
-        "memory": {
-            "total_gb": round(
-                memory.total / (1024 ** 3),
-                2,
-            ),
-            "available_gb": round(
-                memory.available / (1024 ** 3),
-                2,
-            ),
-            "used_gb": round(
-                memory.used / (1024 ** 3),
-                2,
-            ),
-            "usage_percent": memory.percent,
-        },
-
-        "disk": {
-            "total_gb": round(
-                disk.total / (1024 ** 3),
-                2,
-            ),
-            "free_gb": round(
-                disk.free / (1024 ** 3),
-                2,
-            ),
-            "usage_percent": disk.percent,
-        },
-
-        "network": {
-            "interface": INTERFACE,
-            "upload_mbps": network["upload_mbps"],
-            "download_mbps": network["download_mbps"],
-        },
-
-        "temperature_c": get_temperature(),
-        "current_job": job_info,
-        "timestamp": time.time(),
-    })
+    return jsonify(
+        {
+            "node": socket.gethostname(),
+            "ip": get_ip_address(),
+            "status": "ONLINE",
+            "node_state": node_status,
+            "cpu": {
+                "usage_percent": psutil.cpu_percent(interval=0.2),
+                "logical_cores": psutil.cpu_count(logical=True),
+                "physical_cores": psutil.cpu_count(logical=False),
+                "frequency_mhz": (
+                    round(cpu_frequency.current, 2) if cpu_frequency else None
+                ),
+            },
+            "memory": {
+                "total_gb": round(
+                    memory.total / (1024**3),
+                    2,
+                ),
+                "available_gb": round(
+                    memory.available / (1024**3),
+                    2,
+                ),
+                "used_gb": round(
+                    memory.used / (1024**3),
+                    2,
+                ),
+                "usage_percent": memory.percent,
+            },
+            "disk": {
+                "total_gb": round(
+                    disk.total / (1024**3),
+                    2,
+                ),
+                "free_gb": round(
+                    disk.free / (1024**3),
+                    2,
+                ),
+                "usage_percent": disk.percent,
+            },
+            "network": {
+                "interface": INTERFACE,
+                "upload_mbps": network["upload_mbps"],
+                "download_mbps": network["download_mbps"],
+            },
+            "temperature_c": get_temperature(),
+            "current_job": job_info,
+            "timestamp": time.time(),
+        }
+    )
 
 
-# ==========================================
 # Start job
-# ==========================================
-
 @app.route("/jobs/start", methods=["POST"])
 def start_job():
+    """Validate supported workloads and launch a single tracked process group on this worker."""
     global current_job
     global job_process
     global job_history
@@ -380,33 +337,49 @@ def start_job():
     job_id = data.get("job_id")
 
     if not valid_job_id(job_id):
-        return jsonify({
-            "error": (
-                "job_id is required and may contain only "
-                "letters, numbers, '.', '_' and '-'"
+        return (
+            jsonify(
+                {
+                    "error": (
+                        "job_id is required and may contain only "
+                        "letters, numbers, '.', '_' and '-'"
+                    )
+                }
+            ),
+            400,
+        )
+
+    job_type = str(data.get("job_type", "dummy")).strip().lower()
+
+    if job_type not in {"dummy", "pytorch", "benchmark"}:
+        return (
+            jsonify(
+                {
+                    "error": (
+                        "Unsupported job_type. "
+                        "Use 'dummy', 'pytorch' or 'benchmark'."
+                    )
+                }
+            ),
+            400,
+        )
+
+    with job_lock:
+        if job_process is not None and job_process.poll() is None:
+            if (
+                current_job.get("job_id") == job_id
+                and data.get("attempt_token")
+                and current_job.get("attempt_token") == data["attempt_token"]
+            ):
+                return jsonify({"job": current_job, "message": "Already started"}), 200
+            return (
+                jsonify({"error": "Node is already busy", "current_job": current_job}),
+                409,
             )
-        }), 400
-
-    job_type = str(
-        data.get("job_type", "dummy")
-    ).strip().lower()
-
-    if job_type not in {"dummy", "pytorch"}:
-        return jsonify({
-            "error": (
-                "Unsupported job_type. "
-                "Use 'dummy' or 'pytorch'."
-            )
-        }), 400
-
-    # --------------------------------------
     # Build dummy job
-    # --------------------------------------
     if job_type == "dummy":
         try:
-            duration = int(
-                data.get("duration", 20)
-            )
+            duration = int(data.get("duration", 20))
 
             checkpoint_interval = int(
                 data.get(
@@ -416,26 +389,18 @@ def start_job():
             )
 
         except (TypeError, ValueError):
-            return jsonify({
-                "error": (
-                    "duration and checkpoint_interval "
-                    "must be integers"
-                )
-            }), 400
+            return (
+                jsonify(
+                    {"error": ("duration and checkpoint_interval " "must be integers")}
+                ),
+                400,
+            )
 
         if duration < 1 or duration > 300:
-            return jsonify({
-                "error": (
-                    "duration must be 1-300 seconds"
-                )
-            }), 400
+            return jsonify({"error": ("duration must be 1-300 seconds")}), 400
 
         if checkpoint_interval < 1:
-            return jsonify({
-                "error": (
-                    "checkpoint_interval must be >= 1"
-                )
-            }), 400
+            return jsonify({"error": ("checkpoint_interval must be >= 1")}), 400
 
         checkpoint_path = checkpoint_path_for(
             job_id,
@@ -449,12 +414,10 @@ def start_job():
                 checkpoint_data,
                 dict,
             ):
-                return jsonify({
-                    "error": (
-                        "dummy checkpoint must be "
-                        "a JSON object"
-                    )
-                }), 400
+                return (
+                    jsonify({"error": ("dummy checkpoint must be " "a JSON object")}),
+                    400,
+                )
 
             try:
                 write_json_atomic(
@@ -463,12 +426,12 @@ def start_job():
                 )
 
             except Exception as error:
-                return jsonify({
-                    "error": (
-                        "Failed to save dummy checkpoint: "
-                        f"{error}"
-                    )
-                }), 500
+                return (
+                    jsonify(
+                        {"error": ("Failed to save dummy checkpoint: " f"{error}")}
+                    ),
+                    500,
+                )
 
         command = [
             sys.executable,
@@ -487,23 +450,61 @@ def start_job():
             "duration": duration,
             "checkpoint_interval": checkpoint_interval,
         }
+    # Run only bundled reference workloads; arbitrary commands are not accepted.
+    elif job_type == "benchmark":
+        config = data.get("job_config", {})
+        if not isinstance(config, dict) or config.get("model") not in {
+            "equation",
+            "logistic",
+            "numpy_mlp",
+            "resnet18",
+            "tiny_cnn",
+        }:
+            return jsonify({"error": "Unknown benchmark model"}), 400
+        try:
+            values = {
+                key: int(config.get(key, default))
+                for key, default in (
+                    ("samples", 1000),
+                    ("epochs", 1),
+                    ("rank", 0),
+                    ("world_size", 1),
+                    ("master_port", 29651),
+                )
+            }
+            if not (
+                1 <= values["samples"] <= 1000000
+                and 1 <= values["epochs"] <= 1000
+                and 1 <= values["world_size"] <= 3
+                and 0 <= values["rank"] < values["world_size"]
+                and 1024 <= values["master_port"] <= 65535
+            ):
+                raise ValueError("Invalid benchmark bounds")
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid benchmark numeric settings"}), 400
+        checkpoint_path = checkpoint_path_for(job_id, "dummy")
+        command = [
+            sys.executable,
+            str(TRAINING_DIR / "benchmark_job.py"),
+            "--model",
+            config["model"],
+            "--output",
+            str(LOG_DIR / f"{job_id}.benchmark.json"),
+            "--master-addr",
+            str(config.get("master_addr", "127.0.0.1")),
+        ]
+        for key, value in values.items():
+            command.extend(["--" + key.replace("_", "-"), str(value)])
+        job_details = {"benchmark_config": config}
 
-    # --------------------------------------
-    # Build PyTorch job
-    # --------------------------------------
+    # PyTorch jobs keep the existing recoverable training path.
     else:
         try:
-            epochs = int(
-                data.get("epochs", 20)
-            )
+            epochs = int(data.get("epochs", 20))
 
-            batch_size = int(
-                data.get("batch_size", 128)
-            )
+            batch_size = int(data.get("batch_size", 128))
 
-            learning_rate = float(
-                data.get("learning_rate", 0.001)
-            )
+            learning_rate = float(data.get("learning_rate", 0.001))
 
             checkpoint_interval = int(
                 data.get(
@@ -512,45 +513,44 @@ def start_job():
                 )
             )
 
-            batch_delay = float(
-                data.get("batch_delay", 0.0)
-            )
+            checkpoint_every_seconds = float(data.get("checkpoint_every_seconds", 0.0))
+
+            batch_delay = float(data.get("batch_delay", 0.0))
 
         except (TypeError, ValueError):
-            return jsonify({
-                "error": (
-                    "epochs, batch_size, learning_rate, "
-                    "checkpoint_interval and batch_delay "
-                    "must be numeric"
-                )
-            }), 400
+            return (
+                jsonify(
+                    {
+                        "error": (
+                            "epochs, batch_size, learning_rate, "
+                            "checkpoint_interval and batch_delay "
+                            "must be numeric"
+                        )
+                    }
+                ),
+                400,
+            )
+
+        if not math.isfinite(checkpoint_every_seconds) or checkpoint_every_seconds < 0:
+            return (
+                jsonify({"error": "checkpoint_every_seconds must be finite and >= 0"}),
+                400,
+            )
 
         if epochs < 1:
-            return jsonify({
-                "error": "epochs must be >= 1"
-            }), 400
+            return jsonify({"error": "epochs must be >= 1"}), 400
 
         if batch_size < 1:
-            return jsonify({
-                "error": "batch_size must be >= 1"
-            }), 400
+            return jsonify({"error": "batch_size must be >= 1"}), 400
 
         if learning_rate <= 0:
-            return jsonify({
-                "error": "learning_rate must be > 0"
-            }), 400
+            return jsonify({"error": "learning_rate must be > 0"}), 400
 
         if checkpoint_interval < 1:
-            return jsonify({
-                "error": (
-                    "checkpoint_interval must be >= 1"
-                )
-            }), 400
+            return jsonify({"error": ("checkpoint_interval must be >= 1")}), 400
 
         if batch_delay < 0:
-            return jsonify({
-                "error": "batch_delay must be >= 0"
-            }), 400
+            return jsonify({"error": "batch_delay must be >= 0"}), 400
 
         checkpoint_path = checkpoint_path_for(
             job_id,
@@ -572,6 +572,10 @@ def start_job():
             str(checkpoint_path),
             "--checkpoint-interval",
             str(checkpoint_interval),
+            "--checkpoint-every-seconds",
+            str(checkpoint_every_seconds),
+            "--resume-status-file",
+            str(LOG_DIR / f"{job_id}.resume.json"),
             "--batch-delay",
             str(batch_delay),
         ]
@@ -582,35 +586,34 @@ def start_job():
             "learning_rate": learning_rate,
             "checkpoint_interval": checkpoint_interval,
             "batch_delay": batch_delay,
+            "checkpoint_every_seconds": checkpoint_every_seconds,
         }
 
     script_path = (
-        DUMMY_JOB_SCRIPT
-        if job_type == "dummy"
-        else PYTORCH_JOB_SCRIPT
+        TRAINING_DIR / "benchmark_job.py"
+        if job_type == "benchmark"
+        else DUMMY_JOB_SCRIPT if job_type == "dummy" else PYTORCH_JOB_SCRIPT
     )
 
     if not script_path.exists():
-        return jsonify({
-            "error": (
-                f"Training script not found: "
-                f"{script_path}"
-            )
-        }), 500
-
-    # --------------------------------------
+        return (
+            jsonify({"error": (f"Training script not found: " f"{script_path}")}),
+            500,
+        )
     # Start process
-    # --------------------------------------
     with job_lock:
-        if (
-            job_process is not None
-            and job_process.poll() is None
-        ):
-            return jsonify({
-                "error": "Node is already busy",
-                "current_job": current_job,
-            }), 409
+        if job_process is not None and job_process.poll() is None:
+            return (
+                jsonify(
+                    {
+                        "error": "Node is already busy",
+                        "current_job": current_job,
+                    }
+                ),
+                409,
+            )
 
+        (LOG_DIR / f"{job_id}.resume.json").unlink(missing_ok=True)
         log_path = LOG_DIR / f"{job_id}.log"
 
         try:
@@ -626,6 +629,7 @@ def start_job():
                 stdout=log_file,
                 stderr=subprocess.STDOUT,
                 cwd=str(BASE_DIR),
+                start_new_session=True,
             )
 
         except Exception as error:
@@ -636,18 +640,14 @@ def start_job():
 
             job_process = None
 
-            return jsonify({
-                "error": (
-                    "Failed to start job: "
-                    f"{error}"
-                )
-            }), 500
+            return jsonify({"error": ("Failed to start job: " f"{error}")}), 500
 
         current_job = {
             "job_id": job_id,
             "job_type": job_type,
             "status": "RUNNING",
             "pid": job_process.pid,
+            "attempt_token": data.get("attempt_token"),
             "started_at": time.time(),
             "checkpoint": str(checkpoint_path),
             "log": str(log_path),
@@ -668,28 +668,49 @@ def start_job():
 
         watcher.start()
 
-        return jsonify({
-            "message": "Job started",
-            "node": socket.gethostname(),
-            "job": current_job,
-        }), 200
+        return (
+            jsonify(
+                {
+                    "message": "Job started",
+                    "node": socket.gethostname(),
+                    "job": current_job,
+                }
+            ),
+            200,
+        )
 
 
-# ==========================================
 # Job status
-# ==========================================
-
 @app.route("/jobs/status", methods=["GET"])
 def job_status():
+    """Expose the current worker job without consulting the controller database."""
     with job_lock:
         if current_job is None:
-            return jsonify({
-                "current_job": None
-            })
+            return jsonify({"current_job": None})
 
-        return jsonify({
-            "current_job": current_job
-        })
+        return jsonify({"current_job": current_job})
+
+
+def job_with_resume(job):
+    """Attach trainer acknowledgments only when their process identity matches this attempt."""
+    result = job.copy()
+    try:
+        info = json.loads((LOG_DIR / f"{job['job_id']}.resume.json").read_text())
+        if (
+            info.get("pid") == job.get("pid")
+            and info.get("confirmed_at", 0) >= job["started_at"]
+        ):
+            result["resume"] = info
+    except (OSError, ValueError, KeyError):
+        pass
+    if job.get("job_type") == "benchmark":
+        try:
+            result["benchmark_result"] = json.loads(
+                (LOG_DIR / f"{job['job_id']}.benchmark.json").read_text()
+            )
+        except (OSError, ValueError):
+            pass
+    return result
 
 
 @app.route(
@@ -697,34 +718,32 @@ def job_status():
     methods=["GET"],
 )
 def get_job(job_id):
+    """Look up active or recent in-memory attempt state and attach trainer acknowledgment."""
     if not valid_job_id(job_id):
-        return jsonify({
-            "error": "Invalid job_id"
-        }), 400
+        return jsonify({"error": "Invalid job_id"}), 400
 
     with job_lock:
-        if (
-            current_job
-            and current_job.get("job_id") == job_id
-        ):
-            return jsonify({
-                "job": current_job
-            })
+        if current_job and current_job.get("job_id") == job_id:
+            return jsonify({"job": job_with_resume(current_job)})
 
         if job_id in job_history:
-            return jsonify({
-                "job": job_history[job_id]
-            })
+            return jsonify({"job": job_with_resume(job_history[job_id])})
 
-    return jsonify({
-        "error": "Job not found"
-    }), 404
+    return jsonify({"error": "Job not found"}), 404
 
 
-# ==========================================
+@app.route("/jobs/<job_id>/stop", methods=["POST"])
+def stop_job(job_id):
+    """Stop only this agent's matching process group, including DDP/data workers."""
+    with job_lock:
+        if not current_job or current_job["job_id"] != job_id:
+            return jsonify({"error": "Job not active on this worker"}), 404
+        if job_process is not None and job_process.poll() is None:
+            os.killpg(job_process.pid, signal.SIGTERM)
+        return jsonify({"message": "Stop requested", "job_id": job_id})
+
+
 # Checkpoints
-# ==========================================
-
 @app.route(
     "/jobs/<job_id>/checkpoint",
     methods=["GET"],
@@ -739,26 +758,20 @@ def get_checkpoint(job_id):
         returns the .pt file as binary.
     """
     if not valid_job_id(job_id):
-        return jsonify({
-            "error": "Invalid job_id"
-        }), 400
+        return jsonify({"error": "Invalid job_id"}), 400
 
     requested_type = request.args.get("job_type")
 
     if requested_type:
         requested_type = requested_type.strip().lower()
         if requested_type not in {"dummy", "pytorch"}:
-            return jsonify({
-                "error": "job_type must be 'dummy' or 'pytorch'"
-            }), 400
+            return jsonify({"error": "job_type must be 'dummy' or 'pytorch'"}), 400
         job_type = requested_type
     else:
         job_type = resolve_job_type(job_id)
 
     if job_type is None:
-        return jsonify({
-            "error": "Checkpoint not found"
-        }), 404
+        return jsonify({"error": "Checkpoint not found"}), 404
 
     checkpoint_path = checkpoint_path_for(
         job_id,
@@ -766,9 +779,7 @@ def get_checkpoint(job_id):
     )
 
     if not checkpoint_path.exists():
-        return jsonify({
-            "error": "Checkpoint not found"
-        }), 404
+        return jsonify({"error": "Checkpoint not found"}), 404
 
     if job_type == "pytorch":
         return send_file(
@@ -787,14 +798,10 @@ def get_checkpoint(job_id):
         ) as file:
             data = json.load(file)
 
-        return jsonify({
-            "checkpoint": data
-        })
+        return jsonify({"checkpoint": data})
 
     except Exception as error:
-        return jsonify({
-            "error": str(error)
-        }), 500
+        return jsonify({"error": str(error)}), 500
 
 
 @app.route(
@@ -814,16 +821,19 @@ def upload_checkpoint(job_id):
         {"checkpoint": {...}}
     """
     if not valid_job_id(job_id):
-        return jsonify({
-            "error": "Invalid job_id"
-        }), 400
+        return jsonify({"error": "Invalid job_id"}), 400
 
     with job_lock:
         if job_process is not None and job_process.poll() is None:
-            return jsonify({
-                "error": "Cannot upload checkpoint while node is busy",
-                "current_job": current_job,
-            }), 409
+            return (
+                jsonify(
+                    {
+                        "error": "Cannot upload checkpoint while node is busy",
+                        "current_job": current_job,
+                    }
+                ),
+                409,
+            )
 
     requested_type = (
         request.args.get("job_type")
@@ -837,14 +847,8 @@ def upload_checkpoint(job_id):
     else:
         job_type = resolve_job_type(job_id)
 
-        if (
-            job_type is None
-            and "file" in request.files
-        ):
-            filename = (
-                request.files["file"].filename
-                or ""
-            ).lower()
+        if job_type is None and "file" in request.files:
+            filename = (request.files["file"].filename or "").lower()
 
             if filename.endswith((".pt", ".pth")):
                 job_type = "pytorch"
@@ -860,13 +864,18 @@ def upload_checkpoint(job_id):
                 job_type = "pytorch"
 
     if job_type not in {"dummy", "pytorch"}:
-        return jsonify({
-            "error": (
-                "Unable to determine checkpoint type. "
-                "Specify ?job_type=dummy or "
-                "?job_type=pytorch."
-            )
-        }), 400
+        return (
+            jsonify(
+                {
+                    "error": (
+                        "Unable to determine checkpoint type. "
+                        "Specify ?job_type=dummy or "
+                        "?job_type=pytorch."
+                    )
+                }
+            ),
+            400,
+        )
 
     checkpoint_path = checkpoint_path_for(
         job_id,
@@ -875,16 +884,10 @@ def upload_checkpoint(job_id):
 
     try:
         if job_type == "dummy":
-            payload = request.get_json(
-                silent=True
-            )
+            payload = request.get_json(silent=True)
 
             if payload is None:
-                return jsonify({
-                    "error": (
-                        "Dummy checkpoint must be JSON"
-                    )
-                }), 400
+                return jsonify({"error": ("Dummy checkpoint must be JSON")}), 400
 
             checkpoint_data = payload.get(
                 "checkpoint",
@@ -895,12 +898,10 @@ def upload_checkpoint(job_id):
                 checkpoint_data,
                 dict,
             ):
-                return jsonify({
-                    "error": (
-                        "Dummy checkpoint must be "
-                        "a JSON object"
-                    )
-                }), 400
+                return (
+                    jsonify({"error": ("Dummy checkpoint must be " "a JSON object")}),
+                    400,
+                )
 
             write_json_atomic(
                 checkpoint_path,
@@ -917,50 +918,40 @@ def upload_checkpoint(job_id):
                 )
 
             else:
-                raw_data = request.get_data(
-                    cache=False
-                )
+                raw_data = request.get_data(cache=False)
 
                 if not raw_data:
-                    return jsonify({
-                        "error": (
-                            "No PyTorch checkpoint "
-                            "data received"
-                        )
-                    }), 400
+                    return (
+                        jsonify({"error": ("No PyTorch checkpoint " "data received")}),
+                        400,
+                    )
 
                 write_binary_atomic(
                     checkpoint_path,
                     raw_bytes=raw_data,
                 )
 
-        return jsonify({
-            "message": "Checkpoint uploaded",
-            "job_id": job_id,
-            "job_type": job_type,
-            "checkpoint": str(checkpoint_path),
-            "size_bytes": checkpoint_path.stat().st_size,
-            "node": socket.gethostname(),
-        }), 200
+        return (
+            jsonify(
+                {
+                    "message": "Checkpoint uploaded",
+                    "job_id": job_id,
+                    "job_type": job_type,
+                    "checkpoint": str(checkpoint_path),
+                    "size_bytes": checkpoint_path.stat().st_size,
+                    "node": socket.gethostname(),
+                }
+            ),
+            200,
+        )
 
     except Exception as error:
-        return jsonify({
-            "error": (
-                "Failed to save checkpoint: "
-                f"{error}"
-            )
-        }), 500
+        return jsonify({"error": ("Failed to save checkpoint: " f"{error}")}), 500
 
 
-# ==========================================
 # Main
-# ==========================================
-
 if __name__ == "__main__":
-    print(
-        f"Starting Node Agent: "
-        f"{socket.gethostname()}"
-    )
+    print(f"Starting Node Agent: " f"{socket.gethostname()}")
 
     print(f"Base directory: {BASE_DIR}")
     print(f"Python: {sys.executable}")

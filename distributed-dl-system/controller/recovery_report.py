@@ -1,19 +1,22 @@
+"""Compute recovery timings around the latest explicitly recorded failure injection."""
+
 import argparse
 import sqlite3
 from pathlib import Path
-
 
 CONTROLLER_DIR = Path(__file__).resolve().parent
 DB_PATH = CONTROLLER_DIR / "jobs.db"
 
 
 def get_connection():
+    """Open the local database with the connection settings used by this module."""
     connection = sqlite3.connect(DB_PATH, timeout=5)
     connection.row_factory = sqlite3.Row
     return connection
 
 
 def load_events(job_id):
+    """Read the ordered event history used for recovery reporting."""
     with get_connection() as connection:
         rows = connection.execute(
             """
@@ -35,23 +38,19 @@ def load_events(job_id):
 
 
 def first_event_after(events, event_type, after_time):
+    """Find the next matching event after a given stage of recovery."""
     for event in events:
-        if (
-            event["event_type"] == event_type
-            and event["event_time"] >= after_time
-        ):
+        if event["event_type"] == event_type and event["event_time"] >= after_time:
             return event
     return None
 
 
 def last_event_before(events, event_type, before_time):
+    """Choose the latest checkpoint available before failure, not one written after recovery."""
     matches = [
         event
         for event in events
-        if (
-            event["event_type"] == event_type
-            and event["event_time"] <= before_time
-        )
+        if (event["event_type"] == event_type and event["event_time"] <= before_time)
     ]
 
     if not matches:
@@ -61,35 +60,31 @@ def last_event_before(events, event_type, before_time):
 
 
 def print_timestamp(label, event):
+    """Show the event timestamp and worker, including an explicit missing marker."""
     if event is None:
         print(f"{label:<24}: MISSING")
         return
 
     node = event.get("node_id") or "-"
 
-    print(
-        f"{label:<24}: "
-        f"{event['event_time']:.6f} "
-        f"(node={node})"
-    )
+    print(f"{label:<24}: " f"{event['event_time']:.6f} " f"(node={node})")
 
 
 def print_metric(label, start_event, end_event):
+    """Subtract two available timestamps without inventing missing measurements."""
     if start_event is None or end_event is None:
         print(f"{label:<24}: unavailable")
         return None
 
     value = end_event["event_time"] - start_event["event_time"]
 
-    print(
-        f"{label:<24}: "
-        f"{value:.3f} s"
-    )
+    print(f"{label:<24}: " f"{value:.3f} s")
 
     return value
 
 
 def build_report(job_id):
+    """Associate checkpoint, failure, restore and completion events and report missing evidence."""
     events = load_events(job_id)
 
     if not events:
@@ -97,18 +92,12 @@ def build_report(job_id):
         return 1
 
     failure_events = [
-        event
-        for event in events
-        if event["event_type"] == "FAILURE_INJECTED"
+        event for event in events if event["event_type"] == "FAILURE_INJECTED"
     ]
 
     if not failure_events:
-        print(
-            f"No FAILURE_INJECTED event found for job {job_id}."
-        )
-        print(
-            "Record the injected failure before stopping the worker."
-        )
+        print(f"No FAILURE_INJECTED event found for job {job_id}.")
+        print("Record the injected failure before stopping the worker.")
         return 1
 
     failure = failure_events[-1]
@@ -126,11 +115,7 @@ def build_report(job_id):
         failure_time,
     )
 
-    search_after = (
-        detected["event_time"]
-        if detected
-        else failure_time
-    )
+    search_after = detected["event_time"] if detected else failure_time
 
     rescheduled = first_event_after(
         events,
@@ -138,11 +123,7 @@ def build_report(job_id):
         search_after,
     )
 
-    search_after = (
-        rescheduled["event_time"]
-        if rescheduled
-        else search_after
-    )
+    search_after = rescheduled["event_time"] if rescheduled else search_after
 
     resumed = first_event_after(
         events,
@@ -150,11 +131,7 @@ def build_report(job_id):
         search_after,
     )
 
-    search_after = (
-        resumed["event_time"]
-        if resumed
-        else search_after
-    )
+    search_after = resumed["event_time"] if resumed else search_after
 
     completed = first_event_after(
         events,
@@ -224,20 +201,12 @@ def build_report(job_id):
     print("-" * 78)
 
     failed_node = failure.get("node_id") or "-"
-    replacement_node = (
-        resumed.get("node_id")
-        if resumed
-        else "-"
-    )
+    replacement_node = resumed.get("node_id") if resumed else "-"
 
     print(f"Failed node              : {failed_node}")
     print(f"Replacement node         : {replacement_node}")
 
-    if (
-        resumed is not None
-        and failed_node != "-"
-        and replacement_node != "-"
-    ):
+    if resumed is not None and failed_node != "-" and replacement_node != "-":
         print(
             f"Cross-node recovery      : "
             f"{'YES' if failed_node != replacement_node else 'NO'}"
@@ -261,20 +230,17 @@ def build_report(job_id):
 
     if missing:
         print()
-        print(
-            "WARNING: missing event(s): "
-            + ", ".join(missing)
-        )
+        print("WARNING: missing event(s): " + ", ".join(missing))
         return 2
 
     return 0
 
 
 def main():
+    """Generate a report and signal incomplete evidence through the exit code."""
     parser = argparse.ArgumentParser(
         description=(
-            "Calculate fault-recovery metrics "
-            "from controller recovery_events."
+            "Calculate fault-recovery metrics " "from controller recovery_events."
         )
     )
 
@@ -285,9 +251,7 @@ def main():
 
     args = parser.parse_args()
 
-    raise SystemExit(
-        build_report(args.job_id)
-    )
+    raise SystemExit(build_report(args.job_id))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,12 @@
+# Generated runtime state is local, not source code.
+__pycache__/
+*.py[cod]
+.controller-venv/
+controller/jobs.db*
+controller/*.lock
+checkpoints/*
+!checkpoints/.gitkeep
+logs/*
+!logs/.gitkeep
+*.before_*
+*.backup-*

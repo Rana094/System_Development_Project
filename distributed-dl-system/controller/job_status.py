@@ -1,37 +1,28 @@
+"""Display persistent job state and the history of worker attempts."""
+
 import sys
 from datetime import datetime
 
-from job_store import (
-    get_job,
-    get_all_jobs,
-    get_attempts
-)
+from job_store import get_job, get_all_jobs, get_attempts
 
 
 def format_time(value):
-
+    """Render an optional stored Unix timestamp for the terminal display."""
     if value is None:
         return "-"
 
-    return datetime.fromtimestamp(
-        value
-    ).strftime(
-        "%H:%M:%S"
-    )
+    return datetime.fromtimestamp(value).strftime("%H:%M:%S")
 
 
 def show_all():
-
+    """Print a compact queue and running-job summary."""
     jobs = get_all_jobs()
 
     if not jobs:
 
-        print(
-            "No jobs found."
-        )
+        print("No jobs found.")
 
         return
-
 
     print()
 
@@ -48,7 +39,6 @@ def show_all():
 
     print("-" * 92)
 
-
     for job in jobs:
 
         print(
@@ -64,81 +54,38 @@ def show_all():
 
 
 def show_one(job_id):
-
-    job = get_job(
-        job_id
-    )
+    """Print one job and all its attempts to explain migration and retries."""
+    job = get_job(job_id)
 
     if job is None:
 
-        print(
-            "Job not found."
-        )
+        print("Job not found.")
 
         return
 
-
     print()
 
-    print(
-        "Job ID:",
-        job["job_id"]
-    )
+    print("Job ID:", job["job_id"])
 
-    print(
-        "Status:",
-        job["status"]
-    )
+    print("Status:", job["status"])
 
-    print(
-        "Node:",
-        job["node_id"]
-    )
+    print("Node:", job["node_id"])
 
-    print(
-        "Node IP:",
-        job["node_ip"]
-    )
+    print("Node IP:", job["node_ip"])
 
-    print(
-        "Duration:",
-        job["duration"]
-    )
+    print("Duration:", job["duration"])
 
-    print(
-        "Created:",
-        format_time(
-            job["created_at"]
-        )
-    )
+    print("Created:", format_time(job["created_at"]))
 
-    print(
-        "Started:",
-        format_time(
-            job["started_at"]
-        )
-    )
+    print("Started:", format_time(job["started_at"]))
 
-    print(
-        "Finished:",
-        format_time(
-            job["finished_at"]
-        )
-    )
+    print("Finished:", format_time(job["finished_at"]))
 
-    print(
-        "Return code:",
-        job["return_code"]
-    )
+    print("Return code:", job["return_code"])
 
-    print(
-        "Error:",
-        job["error"]
-    )
+    print("Error:", job["error"])
 
-    attempts = get_attempts(
-        job_id
-    )
+    attempts = get_attempts(job_id)
 
     print()
     print("Attempts:")
@@ -154,16 +101,14 @@ def show_one(job_id):
 
 
 def main():
-
+    """Choose the complete job list or one detailed job from command-line arguments."""
     if len(sys.argv) == 1:
 
         show_all()
 
     else:
 
-        show_one(
-            sys.argv[1]
-        )
+        show_one(sys.argv[1])
 
 
 if __name__ == "__main__":

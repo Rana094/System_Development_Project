@@ -1,6 +1,7 @@
+"""Idempotent migration for databases created before PyTorch job metadata was added."""
+
 import sqlite3
 from pathlib import Path
-
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "jobs.db"
@@ -16,20 +17,17 @@ NEW_COLUMNS = {
 
 
 def get_existing_columns(cursor):
+    """Inspect current columns so running the migration repeatedly is safe."""
     cursor.execute("PRAGMA table_info(jobs)")
     rows = cursor.fetchall()
 
-    return {
-        row[1]
-        for row in rows
-    }
+    return {row[1] for row in rows}
 
 
 def main():
+    """Add absent PyTorch columns in a transaction while preserving existing rows."""
     if not DB_PATH.exists():
-        raise FileNotFoundError(
-            f"Database not found: {DB_PATH}"
-        )
+        raise FileNotFoundError(f"Database not found: {DB_PATH}")
 
     print("=" * 60)
     print("PyTorch job database migration")
@@ -42,9 +40,7 @@ def main():
     try:
         cursor = connection.cursor()
 
-        existing_columns = get_existing_columns(
-            cursor
-        )
+        existing_columns = get_existing_columns(cursor)
 
         print("Existing columns:")
 
@@ -58,19 +54,12 @@ def main():
         for column_name, definition in NEW_COLUMNS.items():
 
             if column_name in existing_columns:
-                print(
-                    f"[SKIP] {column_name} already exists"
-                )
+                print(f"[SKIP] {column_name} already exists")
                 continue
 
-            sql = (
-                f"ALTER TABLE jobs "
-                f"ADD COLUMN {column_name} {definition}"
-            )
+            sql = f"ALTER TABLE jobs " f"ADD COLUMN {column_name} {definition}"
 
-            print(
-                f"[ADD] {column_name}"
-            )
+            print(f"[ADD] {column_name}")
 
             cursor.execute(sql)
 
@@ -82,9 +71,7 @@ def main():
         print("=" * 60)
 
         if added:
-            print(
-                "Migration completed successfully."
-            )
+            print("Migration completed successfully.")
 
             print("Added:")
 
@@ -92,18 +79,14 @@ def main():
                 print(f"  - {column}")
 
         else:
-            print(
-                "Database already migrated."
-            )
+            print("Database already migrated.")
 
         print("=" * 60)
 
         print()
         print("Final jobs table:")
 
-        cursor.execute(
-            "PRAGMA table_info(jobs)"
-        )
+        cursor.execute("PRAGMA table_info(jobs)")
 
         for row in cursor.fetchall():
 

@@ -1,3 +1,5 @@
+"""Read-only cluster dashboard; scheduling and recovery run separately in dispatcher.py."""
+
 import json
 import time
 from datetime import datetime
@@ -5,19 +7,15 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-
 CONFIG_FILE = "config/nodes.json"
 
 POLL_INTERVAL = 3
 FAILURE_THRESHOLD = 3
 
 
-# ==========================================
 # Load cluster configuration
-# ==========================================
-
 def load_nodes():
-
+    """Read the configured worker inventory used by this process."""
     with open(CONFIG_FILE, "r") as file:
         config = json.load(file)
 
@@ -25,33 +23,21 @@ def load_nodes():
 
 
 nodes = load_nodes()
-
-
-# ==========================================
 # Runtime state of every node
-# ==========================================
-
 node_states = {}
 
 for node in nodes:
 
     node_states[node["id"]] = {
-
         "status": "UNKNOWN",
-
         "failed_heartbeats": 0,
-
-        "last_seen": None
-
+        "last_seen": None,
     }
 
 
-# ==========================================
 # Query one Node Agent
-# ==========================================
-
 def check_node(node):
-
+    """Track consecutive missed resource polls for the read-only cluster dashboard."""
     node_id = node["id"]
 
     ip = node["ip"]
@@ -62,82 +48,54 @@ def check_node(node):
 
     try:
 
-        response = requests.get(
-            url,
-            timeout=1.5
-        )
+        response = requests.get(url, timeout=1.5)
 
         response.raise_for_status()
 
         resources = response.json()
 
-
         # Successful heartbeat
 
-        node_states[node_id][
-            "failed_heartbeats"
-        ] = 0
+        node_states[node_id]["failed_heartbeats"] = 0
 
-        node_states[node_id][
-            "status"
-        ] = "ONLINE"
+        node_states[node_id]["status"] = "ONLINE"
 
-        node_states[node_id][
-            "last_seen"
-        ] = datetime.now().strftime(
-            "%H:%M:%S"
-        )
+        node_states[node_id]["last_seen"] = datetime.now().strftime("%H:%M:%S")
 
         return node_id, resources
-
 
     except requests.RequestException:
 
         # Heartbeat failed
 
-        node_states[node_id][
-            "failed_heartbeats"
-        ] += 1
+        node_states[node_id]["failed_heartbeats"] += 1
 
-        failures = node_states[node_id][
-            "failed_heartbeats"
-        ]
+        failures = node_states[node_id]["failed_heartbeats"]
 
         if failures >= FAILURE_THRESHOLD:
 
-            node_states[node_id][
-                "status"
-            ] = "OFFLINE"
+            node_states[node_id]["status"] = "OFFLINE"
 
         else:
 
-            node_states[node_id][
-                "status"
-            ] = "SUSPECT"
+            node_states[node_id]["status"] = "SUSPECT"
 
         return node_id, None
 
 
-# ==========================================
 # Display cluster status
-# ==========================================
-
 def display_cluster(results):
 
     # Clear terminal
 
+    """Render the most recent health and resource observations in a terminal table."""
     print("\033[2J\033[H", end="")
 
-
     print("=" * 115)
 
-    print(
-        "DISTRIBUTED FAULT-TOLERANT "
-        "DEEP LEARNING CLUSTER"
-    )
+    print("DISTRIBUTED FAULT-TOLERANT " "DEEP LEARNING CLUSTER")
 
     print("=" * 115)
-
 
     print(
         f"{'NODE':<8}"
@@ -151,60 +109,39 @@ def display_cluster(results):
         f"{'JOB':<10}"
     )
 
-
     print("-" * 115)
-
 
     for node_id, data in results:
 
         state = node_states[node_id]
 
-
         if data is not None:
 
-            cpu = (
-                f"{data['cpu']['usage_percent']}%"
-            )
+            cpu = f"{data['cpu']['usage_percent']}%"
 
-            ram = (
-                f"{data['memory']['available_gb']} GB"
-            )
+            ram = f"{data['memory']['available_gb']} GB"
 
-            disk = (
-                f"{data['disk']['free_gb']} GB"
-            )
-
+            disk = f"{data['disk']['free_gb']} GB"
 
             if data["temperature_c"] is not None:
 
-                temperature = (
-                    f"{data['temperature_c']} C"
-                )
+                temperature = f"{data['temperature_c']} C"
 
             else:
 
                 temperature = "-"
 
+            download = f"{data['network']['download_mbps']}"
 
-            download = (
-                f"{data['network']['download_mbps']}"
-            )
-
-            upload = (
-                f"{data['network']['upload_mbps']}"
-            )
-
+            upload = f"{data['network']['upload_mbps']}"
 
             if data["current_job"]:
 
-                job = str(
-                    data["current_job"]
-                )
+                job = str(data["current_job"])
 
             else:
 
                 job = "-"
-
 
         else:
 
@@ -215,7 +152,6 @@ def display_cluster(results):
             download = "-"
             upload = "-"
             job = "-"
-
 
         print(
             f"{node_id:<8}"
@@ -229,7 +165,6 @@ def display_cluster(results):
             f"{job:<10}"
         )
 
-
     print("-" * 115)
 
     print(
@@ -241,24 +176,14 @@ def display_cluster(results):
     print("=" * 115)
 
 
-# ==========================================
 # Main Controller
-# ==========================================
-
 def main():
-
+    """Refresh the cluster dashboard using concurrent read-only worker polls."""
     while True:
 
-        with ThreadPoolExecutor(
-            max_workers=len(nodes)
-        ) as executor:
+        with ThreadPoolExecutor(max_workers=len(nodes)) as executor:
 
-            results = list(
-                executor.map(
-                    check_node,
-                    nodes
-                )
-            )
+            results = list(executor.map(check_node, nodes))
 
         display_cluster(results)
 

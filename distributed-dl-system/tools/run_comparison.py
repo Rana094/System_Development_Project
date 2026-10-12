@@ -7,6 +7,7 @@ These benchmark jobs have no automatic retry or checkpoint recovery.
 """
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -31,6 +32,14 @@ def main():
         "--output-dir",
         type=Path,
         default=Path.home() / "distributed-dl-private" / "comparisons",
+    )
+    parser.add_argument(
+        "--world-sizes",
+        nargs="+",
+        type=int,
+        choices=[1, 2],
+        default=[1, 2],
+        help="Use two ranks for the original full training workflows.",
     )
     parser.add_argument(
         "--models",
@@ -84,8 +93,12 @@ def main():
                 "numpy_mlp",
                 "resnet18",
                 "tiny_cnn",
+                "logistic_train",
+                "numpy_mlp_train",
+                "resnet18_train",
+                "tiny_cnn_train",
             }
-            for world_size in (1, 2):
+            for world_size in args.world_sizes:
                 # Sample counts, epochs and batch sizes are inherited unchanged.
                 samples = {
                     "equation": 5000,
@@ -93,6 +106,10 @@ def main():
                     "numpy_mlp": 200000 // world_size,
                     "resnet18": 1000,
                     "tiny_cnn": 50000,
+                    "logistic_train": 15000,
+                    "numpy_mlp_train": 100000,
+                    "resnet18_train": 50000,
+                    "tiny_cnn_train": 50000,
                 }[model]
                 case = f"{model}-{world_size}node"
                 started = time.monotonic()
@@ -102,7 +119,11 @@ def main():
                     config = {
                         "model": model,
                         "samples": samples,
-                        "epochs": 1,
+                        "epochs": {
+                            "logistic_train": 40,
+                            "numpy_mlp_train": 500,
+                            "tiny_cnn_train": 5,
+                        }.get(model, 1),
                         "rank": rank,
                         "world_size": world_size,
                         "master_addr": nodes["pi02"]["ip"],
@@ -142,6 +163,24 @@ def main():
                     result = remote["benchmark_result"]
                     assert result["completed"]
                     rank_results.append(result)
+                    if result.get("artifact"):
+                        artifact = result["artifact"]
+                        destination = output / (j["job_id"] + ".pt")
+                        subprocess.run(
+                            [
+                                "scp",
+                                "-q",
+                                f"{j['node_id']}:{artifact['path']}",
+                                str(destination),
+                            ],
+                            check=True,
+                            timeout=180,
+                        )
+                        assert (
+                            hashlib.sha256(destination.read_bytes()).hexdigest()
+                            == artifact["sha256"]
+                        )
+                        result["controller_artifact"] = str(destination)
                     save(
                         j["job_id"] + ".json",
                         {
@@ -160,18 +199,29 @@ def main():
                     "max_wrapper_seconds": max(
                         r["wrapper_seconds"] for r in rank_results
                     ),
+                    "test_accuracy_percent": rank_results[0].get(
+                        "test_accuracy_percent"
+                    ),
                 }
-                if model == "equation":
+                if model in {"equation", "logistic_train", "numpy_mlp_train"}:
                     weights = []
                     for result in rank_results:
                         lines = result["reference_output"].splitlines()
                         for i, line in enumerate(lines):
                             if line.startswith("--- MODEL_EXPORT"):
                                 weights.append(
-                                    [float(x) for x in lines[i + 1].split(",")]
+                                    [
+                                        float(x)
+                                        for x in lines[i + 1]
+                                        .replace("|", ",")
+                                        .split(",")
+                                    ]
                                 )
+                    assert len(weights) == world_size, "Missing rank model export"
+                    assert len({len(w) for w in weights}) == 1
                     row["averaged_weights"] = [
-                        sum(w[i] for w in weights) / len(weights) for i in range(3)
+                        sum(w[i] for w in weights) / len(weights)
+                        for i in range(len(weights[0]))
                     ]
                 rows.append(row)
                 save("results.json", rows)

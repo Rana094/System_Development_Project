@@ -21,6 +21,10 @@ from scheduler import select_best_node
 
 from job_store import (
     get_jobs_by_status,
+    get_job_environments,
+    get_reservations,
+    fair_queue,
+    finish_cancellation,
     mark_scheduled,
     mark_running,
     mark_completed,
@@ -72,6 +76,7 @@ unhealthy_nodes = {}
 last_checkpoint_sync = {}
 last_checkpoint_etag = {}
 last_checkpoint_hash = {}
+final_custom_checkpoint_failures = {}
 
 
 # Helpers
@@ -418,7 +423,15 @@ def sync_pytorch_checkpoint(job, force=False):
 
 def sync_checkpoint(job, force=False):
     """Route recoverable job types to their checkpoint transport; benchmarks do not retry."""
-    if get_job_type(job) == "benchmark":
+    if get_job_type(job) == 'custom':
+        config=get_job_config(job)
+        if config['recovery']['mode']=='checkpoint' and checkpoint_due(job['job_id'],force):
+            from custom_checkpoints import sync
+            result=sync(job)
+            last_checkpoint_sync[job['job_id']]=time.time()
+            return result
+        return False
+    if get_job_type(job) == 'benchmark':
         return False
 
     if get_job_type(job) == "pytorch":
@@ -549,6 +562,18 @@ def build_start_payload(job):
 
     job_type = get_job_type(job)
 
+    if job_type == "custom":
+        config = get_job_config(job)
+        if config['execution'] != {'mode':'single','workers':1} or config['recovery']['mode'] not in ('restart','checkpoint'):
+            raise ValueError('Only single-worker submissions are supported')
+        prepared = next(row['record'] for row in get_job_environments(job_id)
+                        if row['node_id'] == job['node_id'])
+        return {'job_id':job_id,'job_type':'custom',
+                'manifest_sha256':job['storage_manifest_sha256'],
+                'environment_key':prepared['environment_key'],
+                'resources':config['resources_per_worker'],
+                'resume_checkpoint':job.get('resume_checkpoint')}
+
     if job_type == "benchmark":
         return {
             "job_id": job_id,
@@ -590,8 +615,25 @@ def build_start_payload(job):
 # Dispatch
 def dispatch_one_job(job):
     """Select a worker, prepare recovery data, and persist the outcome of the start request."""
+    config = get_job_config(job)
+    custom = get_job_type(job) == 'custom'
+    allowed = ([row['node_id'] for row in get_job_environments(job['job_id'])]
+               if custom else config.get('allowed_nodes'))
+    if custom and config['recovery']['mode']=='checkpoint':
+        from custom_checkpoints import metadata
+        try:
+            saved=metadata(job)
+        except Exception as error:
+            print(f"[RESTORE_BLOCKED] {job['job_id']}: {error}")
+            return False
+        if saved:
+            allowed=[row['node_id'] for row in get_job_environments(job['job_id'])
+                     if row['record']['compatibility_key']==saved['compatibility_key']]
+    requirements = config['resources_per_worker'] if custom else None
     selected = select_best_node(
-        allowed_nodes=get_job_config(job).get("allowed_nodes"),
+        allowed_nodes=allowed,
+        requirements=requirements,
+        reserved_nodes={row['node_id'] for row in get_reservations()},
         excluded_nodes=(get_excluded_nodes()),
     )
 
@@ -615,12 +657,23 @@ def dispatch_one_job(job):
 
     print(f"Scheduling {job_id} " f"({job_type}) on {node_id}")
 
-    mark_scheduled(job_id, node_id, node_ip)
+    try:
+        mark_scheduled(job_id, node_id, node_ip, requirements)
+    except (sqlite3.IntegrityError, ValueError):
+        return False
+    # Build custom payloads from the selected prepared worker, not a stale queued row.
+    previous_node = job.get('node_id')
+    job = {**job, 'node_id':node_id, 'node_ip':node_ip}
 
     retry_count = int(job.get("retry_count") or 0)
 
-    previous_node = job.get("node_id")
-
+    if custom and config['recovery']['mode']=='checkpoint':
+        try:
+            from custom_checkpoints import restore
+            job['resume_checkpoint']=restore(job,node)
+        except Exception as error:
+            return_to_queue(job_id,'Could not restore custom checkpoint: '+str(error))
+            return False
     # For a PyTorch retry, upload the controller's
 
     # latest .pt file before starting the worker.
@@ -796,12 +849,38 @@ def monitor_running_jobs():
                         print(f"[FINAL_CHECKPOINT_PENDING] {job_id}: {error}")
                         continue
 
-                mark_completed(
+                if get_job_type(job) == 'custom':
+                    if get_job_config(job)['recovery']['mode']=='checkpoint':
+                        from custom_checkpoints import metadata
+                        try:
+                            final=metadata(job)
+                            if not final or not final['completed'] or final['attempt_token']!=attempt_token(job):
+                                raise ValueError('Trainer exited without a validated final SDK checkpoint')
+                        except Exception as error:
+                            count=final_custom_checkpoint_failures.get(job_id,0)+1
+                            final_custom_checkpoint_failures[job_id]=count
+                            if count>=3:
+                                final_custom_checkpoint_failures.pop(job_id,None)
+                                handle_running_job_failure(job,str(error))
+                            else:
+                                print(f"[FINAL_CUSTOM_CHECKPOINT_PENDING] {job_id}: {error}")
+                            continue
+                        final_custom_checkpoint_failures.pop(job_id,None)
+                    try:
+                        from job_artifacts import collect
+                        collect(job)
+                    except Exception as error:
+                        print(f"[ARTIFACTS_PENDING] {job_id}: {error}")
+                        continue
+
+                completed = mark_completed(
                     job_id,
                     worker_job.get("return_code", 0),
                     worker_job.get("finished_at"),
                 )
 
+                if completed is False:
+                    continue
                 log_event(
                     job_id=job_id,
                     event_type="COMPLETED",
@@ -852,7 +931,9 @@ def monitor_running_jobs():
                 f"{FAILURE_THRESHOLD})"
             )
 
-            if failures >= FAILURE_THRESHOLD:
+            # Hold custom allocations during lost contact until the worker confirms
+            # an exit or missing attempt. Network-partition fencing arrives later.
+            if failures >= FAILURE_THRESHOLD and get_job_type(job) != 'custom':
 
                 error = f"Node {node_id} " "became unreachable"
 
@@ -892,6 +973,12 @@ def handle_running_job_failure(job, error):
         event_time=detect_time,
     )
 
+    if get_job_type(job)=='custom':
+        try:
+            from job_artifacts import collect
+            collect(job)
+        except Exception as error:
+            print(f"[FAILED_ARTIFACTS_UNAVAILABLE] {job_id}: {error}")
     mark_node_unhealthy(node_id)
 
     new_state = requeue_after_failure(job_id, error)
@@ -905,18 +992,54 @@ def handle_running_job_failure(job, error):
 
 # Queue processing
 def dispatch_queued_jobs():
-    """Fill available workers in queue order and stop when no placement can proceed."""
-    queued_jobs = get_jobs_by_status("QUEUED")
+    """Recompute fair turns after each placement as active counts and last-service change."""
+    attempted = set()
+    while True:
+        queued = [job for job in fair_queue() if job['job_id'] not in attempted]
+        if not queued:
+            return
+        job = queued[0]
+        attempted.add(job['job_id'])
+        dispatch_one_job(job)
 
-    for job in queued_jobs:
 
-        success = dispatch_one_job(job)
-
-        if not success:
-
-            # Retry on the next dispatcher cycle.
-
-            break
+def reconcile_cancellations():
+    """Persist cancellation through controller/network failures until the worker stops."""
+    from scheduler import load_nodes
+    ports = {node['id']:node['port'] for node in load_nodes()}
+    for job in get_jobs_by_status('CANCELLING'):
+        url = f"http://{job['node_ip']}:{ports.get(job['node_id'],5000)}/jobs/{job['job_id']}"
+        try:
+            response = requests.get(url,timeout=2)
+            if response.status_code == 404:
+                # Install a worker tombstone before releasing an uncertain start's
+                # slot; a delayed request must not be able to launch afterward.
+                stopped = requests.post(url + '/stop',json={'attempt_token':attempt_token(job)},timeout=3)
+                stopped.raise_for_status()
+                finish_cancellation(job['job_id'])
+                continue
+            response.raise_for_status()
+            worker = response.json()['job']
+            if worker.get('attempt_token') != attempt_token(job):
+                print(f"[CANCEL_PENDING] {job['job_id']}: original attempt identity not confirmed")
+                continue
+            if not job.get('started_at'):
+                mark_running(job['job_id'],worker.get('started_at'))
+            if worker['status'] in ('COMPLETED','FAILED'):
+                try:
+                    from job_artifacts import collect
+                    collect(job)
+                except Exception as error:
+                    print(f"[CANCEL_ARTIFACTS_UNAVAILABLE] {job['job_id']}: {error}")
+                finish_cancellation(job['job_id'],worker.get('return_code'))
+                continue
+            if worker['status'] == 'RUNNING':
+                stopped = requests.post(url + '/stop',json={
+                    'attempt_token':attempt_token(job),
+                    'force':time.time() - job['cancel_requested_at'] >= 10},timeout=3)
+                stopped.raise_for_status()
+        except (requests.RequestException,KeyError,ValueError) as error:
+            print(f"[CANCEL_PENDING] {job['job_id']}: {error}")
 
 
 # Main
@@ -943,6 +1066,12 @@ def read_valid_checkpoint(path, job_id):
 def record_confirmed_resume(job, worker_job):
     """Emit RESUMED only after the trainer confirms both state dictionaries were loaded."""
     info = worker_job.get("resume")
+    if get_job_type(job)=='custom' and info:
+        expected=worker_job.get('resume_checkpoint') or {}
+        if (not expected or info.get('attempt_token')!=attempt_token(job) or not info.get('rng_restored')
+            or info.get('checkpoint_sha256')!=expected.get('sha256')
+            or info.get('restored_global_step')!=expected.get('global_step')):
+            return
     if not info or not info.get("model_restored") or not info.get("optimizer_restored"):
         return
     if info.get("job_id") != job["job_id"] or info.get("pid") != worker_job.get("pid"):
@@ -1022,6 +1151,7 @@ def main():
 
     while True:
 
+        reconcile_cancellations()
         reconcile_scheduled_jobs()
         monitor_running_jobs()
 

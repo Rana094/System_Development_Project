@@ -16,6 +16,7 @@ the controller's last valid model and optimizer checkpoint.
 | `tests/` | Isolated regression checks; they do not use the live job database |
 | `tools/` | Reproducible live-recovery and comparison runners |
 | `config/` | Worker addresses and ports |
+| `storage/jobs/` | Controller-owned student inputs, manifests and separate runtime folders; ignored by Git |
 | `checkpoints/`, `logs/` | Local runtime data; retained for recovery and job history |
 
 Private notes, historical reports, backups and new experiment results live under
@@ -55,6 +56,30 @@ Private notes, historical reports, backups and new experiment results live under
    retry; two-node DDP comparison is not fault-tolerant DDP.
 
 ## Normal use
+
+General student submission **steps 1–4** are implemented: validate a JSON project
+definition and persist its owner, execution mode, resource requests, dataset,
+environment and recovery declaration, then publish controller-owned source and
+dataset snapshots with file hashes and content versions. Successful submissions
+become `STAGED`; preparing enough compatible worker environments makes them `READY`.
+Step 4 explicitly queues READY single-worker jobs and dispatches them using
+resource requests and persistent exclusive worker reservations. See
+[the concurrent training guide](docs/scheduling.md).
+See [the submission guide](docs/submission.md) and [storage guide](docs/storage.md).
+
+Run the complete terminal demonstration yourself:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/check_step3.py --nodes pi01 --profile pytorch-cpu
+```
+
+It submits two jobs, verifies managed inputs, prepares and checks the worker's
+Python environment, and demonstrates cache reuse. See [step 3 commands and expected output](docs/environments.md).
+
+```bash
+.controller-venv/bin/python controller/submit_job.py --spec examples/job.single.json --validate-only
+.controller-venv/bin/python controller/submit_job.py --spec examples/job.single.json --owner student-2026
+```
 
 Run commands from this directory:
 
@@ -119,3 +144,63 @@ at `/tmp/cifar10_data`, matching the reference; it may need preparing after rebo
 Model accuracy, single-run compute speed and scheduler/recovery behavior are
 separate measurements. Historical numbers from a different environment are
 reference observations, not a controlled proof that one scheduler is faster.
+
+## Full reference training and inference
+
+The benchmark variants above differ from the friend's full training workers.
+Run all five original training workflows on two workers with:
+
+```bash
+.controller-venv/bin/python -u tools/run_comparison.py \
+  --models equation logistic_train numpy_mlp_train resnet18_train tiny_cnn_train \
+  --world-sizes 2 --output-dir "$HOME/distributed-dl-private/full-training"
+```
+
+This uses the original worker code and epoch counts. Logistic regression and
+the NumPy MLP export independent rank models; the runner averages their parameters
+using the same arithmetic as the original master scripts. ResNet-18 trains on
+all 50,000 CIFAR-10 images for one epoch, and the CNN trains for five epochs with
+the original augmentation. Both image workers synchronize gradients using DDP.
+Their original inference scripts then evaluate the exported model on 10,000
+test images. Model files are copied to the private run directory and checked
+against the worker's SHA-256 digest.
+
+Your controller replaces the friend's Slurm dispatch/master launch commands.
+The original source folder is not edited. Fixed output paths expected by the
+image workers are temporarily reserved; existing weights at those paths are
+restored afterward. Full-run wall time includes inference and artifact
+validation, so it must not be compared with training-only benchmark timers.
+The `benchmark` job type hosts these reference workloads with zero retries;
+it does not add checkpoint recovery to the friend's workers.
+
+Validate a completed full-training run and generate private notes with:
+
+```bash
+.controller-venv/bin/python tools/verify_reference_training.py \
+  "$HOME/distributed-dl-private/full-training/<run-directory>"
+```
+
+This checks completion and artifact hashes, verifies unchanged reference sources,
+and evaluates the averaged logistic/MLP models on independent synthetic examples.
+Successful execution and good model accuracy are reported separately.
+
+## Step 4: concurrent student jobs
+
+Single-worker submissions can now be explicitly queued after environment
+preparation. Resource requests and durable worker reservations control placement.
+Run the four-job real PyTorch demonstration and inspect its outputs using
+[the Step 4 terminal guide](docs/scheduling.md).
+
+## Step 5: fair queues and student controls
+
+Students have configurable active and pending limits. Fair owner turns and queue
+aging share workers; hold, release and durable cancellation control submissions.
+See [the Step 5 terminal guide](docs/queue-controls.md) for the real training
+demonstration, owner commands and lab policy settings.
+
+## Step 6: checkpoint recovery for submitted PyTorch code
+
+The cooperative `dl_checkpoint` SDK saves model, optimizer, scheduler, random
+state and application progress. Validated central checkpoints can resume a
+single-worker submission on another compatible prepared worker. See the
+[Step 6 integration and real reboot test guide](docs/checkpoint-integration.md).

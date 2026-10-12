@@ -10,3 +10,4 @@ logs/*
 !logs/.gitkeep
 *.before_*
 *.backup-*
+storage/

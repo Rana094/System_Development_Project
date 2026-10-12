@@ -48,9 +48,37 @@ def valid_job_id(job_id):
     """
     return bool(
         isinstance(job_id, str)
+        and job_id not in {".", ".."}
         and 1 <= len(job_id) <= 128
         and re.fullmatch(r"[A-Za-z0-9._-]+", job_id)
     )
+
+
+def cancellation_path(job_id):
+    return BASE_DIR / 'worker-storage' / 'cancellations' / (job_id + '.json')
+
+
+def attempt_cancelled(job_id, token):
+    """Read a durable tombstone so delayed or replayed HTTP starts cannot undo a stop."""
+    path = cancellation_path(job_id)
+    if not path.exists():
+        return False
+    return token in json.loads(path.read_text())['attempt_tokens']
+
+
+def remember_cancellation(job_id, token):
+    """The caller holds job_lock, serializing tombstones with the final launch check."""
+    path = cancellation_path(job_id)
+    path.parent.mkdir(parents=True,exist_ok=True)
+    tokens = json.loads(path.read_text())['attempt_tokens'] if path.exists() else []
+    if token not in tokens:
+        write_json_atomic(path,{'attempt_tokens':[*tokens,token]})
+        for directory in (path.parent,path.parent.parent):
+            descriptor = os.open(directory,os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
 
 
 def checkpoint_path_for(job_id, job_type):
@@ -216,6 +244,19 @@ def get_network_speed():
     }
 
 
+def gpu_count():
+    """Discover CUDA devices without importing a student's tensor library into Flask."""
+    try:
+        result = subprocess.run(['nvidia-smi','--query-gpu=index','--format=csv,noheader'],
+                                capture_output=True,text=True,timeout=2)
+        return len(result.stdout.strip().splitlines()) if result.returncode == 0 else 0
+    except (OSError,subprocess.TimeoutExpired):
+        return 0
+
+
+GPU_COUNT = gpu_count()
+
+
 # Job watcher
 def watch_job(process, job_id, log_file):
     """Wait for the child to exit, then release the busy slot and preserve its final status."""
@@ -224,6 +265,12 @@ def watch_job(process, job_id, log_file):
     global job_history
 
     process.wait()
+    # A launcher can exit before a child that ignores SIGTERM. Clean up remaining
+    # members of its process group before advertising the worker slot as idle.
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
     log_file.close()
 
     with job_lock:
@@ -278,7 +325,11 @@ def resources():
             "ip": get_ip_address(),
             "status": "ONLINE",
             "node_state": node_status,
+            "slots": {"total":1,"available":int(node_status == "IDLE")},
+            "allocation": (job_info.get("resources", {}) if node_status == "BUSY" else {}),
+            "gpu": {"total":GPU_COUNT,"available":GPU_COUNT if node_status == "IDLE" else 0},
             "cpu": {
+                "available_cores": len(os.sched_getaffinity(0)) if node_status == "IDLE" else 0,
                 "usage_percent": psutil.cpu_percent(interval=0.2),
                 "logical_cores": psutil.cpu_count(logical=True),
                 "physical_cores": psutil.cpu_count(logical=False),
@@ -351,20 +402,28 @@ def start_job():
 
     job_type = str(data.get("job_type", "dummy")).strip().lower()
 
-    if job_type not in {"dummy", "pytorch", "benchmark"}:
+    if job_type not in {"dummy", "pytorch", "benchmark", "custom"}:
         return (
             jsonify(
                 {
                     "error": (
                         "Unsupported job_type. "
-                        "Use 'dummy', 'pytorch' or 'benchmark'."
+                        "Use 'dummy', 'pytorch', 'benchmark' or 'custom'."
                     )
                 }
             ),
             400,
         )
 
+    if job_type == 'custom' and not re.fullmatch(re.escape(job_id) + r':[0-9]+',str(data.get('attempt_token',''))):
+        return jsonify({'error':'Custom start requires a job_id:retry attempt token'}),400
+
     with job_lock:
+        if attempt_cancelled(job_id,data.get('attempt_token')):
+            return jsonify({'error':'Attempt has been cancelled'}),409
+        previous = job_history.get(job_id)
+        if previous and data.get("attempt_token") and previous.get("attempt_token") == data["attempt_token"]:
+            return jsonify({"job":previous,"message":"Already started"}),200
         if job_process is not None and job_process.poll() is None:
             if (
                 current_job.get("job_id") == job_id
@@ -450,7 +509,42 @@ def start_job():
             "duration": duration,
             "checkpoint_interval": checkpoint_interval,
         }
-    # Run only bundled reference workloads; arbitrary commands are not accepted.
+    elif job_type == "custom":
+        try:
+            directory = BASE_DIR / 'worker-storage' / 'jobs' / job_id
+            prepared = json.loads((directory / 'prepared.json').read_text())
+            descriptor = json.loads((directory / 'request.json').read_text())
+            spec = descriptor['manifest']['execution_spec']
+            if (prepared['manifest_sha256'] != data['manifest_sha256']
+                or prepared['environment_key'] != data['environment_key']
+                or prepared['job_id'] != job_id
+                or descriptor['manifest_sha256'] != data['manifest_sha256']):
+                raise ValueError('Prepared snapshot does not match controller placement')
+            if spec['execution'] != {'mode':'single','workers':1} or spec['recovery']['mode'] not in ('restart','checkpoint'):
+                raise ValueError('This execution mode is not available yet')
+            resume=data.get('resume_checkpoint')
+            if resume:
+                from checkpoint_protocol import validate
+                info=validate(directory/'checkpoints/resume.dlckpt',job_id,prepared['manifest_sha256'])
+                if (spec['recovery']['mode']!='checkpoint' or info['compatibility_key']!=prepared['compatibility_key'] or info['sha256']!=resume['sha256']
+                    or info['global_step']!=resume['global_step']):
+                    raise ValueError('Uploaded resume checkpoint differs from start request')
+            allocation = spec['resources_per_worker']
+            if allocation != data['resources']:
+                raise ValueError('Resource request does not match staged submission')
+        except (OSError,ValueError,KeyError,TypeError) as error:
+            return jsonify({'error':str(error)}),400
+        checkpoint_path = directory / 'checkpoints'
+        command = [sys.executable,str(BASE_DIR / 'agent/custom_runner.py'),
+                   '--root',str(BASE_DIR / 'worker-storage'),'--job-id',job_id,
+                   '--attempt-token',data['attempt_token']]
+        resume=data.get('resume_checkpoint')
+        if resume:
+            command += ['--resume-sha256',resume['sha256']]
+        job_details = {'resources':allocation,'environment_key':prepared['environment_key'],
+                       'manifest_sha256':prepared['manifest_sha256'],'resume_checkpoint':resume}
+    # Reference workloads continue to use their bundled launcher.
+
     elif job_type == "benchmark":
         config = data.get("job_config", {})
         if not isinstance(config, dict) or config.get("model") not in {
@@ -459,6 +553,10 @@ def start_job():
             "numpy_mlp",
             "resnet18",
             "tiny_cnn",
+            "logistic_train",
+            "numpy_mlp_train",
+            "resnet18_train",
+            "tiny_cnn_train",
         }:
             return jsonify({"error": "Unknown benchmark model"}), 400
         try:
@@ -590,6 +688,7 @@ def start_job():
         }
 
     script_path = (
+        BASE_DIR / 'agent/custom_runner.py' if job_type == 'custom' else
         TRAINING_DIR / "benchmark_job.py"
         if job_type == "benchmark"
         else DUMMY_JOB_SCRIPT if job_type == "dummy" else PYTORCH_JOB_SCRIPT
@@ -602,6 +701,8 @@ def start_job():
         )
     # Start process
     with job_lock:
+        if attempt_cancelled(job_id,data.get('attempt_token')):
+            return jsonify({'error':'Attempt has been cancelled'}),409
         if job_process is not None and job_process.poll() is None:
             return (
                 jsonify(
@@ -613,6 +714,17 @@ def start_job():
                 409,
             )
 
+        if job_type == 'custom':
+            # Recheck admission while holding the slot lock; the scheduler's earlier
+            # snapshot may be stale. RAM is admission accounting, not a cgroup limit.
+            if (allocation['cpu_cores'] > len(os.sched_getaffinity(0))
+                or allocation['memory_gb'] > psutil.virtual_memory().available / 1024**3
+                or allocation['gpus'] > GPU_COUNT):
+                return jsonify({'error':'Insufficient CPU, RAM or GPU capacity'}),409
+
+        if job_type == 'custom':
+            for name in ('latest.dlckpt','resume-status.json'):
+                (directory / 'checkpoints' / name).unlink(missing_ok=True)
         (LOG_DIR / f"{job_id}.resume.json").unlink(missing_ok=True)
         log_path = LOG_DIR / f"{job_id}.log"
 
@@ -680,6 +792,17 @@ def start_job():
         )
 
 
+@app.route('/jobs/<job_id>/log', methods=['GET'])
+def download_job_log(job_id):
+    """Expose the tracked stdout/stderr file for terminal inspection and collection."""
+    if not valid_job_id(job_id):
+        return jsonify({'error':'Invalid job ID'}),400
+    path = LOG_DIR / (job_id + '.log')
+    if not path.is_file():
+        return jsonify({'error':'Log not found'}),404
+    return send_file(path, mimetype='text/plain', conditional=True)
+
+
 # Job status
 @app.route("/jobs/status", methods=["GET"])
 def job_status():
@@ -703,6 +826,14 @@ def job_with_resume(job):
             result["resume"] = info
     except (OSError, ValueError, KeyError):
         pass
+    if job.get('job_type') == 'custom':
+        try:
+            info=json.loads((BASE_DIR/'worker-storage/jobs'/job['job_id']/'checkpoints/resume-status.json').read_text())
+            if (info.get('attempt_token')==job.get('attempt_token') and info.get('pid')==job.get('pid')
+                and info.get('confirmed_at',0)>=job['started_at']):
+                result['resume']=info
+        except (OSError,ValueError,KeyError):
+            pass
     if job.get("job_type") == "benchmark":
         try:
             result["benchmark_result"] = json.loads(
@@ -734,13 +865,83 @@ def get_job(job_id):
 
 @app.route("/jobs/<job_id>/stop", methods=["POST"])
 def stop_job(job_id):
-    """Stop only this agent's matching process group, including DDP/data workers."""
+    """Cancel a specific attempt durably and stop only its matching process group."""
+    if not valid_job_id(job_id):
+        return jsonify({'error':'Invalid job ID'}),400
+    data = request.get_json(silent=True) or {}
+    token = data.get('attempt_token')
+    if token is not None and not re.fullmatch(re.escape(job_id) + r':[0-9]+',str(token)):
+        return jsonify({'error':'Invalid attempt token'}),400
+    if 'force' in data and type(data['force']) is not bool:
+        return jsonify({'error':'force must be a boolean'}),400
     with job_lock:
-        if not current_job or current_job["job_id"] != job_id:
-            return jsonify({"error": "Job not active on this worker"}), 404
+        if not current_job or current_job['job_id'] != job_id:
+            if token:
+                remember_cancellation(job_id,token)
+                return jsonify({'message':'Attempt cancelled before launch','job_id':job_id})
+            return jsonify({'error':'Job not active on this worker'}),404
+        if token and token != current_job.get('attempt_token'):
+            return jsonify({'error':'Attempt token mismatch'}),409
+        if token:
+            remember_cancellation(job_id,token)
         if job_process is not None and job_process.poll() is None:
-            os.killpg(job_process.pid, signal.SIGTERM)
-        return jsonify({"message": "Stop requested", "job_id": job_id})
+            try:
+                os.killpg(job_process.pid,signal.SIGKILL if data.get('force') else signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        return jsonify({'message':'Stop requested','job_id':job_id})
+
+
+@app.route('/jobs/<job_id>/custom-checkpoint',methods=['GET','POST'])
+def custom_checkpoint(job_id):
+    """Transport validated SDK archives without importing student tensor libraries into Flask."""
+    if not valid_job_id(job_id):
+        return jsonify({'error':'Invalid job ID'}),400
+    from checkpoint_protocol import validate
+    directory=BASE_DIR/'worker-storage/jobs'/job_id/'checkpoints'
+    try:
+        record=json.loads((directory.parent/'prepared.json').read_text())
+        manifest=record['manifest_sha256']
+    except (OSError,ValueError,KeyError):
+        return jsonify({'error':'Prepared job not found'}),404
+    if request.method=='GET':
+        path=directory/'latest.dlckpt'
+        if not path.is_file(): return jsonify({'error':'Checkpoint not found'}),404
+        try:
+            validate(path,job_id,manifest,request.args.get('attempt_token'))
+            return send_file(path,mimetype='application/octet-stream',conditional=True)
+        except Exception as error:
+            return jsonify({'error':str(error)}),422
+    with job_lock:
+        if job_process is not None and job_process.poll() is None:
+            return jsonify({'error':'Worker is busy'}),409
+        if request.headers.get('X-Manifest-SHA256')!=manifest or 'file' not in request.files:
+            return jsonify({'error':'Snapshot identity and checkpoint file are required'}),400
+        directory.mkdir(parents=True,exist_ok=True)
+        import tempfile
+        temporary=None
+        try:
+            with tempfile.NamedTemporaryFile(dir=directory,delete=False) as stream:
+                temporary=Path(stream.name)
+                while True:
+                    chunk=request.files['file'].stream.read(1024*1024)
+                    if not chunk: break
+                    stream.write(chunk)
+                stream.flush();os.fsync(stream.fileno())
+            info=validate(temporary,job_id,manifest)
+            if info['compatibility_key']!=record['compatibility_key']:
+                raise ValueError('Checkpoint environment differs from prepared worker')
+            if info['sha256']!=request.headers.get('X-Resume-SHA256'):
+                raise ValueError('Uploaded checkpoint hash differs from the controller copy')
+            os.replace(temporary,directory/'resume.dlckpt')
+            descriptor=os.open(directory,os.O_RDONLY|os.O_DIRECTORY)
+            try: os.fsync(descriptor)
+            finally: os.close(descriptor)
+            return jsonify({'checkpoint':info})
+        except Exception as error:
+            return jsonify({'error':str(error)}),422
+        finally:
+            if temporary: temporary.unlink(missing_ok=True)
 
 
 # Checkpoints

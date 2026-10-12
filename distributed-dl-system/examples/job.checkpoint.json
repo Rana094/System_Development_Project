@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "recoverable-student-mlp",
+  "project": "checkpoint_project",
+  "entrypoint": ["python", "train.py", "--steps", "6000", "--batch-delay", "0.003"],
+  "dataset": "dataset.csv",
+  "execution": {"mode": "single", "workers": 1},
+  "resources_per_worker": {"cpu_cores": 1, "memory_gb": 1, "gpus": 0},
+  "environment": {"requirements": "requirements.txt"},
+  "recovery": {"mode": "checkpoint", "interval_seconds": 1, "max_retries": 2}
+}

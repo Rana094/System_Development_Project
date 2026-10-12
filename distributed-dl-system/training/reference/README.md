@@ -1,6 +1,6 @@
 # Reference workload explanations
 
-These five scripts are unchanged snapshots of the comparison project. Their
+These scripts are unchanged snapshots of the comparison project. Their
 original locations and SHA-256 fingerprints are in `provenance.json`. Explanations
 live here so that comments or formatting do not change those fingerprints.
 
@@ -21,3 +21,14 @@ These reference scripts do not save recoverable checkpoints. Use
 `training/pytorch_job.py` and `tools/run_reboot_demo.py` to demonstrate the
 system's tested checkpoint recovery. One epoch of the image benchmarks measures
 execution speed; it does not establish model convergence or held-out accuracy.
+
+## Full workers
+
+The `*_train.py` copies preserve the separate original `worker.py` programs:
+logistic regression exports six parameters, and the NumPy MLP exports seventeen.
+`resnet18_train.py` trains on the entire CIFAR-10 training set and exports a
+state dictionary. `tiny_cnn_train.py` uses augmentation and five training epochs,
+then exports its state dictionary. Both image workers initialize DDP even with
+one rank. `*_inference.py` copies evaluate these weights on the CIFAR-10 test set.
+The adapter supplies the original path/environment conventions and collects
+results; none of these copied scripts are edited.

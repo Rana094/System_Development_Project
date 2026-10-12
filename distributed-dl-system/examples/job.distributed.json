@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "distributed-submission-example",
+  "project": "student_project",
+  "entrypoint": ["python", "train.py", "--epochs", "5"],
+  "dataset": "dataset.csv",
+  "execution": {"mode": "distributed", "workers": 2},
+  "resources_per_worker": {"cpu_cores": 2, "memory_gb": 2, "gpus": 0},
+  "environment": {"requirements": "requirements.txt"},
+  "recovery": {"mode": "restart", "max_retries": 2}
+}

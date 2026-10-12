@@ -18,5 +18,29 @@
   "tiny_cnn": {
     "source": "/home/rana/System/System/distML/yolo_distributed/benchmark_node.py",
     "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+  },
+  "logistic_train": {
+    "source": "/home/rana/System/System/distML/lregression/worker.py",
+    "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+  },
+  "numpy_mlp_train": {
+    "source": "/home/rana/System/System/distML/neural_network/worker.py",
+    "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+  },
+  "resnet18_train": {
+    "source": "/home/rana/System/System/distML/pretrained_ddp/worker.py",
+    "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+  },
+  "tiny_cnn_train": {
+    "source": "/home/rana/System/System/distML/yolo_distributed/worker.py",
+    "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+  },
+  "resnet18_inference": {
+    "source": "/home/rana/System/System/distML/pretrained_ddp/inference.py",
+    "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+  },
+  "tiny_cnn_inference": {
+    "source": "/home/rana/System/System/distML/yolo_distributed/inference.py",
+    "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
   }
 }

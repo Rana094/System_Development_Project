@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Student training submission version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "name", "project", "entrypoint", "dataset", "execution", "resources_per_worker", "environment", "recovery"],
+  "properties": {
+    "schema_version": {"const": 1, "type": "integer"},
+    "name": {"type": "string", "minLength": 1, "maxLength": 128},
+    "project": {"type": "string", "minLength": 1, "maxLength": 4096, "description": "Local directory or ZIP package, relative to the manifest or absolute."},
+    "entrypoint": {"type": "array", "minItems": 1, "maxItems": 256, "items": {"type": "string", "maxLength": 4096}, "prefixItems": [{"type": "string", "minLength": 1, "maxLength": 4096}]},
+    "dataset": {"type": ["string", "null"], "minLength": 1, "maxLength": 4096, "description": "Local file or directory; null for generated data."},
+    "execution": {
+      "type": "object", "additionalProperties": false, "required": ["mode", "workers"],
+      "properties": {"mode": {"enum": ["single", "distributed"]}, "workers": {"type": "integer", "minimum": 1}},
+      "allOf": [
+        {"if": {"properties": {"mode": {"const": "single"}}}, "then": {"properties": {"workers": {"const": 1}}}},
+        {"if": {"properties": {"mode": {"const": "distributed"}}}, "then": {"properties": {"workers": {"minimum": 2}}}}
+      ]
+    },
+    "resources_per_worker": {
+      "type": "object", "additionalProperties": false, "required": ["cpu_cores", "memory_gb", "gpus"],
+      "properties": {"cpu_cores": {"type": "integer", "minimum": 1}, "memory_gb": {"type": "number", "exclusiveMinimum": 0}, "gpus": {"type": "integer", "minimum": 0}}
+    },
+    "environment": {
+      "type": "object", "additionalProperties": false, "required": ["requirements"],
+      "properties": {"requirements": {"type": "string", "minLength": 1, "maxLength": 4096, "description": "Dependency file relative to the project root."}, "python": {"type": "string", "pattern": "^3\\.[0-9]{1,2}$"}}
+    },
+    "recovery": {
+      "type": "object", "additionalProperties": false, "required": ["mode"],
+      "properties": {"mode": {"enum": ["restart", "checkpoint"]}, "interval_seconds": {"type": "number", "exclusiveMinimum": 0}, "max_retries": {"type": "integer", "minimum": 0, "maximum": 10, "default": 2}},
+      "allOf": [
+        {"if": {"properties": {"mode": {"const": "checkpoint"}}}, "then": {"required": ["interval_seconds"]}},
+        {"if": {"properties": {"mode": {"const": "restart"}}}, "then": {"not": {"required": ["interval_seconds"]}}}
+      ]
+    }
+  }
+}

@@ -8,6 +8,8 @@ import uuid
 from pathlib import Path
 
 from job_store import add_job
+from job_spec import JobSpecError, load_spec, validate_owner
+from job_storage import StorageError, stage_job
 
 # Paths
 CONTROLLER_DIR = Path(__file__).resolve().parent
@@ -17,7 +19,45 @@ DB_PATH = CONTROLLER_DIR / "jobs.db"
 # Job ID
 def create_job_id():
     """Generate a readable submission timestamp with a short collision-resistant suffix."""
-    return "job-" + time.strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:4]
+    return "job-" + time.strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:12]
+
+
+def create_custom_job(spec, owner):
+    """Accept a definition, publish its input snapshot, then return the managed receipt."""
+    owner = validate_owner(owner)
+    job_id = create_job_id()
+    add_job(
+        job_id,
+        1,
+        spec["recovery"]["max_retries"],
+        job_type="custom",
+        job_config=spec,
+        status="RECEIVED",
+        owner=owner,
+    )
+    try:
+        stored = stage_job(job_id)
+    except StorageError as error:
+        raise StorageError(
+            f"Submission remains RECEIVED; retry staging for {job_id}: {error}"
+        ) from error
+    print(
+        json.dumps(
+            {
+                "job_id": job_id,
+                "owner": owner,
+                "status": "STAGED",
+                "submission": {
+                    **spec,
+                    "project": stored["project_path"],
+                    "dataset": stored["dataset_path"],
+                },
+                "storage": stored,
+            },
+            indent=2,
+        )
+    )
+    return job_id
 
 
 # Store extended job definition
@@ -202,16 +242,22 @@ def validate_args(args, parser):
 def main():
     """Parse command-line options and enqueue the requested workload."""
     parser = argparse.ArgumentParser(
-        description=(
-            "Submit dummy or PyTorch jobs " "to the distributed DL controller."
-        )
+        description=("Submit a student JSON specification or a built-in workload."),
+        allow_abbrev=False,
+    )
+    parser.add_argument("--spec", type=Path, help="Version-one JSON submission file.")
+    parser.add_argument("--owner", help="Student ID or email for --spec submissions.")
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Validate --spec without submitting a job.",
     )
     # Dummy job options
     parser.add_argument(
         "duration",
         type=int,
         nargs="?",
-        default=30,
+        default=None,
         help=("Dummy-job duration in seconds. " "Ignored for PyTorch jobs."),
     )
     # Common options
@@ -289,6 +335,43 @@ def main():
     )
     # Parse + validate
     args = parser.parse_args()
+
+    if args.spec is not None:
+        # Mixing two submission formats would silently discard requested options.
+        legacy_options = {
+            "--type",
+            "--max-retries",
+            "--epochs",
+            "--batch-size",
+            "--learning-rate",
+            "--checkpoint-interval",
+            "--checkpoint-every-seconds",
+            "--batch-delay",
+        }
+        import sys
+
+        if args.duration is not None or any(
+            token.split("=", 1)[0] in legacy_options for token in sys.argv[1:]
+        ):
+            parser.error("--spec cannot be combined with built-in workload options")
+        try:
+            spec = load_spec(args.spec)
+            if args.owner is not None:
+                validate_owner(args.owner)
+            if args.validate_only:
+                print(json.dumps({"valid": True, "submission": spec}, indent=2))
+            else:
+                if args.owner is None:
+                    parser.error("--owner is required when submitting --spec")
+                create_custom_job(spec, args.owner)
+        except (JobSpecError, StorageError, ValueError) as error:
+            parser.error(str(error))
+        return
+    if args.owner is not None or args.validate_only:
+        parser.error("--owner and --validate-only require --spec")
+
+    if args.duration is None:
+        args.duration = 30
 
     validate_args(args, parser)
     # Dummy

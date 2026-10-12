@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "concurrent-mlp-training",
+  "project": "scheduling_project",
+  "entrypoint": ["python", "train.py", "--seconds", "30"],
+  "dataset": "dataset.csv",
+  "execution": {"mode": "single", "workers": 1},
+  "resources_per_worker": {"cpu_cores": 1, "memory_gb": 1, "gpus": 0},
+  "environment": {"requirements": "requirements.txt"},
+  "recovery": {"mode": "restart", "max_retries": 2}
+}

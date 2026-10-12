@@ -1,9 +1,10 @@
 """Display persistent job state and the history of worker attempts."""
 
 import sys
+import json
 from datetime import datetime
 
-from job_store import get_job, get_all_jobs, get_attempts
+from job_store import get_job, get_all_jobs, get_attempts, get_job_environments
 
 
 def format_time(value):
@@ -69,6 +70,40 @@ def show_one(job_id):
 
     print("Status:", job["status"])
 
+    if job.get("job_type") == "custom":
+        print("Owner:", job["owner"])
+        print("Submission:")
+        print(json.dumps(json.loads(job["job_config"]), indent=2))
+        print(
+            "Execution: waiting for input staging"
+            if job["status"] == "RECEIVED"
+            else (
+                "Execution: READY; use controller/queue_job.py --job-id to enqueue"
+                if job["status"] == "READY"
+                else ("Execution: waiting for environment preparation" if job["status"] == "STAGED" else "Execution: " + job["status"])
+            )
+        )
+        if job.get("storage_path"):
+            print("Storage:", job["storage_path"])
+            print("Manifest SHA-256:", job["storage_manifest_sha256"])
+        for prepared in get_job_environments(job_id):
+            record = prepared["record"]
+            print(
+                "Prepared worker:",
+                prepared["node_id"],
+                "profile=",
+                record["profile"],
+                "python=",
+                record["runtime"]["python"],
+                "architecture=",
+                record["runtime"]["machine"],
+            )
+            print("Environment interpreter:", record["python_path"])
+
+    if job.get('checkpoint_path'):
+        print('Central checkpoint:', job['checkpoint_path'])
+        print('Checkpoint size:', job['checkpoint_size_bytes'], 'bytes')
+    print("Queue reason:", job.get("queue_reason"))
     print("Node:", job["node_id"])
 
     print("Node IP:", job["node_ip"])

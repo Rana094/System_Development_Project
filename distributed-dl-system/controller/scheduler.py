@@ -1,9 +1,10 @@
 """Choose an eligible idle worker by lowest CPU usage, then greatest available RAM."""
 
+from pathlib import Path
 import json
 import requests
 
-CONFIG_FILE = "config/nodes.json"
+CONFIG_FILE = Path(__file__).resolve().parents[1] / "config/nodes.json"
 
 
 def load_nodes():
@@ -25,20 +26,37 @@ def get_resources(node):
         return None
 
 
+def resources_fit(snapshot, requested):
+    """Check capacity as well as load; a low-load worker can still be too small."""
+    return (
+        snapshot.get("node_state") == "IDLE"
+        and snapshot["cpu"].get("available_cores", snapshot["cpu"].get("logical_cores", 0)) >= requested.get("cpu_cores", 0)
+        and snapshot["memory"]["available_gb"] >= requested.get("memory_gb", 0)
+        and snapshot.get("gpu", {}).get("available", 0) >= requested.get("gpus", 0)
+    )
+
+
 def select_best_node(
     excluded_nodes=None,
     allowed_nodes=None,
+    requirements=None,
+    reserved_nodes=None,
 ):
     """Filter unavailable, busy or excluded nodes, then rank the remaining resources."""
     if excluded_nodes is None:
         excluded_nodes = set()
 
+    requirements = requirements or {}
+    reserved_nodes = reserved_nodes or set()
     nodes = load_nodes()
     candidates = []
 
     for node in nodes:
         # Optional placement constraints keep benchmark hardware comparable.
         if allowed_nodes is not None and node["id"] not in allowed_nodes:
+            continue
+
+        if node["id"] in reserved_nodes:
             continue
 
         if node["id"] in excluded_nodes:
@@ -55,6 +73,9 @@ def select_best_node(
 
         if resources["node_state"] != "IDLE":
             print(f"{node['id']} skipped " f"({resources['node_state']})")
+            continue
+
+        if not resources_fit(resources, requirements):
             continue
 
         print(

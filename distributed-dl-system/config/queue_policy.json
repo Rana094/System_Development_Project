@@ -1,0 +1,6 @@
+{
+  "max_active_per_owner": 1,
+  "max_pending_per_owner": 20,
+  "aging_seconds": 300,
+  "owners": {}
+}

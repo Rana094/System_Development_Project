@@ -52,11 +52,16 @@ def main():
     # the scheduler marks a checkpoint-enabled submission COMPLETED.
     checkpoint.save(model,optimizer,scheduler=scheduler,global_step=args.steps,
                     progress={'next_step':args.steps},completed=True,force=True)
+    model.eval()
+    with torch.no_grad():
+        predictions=model(x).squeeze(1)
+        final_mse=torch.nn.functional.mse_loss(predictions,y.squeeze(1)).item()
     output=Path(os.environ['DL_OUTPUT_DIR'])
     torch.save({'model':model.state_dict(),'optimizer':optimizer.state_dict(),
                 'scheduler':scheduler.state_dict(),'steps':args.steps},output/'model.pt')
     (output/'summary.json').write_text(json.dumps({'job_id':os.environ['DL_JOB_ID'],
-        'training_steps':args.steps,'resumed_from':next_step,'torch_version':str(torch.__version__)}))
+        'training_steps':args.steps,'resumed_from':next_step,'final_mse':final_mse,
+        'predictions':predictions.tolist(),'torch_version':str(torch.__version__)},indent=2))
     print(f'TRAINING_COMPLETE steps={args.steps} resumed_from={next_step}',flush=True)
 
 

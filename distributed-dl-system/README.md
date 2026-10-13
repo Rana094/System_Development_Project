@@ -204,3 +204,7 @@ The cooperative `dl_checkpoint` SDK saves model, optimizer, scheduler, random
 state and application progress. Validated central checkpoints can resume a
 single-worker submission on another compatible prepared worker. See the
 [Step 6 integration and real reboot test guide](docs/checkpoint-integration.md).
+
+For a command-by-command live workflow that submits regression jobs, shows the
+queue and worker status, reboots the active Pi, and compares uninterrupted and
+recovered results, see the [integration instructions](docs/integration-instructions.md).

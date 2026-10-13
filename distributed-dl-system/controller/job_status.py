@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 
 from job_store import get_job, get_all_jobs, get_attempts, get_job_environments
+from custom_checkpoints import metadata as checkpoint_metadata
 
 
 def format_time(value):
@@ -103,6 +104,15 @@ def show_one(job_id):
     if job.get('checkpoint_path'):
         print('Central checkpoint:', job['checkpoint_path'])
         print('Checkpoint size:', job['checkpoint_size_bytes'], 'bytes')
+        try:
+            checkpoint = checkpoint_metadata(job)
+        except (OSError, ValueError) as error:
+            print('Checkpoint validation:', error)
+        else:
+            if checkpoint:
+                print('Checkpoint step:', checkpoint['global_step'])
+                print('Checkpoint complete:', checkpoint['completed'])
+                print('Checkpoint SHA-256:', checkpoint['sha256'])
     print("Queue reason:", job.get("queue_reason"))
     print("Node:", job["node_id"])
 

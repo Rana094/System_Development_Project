@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "regression-checkpoint-integration",
+  "project": "checkpoint_project",
+  "entrypoint": ["python", "train.py", "--steps", "800", "--batch-delay", "0.08"],
+  "dataset": "dataset.csv",
+  "execution": {"mode": "single", "workers": 1},
+  "resources_per_worker": {"cpu_cores": 1, "memory_gb": 1, "gpus": 0},
+  "environment": {"requirements": "requirements.txt"},
+  "recovery": {"mode": "checkpoint", "interval_seconds": 1, "max_retries": 2}
+}

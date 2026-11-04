@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "duration_seconds": 30,
+  "renew_every_seconds": 5
+}

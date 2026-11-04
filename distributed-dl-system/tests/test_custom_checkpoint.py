@@ -114,6 +114,7 @@ torch.save({'model':m.state_dict(),'optimizer':o.state_dict(),'scheduler':s.stat
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);directory=root/'worker-storage/jobs/j/checkpoints';directory.mkdir(parents=True)
             (directory.parent/'prepared.json').write_text(json.dumps({'manifest_sha256':'snapshot','compatibility_key':'compat'}))
+            (directory.parent/'request.json').write_text(json.dumps({'manifest':{'execution_spec':{'execution':{'mode':'single','workers':1}}}}))
             original=root/'original';self.archive(original)
             damaged=root/'damaged';self.archive(damaged,bad=True)
             with patch.object(agent,'BASE_DIR',root):

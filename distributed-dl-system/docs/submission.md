@@ -85,10 +85,9 @@ with `STAGED`. These remain readable after a controller restart, even if the
 original files are removed. Keep original inputs available until staging succeeds.
 The original request is retained separately in `submission.json`.
 
-Selecting checkpoint mode records the intended capability. The controller does
-not yet verify or provide checkpoint integration for custom projects. Likewise,
-submitting distributed mode does not make a single-process script distributed;
-the trainer must implement the training-framework integration.
+Single-worker checkpoint jobs must integrate the [checkpoint SDK](checkpoint-integration.md).
+CPU distributed jobs can use the [Step 7 DDP dispatcher](distributed-training.md)
+with restart recovery, or the [Step 9 checkpoint recovery workflow](distributed-training.md#step-9-coordinated-ddp-checkpoint-recovery). The submitted trainer must implement DDP, data sharding and the collective checkpoint SDK when requesting checkpoint recovery.
 
 ## Verify the submission contract
 

@@ -6,20 +6,45 @@ import os
 import re
 import socket
 import signal
+import shutil
 import subprocess
 import sys
 import threading
 import time
 from pathlib import Path
 
+import platform
+
 import psutil
 from flask import Flask, jsonify, request, send_file
 
 app = Flask(__name__)
-# Configuration
-INTERFACE = "eth0"
+# Service settings keep logical worker IDs independent of machine hostnames.
+def node_id():
+    return os.environ.get("DL_NODE_ID") or socket.gethostname()
+
+
+def network_interface():
+    configured = os.environ.get("DL_NETWORK_INTERFACE")
+    if configured:
+        return configured
+    try:
+        interfaces = psutil.net_if_addrs()
+    except OSError:
+        return "eth0"
+    advertised = os.environ.get("DL_NODE_ADDRESS")
+    for name, addresses in interfaces.items():
+        if advertised and any(address.address == advertised for address in addresses):
+            return name
+    return "eth0" if "eth0" in interfaces else next(
+        (name for name in interfaces if name != "lo"), "lo")
+
+
+INTERFACE = network_interface()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+import execution_lease as ownership
 TRAINING_DIR = BASE_DIR / "training"
 CHECKPOINT_DIR = BASE_DIR / "checkpoints"
 LOG_DIR = BASE_DIR / "logs"
@@ -167,6 +192,8 @@ def resolve_job_type(job_id):
 
 def get_ip_address():
     """Report the worker address observed by its outbound socket."""
+    if os.environ.get("DL_NODE_ADDRESS"):
+        return os.environ["DL_NODE_ADDRESS"]
     interfaces = psutil.net_if_addrs()
 
     if INTERFACE not in interfaces:
@@ -275,6 +302,9 @@ def watch_job(process, job_id, log_file):
 
     with job_lock:
         status = "COMPLETED" if process.returncode == 0 else "FAILED"
+        if current_job and current_job.get('lease') and current_job.get('pid')==process.pid:
+            try:ownership.finished(BASE_DIR,current_job['lease'],process.returncode==0)
+            except (OSError,ValueError):pass
 
         if (
             current_job
@@ -297,8 +327,11 @@ def health():
     """Provide a minimal liveness response that does not launch work."""
     return jsonify(
         {
-            "node": socket.gethostname(),
+            "node": node_id(),
             "status": "ONLINE",
+            "architecture": platform.machine(),
+            "python": platform.python_version(),
+            "execution_ownership": {"protocol":ownership.PROTOCOL},
         }
     )
 
@@ -321,7 +354,7 @@ def resources():
 
     return jsonify(
         {
-            "node": socket.gethostname(),
+            "node": node_id(),
             "ip": get_ip_address(),
             "status": "ONLINE",
             "node_state": node_status,
@@ -371,6 +404,7 @@ def resources():
             "temperature_c": get_temperature(),
             "current_job": job_info,
             "timestamp": time.time(),
+            "execution_ownership": {"protocol":ownership.PROTOCOL},
         }
     )
 
@@ -418,11 +452,39 @@ def start_job():
     if job_type == 'custom' and not re.fullmatch(re.escape(job_id) + r':[0-9]+',str(data.get('attempt_token',''))):
         return jsonify({'error':'Custom start requires a job_id:retry attempt token'}),400
 
+    lease=data.get('lease')
+    required_file=BASE_DIR/'config/execution_leases.json'
+    required=required_file.exists() and json.loads(required_file.read_text()).get('enabled',False)
+    if required and job_type=='custom' and not lease:
+        return jsonify({'error':'Submitted jobs require an execution lease'}),400
+    if lease:
+        try:
+            ownership.validate(lease,job_id,data.get('attempt_token'),node_id())
+        except (ValueError,KeyError,TypeError) as error:
+            return jsonify({'error':str(error)}),409
     with job_lock:
+        if data.get('lease'):
+            try:
+                ownership.validate(data['lease'],job_id,data.get('attempt_token'),node_id())
+                path=ownership.authority_path(BASE_DIR)
+                if path.exists():
+                    held=ownership.read(path)
+                    if data['lease']['generation']<held['lease']['generation']:
+                        raise ValueError('Stale execution generation')
+                    if data['lease']['generation']==held['lease']['generation'] and (
+                            ownership.fence(data['lease'])!=ownership.fence(held['lease']) or not ownership.alive(held)):
+                        raise ValueError('Stale or expired execution owner')
+                    if (data['lease']['generation']==held['lease']['generation'] and held.get('started')
+                            and not (job_history.get(job_id) and job_history[job_id].get('attempt_token')==data.get('attempt_token'))):
+                        raise ValueError('This lease already launched an attempt before the API restarted')
+            except (ValueError,KeyError,OSError,TypeError) as error:
+                return jsonify({'error':str(error)}),409
         if attempt_cancelled(job_id,data.get('attempt_token')):
             return jsonify({'error':'Attempt has been cancelled'}),409
         previous = job_history.get(job_id)
         if previous and data.get("attempt_token") and previous.get("attempt_token") == data["attempt_token"]:
+            if lease and (not previous.get('lease') or ownership.fence(previous['lease'])!=ownership.fence(lease)):
+                return jsonify({'error':'Idempotent start has a different execution owner'}),409
             return jsonify({"job":previous,"message":"Already started"}),200
         if job_process is not None and job_process.poll() is None:
             if (
@@ -520,12 +582,19 @@ def start_job():
                 or prepared['job_id'] != job_id
                 or descriptor['manifest_sha256'] != data['manifest_sha256']):
                 raise ValueError('Prepared snapshot does not match controller placement')
-            if spec['execution'] != {'mode':'single','workers':1} or spec['recovery']['mode'] not in ('restart','checkpoint'):
-                raise ValueError('This execution mode is not available yet')
+            from custom_runner import validate_execution
+            validate_execution(spec,data.get('ddp'))
+            if spec['recovery']['mode'] not in ('restart','checkpoint'):
+                raise ValueError('Unsupported recovery mode')
             resume=data.get('resume_checkpoint')
             if resume:
-                from checkpoint_protocol import validate
-                info=validate(directory/'checkpoints/resume.dlckpt',job_id,prepared['manifest_sha256'])
+                from checkpoint_protocol import validate, validate_group
+                validator = validate_group if data.get('ddp') is not None else validate
+                info=validator(directory/'checkpoints/resume.dlckpt',job_id,prepared['manifest_sha256'])
+                if data.get('ddp') is not None and (info['world_size'] != data['ddp']['world_size']
+                        or int(info['attempt_token'].rsplit(':',1)[1]) >= int(data['attempt_token'].rsplit(':',1)[1])
+                        or info['checkpoint_id'] != resume['checkpoint_id']):
+                    raise ValueError('Group resume count, source attempt or checkpoint ID differs')
                 if (spec['recovery']['mode']!='checkpoint' or info['compatibility_key']!=prepared['compatibility_key'] or info['sha256']!=resume['sha256']
                     or info['global_step']!=resume['global_step']):
                     raise ValueError('Uploaded resume checkpoint differs from start request')
@@ -541,8 +610,11 @@ def start_job():
         resume=data.get('resume_checkpoint')
         if resume:
             command += ['--resume-sha256',resume['sha256']]
+        if data.get('ddp') is not None:
+            command += ['--ddp-json',json.dumps(data['ddp'])]
         job_details = {'resources':allocation,'environment_key':prepared['environment_key'],
-                       'manifest_sha256':prepared['manifest_sha256'],'resume_checkpoint':resume}
+                       'manifest_sha256':prepared['manifest_sha256'],'resume_checkpoint':resume,
+                       'ddp':data.get('ddp')}
     # Reference workloads continue to use their bundled launcher.
 
     elif job_type == "benchmark":
@@ -722,6 +794,19 @@ def start_job():
                 or allocation['gpus'] > GPU_COUNT):
                 return jsonify({'error':'Insufficient CPU, RAM or GPU capacity'}),409
 
+        if lease:
+            try:
+                ownership.accept(BASE_DIR,lease,job_id,data['attempt_token'],node_id())
+            except (ValueError,KeyError,OSError) as error:
+                return jsonify({'error':str(error)}),409
+            command=[sys.executable,str(BASE_DIR/'agent/lease_runner.py'),
+                     '--lease-path',str(ownership.lease_path(BASE_DIR,lease)),'--',*command]
+        if job_type=='custom' and lease:
+            # A fresh owner must not inherit final files from a failed attempt.
+            results=directory/'results'
+            if results.is_symlink():results.unlink()
+            elif results.exists():shutil.rmtree(results)
+            results.mkdir()
         if job_type == 'custom':
             for name in ('latest.dlckpt','resume-status.json'):
                 (directory / 'checkpoints' / name).unlink(missing_ok=True)
@@ -743,6 +828,7 @@ def start_job():
                 cwd=str(BASE_DIR),
                 start_new_session=True,
             )
+            if lease:ownership.attach(BASE_DIR,lease,job_process.pid)
 
         except Exception as error:
             try:
@@ -750,6 +836,9 @@ def start_job():
             except Exception:
                 pass
 
+            if job_process is not None and job_process.poll() is None:
+                os.killpg(job_process.pid,signal.SIGKILL)
+                job_process.wait(timeout=5)
             job_process = None
 
             return jsonify({"error": ("Failed to start job: " f"{error}")}), 500
@@ -760,6 +849,7 @@ def start_job():
             "status": "RUNNING",
             "pid": job_process.pid,
             "attempt_token": data.get("attempt_token"),
+            "lease": lease,
             "started_at": time.time(),
             "checkpoint": str(checkpoint_path),
             "log": str(log_path),
@@ -784,7 +874,7 @@ def start_job():
             jsonify(
                 {
                     "message": "Job started",
-                    "node": socket.gethostname(),
+                    "node": node_id(),
                     "job": current_job,
                 }
             ),
@@ -817,6 +907,10 @@ def job_status():
 def job_with_resume(job):
     """Attach trainer acknowledgments only when their process identity matches this attempt."""
     result = job.copy()
+    if job.get('lease'):
+        try:
+            result['lease']=ownership.read(ownership.lease_path(BASE_DIR,job['lease']))['lease']
+        except (OSError,ValueError):pass
     try:
         info = json.loads((LOG_DIR / f"{job['job_id']}.resume.json").read_text())
         if (
@@ -876,11 +970,19 @@ def stop_job(job_id):
         return jsonify({'error':'force must be a boolean'}),400
     with job_lock:
         if not current_job or current_job['job_id'] != job_id:
+            path=ownership.authority_path(BASE_DIR)
+            if token and path.exists():
+                held=ownership.read(path)
+                if held['lease']['job_id']==job_id and held['lease']['attempt_token']==token:
+                    ownership.reap_previous(BASE_DIR)
             if token:
                 remember_cancellation(job_id,token)
                 return jsonify({'message':'Attempt cancelled before launch','job_id':job_id})
             return jsonify({'error':'Job not active on this worker'}),404
         if token and token != current_job.get('attempt_token'):
+            if current_job['status'] in ('COMPLETED','FAILED'):
+                remember_cancellation(job_id,token)
+                return jsonify({'message':'Attempt cancelled before launch','job_id':job_id})
             return jsonify({'error':'Attempt token mismatch'}),409
         if token:
             remember_cancellation(job_id,token)
@@ -897,7 +999,7 @@ def custom_checkpoint(job_id):
     """Transport validated SDK archives without importing student tensor libraries into Flask."""
     if not valid_job_id(job_id):
         return jsonify({'error':'Invalid job ID'}),400
-    from checkpoint_protocol import validate
+    from checkpoint_protocol import validate, validate_group
     directory=BASE_DIR/'worker-storage/jobs'/job_id/'checkpoints'
     try:
         record=json.loads((directory.parent/'prepared.json').read_text())
@@ -908,7 +1010,13 @@ def custom_checkpoint(job_id):
         path=directory/'latest.dlckpt'
         if not path.is_file(): return jsonify({'error':'Checkpoint not found'}),404
         try:
-            validate(path,job_id,manifest,request.args.get('attempt_token'))
+            spec=json.loads((directory.parent/'request.json').read_text())['manifest']['execution_spec']
+            validator = validate_group if spec['execution']['mode']=='distributed' else validate
+            info=validator(path,job_id,manifest,request.args.get('attempt_token'))
+            if info['compatibility_key'] != record['compatibility_key']:
+                raise ValueError('Checkpoint environment differs from prepared worker')
+            if spec['execution']['mode']=='distributed' and info['world_size'] != spec['execution']['workers']:
+                raise ValueError('Checkpoint worker count differs from submission')
             return send_file(path,mimetype='application/octet-stream',conditional=True)
         except Exception as error:
             return jsonify({'error':str(error)}),422
@@ -928,7 +1036,11 @@ def custom_checkpoint(job_id):
                     if not chunk: break
                     stream.write(chunk)
                 stream.flush();os.fsync(stream.fileno())
-            info=validate(temporary,job_id,manifest)
+            spec=json.loads((directory.parent/'request.json').read_text())['manifest']['execution_spec']
+            validator = validate_group if spec['execution']['mode']=='distributed' else validate
+            info=validator(temporary,job_id,manifest)
+            if spec['execution']['mode']=='distributed' and info['world_size'] != spec['execution']['workers']:
+                raise ValueError('Resume checkpoint worker count differs from submission')
             if info['compatibility_key']!=record['compatibility_key']:
                 raise ValueError('Checkpoint environment differs from prepared worker')
             if info['sha256']!=request.headers.get('X-Resume-SHA256'):
@@ -942,6 +1054,54 @@ def custom_checkpoint(job_id):
             return jsonify({'error':str(error)}),422
         finally:
             if temporary: temporary.unlink(missing_ok=True)
+
+
+@app.route('/jobs/<job_id>/lease',methods=['POST'])
+def renew_execution_lease(job_id):
+    data=request.get_json(silent=True) or {}
+    with job_lock:
+        try:
+            lease=data['lease']
+            if (not current_job or current_job['job_id']!=job_id
+                    or not current_job.get('lease') or ownership.fence(current_job['lease'])!=ownership.fence(lease)):
+                raise ValueError('No matching leased execution')
+            ownership.assert_owned(BASE_DIR,job_id,lease['attempt_token'],lease['generation'],lease['lease_id'])
+            if job_process is not None and job_process.poll() is None:
+                ownership.accept(BASE_DIR,lease,job_id,current_job['attempt_token'],node_id())
+                current_job['lease']=lease
+            return jsonify({'job':job_with_resume(current_job)})
+        except (ValueError,OSError,KeyError,TypeError) as error:
+            return jsonify({'error':str(error)}),409
+
+
+@app.before_request
+def fence_downloads():
+    if request.method!='GET' or 'generation' not in request.args:return None
+    match=re.fullmatch(r'/jobs/([A-Za-z0-9._-]+)/(custom-checkpoint|checkpoint|log)',request.path)
+    if not match:return None
+    try:
+        token=request.args['attempt_token'];generation=int(request.args['generation']);lease_id=request.args['lease_id']
+        with job_lock:
+            completed=bool(current_job and current_job['job_id']==match[1] and current_job['attempt_token']==token
+                           and current_job['status']=='COMPLETED')
+            receipt=ownership.read(ownership.authority_path(BASE_DIR))
+            completed=completed or bool(receipt.get('completed'))
+            record=ownership.assert_owned(BASE_DIR,match[1],token,generation,lease_id,allow_completed=completed)
+        from flask import g
+        g.execution_lease=record['lease']
+    except (OSError,ValueError,KeyError) as error:
+        return jsonify({'error':'FENCED: '+str(error)}),409
+
+
+@app.after_request
+def execution_headers(response):
+    from flask import g
+    lease=getattr(g,'execution_lease',None)
+    if lease:
+        response.headers['X-Attempt-Token']=lease['attempt_token']
+        response.headers['X-Lease-Id']=lease['lease_id']
+        response.headers['X-Execution-Generation']=str(lease['generation'])
+    return response
 
 
 # Checkpoints
@@ -1140,7 +1300,7 @@ def upload_checkpoint(job_id):
                     "job_type": job_type,
                     "checkpoint": str(checkpoint_path),
                     "size_bytes": checkpoint_path.stat().st_size,
-                    "node": socket.gethostname(),
+                    "node": node_id(),
                 }
             ),
             200,
@@ -1152,14 +1312,16 @@ def upload_checkpoint(job_id):
 
 # Main
 if __name__ == "__main__":
-    print(f"Starting Node Agent: " f"{socket.gethostname()}")
+    ownership.reap_previous(BASE_DIR)
+    print(f"Starting Node Agent: " f"{node_id()}")
 
     print(f"Base directory: {BASE_DIR}")
     print(f"Python: {sys.executable}")
 
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=False,
-        threaded=True,
-    )
+    host = os.environ.get("DL_BIND_ADDRESS", "0.0.0.0")
+    port = int(os.environ.get("DL_PORT", "5000"))
+    if os.environ.get("DL_PRODUCTION") == "1":
+        from waitress import serve
+        serve(app, host=host, port=port, threads=8)
+    else:
+        app.run(host=host, port=port, debug=False, threaded=True)

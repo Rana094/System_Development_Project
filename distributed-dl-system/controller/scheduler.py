@@ -86,6 +86,7 @@ def select_best_node(
         candidates.append(
             {
                 "node": node,
+                "resources": resources,
                 "cpu": resources["cpu"]["usage_percent"],
                 "ram": resources["memory"]["available_gb"],
                 "temperature": resources["temperature_c"],

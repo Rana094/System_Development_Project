@@ -7,6 +7,9 @@ from pathlib import Path
 import random
 import time
 
+# Include PyTorch import/setup in program time; keep timing outside checkpoint state.
+PROGRAM_STARTED = time.perf_counter()
+
 import torch
 from dl_checkpoint import CheckpointManager
 
@@ -36,6 +39,7 @@ def main():
     restored=checkpoint.load(model,optimizer,scheduler=scheduler)
     next_step=restored['progress']['next_step'] if restored else 0
     print(f'TRAINING_START next_step={next_step} model/Adam/scheduler/RNG restored={bool(restored)}',flush=True)
+    loop_started = time.perf_counter()
     for step in range(next_step,args.steps):
         # Random sampling and dropout make missing RNG restoration observable.
         indices=torch.randint(0,len(x),(16,))
@@ -48,6 +52,7 @@ def main():
         if saved or step%1000==0:
             print(f'step={step+1} loss={loss.item():.6f} checkpoint_saved={saved}',flush=True)
         if args.batch_delay: time.sleep(args.batch_delay)
+    loop_seconds = time.perf_counter() - loop_started
     # Completion is explicit: the final state must reach the controller before
     # the scheduler marks a checkpoint-enabled submission COMPLETED.
     checkpoint.save(model,optimizer,scheduler=scheduler,global_step=args.steps,
@@ -61,7 +66,11 @@ def main():
                 'scheduler':scheduler.state_dict(),'steps':args.steps},output/'model.pt')
     (output/'summary.json').write_text(json.dumps({'job_id':os.environ['DL_JOB_ID'],
         'training_steps':args.steps,'resumed_from':next_step,'final_mse':final_mse,
-        'predictions':predictions.tolist(),'torch_version':str(torch.__version__)},indent=2))
+        'predictions':predictions.tolist(),'torch_version':str(torch.__version__),
+        'timing': {'scope': 'final_attempt', 'training_loop_seconds': loop_seconds,
+                   'training_program_seconds': time.perf_counter() - PROGRAM_STARTED,
+                   'loop_includes': 'batches, checkpoint saves, logging and configured batch delays',
+                   'program_ends': 'after evaluation and model saving, before summary writing'}},indent=2))
     print(f'TRAINING_COMPLETE steps={args.steps} resumed_from={next_step}',flush=True)
 
 

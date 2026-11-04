@@ -3,7 +3,7 @@ import argparse
 import json
 
 from job_spec import validate_owner
-from job_store import control_job, fair_queue, get_all_jobs
+from job_store import control_job, fair_queue, get_all_jobs, get_ranks
 from queue_policy import load_policy, limits
 
 
@@ -28,7 +28,9 @@ def main():
                     and (args.history or j['status'] not in ('COMPLETED','FAILED','CANCELLED'))]
             print(json.dumps([{'job_id':j['job_id'],'owner':j['owner'],'status':j['status'],
                 'node':j['node_id'],'queued_at':j['queued_at'],'reason':j['queue_reason'],
-                'last_error':j['last_error']} for j in jobs],indent=2))
+                'last_error':j['last_error'],
+                'ranks':[{'rank':r['rank'],'node':r['node_id'],'status':r['status']}
+                         for r in get_ranks(j['job_id'],j['retry_count'])]} for j in jobs],indent=2))
         else:
             if not args.owner or not args.job_id:
                 raise ValueError('hold, release and cancel require --owner and --job-id')

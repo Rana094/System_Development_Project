@@ -66,8 +66,9 @@ In terminal 1, watch the queue:
 watch -n 2 '.controller-venv/bin/python controller/queue_ctl.py list --owner student01'
 ```
 
-The default owner limit allows one active job. The first job runs while the
-second waits. After the first completes, the scheduler starts the second.
+The configured owner limit allows three active jobs. Both jobs can run on
+different available Pis. Keep the baseline uninterrupted; reboot only the Pi
+running the recovery job.
 Press Ctrl+C to stop watching; this leaves the dispatcher running in terminal 3.
 
 ## 5. Reboot the Pi running the second job

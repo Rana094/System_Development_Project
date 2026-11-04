@@ -138,6 +138,8 @@ class SubmissionIntegrationTests(unittest.TestCase):
                 root / "controller",
                 ignore=shutil.ignore_patterns("jobs.db*", "*.lock", "__pycache__"),
             )
+            (root / "agent").mkdir()
+            shutil.copyfile(ROOT / "agent/execution_lease.py", root / "agent/execution_lease.py")
             shutil.copytree(ROOT / "config", root / "config")
             shutil.copytree(ROOT / "examples", root / "examples")
             db = root / "controller/jobs.db"

@@ -367,7 +367,7 @@ def main():
     if args.resume_status_file and os.path.exists(args.checkpoint):
         info = {
             "job_id": args.job_id,
-            "pid": os.getpid(),
+            "pid": int(os.environ.get("DL_GUARDIAN_PID",os.getpid())),
             "confirmed_at": time.time(),
             "hostname": socket.gethostname(),
             "checkpoint_epoch": start_epoch,

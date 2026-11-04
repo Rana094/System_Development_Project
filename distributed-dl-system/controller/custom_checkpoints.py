@@ -11,6 +11,7 @@ from checkpoint_protocol import validate
 from job_store import get_connection, get_job_environments
 from recovery_metrics import log_event
 from scheduler import load_nodes
+import execution_leases as ownership
 
 
 def path_for(job):
@@ -32,9 +33,10 @@ def sync(job):
     destination=path_for(job)
     temporary=None
     try:
-        with requests.get(endpoint(job),params={'attempt_token':f"{job['job_id']}:{job['retry_count']}"},stream=True,timeout=10) as response:
+        with requests.get(endpoint(job),params=ownership.params(job,job['node_id']),stream=True,timeout=(2,10)) as response:
             if response.status_code==404: return False
             response.raise_for_status()
+            ownership.response(job,job['node_id'],response.headers)
             with tempfile.NamedTemporaryFile(dir=destination.parent,delete=False) as output:
                 temporary=Path(output.name)
                 for chunk in response.iter_content(1024*1024): output.write(chunk)
@@ -48,6 +50,7 @@ def sync(job):
         candidate=next(row['record'] for row in get_job_environments(job['job_id']) if row['node_id']==job['node_id'])
         if info['compatibility_key']!=candidate['compatibility_key']:
             raise ValueError('Checkpoint differs from the prepared environment')
+        ownership.checkpoint(job,info)
         os.replace(temporary,destination)
         descriptor=os.open(destination.parent,os.O_RDONLY|os.O_DIRECTORY)
         try: os.fsync(descriptor)

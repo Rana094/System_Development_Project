@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "name": "distributed-classifier-checkpoints",
+  "project": "ddp_project",
+  "entrypoint": [
+    "python",
+    "train.py",
+    "--epochs",
+    "40",
+    "--batch-delay",
+    "0.2",
+    "--dropout",
+    "0.1"
+  ],
+  "dataset": "binary-classification.csv",
+  "execution": {
+    "mode": "distributed",
+    "workers": 2
+  },
+  "resources_per_worker": {
+    "cpu_cores": 1,
+    "memory_gb": 1,
+    "gpus": 0
+  },
+  "environment": {
+    "requirements": "requirements.txt"
+  },
+  "recovery": {
+    "mode": "checkpoint",
+    "interval_seconds": 5,
+    "max_retries": 2
+  }
+}

@@ -123,7 +123,7 @@ A zero process exit and successful collection determine `COMPLETED`.
 ## What each block does
 
 - `queue_job.py` verifies central inputs and queues only a READY, single-worker
-  submission using restart recovery. Distributed jobs remain gated until DDP dispatch is implemented. Step 6 adds
+  submission using restart recovery. CPU distributed jobs use the [group dispatcher](distributed-training.md) with restart or coordinated checkpoint recovery. Step 6 adds
   checkpoint-enabled single-worker jobs.
 - `scheduler.py` checks requested CPU cores, available RAM and CUDA GPU count;
   filters busy, reserved, unreachable and unprepared workers; then ranks eligible
@@ -153,6 +153,7 @@ must prepare their own compatible environments before being added to inventory.
 
 This milestone verifies concurrent independent training and capacity queuing.
 Custom jobs retain their reservations during lost contact until the worker
-confirms an outcome; partition fencing is a later milestone. The existing bundled
+confirms an outcome, or [Step 10 lease fencing](execution-ownership.md) resolves
+the bounded execution deadline. The existing bundled
 PyTorch checkpoint/reboot recovery path remains available. Submitted PyTorch recovery now uses the [step 6 SDK](checkpoint-integration.md);
-coordinated multi-worker DDP execution is step 7.
+coordinated multi-worker DDP execution is available in [step 7](distributed-training.md).

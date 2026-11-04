@@ -188,13 +188,12 @@ The new executor variables include `DL_ATTEMPT_TOKEN`, `DL_MANIFEST_SHA256`,
 instead of constructing or overriding them.
 
 During an unreachable-worker interval, custom jobs retain their reservations.
-After a rebooted agent returns and confirms the old process is gone, the
-controller can retry on another worker. This avoids treating lost network
-contact alone as permission to run a second copy; network-partition fencing is
-still a later milestone. Unsaved updates after the last central checkpoint may
+The controller can retry after the old process is confirmed gone, or after
+[Step 10 execution leases](execution-ownership.md) safely expire and fence the
+old producer. Lost network contact alone never permits a second copy. Unsaved updates after the last central checkpoint may
 be replayed. The Pi demonstration verifies CPU recovery; CUDA restoration logic
-has not been exercised on GPU hardware. DDP dispatch and coordinated group
-checkpoints remain later steps.
+has not been exercised on GPU hardware. CPU DDP dispatch is available in [Step 7](distributed-training.md). Consistent group checkpoints are available in Step 8 of that guide; automatic
+group checkpoint resume is now available in [Step 9](distributed-training.md#step-9-coordinated-ddp-checkpoint-recovery).
 
 Run isolated SDK and transport checks without the Pis:
 

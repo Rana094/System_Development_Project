@@ -4,8 +4,7 @@ import sys
 import json
 from datetime import datetime
 
-from job_store import get_job, get_all_jobs, get_attempts, get_job_environments
-from custom_checkpoints import metadata as checkpoint_metadata
+from job_store import get_job, get_all_jobs, get_attempts, get_job_environments, get_ranks
 
 
 def format_time(value):
@@ -104,15 +103,24 @@ def show_one(job_id):
     if job.get('checkpoint_path'):
         print('Central checkpoint:', job['checkpoint_path'])
         print('Checkpoint size:', job['checkpoint_size_bytes'], 'bytes')
-        try:
-            checkpoint = checkpoint_metadata(job)
-        except (OSError, ValueError) as error:
-            print('Checkpoint validation:', error)
-        else:
-            if checkpoint:
-                print('Checkpoint step:', checkpoint['global_step'])
-                print('Checkpoint complete:', checkpoint['completed'])
-                print('Checkpoint SHA-256:', checkpoint['sha256'])
+        if job.get('job_type') == 'custom' and job.get('storage_path'):
+            if json.loads(job['job_config'])['execution']['mode']=='distributed':
+                from group_checkpoints import metadata as checkpoint_metadata
+            else:
+                from custom_checkpoints import metadata as checkpoint_metadata
+            try:
+                checkpoint = checkpoint_metadata(job)
+            except (OSError, ValueError) as error:
+                print('Checkpoint validation:', error)
+            else:
+                if checkpoint:
+                    print('Checkpoint step:', checkpoint['global_step'])
+                    print('Checkpoint complete:', checkpoint['completed'])
+                    print('Checkpoint SHA-256:', checkpoint['sha256'])
+                    if checkpoint.get('kind')=='ddp':
+                        print('Checkpoint type: consistent DDP group')
+                        print('Checkpoint ID:',checkpoint['checkpoint_id'])
+                        print('Rank acknowledgments:',len(checkpoint['rank_acknowledgments']), '/', checkpoint['world_size'])
     print("Queue reason:", job.get("queue_reason"))
     print("Node:", job["node_id"])
 
@@ -143,6 +151,31 @@ def show_one(job_id):
             f"status={attempt['status']} "
             f"error={attempt['error']}"
         )
+    if job.get('job_type')=='custom' and json.loads(job['job_config'])['execution']['mode']=='distributed':
+        from recovery_metrics import get_events
+        for event in get_events(job_id):
+            if event['event_type']=='DDP_RESUMED':
+                details=json.loads(event['details_json'])
+                print(f"DDP recovery: attempt={details['retry_count']+1} restored_step={details['global_step']} "
+                      f"ranks={len(details['acknowledged_ranks'])}/{details['world_size']} "
+                      f"source_attempt={details['attempt_token']}")
+    from job_store import get_connection
+    connection=get_connection()
+    try:
+        leases=connection.execute('SELECT * FROM execution_leases WHERE job_id=? ORDER BY retry_count,node_id',(job_id,)).fetchall()
+        if leases:
+            print('Execution ownership:')
+            for lease in leases:
+                print(f"  attempt={lease['retry_count']+1} node={lease['node_id']} generation={lease['generation']} "
+                      f"renewal_blocked={bool(lease['renewal_blocked'])} fenced={bool(lease['revoked'])} "
+                      f"expires={format_time(lease['expires_at'])}")
+    finally:connection.close()
+    ranks = get_ranks(job_id)
+    if ranks:
+        print('DDP ranks:')
+        for rank in ranks:
+            print(f"  attempt={rank['retry_count'] + 1} rank={rank['rank']} "
+                  f"node={rank['node_id']} status={rank['status']} error={rank['error']}")
 
 
 def main():

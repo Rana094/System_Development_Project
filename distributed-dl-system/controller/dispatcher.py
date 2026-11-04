@@ -44,6 +44,8 @@ from recovery_metrics import (
     get_events,
     init_table as init_recovery_table,
 )
+from distributed_dispatch import is_distributed, progress as progress_distributed
+import execution_leases as ownership
 
 # Paths / configuration
 CONTROLLER_DIR = Path(__file__).resolve().parent
@@ -227,7 +229,7 @@ def sync_dummy_checkpoint(job, force=False):
 
     try:
 
-        response = requests.get(url, timeout=3)
+        response = requests.get(url, params=ownership.params(job,job['node_id']),timeout=3)
 
         if response.status_code == 404:
 
@@ -235,7 +237,9 @@ def sync_dummy_checkpoint(job, force=False):
 
         response.raise_for_status()
 
+        ownership.response(job,job['node_id'],response.headers)
         checkpoint = response.json()["checkpoint"]
+        ownership.current(job,job['node_id'])
 
         save_checkpoint(job_id, checkpoint)
 
@@ -296,6 +300,7 @@ def sync_pytorch_checkpoint(job, force=False):
             timeout=5,
             stream=True,
             headers=headers,
+            params=ownership.params(job,job['node_id']),
         ) as response:
 
             # Worker has no checkpoint yet.
@@ -310,6 +315,7 @@ def sync_pytorch_checkpoint(job, force=False):
 
             response.raise_for_status()
 
+            ownership.response(job,job['node_id'],response.headers)
             response_etag = response.headers.get("ETag")
 
             response_last_modified = response.headers.get("Last-Modified")
@@ -372,6 +378,7 @@ def sync_pytorch_checkpoint(job, force=False):
         read_valid_checkpoint(temporary, job_id)
 
         # New checkpoint: atomically replace the controller copy.
+        ownership.current(job,job['node_id'])
         os.replace(temporary, destination)
 
         last_checkpoint_sync[job_id] = now
@@ -616,6 +623,9 @@ def build_start_payload(job):
 def dispatch_one_job(job):
     """Select a worker, prepare recovery data, and persist the outcome of the start request."""
     config = get_job_config(job)
+    if is_distributed(job):
+        from distributed_dispatch import dispatch
+        return dispatch(job,get_excluded_nodes())
     custom = get_job_type(job) == 'custom'
     allowed = ([row['node_id'] for row in get_job_environments(job['job_id'])]
                if custom else config.get('allowed_nodes'))
@@ -649,6 +659,10 @@ def dispatch_one_job(job):
 
     node_port = node["port"]
 
+    leased=ownership.settings()['enabled'] and ownership.supported(selected.get('resources'))
+    if custom and ownership.settings()['enabled'] and not leased:
+        print(f"[LEASE_CAPABILITY_REQUIRED] {job['job_id']}: worker clocks/protocol are not eligible")
+        return False
     job_id = job["job_id"]
 
     job_type = get_job_type(job)
@@ -710,6 +724,7 @@ def dispatch_one_job(job):
 
         payload = build_start_payload(job)
         payload["attempt_token"] = attempt_token(job)
+        if leased:payload["lease"]=ownership.ensure(job,node_id)
 
     except (
         ValueError,
@@ -733,6 +748,11 @@ def dispatch_one_job(job):
         )
 
         if response.status_code == 200:
+            if not ownership.matches(job,node_id,response.json()['job']):
+                ownership.block(job)
+                print(f"[START_UNCERTAIN] {job_id}: lease acknowledgment differs")
+                return False
+
 
             data = response.json()
 
@@ -758,7 +778,18 @@ def dispatch_one_job(job):
 
             error += f" ({worker_error})"
 
-        return_to_queue(job_id, error)
+        if ownership.get(job,node_id):
+            ownership.block(job)
+            try:
+                stopped=requests.post(f"http://{node_ip}:{node_port}/jobs/{job_id}/stop",
+                    json={'attempt_token':attempt_token(job),'force':True},timeout=3)
+                stopped.raise_for_status()
+                ownership.revoke(job,node_id)
+                requeue_after_failure(job_id,error)
+            except requests.RequestException:
+                print(f"[START_UNCERTAIN] {job_id}: waiting for lease expiry after rejection")
+        else:
+            return_to_queue(job_id,error)
 
         print(f"{job_id} returned " "to queue")
 
@@ -787,6 +818,9 @@ def monitor_running_jobs():
         job_id = job["job_id"]
 
         active_job_ids.add(job_id)
+        if is_distributed(job):
+            progress_distributed(job)
+            continue
 
         # Best-effort central checkpoint copy.
 
@@ -821,6 +855,13 @@ def monitor_running_jobs():
             data = response.json()
 
             worker_job = data["job"]
+            if not ownership.matches(job,node_id,worker_job):
+                ownership.block(job)
+                if ownership.safe_to_replace(job,node_id):
+                    ownership.revoke(job,node_id)
+                    handle_running_job_failure(job,'Execution ownership was lost')
+                continue
+            ownership.renew(job)
 
             record_confirmed_resume(job, worker_job)
 
@@ -931,9 +972,9 @@ def monitor_running_jobs():
                 f"{FAILURE_THRESHOLD})"
             )
 
-            # Hold custom allocations during lost contact until the worker confirms
-            # an exit or missing attempt. Network-partition fencing arrives later.
-            if failures >= FAILURE_THRESHOLD and get_job_type(job) != 'custom':
+            ownership.block(job)
+            if failures >= FAILURE_THRESHOLD and ownership.safe_to_replace(job,node_id):
+                ownership.revoke(job,node_id)
 
                 error = f"Node {node_id} " "became unreachable"
 
@@ -977,8 +1018,8 @@ def handle_running_job_failure(job, error):
         try:
             from job_artifacts import collect
             collect(job)
-        except Exception as error:
-            print(f"[FAILED_ARTIFACTS_UNAVAILABLE] {job_id}: {error}")
+        except Exception as artifact_error:
+            print(f"[FAILED_ARTIFACTS_UNAVAILABLE] {job_id}: {artifact_error}")
     mark_node_unhealthy(node_id)
 
     new_state = requeue_after_failure(job_id, error)
@@ -1008,6 +1049,9 @@ def reconcile_cancellations():
     from scheduler import load_nodes
     ports = {node['id']:node['port'] for node in load_nodes()}
     for job in get_jobs_by_status('CANCELLING'):
+        if is_distributed(job):
+            progress_distributed(job)
+            continue
         url = f"http://{job['node_ip']}:{ports.get(job['node_id'],5000)}/jobs/{job['job_id']}"
         try:
             response = requests.get(url,timeout=2)
@@ -1039,6 +1083,10 @@ def reconcile_cancellations():
                     'force':time.time() - job['cancel_requested_at'] >= 10},timeout=3)
                 stopped.raise_for_status()
         except (requests.RequestException,KeyError,ValueError) as error:
+            ownership.block(job)
+            if ownership.safe_to_replace(job,job['node_id']):
+                ownership.revoke(job,job['node_id'])
+                finish_cancellation(job['job_id'])
             print(f"[CANCEL_PENDING] {job['job_id']}: {error}")
 
 
@@ -1101,19 +1149,35 @@ def record_confirmed_resume(job, worker_job):
 def reconcile_scheduled_jobs():
     """Resolve uncertain starts with the original worker before risking a duplicate launch."""
     for job in get_jobs_by_status("SCHEDULED"):
+        if is_distributed(job):
+            progress_distributed(job)
+            continue
         try:
+            ownership.renew(job)
             response = requests.get(
                 f"http://{job['node_ip']}:5000/jobs/{job['job_id']}", timeout=2
             )
             if response.status_code == 404:
-                return_to_queue(job["job_id"], "Agent confirms attempt was not started")
+                if ownership.get(job,job['node_id']):
+                    ownership.block(job)
+                    stopped=requests.post(f"http://{job['node_ip']}:5000/jobs/{job['job_id']}/stop",
+                        json={'attempt_token':attempt_token(job),'force':True},timeout=3)
+                    stopped.raise_for_status()
+                    ownership.revoke(job,job['node_id'])
+                    requeue_after_failure(job['job_id'],'Agent confirms attempt was not started; late launch fenced')
+                else:
+                    return_to_queue(job["job_id"], "Agent confirms attempt was not started")
                 continue
             response.raise_for_status()
             worker = response.json()["job"]
-            if worker.get("attempt_token") == attempt_token(job):
+            if worker.get("attempt_token") == attempt_token(job) and ownership.matches(job,job['node_id'],worker):
                 mark_running(job["job_id"], worker["started_at"])
                 print(f"[RECONCILED] {job['job_id']} on {job['node_id']}")
         except (requests.RequestException, ValueError, KeyError) as error:
+            ownership.block(job)
+            if ownership.safe_to_replace(job,job['node_id']):
+                ownership.revoke(job,job['node_id'])
+                handle_running_job_failure(job,'Uncertain launch lease expired')
             print(
                 f"[START_UNCERTAIN] {job['job_id']}: waiting for original worker: {error}"
             )
@@ -1129,7 +1193,10 @@ def main():
     except BlockingIOError:
         raise SystemExit("Another dispatcher is already running")
 
+    from job_store import initialize_database
+    initialize_database()
     init_recovery_table()
+    ownership.start_renewals()
 
     print("=" * 70)
 

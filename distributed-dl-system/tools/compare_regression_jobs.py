@@ -32,6 +32,8 @@ def load_result(job_id):
     if job["status"] != "COMPLETED":
         raise ValueError(f"{job_id} is {job['status']}; wait until it is COMPLETED")
     results = Path(job["storage_path"]) / "results"
+    if json.loads(job['job_config'])['execution']['mode']=='distributed':
+        results = results/'rank-0'
     return (
         torch.load(results / "model.pt", map_location="cpu", weights_only=True),
         json.loads((results / "summary.json").read_text()),

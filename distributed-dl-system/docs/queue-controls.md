@@ -1,7 +1,7 @@
 # Step 5: fair student queues and job controls
 
-The scheduler shares workers between students. By default, a student can have
-one active job and twenty pending submissions. An active job includes an
+The scheduler shares workers between students. The current policy allows a student
+three active jobs and twenty pending submissions. An active job includes an
 uncertain `SCHEDULED` start and a `CANCELLING` attempt, so lost network contact
 cannot bypass the quota. Received, staged, prepared, queued and held submissions
 all count toward the pending limit. Completed, failed and cancelled jobs remain
@@ -19,7 +19,10 @@ cd '/home/rana/Projects/System Project/System_Development_Project/distributed-dl
 Stop a manually running dispatcher with Ctrl+C before starting this tool. The
 tool holds the normal dispatcher lock and calls the production dispatch loop;
 it does not leave a background controller running. Existing active jobs must
-finish first. The demo uses the default one-active-job limit for its student IDs.
+finish first. This quota demonstration requires a one-active-job limit for its
+student IDs. Before running it, set the four `step5-alice`, `step5-bob`,
+`step5-carol` and `step5-dave` owner overrides to `max_active_per_owner: 1` in
+`config/queue_policy.json`; ordinary students can keep the three-job limit.
 
 It submits six jobs: Alice's three jobs, Bob's job, Carol's job and Dave's held
 job. All executable jobs use the real 30-second PyTorch MLP from step 4. The
@@ -117,12 +120,12 @@ submitted PyTorch checkpoint recovery uses the [step 6 SDK](checkpoint-integrati
 
 ## Configure limits for the lab
 
-The controller reads `config/queue_policy.json` each scheduling pass. It defaults
-to:
+The controller reads `config/queue_policy.json` each scheduling pass. The current
+global settings are:
 
 ```json
 {
-  "max_active_per_owner": 1,
+  "max_active_per_owner": 3,
   "max_pending_per_owner": 20,
   "aging_seconds": 300,
   "owners": {}

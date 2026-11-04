@@ -11,3 +11,6 @@ logs/*
 *.before_*
 *.backup-*
 storage/
+
+# Lock used by atomic worker registration.
+config/nodes.lock

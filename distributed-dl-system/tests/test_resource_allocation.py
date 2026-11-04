@@ -91,6 +91,12 @@ class AllocationTests(unittest.TestCase):
             self.assertEqual(r['allocation'],allocation)
             self.assertFalse(agent.valid_job_id('..'))
             self.assertFalse(agent.valid_job_id('.'))
+            # A never-launched retry must be cancellable even when the agent
+            # still remembers a terminal previous attempt of the same job.
+            agent.current_job['status'] = 'COMPLETED'
+            self.assertEqual(client.post('/jobs/custom/stop',json={'attempt_token':'custom:1'}).status_code,200)
+            self.assertEqual(client.post('/jobs/start',json={**payload,'attempt_token':'custom:1'}).status_code,409)
+            launch.assert_called_once()
             # Closing the mocked launch's file avoids leaking handles in this test.
             launch.call_args.kwargs['stdout'].close()
 
@@ -126,16 +132,16 @@ class AllocationTests(unittest.TestCase):
             self.assertIsNone(scheduler.select_best_node(requirements={**requirement,'gpus':1}))
 
     def ready(self,execution,recovery):
-        spec = {'execution':execution,'recovery':recovery}
+        spec = {'execution':execution,'recovery':recovery,'resources_per_worker':{'gpus':0}}
         store.add_job('custom',0,job_type='custom',status='RECEIVED',job_config=spec,owner='s')
         with store.get_connection() as db:
             db.execute("UPDATE jobs SET status='READY' WHERE job_id='custom'")
             db.execute("INSERT INTO job_environments VALUES(?,?,?,?,?,?,?)",
-                       ('custom','pi01','isolated','key','{}',1,1))
+                       ('custom','pi01','isolated','key','{"compatibility_key":"test"}',1,1))
 
     def test_enqueue_requires_supported_execution(self):
         self.ready({'mode':'distributed','workers':2},{'mode':'restart'})
-        with self.assertRaisesRegex(ValueError,'step 7'):
+        with self.assertRaisesRegex(ValueError,'enough compatible'):
             store.enqueue_custom_job('custom',{'pi01'})
         with store.get_connection() as db:
             db.execute("UPDATE jobs SET job_config=?",(json.dumps({'execution':{'mode':'single','workers':1},'recovery':{'mode':'checkpoint'}}),))

@@ -5,6 +5,34 @@ and stores checkpoints centrally. Node Agents launch the training processes and
 report their state. A failed PyTorch attempt can continue on another worker using
 the controller's last valid model and optimizer checkpoint.
 
+Start with the [website initialization, usage and training integration guide](docs/student-interface.md).
+It covers startup, every website option, custom uploads, and an interactive
+walkthrough of scheduling, DDP and checkpoint recovery. For machine installation
+and migration, use the [deployment guide](docs/deployment.md).
+
+## Run the website locally
+
+On the existing controller laptop, open a terminal and run:
+
+```bash
+cd "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system"
+systemctl --user start dl-dispatcher dl-student-portal
+systemctl --user is-active dl-dispatcher dl-student-portal
+```
+
+Expect two `active` lines. Open **http://127.0.0.1:8080/** in your browser and
+sign in using your existing account. The services keep running after you close
+the terminal. The portal displays the website; the dispatcher schedules and
+monitors training. Workers must be online and configured to execute jobs.
+
+For remote access on the configured Tailscale network, open
+**http://100.73.90.91:8080/**. See [Tailscale setup and checks](docs/tailscale.md).
+
+For a fresh checkout without installed services, follow the
+[manual local-server instructions](docs/student-interface.md#run-the-local-server-manually-without-installed-services).
+They cover Python setup, dependencies, creating a login, starting both processes,
+checking the server and stopping it. Replace the project path when using another PC.
+
 ## Source layout
 
 | Folder | Purpose |
@@ -56,6 +84,11 @@ Private notes, historical reports, backups and new experiment results live under
    retry; two-node DDP comparison is not fault-tolerant DDP.
 
 ## Normal use
+
+Step 11 adds the [student browser interface](docs/student-interface.md): upload
+code and data, automatically prepare and queue single-worker or DDP training,
+follow live logs and recovery, cancel jobs, and download results.
+
 
 General student submission **steps 1–4** are implemented: validate a JSON project
 definition and persist its owner, execution mode, resource requests, dataset,
@@ -208,3 +241,50 @@ single-worker submission on another compatible prepared worker. See the
 For a command-by-command live workflow that submits regression jobs, shows the
 queue and worker status, reboots the active Pi, and compares uninterrupted and
 recovered results, see the [integration instructions](docs/integration-instructions.md).
+
+The [training examples guide](docs/training-examples.md) submits regression,
+binary classification and CNN jobs concurrently and explains their recovery and
+result comparison commands.
+
+## Step 7: coordinated CPU DDP jobs
+
+The controller reserves a complete compatible worker group, starts one PyTorch
+rank per Pi, and reconciles every rank before completing, cancelling or retrying
+the job. Independent jobs can use remaining workers. See the
+[distributed training instructions](docs/distributed-training.md) for submission,
+status, results and the current restart-recovery behavior.
+
+
+## Step 8: consistent DDP checkpoints
+
+All ranks save a common training boundary with their complete local states.
+The worker publishes only after every rank acknowledges the checkpoint; the
+controller validates and retains the complete archive. See the
+[Step 8 commands and SDK integration](docs/distributed-training.md#step-8-consistent-ddp-checkpoints).
+Automatic group checkpoint restore is available in Step 9 below.
+
+
+## Step 9: coordinated DDP checkpoint resume
+
+A failed DDP group resumes from the same validated checkpoint on every logical
+rank after all old processes are stopped. Restored model, optimizer, scheduler,
+random state and application progress are confirmed collectively before the
+controller marks the replacement attempt running. Follow the
+[Step 9 terminal workflow](docs/distributed-training.md#step-9-coordinated-ddp-checkpoint-recovery)
+to reboot an active Pi and compare its result with uninterrupted training.
+
+
+## Step 10: execution ownership and network partitions
+
+Worker leases and durable generations fence expired attempts. An independent
+watchdog terminates their process groups, and collectors reject stale checkpoints
+and results before publication. Both single-worker and DDP jobs can recover while
+the failed worker remains disconnected. See the
+[Step 10 terminal instructions](docs/execution-ownership.md).
+
+## Step 12: installation and lab migration
+
+The [deployment and full-system inspection guide](docs/deployment.md) covers
+automated worker setup/registration, persistent controller services, real training
+submission, reboot recovery and gradual migration from Pis to Linux lab PCs.
+Run `python3 tools/cluster_setup.py check` to inspect registered workers.

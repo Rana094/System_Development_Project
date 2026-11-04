@@ -92,7 +92,8 @@ shows prepared worker IDs and their environment interpreter paths.
 
 For a distributed submission, use `examples/job.distributed.json` and prepare
 `--nodes pi01 pi02`. You can prepare pi03 as another compatible candidate too;
-none of these candidates is reserved until scheduling is implemented.
+preparation does not reserve candidates. The scheduler reserves the worker group
+when the job is queued and sufficient compatible resources are available.
 
 ## Profiles
 
@@ -155,8 +156,8 @@ and suitable baseline environments when moving to the lab PCs.
 
 A controller-side check can use `--nodes local`; its worker storage is under
 `storage/local-worker` or `DL_LOCAL_WORKER_ROOT`. The local candidate is a testing
-facility and is not a Pi worker. Future scheduling must consider registered
-worker capacity and verify candidates again before launching jobs.
+facility and is not a registered Pi worker. Live scheduling uses registered
+worker capacity and compatible preparation records.
 
 ## Offline automated checks
 

@@ -41,6 +41,7 @@ def column_exists(connection, table, column):
 def initialize_database():
     """Create missing tables and columns without discarding existing jobs or attempts."""
     connection = get_connection()
+    connection.execute('BEGIN IMMEDIATE')
     cursor = connection.cursor()
 
     cursor.execute("""
@@ -127,6 +128,35 @@ def initialize_database():
         resources_json TEXT NOT NULL, created_at REAL NOT NULL,
         FOREIGN KEY(job_id) REFERENCES jobs(job_id)
     )""")
+    # A DDP job owns several exclusive node slots; preserve existing reservations
+    # while removing the old one-node-per-job database constraint.
+    reservation_sql = cursor.execute("SELECT sql FROM sqlite_master WHERE name='resource_reservations'").fetchone()[0]
+    if 'NOT NULL UNIQUE' in reservation_sql:
+        cursor.execute('ALTER TABLE resource_reservations RENAME TO old_reservations')
+        cursor.execute('''CREATE TABLE resource_reservations (
+            node_id TEXT PRIMARY KEY, job_id TEXT NOT NULL,
+            resources_json TEXT NOT NULL, created_at REAL NOT NULL,
+            FOREIGN KEY(job_id) REFERENCES jobs(job_id))''')
+        cursor.execute('INSERT INTO resource_reservations SELECT * FROM old_reservations')
+        cursor.execute('DROP TABLE old_reservations')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS distributed_attempts (
+        job_id TEXT NOT NULL, retry_count INTEGER NOT NULL, phase TEXT NOT NULL,
+        context_json TEXT NOT NULL, error TEXT, created_at REAL NOT NULL,
+        PRIMARY KEY(job_id,retry_count), FOREIGN KEY(job_id) REFERENCES jobs(job_id))''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS job_ranks (
+        job_id TEXT NOT NULL, retry_count INTEGER NOT NULL, rank INTEGER NOT NULL,
+        node_id TEXT NOT NULL, node_ip TEXT NOT NULL, node_port INTEGER NOT NULL,
+        status TEXT NOT NULL, started_at REAL, error TEXT,
+        PRIMARY KEY(job_id,retry_count,rank),
+        FOREIGN KEY(job_id) REFERENCES jobs(job_id))''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS node_generations (
+        node_id TEXT PRIMARY KEY,generation INTEGER NOT NULL)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS execution_leases (
+        job_id TEXT NOT NULL,retry_count INTEGER NOT NULL,node_id TEXT NOT NULL,
+        generation INTEGER NOT NULL,lease_id TEXT NOT NULL UNIQUE,attempt_token TEXT NOT NULL,
+        issued_at REAL NOT NULL,expires_at REAL NOT NULL,controller_boot_id TEXT NOT NULL,
+        expires_clock REAL NOT NULL,renewal_blocked INTEGER NOT NULL,revoked INTEGER NOT NULL,
+        PRIMARY KEY(job_id,retry_count,node_id),FOREIGN KEY(job_id) REFERENCES jobs(job_id))''')
     cursor.execute("""CREATE TABLE IF NOT EXISTS owner_service (
         owner TEXT PRIMARY KEY, last_dispatch REAL NOT NULL
     )""")
@@ -135,6 +165,9 @@ def initialize_database():
     cursor.execute("""INSERT OR IGNORE INTO resource_reservations
         SELECT node_id,job_id,'{}',COALESCE(scheduled_at,created_at)
         FROM jobs WHERE status IN ('SCHEDULED','RUNNING','CANCELLING') AND node_id IS NOT NULL""")
+    cursor.execute('''INSERT OR IGNORE INTO resource_reservations
+        SELECT r.node_id,r.job_id,'{}',j.scheduled_at FROM job_ranks r JOIN jobs j ON j.job_id=r.job_id
+        WHERE j.status IN ('SCHEDULED','RUNNING','CANCELLING') AND r.retry_count=j.retry_count''')
     connection.commit()
     connection.close()
 
@@ -425,7 +458,7 @@ def get_reservations():
 
 
 def enqueue_custom_job(job_id, candidates):
-    """Explicitly queue prepared single-worker restart jobs; later modes cannot slip through."""
+    """Queue a prepared single-worker job or a compatible CPU DDP group."""
     connection = get_connection()
     try:
         with connection:
@@ -434,22 +467,25 @@ def enqueue_custom_job(job_id, candidates):
             if not job or job["job_type"] != "custom" or job["status"] != "READY":
                 raise ValueError("Only READY custom jobs can be queued")
             spec = json.loads(job["job_config"])
-            if spec["execution"] != {"mode": "single", "workers": 1}:
-                raise ValueError("Distributed dispatch arrives in step 7")
+            if spec['execution']['mode'] == 'distributed':
+                if spec['resources_per_worker']['gpus']:
+                    raise ValueError('Step 7 currently supports CPU DDP with Gloo')
             if spec["recovery"]["mode"] not in ('restart','checkpoint'):
                 raise ValueError('Unsupported recovery mode')
-            prepared = {row[0] for row in connection.execute(
-                "SELECT node_id FROM job_environments WHERE job_id=?", (job_id,)
-            )}
-            if not prepared.intersection(candidates):
-                raise ValueError("Prepare this job on at least one configured scheduler worker")
+            groups = {}
+            for row in connection.execute('SELECT node_id,record_json FROM job_environments WHERE job_id=?',(job_id,)):
+                if row[0] in candidates:
+                    key = json.loads(row[1])['compatibility_key']
+                    groups[key] = groups.get(key,0) + 1
+            if max(groups.values(), default=0) < spec['execution']['workers']:
+                raise ValueError('Prepare enough compatible configured workers for this job')
             connection.execute("UPDATE jobs SET status='QUEUED',queued_at=?,queue_reason=NULL,updated_at=? WHERE job_id=?",
                                (time.time(),time.time(),job_id))
     finally:
         connection.close()
 
 
-def mark_scheduled(job_id, node_id, node_ip, resources=None):
+def mark_scheduled(job_id, node_id, node_ip, resources=None, workers=None, ddp=None):
     """Reserve a whole worker slot and persist placement atomically before sending HTTP."""
     connection = get_connection()
     try:
@@ -464,8 +500,23 @@ def mark_scheduled(job_id, node_id, node_ip, resources=None):
                                            (job['owner'],*ACTIVE_STATES)).fetchone()[0]
                 if count >= quota:
                     raise ValueError('Owner active-job quota reached')
-            connection.execute("INSERT INTO resource_reservations VALUES(?,?,?,?)",
-                (node_id,job_id,json.dumps(resources or {}),time.time()))
+            if workers is None:
+                workers = [{'id':node_id,'ip':node_ip}]
+            for worker in workers:
+                connection.execute("INSERT INTO resource_reservations VALUES(?,?,?,?)",
+                    (worker['id'],job_id,json.dumps(resources or {}),time.time()))
+            if ddp is not None:
+                spec = json.loads(job['job_config'])
+                if len(workers) != spec['execution']['workers'] or len({n['id'] for n in workers}) != len(workers):
+                    raise ValueError('DDP placement must reserve all distinct workers')
+                connection.execute('INSERT INTO distributed_attempts VALUES(?,?,?,?,?,?)',
+                    (job_id,job['retry_count'],'STARTING',json.dumps(ddp),None,time.time()))
+                for rank,worker in enumerate(workers):
+                    connection.execute('INSERT INTO job_ranks VALUES(?,?,?,?,?,?,?,?,?)',
+                        (job_id,job['retry_count'],rank,worker['id'],worker['ip'],worker['port'],'RESERVED',None,None))
+                connection.execute('''INSERT INTO job_attempts
+                    (job_id,attempt_number,node_id,node_ip,status) VALUES(?,?,?,?,?)''',
+                    (job_id,job['retry_count']+1,node_id,node_ip,'SCHEDULED'))
             connection.execute("""UPDATE jobs SET status='SCHEDULED',node_id=?,node_ip=?,
                 scheduled_at=?,updated_at=?,queue_reason=NULL WHERE job_id=?""",
                 (node_id,node_ip,time.time(),time.time(),job_id))
@@ -511,6 +562,14 @@ def mark_running(job_id, started_at=None):
         ("CANCELLING" if job["status"] == "CANCELLING" else "RUNNING", started_at, time.time(), job_id),
     )
 
+    scheduled_attempt = connection.execute("SELECT 1 FROM job_attempts WHERE job_id=? AND attempt_number=? AND status='SCHEDULED'",
+                                     (job_id,attempt_number)).fetchone()
+    if scheduled_attempt:
+        cursor.execute('''UPDATE job_attempts SET status='RUNNING',started_at=?
+            WHERE job_id=? AND attempt_number=?''',(started_at,job_id,attempt_number))
+        connection.commit()
+        connection.close()
+        return
     cursor.execute(
         """
         INSERT INTO job_attempts (
@@ -578,6 +637,12 @@ def mark_completed(job_id, return_code=0, finished_at=None):
     cursor.execute("DELETE FROM resource_reservations WHERE job_id=?", (job_id,))
     connection.commit()
     connection.close()
+    # Timing output is supplementary; a disk/report error must not undo completed training.
+    try:
+        from job_timing import write_report
+        write_report(job_id)
+    except Exception as error:
+        print(f'[TIMING_REPORT_PENDING] {job_id}: {error}')
     return True
 
 
@@ -706,7 +771,10 @@ def fair_queue():
                 if job['job_type'] == 'custom':
                     count = sum(identity(j)==identity(job) for j in active)
                     quota = limits(policy,job['owner'])['max_active_per_owner']
-                    reason = f'Owner active-job limit: {count}/{quota}' if count >= quota else 'Waiting for eligible worker capacity'
+                    workers = json.loads(job['job_config']).get('execution',{}).get('workers',1)
+                    reason = (f'Owner active-job limit: {count}/{quota}' if count >= quota
+                              else f'Waiting for {workers} compatible idle workers' if workers > 1
+                              else 'Waiting for eligible worker capacity')
                     connection.execute('UPDATE jobs SET queue_reason=? WHERE job_id=?',(reason,job['job_id']))
             return fair_order(queued,active,service,policy,time.time())
     finally:
@@ -780,6 +848,20 @@ def get_attempts(job_id):
     connection.close()
 
     return [dict(row) for row in rows]
+
+
+def get_ranks(job_id, retry_count=None):
+    """Retain rank placement for every group attempt, including partial starts."""
+    connection = get_connection()
+    try:
+        sql = 'SELECT * FROM job_ranks WHERE job_id=?'
+        values = [job_id]
+        if retry_count is not None:
+            sql += ' AND retry_count=?'
+            values.append(retry_count)
+        return [dict(row) for row in connection.execute(sql+' ORDER BY retry_count,rank',values)]
+    finally:
+        connection.close()
 
 
 initialize_database()

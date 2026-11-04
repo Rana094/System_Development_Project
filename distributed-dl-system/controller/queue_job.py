@@ -1,4 +1,4 @@
-"""Queue a prepared single-worker submission for resource-aware dispatch."""
+"""Queue a prepared single-worker or CPU DDP submission for resource-aware dispatch."""
 import argparse
 import json
 from pathlib import Path

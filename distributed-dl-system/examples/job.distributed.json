@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "name": "distributed-submission-example",
-  "project": "student_project",
-  "entrypoint": ["python", "train.py", "--epochs", "5"],
-  "dataset": "dataset.csv",
+  "name": "distributed-classifier",
+  "project": "ddp_project",
+  "entrypoint": ["python", "train.py", "--epochs", "40", "--batch-delay", "0.2"],
+  "dataset": "binary-classification.csv",
   "execution": {"mode": "distributed", "workers": 2},
-  "resources_per_worker": {"cpu_cores": 2, "memory_gb": 2, "gpus": 0},
+  "resources_per_worker": {"cpu_cores": 1, "memory_gb": 1, "gpus": 0},
   "environment": {"requirements": "requirements.txt"},
   "recovery": {"mode": "restart", "max_retries": 2}
 }

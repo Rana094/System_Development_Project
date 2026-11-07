@@ -18,7 +18,7 @@ the whole script; the comparison runner also measures queue-to-completion wall
 time. These measurements answer different questions.
 
 These reference scripts do not save recoverable checkpoints. Use
-`training/pytorch_job.py` and `tools/run_reboot_demo.py` to demonstrate the
+`training/pytorch_job.py` and `tools/demos/reboot_recovery.py` to demonstrate the
 system's tested checkpoint recovery. One epoch of the image benchmarks measures
 execution speed; it does not establish model convergence or held-out accuracy.
 

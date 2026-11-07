@@ -14,7 +14,7 @@ import tempfile
 import uuid
 
 from job_storage import StorageError, verify_workspace
-from job_store import get_job, record_environment, invalidate_environment
+from job_store import get_job, record_environment, invalidate_environment, require_storage_execution
 
 ROOT = Path(__file__).resolve().parents[1]
 HELPER = ROOT / "agent/environment_worker.py"
@@ -143,6 +143,7 @@ def nodes_by_id():
 
 def prepare_on_worker(job_id, node, profile):
     """Transfer cache misses and persist a successful worker record with the input identity."""
+    require_storage_execution(job_id)
     job = get_job(job_id)
     if (
         job is None
@@ -186,6 +187,7 @@ def prepare_on_worker(job_id, node, profile):
 
 def verify_on_worker(job_id, node, modules):
     """Probe a prepared environment in a new worker process and refresh its database record."""
+    require_storage_execution(job_id)
     job = get_job(job_id)
     if job is None or job["status"] not in ("STAGED", "READY"):
         raise PreparationError(

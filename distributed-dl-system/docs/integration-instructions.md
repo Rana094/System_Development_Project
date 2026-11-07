@@ -118,7 +118,7 @@ Log suffixes use the retry count: `attempt-0.log` is the original run and
 After both jobs complete:
 
 ```bash
-.controller-venv/bin/python tools/compare_regression_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
+.controller-venv/bin/python tools/comparisons/compare_regression_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
 ```
 
 Expected result: `pass: true`, identical model/optimizer/scheduler state, equal

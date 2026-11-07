@@ -693,7 +693,7 @@ ssh "$NODE_TO_REBOOT" 'sudo -n reboot'
 BASELINE_ID='paste-baseline-job-id'
 RECOVERY_ID='paste-recovery-job-id'
 .controller-venv/bin/python controller/job_status.py "$RECOVERY_ID"
-.controller-venv/bin/python tools/compare_regression_jobs.py \
+.controller-venv/bin/python tools/comparisons/compare_regression_jobs.py \
   "$BASELINE_ID" "$RECOVERY_ID"
 ```
 
@@ -724,7 +724,7 @@ they train one model.”
 For DDP recovery, first complete an identical baseline, then reboot one rank in
 a second run only after a group checkpoint exists. Show the complete group being
 safely recreated/restored. Compare with
-`tools/compare_training_jobs.py BASELINE_ID RECOVERY_ID`. With only two available
+`tools/comparisons/compare_training_jobs.py BASELINE_ID RECOVERY_ID`. With only two available
 Pis for two ranks, the missing Pi must return unless another compatible candidate
 becomes available. With three prepared candidates, a two-rank group can replace
 one failed machine while it remains offline.

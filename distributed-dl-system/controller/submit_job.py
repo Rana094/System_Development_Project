@@ -5,6 +5,7 @@ import json
 import sqlite3
 import time
 import uuid
+import storage_selection
 from pathlib import Path
 
 from job_store import add_job
@@ -22,9 +23,10 @@ def create_job_id():
     return "job-" + time.strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:12]
 
 
-def create_custom_job(spec, owner):
+def create_custom_job(spec, owner, *, storage_backend=None):
     """Accept a definition, publish its input snapshot, then return the managed receipt."""
     owner = validate_owner(owner)
+    backend = submission_backend(storage_backend)
     job_id = create_job_id()
     add_job(
         job_id,
@@ -34,6 +36,7 @@ def create_custom_job(spec, owner):
         job_config=spec,
         status="RECEIVED",
         owner=owner,
+        storage_backend=backend,
     )
     try:
         stored = stage_job(job_id)
@@ -46,18 +49,45 @@ def create_custom_job(spec, owner):
             {
                 "job_id": job_id,
                 "owner": owner,
-                "status": "STAGED",
+                "status": stored["status"],
                 "submission": {
                     **spec,
                     "project": stored["project_path"],
                     "dataset": stored["dataset_path"],
                 },
                 "storage": stored,
+                **({"storage_selection": {"backend": "nfs", "reason": storage_selection.NFS_HELD_REASON}}
+                   if backend == "nfs" else {}),
             },
             indent=2,
         )
     )
     return job_id
+
+
+def submission_backend(requested=None):
+    """Read only trusted operator config; do not put selection in the job spec."""
+    import sys
+    root = CONTROLLER_DIR.parent
+    path = root / 'config/storage.json'
+    try:
+        path.lstat()
+    except FileNotFoundError:
+        # The historical controller-only CLI remains usable without the new
+        # package/config. Only an actually absent config chooses legacy.
+        backend = 'legacy' if requested is None else storage_selection.validate_backend(requested)
+        if backend == 'nfs':
+            raise ValueError('NFS submissions require operator storage_backend=nfs opt-in')
+        return backend
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+    try:
+        from hybrid_storage.config import load_config, select_submission_backend
+    except ModuleNotFoundError as error:
+        if error.name != 'hybrid_storage':
+            raise
+        raise ValueError('Storage configuration requires the hybrid_storage package in the controller installation') from error
+    return select_submission_backend(load_config(path), requested)
 
 
 # Store extended job definition
@@ -247,6 +277,8 @@ def main():
     )
     parser.add_argument("--spec", type=Path, help="Version-one JSON submission file.")
     parser.add_argument("--owner", help="Student ID or email for --spec submissions.")
+    parser.add_argument("--storage-backend", choices=("legacy", "nfs"),
+                        help="New custom-job storage selection; NFS requires operator opt-in and remains held.")
     parser.add_argument(
         "--validate-only",
         action="store_true",
@@ -359,16 +391,18 @@ def main():
             if args.owner is not None:
                 validate_owner(args.owner)
             if args.validate_only:
+                if args.storage_backend is not None:
+                    submission_backend(args.storage_backend)
                 print(json.dumps({"valid": True, "submission": spec}, indent=2))
             else:
                 if args.owner is None:
                     parser.error("--owner is required when submitting --spec")
-                create_custom_job(spec, args.owner)
+                create_custom_job(spec, args.owner, storage_backend=args.storage_backend)
         except (JobSpecError, StorageError, ValueError) as error:
             parser.error(str(error))
         return
-    if args.owner is not None or args.validate_only:
-        parser.error("--owner and --validate-only require --spec")
+    if args.owner is not None or args.validate_only or args.storage_backend is not None:
+        parser.error("--owner, --validate-only and --storage-backend require --spec")
 
     if args.duration is None:
         args.duration = 30

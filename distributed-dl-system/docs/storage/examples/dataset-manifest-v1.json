@@ -1,0 +1,1 @@
+{"dataset_id":"ds_00000000000000000000000000000000","entries":[{"path":"empty","type":"directory"},{"path":"input.csv","sha256":"5a1e3025c2fcd8b1d88d4bf9625348560cffe6c1c7afffcdee3cab3114ec5423","size_bytes":16,"type":"file"}],"kind":"dataset-manifest","owner":"example-student","previous_manifest_sha256":null,"schema_version":1,"version":1}

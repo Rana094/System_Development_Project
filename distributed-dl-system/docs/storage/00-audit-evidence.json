@@ -1,0 +1,2461 @@
+{
+  "audit_subphase": "0.4",
+  "recorded_at_asia_dhaka": "2026-11-07T19:02:39.716315+06:00",
+  "scope": "Audit/documentation and read-only controller/all-three-Pi probes. No hybrid implementation, migration or deployment.",
+  "provenance": {
+    "subphase": "0.1",
+    "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+    "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "f6e56603f100f3b7620b8d736725d0b9fc20b4ed",
+    "status_counts": {
+      "D ": 943,
+      " M": 13,
+      " D": 10,
+      "??": 24
+    },
+    "status_before_after_identical": true,
+    "status_sha256": "b181927268de970003c0daeda63ca5dff92a2e73f118c214461ae12078e04feb",
+    "staged_tracking_removals_locally_present": 943
+  },
+  "original_first_party_sha256": {
+    "README.md": "5ce735da31bab38a800bad7d9b276bb969aeefebbdd46c622917122bc3393929",
+    ".gitignore": "5e7ddb879fbfd7306183450d353796744c165d1c55fc3600b986a0c6e4db5478",
+    "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+    "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+    "agent/custom_runner.py": "404e33d9932c89a850ae8f1e9f22081aea7e577768dd68aef9eb85814a97a810",
+    "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+    "agent/environment_worker.py": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875",
+    "agent/execution_lease.py": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83",
+    "agent/lease_runner.py": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5",
+    "controller/checkpoint_store.py": "e9df700d4da0f150a8055cd05b1cf611a2d3aedc8a9157de16b3571e5addf7da",
+    "controller/controller.py": "4a14ba6c0a7c3cc0a680926617a5c2b9ace1cd71189599365dbadb71e7b9fd2e",
+    "controller/custom_checkpoints.py": "4266dfd77fbab12c0905e340d9f35e1b6bc965821cb5da1f7c1bcccc0fd66299",
+    "controller/dispatcher.py": "8a175d2785bd7436e4b0f7f8b3b199547aff3b6a04c3df81987ccbc5adb34a6a",
+    "controller/distributed_dispatch.py": "16e91cce6013d4c365aa1ec59c308d204e8e52fc19ba1d6b74ea3cefe8825e8d",
+    "controller/execution_leases.py": "461be753db4319c4b82bb69b9e374e492e15568e5fd399048176e8e4cbf7e41b",
+    "controller/group_checkpoints.py": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2",
+    "controller/job_artifacts.py": "cf94c16628205ab72f46238280bc131edc59e47192c3db63005f3ba441b6ffae",
+    "controller/job_spec.py": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a",
+    "controller/job_status.py": "12d84f2cb1f082fb1de67ee9329115be4352b4f844db0e970b4fd44a0801b20b",
+    "controller/job_storage.py": "01d935c9240ec11873e7c592d019596da5ed86b93497ce29aca4218019b1f79b",
+    "controller/job_store.py": "4ea6d764656473bda6e591948af56d11774d9b73efc4702c9661bcc44d8b152a",
+    "controller/job_timing.py": "dee072e79474e08bbdc97c8fb60584bf9c6ce7707536ce13ee3c194b67b201bf",
+    "controller/migrate_pytorch_jobs.py": "9c52a62a6cd1db3d92a893a8893f050348002ff5291d5f7d0a3c1e41fe2444b6",
+    "controller/portal_static/index.html": "e944aaf3a9942784e1616f56a388778334bf5ba304ba38de749773c0c09406c4",
+    "controller/portal_static/portal.css": "0ee0a548b2d1b6f8829f0ac76b1c0f8f5b2616e46f8fb83c81fe9560bb899035",
+    "controller/portal_static/portal.js": "482c878adf87e202ce30166385083796d8e9ce3ebc5229ee50e8c118c07938c9",
+    "controller/prepare_job.py": "6d648cf6c7e8987a05dd5db560a51be8568cceca11c635469d1db51a4b6e5817",
+    "controller/queue_ctl.py": "c9dead51875b1af7122351c35d1244aa93cc8a6e16e0212f50f4eabdbc63ad26",
+    "controller/queue_job.py": "18d5409d76c074d4bc586ecc6dda2e3049965b7a0dacc1427ef7e4e05a9fccc3",
+    "controller/queue_policy.py": "4a47c261a65b087904d7505a54255593449f8422949d0c34d39cef89cd11260b",
+    "controller/recovery_metrics.py": "dedbe915127817acca96fc0722108eb329f733d80900fcb1089aff8432973809",
+    "controller/recovery_report.py": "edaa3be7b94237a12d5b80ddde611afd666ffa5dd450d2433f149e63f1d9e38c",
+    "controller/scheduler.py": "577f915ed80b44dec1f798c6d7166a5100a276cab4ba12f07f9033c38cc8c58b",
+    "controller/stage_job.py": "79e49d26131e6a453b2414a7a4cf2a3ad51e6041e307a74c433ddadea3debf86",
+    "controller/student_portal.py": "4edbc84bd9aed81a39f199b53057834242ceb0e8cc23fe2712622fbbc52c06a2",
+    "controller/submit_job.py": "62198758e3f21fb48eaabc3d2bb3f8f464451da3fc9efaf2276d2867f937a1b7",
+    "config/README.md": "f427ad8c40fe5714ee72cb55dd263f2f876996795b2cdf9f90db1e2a934173f6",
+    "config/execution_leases.json": "0c487e5d01a121f2b26ea81aa9f6cf1f30b1736d7addc925bf1303935faf30f8",
+    "config/job.schema.json": "8531e354517de209fe12e300b2e93effc1468c00a002e465d8a3f4f77e0e128d",
+    "config/nodes.json": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf",
+    "config/queue_policy.json": "d20d13c1987f69419c190fd09d52f9cdffd297cbc8ecf3c3f694fe2e612fba90",
+    "config/runtime-requirements.txt": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c",
+    "docs/README.md": "97db1b1a398456f6baabf99cb1210253a3e2a00bc60b1790260fb64bc9ce61b9",
+    "docs/architecture.md": "28db000c8cc8244fc924ca167c1bdeaff2ddf327880b788def383d9a18f39f6d",
+    "docs/benchmarks.md": "db93d197e4c9721b8855d34d0cdde5c0de45cdf41d3644131c61ebde67f928dc",
+    "docs/checkpoint-integration.md": "b4abea6b21fa05bf181daf176c2819b38573a88fa6ea809377ef8080f0396db2",
+    "docs/deployment.md": "7991b67a272b8c4e441f08b9c78a7f2df9af8b2b01d533ba1c32005ec492f9c7",
+    "docs/distributed-training.md": "f6cd0efbcfbeb6ea42509a2c8d977852f17f57ea9d97161ee9c8f8ab9a8329d2",
+    "docs/environments.md": "43f3ed8a8904da5911f0199819674a671497a5ff69eb5b6b1e242d8da2303657",
+    "docs/execution-ownership.md": "615bf84ad411e03c88a4b392b027cb9f81d4f1afe61c9c9107ec0ce7a05f7e4e",
+    "docs/integration-instructions.md": "34a06505b15670fcf0593a42ce4a22cc722dbbb95ce3165b3d5181adcb2d0dc2",
+    "docs/project-map.md": "e3291a0ab6343d2c09dad170c036ad1b907e8ae90d4b3aa43613ec236b3a3881",
+    "docs/queue-controls.md": "8d594a7c86f70435c439054f20067d24c615f95607c62ce9c25acb8e3d2813bd",
+    "docs/repository-cleanup.md": "6093551a64e1ba28059b854978f2ef61468ad35f4d931a8dbfb4aacf78210526",
+    "docs/scheduling.md": "4ea90f320127bdcede02ed2ef7aaca64b0beb19b3d25a095575b3b6657452e7a",
+    "docs/storage.md": "b2e1f591c8669d89f6ca4bb61803ceb52eb2795f11ca5904c0bd7b9debec935f",
+    "docs/student-interface.md": "0bb983d1adf01ff15b8f94875184947e8bfb2dceb17a91727713137b463eb650",
+    "docs/submission.md": "13f351e4c2e9e6400965b9fc54bd0af76268042b067aeb302c1f71163acffd5b",
+    "docs/tailscale.md": "c2f83e0858d9515f19f09c24625426e4d9790af9887b642c914732579a59b918",
+    "docs/training-examples.md": "ddb2b814b21a26ea423abfb0aa4ac719db56737b00b972ea829a3da768ea3ae4",
+    "examples/README.md": "a96b9136bfdeac0bd43db04ac05885155a0ec3c53a76234ef015fa1f1eeb53ae",
+    "examples/binary-classification.csv": "8ac0e49a95697b9fc58d3140ba16cb525ad624045d86d1b5656af27ffab50ea7",
+    "examples/checkpoint_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+    "examples/checkpoint_project/train.py": "e332f68f6ce2f6e04c97ed999c5e13dfd501cd7bb9ec259e16ca7074e0eedbb0",
+    "examples/classification_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+    "examples/classification_project/train.py": "7a2bdcaad5f9b31243206db84215a3c5526f0186690001e3d28fcdbd870b9a26",
+    "examples/dataset.csv": "7eff226b1ae4ee6fc085d8c5cf07a6aafddfc6c53b0cb948e624ca2807ce6267",
+    "examples/ddp_project/requirements.txt": "f73b60233c38d0441cebc453b4ef0f3407b685d46b260698127b768a229d42a6",
+    "examples/ddp_project/train.py": "998f21faac1647d2ef878b9841b6ce0c9195146f8ecdffa6942422eff3d4bd90",
+    "examples/image-classification.csv": "67429253845791ddd6e29447fb6e35a909579385b8d3c0dd9a8123529b8fd9a4",
+    "examples/job.binary.json": "9347b10d9faafb366ee6e7459817285709c922aa97b0c99c5e6681e2ff9391ce",
+    "examples/job.checkpoint.json": "64f9f47737ef76c3d8fc512d9b15ddd32f38494379be3dc2160ce0842ca3b4be",
+    "examples/job.cnn.json": "c375bda1de98a4138e82c77874a57e46af772b6857abc3e527107e4f85e9c649",
+    "examples/job.distributed-checkpoint.json": "c3e5a2db1389977a0b896ba87a247d598bcc7da876ff51436453ef1fa04e083e",
+    "examples/job.distributed.json": "32cdf89f1a3f52d60ed6f0e1dcc40998cb4d8101239f4d025965f79295ff76f8",
+    "examples/job.integration.json": "7b838f4207e2b1f148d1fcf867d5bc4640b279fe95274d9efcc3aa2e9a156bd3",
+    "examples/job.scheduling.json": "6bff0921169035c206fdd47e604f99cb163fc2ab66ad7f7a2533f7a6b6179860",
+    "examples/job.single.json": "ffc110dd5f8316f7a517d56319fa87c3b134d8f568eb2b46d64016d1dca4188e",
+    "examples/scheduling_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+    "examples/scheduling_project/train.py": "0814c62294b589205d4f711cca0a89167e37c4ef85265ad56edde9b56792a723",
+    "examples/student_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+    "examples/student_project/train.py": "069b415415a344ff59e709c911940abd865f22dd52713ba4c348f463ad132897",
+    "tests/README.md": "e7b5685889b4e6e702a02b06035ce7b3a48bc051523e81eba0ae02b55a90cdd5",
+    "tests/test_checkpoint_recovery.py": "555a56baf60305d1dfb4984c691fda7781e7a297a8fc52c4a65c9f559e13e42c",
+    "tests/test_cluster_setup.py": "fe70c35f8b690c67c56379f39ab356d3f533472a38ce7e09623673eeea40f4bc",
+    "tests/test_custom_checkpoint.py": "2fe23cee72038561e722710e4791a294e8832dc6f66085aa94c4caeb0fb102a5",
+    "tests/test_distributed_dispatch.py": "24fb466c0f83674fe4a1b7fada4d42ee9fea541c592ad8109736a8d611325a9b",
+    "tests/test_execution_ownership.py": "cb7974a9368800081880a3195f2781dafa8ee7be174fa9f7c2dd289823210a11",
+    "tests/test_group_checkpoint.py": "e5a0ebf6b21890bae12463644922a4b95d16714962bf3161cdb8701913b00e00",
+    "tests/test_group_recovery.py": "acea76283873375c05927f21c2d9b363a82a54d5ed405e8e3958ce092daaa15a",
+    "tests/test_job_environments.py": "e5c36395938b8e5438356d6b06cced51e56d3759500c04b6008d4498b1370362",
+    "tests/test_job_storage.py": "09176eac3ce31891285f9051510e1827184484b0fbfefe42b45f63c0bea41605",
+    "tests/test_job_submission.py": "e97511185b8cc6876b2eda4600651c33c1cae02a2d985aaf6f096e6c5f4792d7",
+    "tests/test_job_timing.py": "f0bcfa50e82ef2f6da12b29944913a69a4f84853634e900cfc6812e1f026273c",
+    "tests/test_queue_controls.py": "3c7841bbd93b05afdf3ff4aff75aabd3c37d175eb752b97712f8f05e4f06b77f",
+    "tests/test_resource_allocation.py": "3c3dca7a08db818b42c992cfcee9f61e53c7e67d85bcab9201a26eb3985d41ae",
+    "tests/test_student_portal.py": "7ce93e5db7b246e5692043b416a59806d5789d3944a847624e1c4daf1f385f94",
+    "tools/README.md": "a481ec851f5936aa7007057b277e3690cd92a100bc134339b86079acef76f630",
+    "tools/benchmarks/benchmark_training.py": "d11d4a97a57da6e1b13ee1b390bb9b4a47a3d8e32767e1d2c0ef34519c0eea75",
+    "tools/benchmarks/run_reference.py": "87d08f05f24ab6c60a6083c10ee6a3c1188aefcc980005104d9c0c56d40b7625",
+    "tools/benchmarks/verify_reference.py": "b7f6e720cfe26a0b4ad7a7c913cdb59692f1cefd371ee2f87349d748eb036620",
+    "tools/cluster_setup.py": "6df5d16d57ffde2bface3d6077622da0f4c60b1143cbdbb968c9ea920ad367aa",
+    "tools/comparisons/compare_regression_jobs.py": "9d664928238a26b0ab10c4a726c405bdfcbfddfe1506dea9e615c75f686c9ecc",
+    "tools/comparisons/compare_training_jobs.py": "024826ab2de508aa89e3e341357de114d94bd00f549d546be6b8c3b345f57b7a",
+    "tools/demos/checkpoint_recovery.py": "a09c272f3ace8758c62efd6ad7643187631e2235c85dd8acc70b3db46023bb6d",
+    "tools/demos/concurrent_jobs.py": "2f26762418051833be0851e084b6c809a1b2389b98a8c19e2876565e8c7d8360",
+    "tools/demos/fair_queue.py": "8bf4f74d365dc44418fe88a0eda30d2da326698cc574df0a94c9329496a7ef34",
+    "tools/demos/prepare_environments.py": "3bbe45fa5fa15748147d7c857d9b2e8dfeb15807470ffaccbffa6c320a7418b7",
+    "tools/demos/reboot_recovery.py": "392ebeaabed6ca60cf7d7971c26c761532ca6130c496349c00793263c16f1378",
+    "tools/run_tests.py": "695f0eda6b1781608be28a44d6770e6b3dd496cc9f1f999c52a4124ff4829e99",
+    "training/README.md": "32c56be0170da0ff86b4a5417bfec46d105c4eabe842e078e9d1bcaddc41a52d",
+    "training/benchmark_job.py": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76",
+    "training/demo_job.py": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49",
+    "training/evaluate_checkpoint.py": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41",
+    "training/pytorch_job.py": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0",
+    "training/reference/README.md": "dbb0280c71ebdfac65e998dca2cf9ff9d24db074fe2f2f7bc37163e3fcaeadd8",
+    "training/reference/equation.py": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb",
+    "training/reference/logistic.py": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98",
+    "training/reference/logistic_train.py": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f",
+    "training/reference/numpy_mlp.py": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160",
+    "training/reference/numpy_mlp_train.py": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac",
+    "training/reference/provenance.json": "a9135e6445300673b3d80c9f310d0cc24e30c29b209a852d7d32eaac6c251e91",
+    "training/reference/resnet18.py": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e",
+    "training/reference/resnet18_inference.py": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c",
+    "training/reference/resnet18_train.py": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0",
+    "training/reference/tiny_cnn.py": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0",
+    "training/reference/tiny_cnn_inference.py": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15",
+    "training/reference/tiny_cnn_train.py": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+  },
+  "phase_0_2_verification": {
+    "subphase": "0.2",
+    "git_status_unchanged": true,
+    "existing_status_counts": {
+      "D ": 943,
+      " M": 13,
+      " D": 10,
+      "??": 24
+    },
+    "first_party_files_compared_with_0_1": 128,
+    "changed_first_party_files": [],
+    "application_imports": 0,
+    "tests_run": 0,
+    "pi_contacts": 0,
+    "service_operations": 0,
+    "repository_files_written": 0,
+    "local_unit_files_read": [
+      "/home/rana/.config/systemd/user/dl-dispatcher.service",
+      "/home/rana/.config/systemd/user/dl-student-portal.service"
+    ],
+    "report": "/tmp/hybrid-storage-0-2-trace.md"
+  },
+  "phase_0_3_verification": {
+    "subphase": "0.3",
+    "git_status_unchanged": true,
+    "git_status_counts": {
+      "D ": 943,
+      " M": 13,
+      " D": 10,
+      "??": 24
+    },
+    "first_party_files_verified": 128,
+    "original_source_changes": [],
+    "snapshot_source_changes": [],
+    "test_methods_available": 104,
+    "selected_tests_passed": 79,
+    "selected_tests_failed": 0,
+    "selected_tests_framework_skipped": 0,
+    "unit_methods_deferred": 25,
+    "standalone_scripts_deferred": 1,
+    "test_files_with_selected_methods": 12,
+    "api_probe_passed": true,
+    "pi_tests_run": 0,
+    "service_operations": 0,
+    "repository_files_written": 0,
+    "report": "/tmp/hybrid-storage-0-3-y8eqvk3f/report.md"
+  },
+  "test_inventory": [
+    {
+      "file": "test_checkpoint_recovery.py",
+      "unit_test_methods": 0,
+      "tests": [],
+      "module_doc": "Isolated regression checks for real model equivalence, controller transitions, and agent launch behavior.",
+      "top_level_imports": [
+        "import contextlib, hashlib, io, os, pathlib, shutil, subprocess, sys, tempfile",
+        "from unittest.mock import patch, Mock, MagicMock",
+        "import torch"
+      ]
+    },
+    {
+      "file": "test_cluster_setup.py",
+      "unit_test_methods": 8,
+      "tests": [
+        "test_invalid_inventory_is_rejected",
+        "test_atomic_registration_preserves_other_settings_and_rejects_duplicates",
+        "test_failed_atomic_write_keeps_inventory",
+        "test_bundle_excludes_runtime_and_controller_secrets",
+        "test_maintenance_excludes_dispatcher_and_portal",
+        "test_maintenance_refuses_active_or_reserved_jobs",
+        "test_service_paths_with_spaces_and_percent_are_quoted",
+        "test_configurable_worker_identity_and_interface"
+      ],
+      "module_doc": "Deployment safety and configuration checks without SSH or the live cluster.",
+      "top_level_imports": [
+        "import importlib.util",
+        "import io",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import sqlite3",
+        "import sys",
+        "import tarfile",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import patch",
+        "import cluster_setup as setup"
+      ]
+    },
+    {
+      "file": "test_custom_checkpoint.py",
+      "unit_test_methods": 4,
+      "tests": [
+        "test_exact_stochastic_model_adam_scheduler_rng_and_position_resume",
+        "test_bad_stale_and_regressing_transfer_preserve_central_bytes",
+        "test_worker_upload_rejects_corruption_without_replacing_resume",
+        "test_zero_exit_without_final_checkpoint_cannot_be_completed"
+      ],
+      "module_doc": "Real stochastic resume equivalence and corrupt-transfer rejection in isolated storage.",
+      "top_level_imports": [
+        "import hashlib",
+        "import importlib.util",
+        "import io",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import Mock, patch",
+        "import zipfile",
+        "from checkpoint_protocol import validate",
+        "import custom_checkpoints as transport"
+      ]
+    },
+    {
+      "file": "test_distributed_dispatch.py",
+      "unit_test_methods": 7,
+      "tests": [
+        "test_atomic_gang_and_migration_preserve_slots",
+        "test_compatibility_and_one_quota_slot_per_group",
+        "test_checkpoint_retries_are_allowed_and_invalid_rank_settings_rejected",
+        "test_uncertain_start_and_all_rank_completion",
+        "test_partial_rejection_stops_every_rank_before_retry",
+        "test_cancel_and_unreachable_rank_hold_allocations",
+        "test_real_two_process_ddp"
+      ],
+      "module_doc": "Verify gang reservations, uncertain starts, peer cleanup and real DDP gradients.",
+      "top_level_imports": [
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import socket",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import patch",
+        "import requests",
+        "import job_store as store",
+        "import distributed_dispatch as ddp"
+      ]
+    },
+    {
+      "file": "test_execution_ownership.py",
+      "unit_test_methods": 12,
+      "tests": [
+        "test_watchdog_kills_all_descendants_without_http_or_sdk_cooperation",
+        "test_primary_exit_cannot_leave_background_training_running",
+        "test_api_restart_reaps_durable_orphan_before_advertising_idle",
+        "test_higher_generation_survives_restart_and_rejects_late_start_and_renewal",
+        "test_clock_skew_and_controller_clock_jump_do_not_allow_early_failover",
+        "test_controller_reboot_holds_old_deadlines_for_maximum_lease_bound",
+        "test_lost_renewal_reply_blocks_revival_and_remembers_possible_deadline",
+        "test_generations_increase_across_attempts_and_node_reuse",
+        "test_stale_checkpoint_cannot_replace_central_after_new_attempt",
+        "test_fenced_artifact_failure_preserves_original_retry_reason",
+        "test_stale_result_transfer_preserves_existing_artifacts",
+        "test_worker_rejects_stale_start_renewal_and_download"
+      ],
+      "module_doc": "Exercise real watchdog expiry, durable generation replay rejection and stale writes.",
+      "top_level_imports": [
+        "import hashlib",
+        "import importlib.util",
+        "import io",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import time",
+        "import unittest",
+        "from unittest.mock import Mock, patch",
+        "import uuid",
+        "import zipfile",
+        "import psutil",
+        "import requests",
+        "import execution_lease as worker",
+        "import execution_leases as controller",
+        "import job_store as store",
+        "import custom_checkpoints as checkpoints",
+        "import job_artifacts as artifacts"
+      ]
+    },
+    {
+      "file": "test_group_checkpoint.py",
+      "unit_test_methods": 8,
+      "tests": [
+        "test_complete_cut_preserves_rank_buffers_rng_and_optimizer",
+        "test_missing_numpy_fails_before_checkpoint_collectives",
+        "test_disagreeing_optimizer_does_not_publish",
+        "test_rejected_ack_does_not_publish",
+        "test_disk_failure_preserves_previous_bundle",
+        "test_rank_dies_during_ack_previous_bundle_remains",
+        "test_corrupt_partial_stale_and_wrong_group_cannot_replace_central",
+        "test_missing_final_group_checkpoint_cannot_complete_job"
+      ],
+      "module_doc": "Exercise real DDP checkpoint cuts, failed acknowledgments and central transfer guards.",
+      "top_level_imports": [
+        "import hashlib",
+        "import importlib.util",
+        "import io",
+        "import json",
+        "import os",
+        "import shutil",
+        "from pathlib import Path",
+        "import socket",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import time",
+        "import unittest",
+        "from unittest.mock import Mock, patch",
+        "import zipfile",
+        "from checkpoint_protocol import validate_group, group_identity",
+        "import group_checkpoints as central",
+        "import job_store as store"
+      ]
+    },
+    {
+      "file": "test_group_recovery.py",
+      "unit_test_methods": 7,
+      "tests": [
+        "test_exact_stochastic_resume_with_rank_buffers_all_rng_and_application_state",
+        "test_no_rank_trains_or_acknowledges_before_all_application_callbacks_finish",
+        "test_corrupt_different_cut_and_callback_failure_reject_whole_restore",
+        "test_worker_group_upload_preserves_resume_after_bad_bytes_or_world_size",
+        "test_transfers_finish_before_any_launch_and_restart_skips_busy_uploads",
+        "test_wrong_or_missing_restore_ack_cannot_complete",
+        "test_known_missing_checkpoint_fails_closed_before_reservation"
+      ],
+      "module_doc": "Verify coordinated restore with stochastic training and durable controller gates.",
+      "top_level_imports": [
+        "import hashlib",
+        "import importlib.util",
+        "import io",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import socket",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import time",
+        "import unittest",
+        "from unittest.mock import Mock, patch",
+        "import zipfile",
+        "from checkpoint_protocol import group_identity, validate_group",
+        "import distributed_dispatch as dispatch",
+        "import group_checkpoints as central",
+        "import job_store as store",
+        "import recovery_metrics as metrics",
+        "from test_group_checkpoint import same"
+      ]
+    },
+    {
+      "file": "test_job_environments.py",
+      "unit_test_methods": 6,
+      "tests": [
+        "test_custom_runner_uses_prepared_interpreter_dataset_and_cpu_affinity",
+        "test_real_installation_two_versions_isolation_and_cache_reuse",
+        "test_incompatible_python_and_failed_install_never_become_ready",
+        "test_distributed_readiness_counts_compatible_candidates_and_invalidates_stale_records",
+        "test_corrupt_cache_and_package_inventory_are_rejected",
+        "test_cpu_profile_rejects_gpu_requests_before_installing"
+      ],
+      "module_doc": "Real offline pip installation, environment separation and readiness transitions.",
+      "top_level_imports": [
+        "import hashlib",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import shutil",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import patch",
+        "import uuid",
+        "import zipfile",
+        "import job_store as store",
+        "import job_storage as storage",
+        "import prepare_job as preparation",
+        "from job_spec import validate_spec"
+      ]
+    },
+    {
+      "file": "test_job_storage.py",
+      "unit_test_methods": 9,
+      "tests": [
+        "test_owned_copy_survives_input_removal_and_controller_restart",
+        "test_versions_depend_on_content_and_isolate_students",
+        "test_source_data_and_manifest_tampering_are_detected",
+        "test_crash_after_publish_reconciles_without_original_inputs",
+        "test_interrupted_copy_never_publishes_and_retry_cleans_partial_workspace",
+        "test_zip_projects_and_datasets_and_generated_data",
+        "test_unsafe_zip_and_links_do_not_escape_storage",
+        "test_concurrent_staging_lock_and_input_mutation",
+        "test_dataset_directory_and_recursive_destination"
+      ],
+      "module_doc": "Managed input storage, crash reconciliation and content integrity in temporary state.",
+      "top_level_imports": [
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import shutil",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import patch",
+        "import zipfile",
+        "import stat",
+        "import job_store as store",
+        "import job_storage as storage",
+        "from job_spec import validate_spec"
+      ]
+    },
+    {
+      "file": "test_job_submission.py",
+      "unit_test_methods": 6,
+      "tests": [
+        "test_both_modes_and_lab_resource_declarations",
+        "test_zip_project_and_generated_dataset",
+        "test_reject_invalid_fields_and_cross_field_settings",
+        "test_missing_input_corrupt_zip_and_escaping_dependency",
+        "test_strict_json_and_owner",
+        "test_cli_atomic_persistence_and_dispatch_boundary"
+      ],
+      "module_doc": "Submission contract and CLI checks using temporary inputs and an isolated database.",
+      "top_level_imports": [
+        "import copy",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import shutil",
+        "import sqlite3",
+        "import subprocess",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "import zipfile",
+        "from job_spec import JobSpecError, load_spec, validate_owner, validate_spec"
+      ]
+    },
+    {
+      "file": "test_job_timing.py",
+      "unit_test_methods": 4,
+      "tests": [
+        "test_recovery_wall_time_includes_gap_and_preserves_final_attempt_scope",
+        "test_ddp_uses_slowest_rank_not_total",
+        "test_historical_and_unmeasured_values_are_not_invented",
+        "test_legacy_ddp_loop_duration_supported_and_nonfinite_rejected"
+      ],
+      "module_doc": "Timing reports distinguish training duration, recovery downtime and DDP rank overlap.",
+      "top_level_imports": [
+        "import json",
+        "from pathlib import Path",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from job_timing import build_report"
+      ]
+    },
+    {
+      "file": "test_queue_controls.py",
+      "unit_test_methods": 10,
+      "tests": [
+        "test_owner_turns_fifo_and_service_survive_restart",
+        "test_active_limit_includes_uncertain_start_and_cancelling",
+        "test_pending_quota_atomic_with_concurrent_submissions",
+        "test_owner_controls_and_hold_cannot_be_overwritten_by_placement",
+        "test_cancel_intent_wins_late_start_completion_and_retry",
+        "test_offline_cancellation_retains_slot_then_confirms_exit",
+        "test_worker_cancellation_blocks_late_start_across_reload",
+        "test_missing_attempt_needs_worker_tombstone_before_release",
+        "test_worker_cleans_child_that_ignores_termination",
+        "test_aging_promotes_waiting_owner_and_overrides_are_validated"
+      ],
+      "module_doc": "Fairness, atomic student quotas, durable controls and cancellation reconciliation.",
+      "top_level_imports": [
+        "import json",
+        "import importlib.util",
+        "import os",
+        "import signal",
+        "import subprocess",
+        "import time",
+        "from pathlib import Path",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import Mock, patch",
+        "from concurrent.futures import ThreadPoolExecutor",
+        "import job_store as store",
+        "import queue_policy as policy",
+        "import dispatcher",
+        "import requests"
+      ]
+    },
+    {
+      "file": "test_resource_allocation.py",
+      "unit_test_methods": 6,
+      "tests": [
+        "test_exclusive_reservation_and_definitive_release",
+        "test_agent_custom_snapshot_admission_and_idempotent_start",
+        "test_uncertain_http_start_keeps_reservation_until_reconciled",
+        "test_capacity_and_reserved_worker_filter",
+        "test_enqueue_requires_supported_execution",
+        "test_enqueue_requires_configured_prepared_candidate"
+      ],
+      "module_doc": "Check admission, exclusive durable placement and mode gates using an isolated database.",
+      "top_level_imports": [
+        "import json",
+        "import importlib.util",
+        "from pathlib import Path",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import patch",
+        "import job_store as store",
+        "import scheduler",
+        "import dispatcher",
+        "import requests"
+      ]
+    },
+    {
+      "file": "test_student_portal.py",
+      "unit_test_methods": 17,
+      "tests": [
+        "test_auth_csrf_and_owner_controls",
+        "test_uploaded_source_and_data_survive_temporary_directory",
+        "test_unsafe_zip_never_creates_job_or_escapes",
+        "test_no_controller_path_input_or_owner_spoofing",
+        "test_hold_release_cancel_and_queue_position",
+        "test_prep_request_cancelled_before_execution_does_not_launch",
+        "test_successful_preparation_uses_existing_enqueue",
+        "test_restart_recovers_preparation_and_error_can_be_retried",
+        "test_result_zip_and_log_tail_exclude_escape",
+        "test_recovery_history_survives_many_checkpoints",
+        "test_live_log_fencing_and_unavailable_worker",
+        "test_short_live_log_retries_unsatisfiable_suffix_range",
+        "test_single_example_rejects_distributed_before_creating_job",
+        "test_ddp_batch_must_match_worker_count",
+        "test_ddp_single_checkpoint_is_rejected_before_staging",
+        "test_terminal_detail_reports_timing",
+        "test_example_package_and_security_headers"
+      ],
+      "module_doc": "Isolated browser API checks: uploads, owner boundaries, queue controls and downloads.",
+      "top_level_imports": [
+        "from contextlib import closing",
+        "import io",
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "import sqlite3",
+        "import sys",
+        "import tempfile",
+        "import unittest",
+        "from unittest.mock import patch, Mock",
+        "import zipfile",
+        "import student_portal as portal",
+        "import job_store as store",
+        "import recovery_metrics",
+        "import queue_policy"
+      ]
+    }
+  ],
+  "test_selection": [
+    {
+      "file": "test_checkpoint_recovery.py",
+      "selected": [],
+      "deferred": [
+        {
+          "test": "standalone_assertion_script",
+          "reason": "Deferred repeated legacy model training/interruption equivalence integration."
+        }
+      ]
+    },
+    {
+      "file": "test_cluster_setup.py",
+      "selected": [
+        "DeploymentTests.test_invalid_inventory_is_rejected",
+        "DeploymentTests.test_atomic_registration_preserves_other_settings_and_rejects_duplicates",
+        "DeploymentTests.test_failed_atomic_write_keeps_inventory",
+        "DeploymentTests.test_bundle_excludes_runtime_and_controller_secrets",
+        "DeploymentTests.test_maintenance_excludes_dispatcher_and_portal",
+        "DeploymentTests.test_maintenance_refuses_active_or_reserved_jobs",
+        "DeploymentTests.test_service_paths_with_spaces_and_percent_are_quoted",
+        "DeploymentTests.test_configurable_worker_identity_and_interface"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_custom_checkpoint.py",
+      "selected": [
+        "CheckpointTests.test_bad_stale_and_regressing_transfer_preserve_central_bytes",
+        "CheckpointTests.test_worker_upload_rejects_corruption_without_replacing_resume",
+        "CheckpointTests.test_zero_exit_without_final_checkpoint_cannot_be_completed"
+      ],
+      "deferred": [
+        {
+          "test": "CheckpointTests.test_exact_stochastic_model_adam_scheduler_rng_and_position_resume",
+          "reason": "Deferred repeated training/interruption equivalence integration."
+        }
+      ]
+    },
+    {
+      "file": "test_distributed_dispatch.py",
+      "selected": [
+        "GroupTests.test_atomic_gang_and_migration_preserve_slots",
+        "GroupTests.test_compatibility_and_one_quota_slot_per_group",
+        "GroupTests.test_checkpoint_retries_are_allowed_and_invalid_rank_settings_rejected",
+        "GroupTests.test_uncertain_start_and_all_rank_completion",
+        "GroupTests.test_partial_rejection_stops_every_rank_before_retry",
+        "GroupTests.test_cancel_and_unreachable_rank_hold_allocations"
+      ],
+      "deferred": [
+        {
+          "test": "GroupTests.test_real_two_process_ddp",
+          "reason": "Deferred real multi-process DDP training."
+        }
+      ]
+    },
+    {
+      "file": "test_execution_ownership.py",
+      "selected": [
+        "OwnershipTests.test_higher_generation_survives_restart_and_rejects_late_start_and_renewal",
+        "OwnershipTests.test_clock_skew_and_controller_clock_jump_do_not_allow_early_failover",
+        "OwnershipTests.test_controller_reboot_holds_old_deadlines_for_maximum_lease_bound",
+        "OwnershipTests.test_lost_renewal_reply_blocks_revival_and_remembers_possible_deadline",
+        "OwnershipTests.test_generations_increase_across_attempts_and_node_reuse",
+        "OwnershipTests.test_stale_checkpoint_cannot_replace_central_after_new_attempt",
+        "OwnershipTests.test_fenced_artifact_failure_preserves_original_retry_reason",
+        "OwnershipTests.test_stale_result_transfer_preserves_existing_artifacts",
+        "OwnershipTests.test_worker_rejects_stale_start_renewal_and_download"
+      ],
+      "deferred": [
+        {
+          "test": "OwnershipTests.test_watchdog_kills_all_descendants_without_http_or_sdk_cooperation",
+          "reason": "Deferred process-group kill/watchdog fault-injection integration."
+        },
+        {
+          "test": "OwnershipTests.test_primary_exit_cannot_leave_background_training_running",
+          "reason": "Deferred process-group kill/watchdog fault-injection integration."
+        },
+        {
+          "test": "OwnershipTests.test_api_restart_reaps_durable_orphan_before_advertising_idle",
+          "reason": "Deferred process-group kill/watchdog fault-injection integration."
+        }
+      ]
+    },
+    {
+      "file": "test_group_checkpoint.py",
+      "selected": [
+        "GroupCheckpointTests.test_missing_final_group_checkpoint_cannot_complete_job"
+      ],
+      "deferred": [
+        {
+          "test": "GroupCheckpointTests.test_complete_cut_preserves_rank_buffers_rng_and_optimizer",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_missing_numpy_fails_before_checkpoint_collectives",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_disagreeing_optimizer_does_not_publish",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_rejected_ack_does_not_publish",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_disk_failure_preserves_previous_bundle",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_rank_dies_during_ack_previous_bundle_remains",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_corrupt_partial_stale_and_wrong_group_cannot_replace_central",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        }
+      ]
+    },
+    {
+      "file": "test_group_recovery.py",
+      "selected": [],
+      "deferred": [
+        {
+          "test": "RecoveryTests.test_exact_stochastic_resume_with_rank_buffers_all_rng_and_application_state",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        },
+        {
+          "test": "RecoveryTests.test_no_rank_trains_or_acknowledges_before_all_application_callbacks_finish",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        },
+        {
+          "test": "RecoveryTests.test_corrupt_different_cut_and_callback_failure_reject_whole_restore",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        },
+        {
+          "test": "RecoveryTests.test_worker_group_upload_preserves_resume_after_bad_bytes_or_world_size",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        },
+        {
+          "test": "RecoveryTests.test_transfers_finish_before_any_launch_and_restart_skips_busy_uploads",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        },
+        {
+          "test": "RecoveryTests.test_wrong_or_missing_restore_ack_cannot_complete",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        },
+        {
+          "test": "RecoveryTests.test_known_missing_checkpoint_fails_closed_before_reservation",
+          "reason": "Deferred coordinated multi-process DDP training/recovery integration."
+        }
+      ]
+    },
+    {
+      "file": "test_job_environments.py",
+      "selected": [
+        "EnvironmentTests.test_cpu_profile_rejects_gpu_requests_before_installing"
+      ],
+      "deferred": [
+        {
+          "test": "EnvironmentTests.test_custom_runner_uses_prepared_interpreter_dataset_and_cpu_affinity",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_real_installation_two_versions_isolation_and_cache_reuse",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_incompatible_python_and_failed_install_never_become_ready",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_distributed_readiness_counts_compatible_candidates_and_invalidates_stale_records",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_corrupt_cache_and_package_inventory_are_rejected",
+          "reason": "Deferred repeated venv/pip installation integration."
+        }
+      ]
+    },
+    {
+      "file": "test_job_storage.py",
+      "selected": [
+        "StorageTests.test_owned_copy_survives_input_removal_and_controller_restart",
+        "StorageTests.test_versions_depend_on_content_and_isolate_students",
+        "StorageTests.test_source_data_and_manifest_tampering_are_detected",
+        "StorageTests.test_crash_after_publish_reconciles_without_original_inputs",
+        "StorageTests.test_interrupted_copy_never_publishes_and_retry_cleans_partial_workspace",
+        "StorageTests.test_zip_projects_and_datasets_and_generated_data",
+        "StorageTests.test_unsafe_zip_and_links_do_not_escape_storage",
+        "StorageTests.test_concurrent_staging_lock_and_input_mutation",
+        "StorageTests.test_dataset_directory_and_recursive_destination"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_job_submission.py",
+      "selected": [
+        "SubmissionValidationTests.test_both_modes_and_lab_resource_declarations",
+        "SubmissionValidationTests.test_zip_project_and_generated_dataset",
+        "SubmissionValidationTests.test_reject_invalid_fields_and_cross_field_settings",
+        "SubmissionValidationTests.test_missing_input_corrupt_zip_and_escaping_dependency",
+        "SubmissionValidationTests.test_strict_json_and_owner",
+        "SubmissionIntegrationTests.test_cli_atomic_persistence_and_dispatch_boundary"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_job_timing.py",
+      "selected": [
+        "TimingTests.test_recovery_wall_time_includes_gap_and_preserves_final_attempt_scope",
+        "TimingTests.test_ddp_uses_slowest_rank_not_total",
+        "TimingTests.test_historical_and_unmeasured_values_are_not_invented",
+        "TimingTests.test_legacy_ddp_loop_duration_supported_and_nonfinite_rejected"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_queue_controls.py",
+      "selected": [
+        "QueueTests.test_owner_turns_fifo_and_service_survive_restart",
+        "QueueTests.test_active_limit_includes_uncertain_start_and_cancelling",
+        "QueueTests.test_pending_quota_atomic_with_concurrent_submissions",
+        "QueueTests.test_owner_controls_and_hold_cannot_be_overwritten_by_placement",
+        "QueueTests.test_cancel_intent_wins_late_start_completion_and_retry",
+        "QueueTests.test_offline_cancellation_retains_slot_then_confirms_exit",
+        "QueueTests.test_worker_cancellation_blocks_late_start_across_reload",
+        "QueueTests.test_missing_attempt_needs_worker_tombstone_before_release",
+        "QueueTests.test_aging_promotes_waiting_owner_and_overrides_are_validated"
+      ],
+      "deferred": [
+        {
+          "test": "QueueTests.test_worker_cleans_child_that_ignores_termination",
+          "reason": "Deferred SIGTERM/SIGKILL child-process fault injection."
+        }
+      ]
+    },
+    {
+      "file": "test_resource_allocation.py",
+      "selected": [
+        "AllocationTests.test_exclusive_reservation_and_definitive_release",
+        "AllocationTests.test_agent_custom_snapshot_admission_and_idempotent_start",
+        "AllocationTests.test_uncertain_http_start_keeps_reservation_until_reconciled",
+        "AllocationTests.test_capacity_and_reserved_worker_filter",
+        "AllocationTests.test_enqueue_requires_supported_execution",
+        "AllocationTests.test_enqueue_requires_configured_prepared_candidate"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_student_portal.py",
+      "selected": [
+        "PortalTests.test_auth_csrf_and_owner_controls",
+        "PortalTests.test_uploaded_source_and_data_survive_temporary_directory",
+        "PortalTests.test_unsafe_zip_never_creates_job_or_escapes",
+        "PortalTests.test_no_controller_path_input_or_owner_spoofing",
+        "PortalTests.test_hold_release_cancel_and_queue_position",
+        "PortalTests.test_prep_request_cancelled_before_execution_does_not_launch",
+        "PortalTests.test_successful_preparation_uses_existing_enqueue",
+        "PortalTests.test_restart_recovers_preparation_and_error_can_be_retried",
+        "PortalTests.test_result_zip_and_log_tail_exclude_escape",
+        "PortalTests.test_recovery_history_survives_many_checkpoints",
+        "PortalTests.test_live_log_fencing_and_unavailable_worker",
+        "PortalTests.test_short_live_log_retries_unsatisfiable_suffix_range",
+        "PortalTests.test_single_example_rejects_distributed_before_creating_job",
+        "PortalTests.test_ddp_batch_must_match_worker_count",
+        "PortalTests.test_ddp_single_checkpoint_is_rejected_before_staging",
+        "PortalTests.test_terminal_detail_reports_timing",
+        "PortalTests.test_example_package_and_security_headers"
+      ],
+      "deferred": []
+    }
+  ],
+  "test_results": [
+    {
+      "file": "test_cluster_setup.py",
+      "selected_count": 8,
+      "ran_count": 8,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.466,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_cluster_setup.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_cluster_setup.py",
+        "DeploymentTests.test_invalid_inventory_is_rejected",
+        "DeploymentTests.test_atomic_registration_preserves_other_settings_and_rejects_duplicates",
+        "DeploymentTests.test_failed_atomic_write_keeps_inventory",
+        "DeploymentTests.test_bundle_excludes_runtime_and_controller_secrets",
+        "DeploymentTests.test_maintenance_excludes_dispatcher_and_portal",
+        "DeploymentTests.test_maintenance_refuses_active_or_reserved_jobs",
+        "DeploymentTests.test_service_paths_with_spaces_and_percent_are_quoted",
+        "DeploymentTests.test_configurable_worker_identity_and_interface",
+        "-v"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_custom_checkpoint.py",
+      "selected_count": 3,
+      "ran_count": 3,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.465,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_custom_checkpoint.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_custom_checkpoint.py",
+        "CheckpointTests.test_bad_stale_and_regressing_transfer_preserve_central_bytes",
+        "CheckpointTests.test_worker_upload_rejects_corruption_without_replacing_resume",
+        "CheckpointTests.test_zero_exit_without_final_checkpoint_cannot_be_completed",
+        "-v"
+      ],
+      "deferred": [
+        {
+          "test": "CheckpointTests.test_exact_stochastic_model_adam_scheduler_rng_and_position_resume",
+          "reason": "Deferred repeated training/interruption equivalence integration."
+        }
+      ]
+    },
+    {
+      "file": "test_distributed_dispatch.py",
+      "selected_count": 6,
+      "ran_count": 6,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.616,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_distributed_dispatch.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_distributed_dispatch.py",
+        "GroupTests.test_atomic_gang_and_migration_preserve_slots",
+        "GroupTests.test_compatibility_and_one_quota_slot_per_group",
+        "GroupTests.test_checkpoint_retries_are_allowed_and_invalid_rank_settings_rejected",
+        "GroupTests.test_uncertain_start_and_all_rank_completion",
+        "GroupTests.test_partial_rejection_stops_every_rank_before_retry",
+        "GroupTests.test_cancel_and_unreachable_rank_hold_allocations",
+        "-v"
+      ],
+      "deferred": [
+        {
+          "test": "GroupTests.test_real_two_process_ddp",
+          "reason": "Deferred real multi-process DDP training."
+        }
+      ]
+    },
+    {
+      "file": "test_execution_ownership.py",
+      "selected_count": 9,
+      "ran_count": 9,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.916,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_execution_ownership.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_execution_ownership.py",
+        "OwnershipTests.test_higher_generation_survives_restart_and_rejects_late_start_and_renewal",
+        "OwnershipTests.test_clock_skew_and_controller_clock_jump_do_not_allow_early_failover",
+        "OwnershipTests.test_controller_reboot_holds_old_deadlines_for_maximum_lease_bound",
+        "OwnershipTests.test_lost_renewal_reply_blocks_revival_and_remembers_possible_deadline",
+        "OwnershipTests.test_generations_increase_across_attempts_and_node_reuse",
+        "OwnershipTests.test_stale_checkpoint_cannot_replace_central_after_new_attempt",
+        "OwnershipTests.test_fenced_artifact_failure_preserves_original_retry_reason",
+        "OwnershipTests.test_stale_result_transfer_preserves_existing_artifacts",
+        "OwnershipTests.test_worker_rejects_stale_start_renewal_and_download",
+        "-v"
+      ],
+      "deferred": [
+        {
+          "test": "OwnershipTests.test_watchdog_kills_all_descendants_without_http_or_sdk_cooperation",
+          "reason": "Deferred process-group kill/watchdog fault-injection integration."
+        },
+        {
+          "test": "OwnershipTests.test_primary_exit_cannot_leave_background_training_running",
+          "reason": "Deferred process-group kill/watchdog fault-injection integration."
+        },
+        {
+          "test": "OwnershipTests.test_api_restart_reaps_durable_orphan_before_advertising_idle",
+          "reason": "Deferred process-group kill/watchdog fault-injection integration."
+        }
+      ]
+    },
+    {
+      "file": "test_group_checkpoint.py",
+      "selected_count": 1,
+      "ran_count": 1,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.315,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_group_checkpoint.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_group_checkpoint.py",
+        "GroupCheckpointTests.test_missing_final_group_checkpoint_cannot_complete_job",
+        "-v"
+      ],
+      "deferred": [
+        {
+          "test": "GroupCheckpointTests.test_complete_cut_preserves_rank_buffers_rng_and_optimizer",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_missing_numpy_fails_before_checkpoint_collectives",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_disagreeing_optimizer_does_not_publish",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_rejected_ack_does_not_publish",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_disk_failure_preserves_previous_bundle",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_rank_dies_during_ack_previous_bundle_remains",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        },
+        {
+          "test": "GroupCheckpointTests.test_corrupt_partial_stale_and_wrong_group_cannot_replace_central",
+          "reason": "Deferred multi-process DDP checkpoint/fault-injection integration."
+        }
+      ]
+    },
+    {
+      "file": "test_job_environments.py",
+      "selected_count": 1,
+      "ran_count": 1,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.265,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_job_environments.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_job_environments.py",
+        "EnvironmentTests.test_cpu_profile_rejects_gpu_requests_before_installing",
+        "-v"
+      ],
+      "deferred": [
+        {
+          "test": "EnvironmentTests.test_custom_runner_uses_prepared_interpreter_dataset_and_cpu_affinity",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_real_installation_two_versions_isolation_and_cache_reuse",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_incompatible_python_and_failed_install_never_become_ready",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_distributed_readiness_counts_compatible_candidates_and_invalidates_stale_records",
+          "reason": "Deferred repeated venv/pip installation integration."
+        },
+        {
+          "test": "EnvironmentTests.test_corrupt_cache_and_package_inventory_are_rejected",
+          "reason": "Deferred repeated venv/pip installation integration."
+        }
+      ]
+    },
+    {
+      "file": "test_job_storage.py",
+      "selected_count": 9,
+      "ran_count": 9,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 1.267,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_job_storage.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_job_storage.py",
+        "StorageTests.test_owned_copy_survives_input_removal_and_controller_restart",
+        "StorageTests.test_versions_depend_on_content_and_isolate_students",
+        "StorageTests.test_source_data_and_manifest_tampering_are_detected",
+        "StorageTests.test_crash_after_publish_reconciles_without_original_inputs",
+        "StorageTests.test_interrupted_copy_never_publishes_and_retry_cleans_partial_workspace",
+        "StorageTests.test_zip_projects_and_datasets_and_generated_data",
+        "StorageTests.test_unsafe_zip_and_links_do_not_escape_storage",
+        "StorageTests.test_concurrent_staging_lock_and_input_mutation",
+        "StorageTests.test_dataset_directory_and_recursive_destination",
+        "-v"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_job_submission.py",
+      "selected_count": 6,
+      "ran_count": 6,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.766,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_job_submission.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_job_submission.py",
+        "SubmissionValidationTests.test_both_modes_and_lab_resource_declarations",
+        "SubmissionValidationTests.test_zip_project_and_generated_dataset",
+        "SubmissionValidationTests.test_reject_invalid_fields_and_cross_field_settings",
+        "SubmissionValidationTests.test_missing_input_corrupt_zip_and_escaping_dependency",
+        "SubmissionValidationTests.test_strict_json_and_owner",
+        "SubmissionIntegrationTests.test_cli_atomic_persistence_and_dispatch_boundary",
+        "-v"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_job_timing.py",
+      "selected_count": 4,
+      "ran_count": 4,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.064,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_job_timing.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_job_timing.py",
+        "TimingTests.test_recovery_wall_time_includes_gap_and_preserves_final_attempt_scope",
+        "TimingTests.test_ddp_uses_slowest_rank_not_total",
+        "TimingTests.test_historical_and_unmeasured_values_are_not_invented",
+        "TimingTests.test_legacy_ddp_loop_duration_supported_and_nonfinite_rejected",
+        "-v"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_queue_controls.py",
+      "selected_count": 9,
+      "ran_count": 9,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.716,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_queue_controls.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_queue_controls.py",
+        "QueueTests.test_owner_turns_fifo_and_service_survive_restart",
+        "QueueTests.test_active_limit_includes_uncertain_start_and_cancelling",
+        "QueueTests.test_pending_quota_atomic_with_concurrent_submissions",
+        "QueueTests.test_owner_controls_and_hold_cannot_be_overwritten_by_placement",
+        "QueueTests.test_cancel_intent_wins_late_start_completion_and_retry",
+        "QueueTests.test_offline_cancellation_retains_slot_then_confirms_exit",
+        "QueueTests.test_worker_cancellation_blocks_late_start_across_reload",
+        "QueueTests.test_missing_attempt_needs_worker_tombstone_before_release",
+        "QueueTests.test_aging_promotes_waiting_owner_and_overrides_are_validated",
+        "-v"
+      ],
+      "deferred": [
+        {
+          "test": "QueueTests.test_worker_cleans_child_that_ignores_termination",
+          "reason": "Deferred SIGTERM/SIGKILL child-process fault injection."
+        }
+      ]
+    },
+    {
+      "file": "test_resource_allocation.py",
+      "selected_count": 6,
+      "ran_count": 6,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.767,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_resource_allocation.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_resource_allocation.py",
+        "AllocationTests.test_exclusive_reservation_and_definitive_release",
+        "AllocationTests.test_agent_custom_snapshot_admission_and_idempotent_start",
+        "AllocationTests.test_uncertain_http_start_keeps_reservation_until_reconciled",
+        "AllocationTests.test_capacity_and_reserved_worker_filter",
+        "AllocationTests.test_enqueue_requires_supported_execution",
+        "AllocationTests.test_enqueue_requires_configured_prepared_candidate",
+        "-v"
+      ],
+      "deferred": []
+    },
+    {
+      "file": "test_student_portal.py",
+      "selected_count": 17,
+      "ran_count": 17,
+      "returncode": 0,
+      "timeout": false,
+      "elapsed_seconds": 7.936,
+      "log": "/tmp/hybrid-storage-0-3-y8eqvk3f/logs/test_student_portal.py.log",
+      "command": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "/tmp/hybrid-storage-0-3-y8eqvk3f/source/tests/test_student_portal.py",
+        "PortalTests.test_auth_csrf_and_owner_controls",
+        "PortalTests.test_uploaded_source_and_data_survive_temporary_directory",
+        "PortalTests.test_unsafe_zip_never_creates_job_or_escapes",
+        "PortalTests.test_no_controller_path_input_or_owner_spoofing",
+        "PortalTests.test_hold_release_cancel_and_queue_position",
+        "PortalTests.test_prep_request_cancelled_before_execution_does_not_launch",
+        "PortalTests.test_successful_preparation_uses_existing_enqueue",
+        "PortalTests.test_restart_recovers_preparation_and_error_can_be_retried",
+        "PortalTests.test_result_zip_and_log_tail_exclude_escape",
+        "PortalTests.test_recovery_history_survives_many_checkpoints",
+        "PortalTests.test_live_log_fencing_and_unavailable_worker",
+        "PortalTests.test_short_live_log_retries_unsatisfiable_suffix_range",
+        "PortalTests.test_single_example_rejects_distributed_before_creating_job",
+        "PortalTests.test_ddp_batch_must_match_worker_count",
+        "PortalTests.test_ddp_single_checkpoint_is_rejected_before_staging",
+        "PortalTests.test_terminal_detail_reports_timing",
+        "PortalTests.test_example_package_and_security_headers",
+        "-v"
+      ],
+      "deferred": []
+    }
+  ],
+  "test_logs": {
+    "test_cluster_setup.py.log": "test_invalid_inventory_is_rejected (__main__.DeploymentTests.test_invalid_inventory_is_rejected) ... ok\ntest_atomic_registration_preserves_other_settings_and_rejects_duplicates (__main__.DeploymentTests.test_atomic_registration_preserves_other_settings_and_rejects_duplicates) ... ok\ntest_failed_atomic_write_keeps_inventory (__main__.DeploymentTests.test_failed_atomic_write_keeps_inventory) ... ok\ntest_bundle_excludes_runtime_and_controller_secrets (__main__.DeploymentTests.test_bundle_excludes_runtime_and_controller_secrets) ... ok\ntest_maintenance_excludes_dispatcher_and_portal (__main__.DeploymentTests.test_maintenance_excludes_dispatcher_and_portal) ... ok\ntest_maintenance_refuses_active_or_reserved_jobs (__main__.DeploymentTests.test_maintenance_refuses_active_or_reserved_jobs) ... ok\ntest_service_paths_with_spaces_and_percent_are_quoted (__main__.DeploymentTests.test_service_paths_with_spaces_and_percent_are_quoted) ... ok\ntest_configurable_worker_identity_and_interface (__main__.DeploymentTests.test_configurable_worker_identity_and_interface) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.289s\n\nOK\n",
+    "test_custom_checkpoint.py.log": "test_bad_stale_and_regressing_transfer_preserve_central_bytes (__main__.CheckpointTests.test_bad_stale_and_regressing_transfer_preserve_central_bytes) ... ok\ntest_worker_upload_rejects_corruption_without_replacing_resume (__main__.CheckpointTests.test_worker_upload_rejects_corruption_without_replacing_resume) ... ok\ntest_zero_exit_without_final_checkpoint_cannot_be_completed (__main__.CheckpointTests.test_zero_exit_without_final_checkpoint_cannot_be_completed) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.210s\n\nOK\n[CUSTOM_CHECKPOINT_PENDING] j: Checkpoint state hash mismatch\n[CUSTOM_CHECKPOINT_PENDING] j: Checkpoint progress regressed\n[CUSTOM_CHECKPOINT_PENDING] j: Checkpoint belongs to a different attempt\n[FINAL_CUSTOM_CHECKPOINT_PENDING] missing-final: Trainer exited without a validated final SDK checkpoint\n[FINAL_CUSTOM_CHECKPOINT_PENDING] missing-final: Trainer exited without a validated final SDK checkpoint\n\n[FAILURE_DETECTED] missing-final\nNode: pi01\nReason: Trainer exited without a validated final SDK checkpoint\npi01 marked unhealthy for 20s\nmissing-final -> FAILED\n",
+    "test_distributed_dispatch.py.log": "test_atomic_gang_and_migration_preserve_slots (__main__.GroupTests.test_atomic_gang_and_migration_preserve_slots) ... ok\ntest_compatibility_and_one_quota_slot_per_group (__main__.GroupTests.test_compatibility_and_one_quota_slot_per_group) ... ok\ntest_checkpoint_retries_are_allowed_and_invalid_rank_settings_rejected (__main__.GroupTests.test_checkpoint_retries_are_allowed_and_invalid_rank_settings_rejected) ... ok\ntest_uncertain_start_and_all_rank_completion (__main__.GroupTests.test_uncertain_start_and_all_rank_completion) ... ok\ntest_partial_rejection_stops_every_rank_before_retry (__main__.GroupTests.test_partial_rejection_stops_every_rank_before_retry) ... ok\ntest_cancel_and_unreachable_rank_hold_allocations (__main__.GroupTests.test_cancel_and_unreachable_rank_hold_allocations) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.440s\n\nOK\n[DDP_CONTACT_PENDING] group rank=1: lost reply\n[DDP_RUNNING] group: 2 ranks\n[DDP_COMPLETED] group: all 2 ranks finished\n[DDP_STOPPING] group: Rank 1 launch rejected: HTTP 409\n[DDP_STOP_PENDING] group rank=1: offline\n[DDP_RESTART] group: QUEUED; all ranks stopped\n[DDP_RUNNING] group: 2 ranks\n[DDP_CONTACT_PENDING] group rank=0: offline\n[DDP_CONTACT_PENDING] group rank=1: offline\n[DDP_STOPPING] group: Cancelled by owner\n",
+    "test_execution_ownership.py.log": "test_higher_generation_survives_restart_and_rejects_late_start_and_renewal (__main__.OwnershipTests.test_higher_generation_survives_restart_and_rejects_late_start_and_renewal) ... ok\ntest_clock_skew_and_controller_clock_jump_do_not_allow_early_failover (__main__.OwnershipTests.test_clock_skew_and_controller_clock_jump_do_not_allow_early_failover) ... ok\ntest_controller_reboot_holds_old_deadlines_for_maximum_lease_bound (__main__.OwnershipTests.test_controller_reboot_holds_old_deadlines_for_maximum_lease_bound) ... ok\ntest_lost_renewal_reply_blocks_revival_and_remembers_possible_deadline (__main__.OwnershipTests.test_lost_renewal_reply_blocks_revival_and_remembers_possible_deadline) ... ok\ntest_generations_increase_across_attempts_and_node_reuse (__main__.OwnershipTests.test_generations_increase_across_attempts_and_node_reuse) ... ok\ntest_stale_checkpoint_cannot_replace_central_after_new_attempt (__main__.OwnershipTests.test_stale_checkpoint_cannot_replace_central_after_new_attempt) ... ok\ntest_fenced_artifact_failure_preserves_original_retry_reason (__main__.OwnershipTests.test_fenced_artifact_failure_preserves_original_retry_reason) ... ok\ntest_stale_result_transfer_preserves_existing_artifacts (__main__.OwnershipTests.test_stale_result_transfer_preserves_existing_artifacts) ... ok\ntest_worker_rejects_stale_start_renewal_and_download (__main__.OwnershipTests.test_worker_rejects_stale_start_renewal_and_download) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.751s\n\nOK\n[LEASE_RENEWAL_BLOCKED] j: reply lost\n[CUSTOM_CHECKPOINT] j: step=5 completed=False\n[CUSTOM_CHECKPOINT_PENDING] j: FENCED: stale attempt may not publish checkpoints or results\n\n[FAILURE_DETECTED] j\nNode: unit-node\nReason: Original network lease failure\n[FAILED_ARTIFACTS_UNAVAILABLE] j: FENCED stale files\nj -> QUEUED\n",
+    "test_group_checkpoint.py.log": "test_missing_final_group_checkpoint_cannot_complete_job (__main__.GroupCheckpointTests.test_missing_final_group_checkpoint_cannot_complete_job) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.160s\n\nOK\n[DDP_RUNNING] group: 2 ranks\n[DDP_FINAL_CHECKPOINT_PENDING] group\n[DDP_FINAL_CHECKPOINT_PENDING] group\n[DDP_FINAL_CHECKPOINT_PENDING] group\n[DDP_STOPPING] group: Trainer exited without a complete acknowledged final DDP checkpoint\n[DDP_RESTART] group: FAILED; all ranks stopped\n",
+    "test_job_environments.py.log": "test_cpu_profile_rejects_gpu_requests_before_installing (__main__.EnvironmentTests.test_cpu_profile_rejects_gpu_requests_before_installing) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.127s\n\nOK\n",
+    "test_job_storage.py.log": "test_owned_copy_survives_input_removal_and_controller_restart (__main__.StorageTests.test_owned_copy_survives_input_removal_and_controller_restart) ... ok\ntest_versions_depend_on_content_and_isolate_students (__main__.StorageTests.test_versions_depend_on_content_and_isolate_students) ... ok\ntest_source_data_and_manifest_tampering_are_detected (__main__.StorageTests.test_source_data_and_manifest_tampering_are_detected) ... ok\ntest_crash_after_publish_reconciles_without_original_inputs (__main__.StorageTests.test_crash_after_publish_reconciles_without_original_inputs) ... ok\ntest_interrupted_copy_never_publishes_and_retry_cleans_partial_workspace (__main__.StorageTests.test_interrupted_copy_never_publishes_and_retry_cleans_partial_workspace) ... ok\ntest_zip_projects_and_datasets_and_generated_data (__main__.StorageTests.test_zip_projects_and_datasets_and_generated_data) ... ok\ntest_unsafe_zip_and_links_do_not_escape_storage (__main__.StorageTests.test_unsafe_zip_and_links_do_not_escape_storage) ... ok\ntest_concurrent_staging_lock_and_input_mutation (__main__.StorageTests.test_concurrent_staging_lock_and_input_mutation) ... ok\ntest_dataset_directory_and_recursive_destination (__main__.StorageTests.test_dataset_directory_and_recursive_destination) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 1.131s\n\nOK\n",
+    "test_job_submission.py.log": "test_both_modes_and_lab_resource_declarations (__main__.SubmissionValidationTests.test_both_modes_and_lab_resource_declarations) ... ok\ntest_zip_project_and_generated_dataset (__main__.SubmissionValidationTests.test_zip_project_and_generated_dataset) ... ok\ntest_reject_invalid_fields_and_cross_field_settings (__main__.SubmissionValidationTests.test_reject_invalid_fields_and_cross_field_settings) ... ok\ntest_missing_input_corrupt_zip_and_escaping_dependency (__main__.SubmissionValidationTests.test_missing_input_corrupt_zip_and_escaping_dependency) ... ok\ntest_strict_json_and_owner (__main__.SubmissionValidationTests.test_strict_json_and_owner) ... ok\ntest_cli_atomic_persistence_and_dispatch_boundary (__main__.SubmissionIntegrationTests.test_cli_atomic_persistence_and_dispatch_boundary) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.713s\n\nOK\n",
+    "test_job_timing.py.log": "test_recovery_wall_time_includes_gap_and_preserves_final_attempt_scope (__main__.TimingTests.test_recovery_wall_time_includes_gap_and_preserves_final_attempt_scope) ... ok\ntest_ddp_uses_slowest_rank_not_total (__main__.TimingTests.test_ddp_uses_slowest_rank_not_total) ... ok\ntest_historical_and_unmeasured_values_are_not_invented (__main__.TimingTests.test_historical_and_unmeasured_values_are_not_invented) ... ok\ntest_legacy_ddp_loop_duration_supported_and_nonfinite_rejected (__main__.TimingTests.test_legacy_ddp_loop_duration_supported_and_nonfinite_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.002s\n\nOK\n",
+    "test_queue_controls.py.log": "test_owner_turns_fifo_and_service_survive_restart (__main__.QueueTests.test_owner_turns_fifo_and_service_survive_restart) ... ok\ntest_active_limit_includes_uncertain_start_and_cancelling (__main__.QueueTests.test_active_limit_includes_uncertain_start_and_cancelling) ... ok\ntest_pending_quota_atomic_with_concurrent_submissions (__main__.QueueTests.test_pending_quota_atomic_with_concurrent_submissions) ... ok\ntest_owner_controls_and_hold_cannot_be_overwritten_by_placement (__main__.QueueTests.test_owner_controls_and_hold_cannot_be_overwritten_by_placement) ... ok\ntest_cancel_intent_wins_late_start_completion_and_retry (__main__.QueueTests.test_cancel_intent_wins_late_start_completion_and_retry) ... ok\ntest_offline_cancellation_retains_slot_then_confirms_exit (__main__.QueueTests.test_offline_cancellation_retains_slot_then_confirms_exit) ... ok\ntest_worker_cancellation_blocks_late_start_across_reload (__main__.QueueTests.test_worker_cancellation_blocks_late_start_across_reload) ... ok\ntest_missing_attempt_needs_worker_tombstone_before_release (__main__.QueueTests.test_missing_attempt_needs_worker_tombstone_before_release) ... ok\ntest_aging_promotes_waiting_owner_and_overrides_are_validated (__main__.QueueTests.test_aging_promotes_waiting_owner_and_overrides_are_validated) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.525s\n\nOK\n[CANCEL_PENDING] a1: offline\n[CANCEL_PENDING] a1: original attempt identity not confirmed\n[CANCEL_PENDING] a1: lost stop\n",
+    "test_resource_allocation.py.log": "test_exclusive_reservation_and_definitive_release (__main__.AllocationTests.test_exclusive_reservation_and_definitive_release) ... ok\ntest_agent_custom_snapshot_admission_and_idempotent_start (__main__.AllocationTests.test_agent_custom_snapshot_admission_and_idempotent_start) ... ok\ntest_uncertain_http_start_keeps_reservation_until_reconciled (__main__.AllocationTests.test_uncertain_http_start_keeps_reservation_until_reconciled) ... ok\ntest_capacity_and_reserved_worker_filter (__main__.AllocationTests.test_capacity_and_reserved_worker_filter) ... ok\ntest_enqueue_requires_supported_execution (__main__.AllocationTests.test_enqueue_requires_supported_execution) ... ok\ntest_enqueue_requires_configured_prepared_candidate (__main__.AllocationTests.test_enqueue_requires_configured_prepared_candidate) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.609s\n\nOK\n\nScheduling uncertain (dummy) on pi01\npi01 marked unhealthy for 20s\nDispatch to pi01 failed.\n[START_UNCERTAIN] uncertain: waiting for original worker: offline\n[SCHEDULER] candidate=pi02 cpu=1% available_ram=3GB\n",
+    "test_student_portal.py.log": "test_auth_csrf_and_owner_controls (__main__.PortalTests.test_auth_csrf_and_owner_controls) ... ok\ntest_uploaded_source_and_data_survive_temporary_directory (__main__.PortalTests.test_uploaded_source_and_data_survive_temporary_directory) ... ok\ntest_unsafe_zip_never_creates_job_or_escapes (__main__.PortalTests.test_unsafe_zip_never_creates_job_or_escapes) ... ok\ntest_no_controller_path_input_or_owner_spoofing (__main__.PortalTests.test_no_controller_path_input_or_owner_spoofing) ... ok\ntest_hold_release_cancel_and_queue_position (__main__.PortalTests.test_hold_release_cancel_and_queue_position) ... ok\ntest_prep_request_cancelled_before_execution_does_not_launch (__main__.PortalTests.test_prep_request_cancelled_before_execution_does_not_launch) ... ok\ntest_successful_preparation_uses_existing_enqueue (__main__.PortalTests.test_successful_preparation_uses_existing_enqueue) ... ok\ntest_restart_recovers_preparation_and_error_can_be_retried (__main__.PortalTests.test_restart_recovers_preparation_and_error_can_be_retried) ... ok\ntest_result_zip_and_log_tail_exclude_escape (__main__.PortalTests.test_result_zip_and_log_tail_exclude_escape) ... ok\ntest_recovery_history_survives_many_checkpoints (__main__.PortalTests.test_recovery_history_survives_many_checkpoints) ... ok\ntest_live_log_fencing_and_unavailable_worker (__main__.PortalTests.test_live_log_fencing_and_unavailable_worker) ... ok\ntest_short_live_log_retries_unsatisfiable_suffix_range (__main__.PortalTests.test_short_live_log_retries_unsatisfiable_suffix_range) ... ok\ntest_single_example_rejects_distributed_before_creating_job (__main__.PortalTests.test_single_example_rejects_distributed_before_creating_job) ... ok\ntest_ddp_batch_must_match_worker_count (__main__.PortalTests.test_ddp_batch_must_match_worker_count) ... ok\ntest_ddp_single_checkpoint_is_rejected_before_staging (__main__.PortalTests.test_ddp_single_checkpoint_is_rejected_before_staging) ... ok\ntest_terminal_detail_reports_timing (__main__.PortalTests.test_terminal_detail_reports_timing) ... ok\ntest_example_package_and_security_headers (__main__.PortalTests.test_example_package_and_security_headers) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 7.712s\n\nOK\n"
+  },
+  "local_apis": {
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "packages": {
+      "Flask": "3.1.3",
+      "Werkzeug": "3.1.9",
+      "requests": "2.34.2",
+      "psutil": "7.2.2",
+      "waitress": "3.0.2",
+      "torch": "2.14.1",
+      "torchvision": null,
+      "numpy": "2.5.3",
+      "pip": "26.2.1"
+    },
+    "torch_runtime_version": "2.14.1+cu130",
+    "torch_cuda_build": "13.0",
+    "torch_load_weights_only_parameter": true,
+    "cpu_forward_backward_adam_step": true,
+    "weights_only_model_optimizer_scheduler_roundtrip": true,
+    "python_numpy_torch_rng_roundtrip": true,
+    "distributed_sampler_two_logical_ranks": true,
+    "distributed_build_available": true,
+    "gloo_build_available": true,
+    "ddp_class_importable": true,
+    "collective_apis": {
+      "init_process_group": true,
+      "gather_object": true,
+      "all_gather_object": true,
+      "broadcast_object_list": true,
+      "barrier": true
+    },
+    "process_group_initialized": false,
+    "limits": "No process group, network socket, GPU workload, training benchmark, or Pi operation was run."
+  },
+  "ssh_resolution": [
+    {
+      "node": "pi01",
+      "returncode": 0,
+      "config": {
+        "user": "pi",
+        "hostname": "100.101.90.46",
+        "port": "22",
+        "stricthostkeychecking": "ask"
+      },
+      "stderr": "Pseudo-terminal will not be allocated because stdin is not a terminal."
+    },
+    {
+      "node": "pi02",
+      "returncode": 0,
+      "config": {
+        "user": "pi",
+        "hostname": "100.91.135.18",
+        "port": "22",
+        "stricthostkeychecking": "ask"
+      },
+      "stderr": "Pseudo-terminal will not be allocated because stdin is not a terminal."
+    },
+    {
+      "node": "pi03",
+      "returncode": 0,
+      "config": {
+        "user": "pi",
+        "hostname": "100.64.202.71",
+        "port": "22",
+        "stricthostkeychecking": "ask"
+      },
+      "stderr": "Pseudo-terminal will not be allocated because stdin is not a terminal."
+    }
+  ],
+  "cluster_probe_sandbox_denied": [
+    {
+      "node": "pi01",
+      "inventory_address": "100.101.90.46",
+      "started_at_utc": "2026-11-07T12:55:15.392289+00:00",
+      "ssh": {
+        "command": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=5",
+          "-o",
+          "ConnectionAttempts=1",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "ControlPersist=no",
+          "-o",
+          "ServerAliveInterval=5",
+          "-o",
+          "ServerAliveCountMax=1",
+          "pi01",
+          "python3 -I -B - distributed-dl-system"
+        ],
+        "returncode": 255,
+        "stderr": "socket: Operation not permitted\nssh: connect to host 100.101.90.46 port 22: failure\n",
+        "elapsed_seconds": 0.007
+      },
+      "http": {
+        "health": {
+          "url": "http://100.101.90.46:5000/health",
+          "error": "<urlopen error [Errno 1] Operation not permitted>"
+        },
+        "resources": {
+          "url": "http://100.101.90.46:5000/resources",
+          "error": "<urlopen error [Errno 1] Operation not permitted>"
+        }
+      }
+    },
+    {
+      "node": "pi02",
+      "inventory_address": "100.91.135.18",
+      "started_at_utc": "2026-11-07T12:55:15.392812+00:00",
+      "ssh": {
+        "command": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=5",
+          "-o",
+          "ConnectionAttempts=1",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "ControlPersist=no",
+          "-o",
+          "ServerAliveInterval=5",
+          "-o",
+          "ServerAliveCountMax=1",
+          "pi02",
+          "python3 -I -B - distributed-dl-system"
+        ],
+        "returncode": 255,
+        "stderr": "socket: Operation not permitted\nssh: connect to host 100.91.135.18 port 22: failure\n",
+        "elapsed_seconds": 0.006
+      },
+      "http": {
+        "health": {
+          "url": "http://100.91.135.18:5000/health",
+          "error": "<urlopen error [Errno 1] Operation not permitted>"
+        },
+        "resources": {
+          "url": "http://100.91.135.18:5000/resources",
+          "error": "<urlopen error [Errno 1] Operation not permitted>"
+        }
+      }
+    },
+    {
+      "node": "pi03",
+      "inventory_address": "100.64.202.71",
+      "started_at_utc": "2026-11-07T12:55:15.393160+00:00",
+      "ssh": {
+        "command": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=5",
+          "-o",
+          "ConnectionAttempts=1",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "ControlPersist=no",
+          "-o",
+          "ServerAliveInterval=5",
+          "-o",
+          "ServerAliveCountMax=1",
+          "pi03",
+          "python3 -I -B - distributed-dl-system"
+        ],
+        "returncode": 255,
+        "stderr": "socket: Operation not permitted\nssh: connect to host 100.64.202.71 port 22: failure\n",
+        "elapsed_seconds": 0.006
+      },
+      "http": {
+        "health": {
+          "url": "http://100.64.202.71:5000/health",
+          "error": "<urlopen error [Errno 1] Operation not permitted>"
+        },
+        "resources": {
+          "url": "http://100.64.202.71:5000/resources",
+          "error": "<urlopen error [Errno 1] Operation not permitted>"
+        }
+      }
+    }
+  ],
+  "cluster_readiness": [
+    {
+      "node": "pi01",
+      "inventory_address": "100.101.90.46",
+      "started_at_utc": "2026-11-07T12:55:29.051368+00:00",
+      "ssh": {
+        "command": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=5",
+          "-o",
+          "ConnectionAttempts=1",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "ControlPersist=no",
+          "-o",
+          "ServerAliveInterval=5",
+          "-o",
+          "ServerAliveCountMax=1",
+          "pi01",
+          "python3 -I -B - distributed-dl-system"
+        ],
+        "returncode": 255,
+        "stderr": "ssh: connect to host 100.101.90.46 port 22: Connection timed out\n",
+        "elapsed_seconds": 5.011
+      },
+      "http": {
+        "health": {
+          "url": "http://100.101.90.46:5000/health",
+          "error": "<urlopen error timed out>"
+        },
+        "resources": {
+          "url": "http://100.101.90.46:5000/resources",
+          "error": "<urlopen error timed out>"
+        }
+      }
+    },
+    {
+      "node": "pi02",
+      "inventory_address": "100.91.135.18",
+      "started_at_utc": "2026-11-07T12:55:29.051945+00:00",
+      "ssh": {
+        "command": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=5",
+          "-o",
+          "ConnectionAttempts=1",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "ControlPersist=no",
+          "-o",
+          "ServerAliveInterval=5",
+          "-o",
+          "ServerAliveCountMax=1",
+          "pi02",
+          "python3 -I -B - distributed-dl-system"
+        ],
+        "returncode": 0,
+        "stderr": "",
+        "elapsed_seconds": 0.426,
+        "data": {
+          "agent_mount_namespace": "mnt:[4026531841]",
+          "agent_service": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "MainPID=945\nWorkingDirectory=/home/pi/distributed-dl-system\nUser=pi\nGroup=\nReadOnlyPaths=\nInaccessiblePaths=\nPrivateMounts=no\nProtectHome=no\nProtectSystem=no\nNoNewPrivileges=no\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/dl-node-agent.service\n"
+          },
+          "architecture": "aarch64",
+          "cache_filesystem": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\n   \"filesystems\": [\n      {\n         \"source\": \"/dev/mmcblk0p2\",\n         \"target\": \"/\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,noatime\"\n      }\n   ]\n}\n"
+          },
+          "gid": 1000,
+          "hostname": "pi02",
+          "kernel": "6.12.25+rpt-rpi-2712",
+          "kernel_nfs_filesystems": [
+            "nodev\tnfs",
+            "nodev\tnfs4",
+            "nodev\tnfsd"
+          ],
+          "link_speeds_mbps": {
+            "eth0": "100\n",
+            "lo": {
+              "error": "[Errno 22] Invalid argument"
+            },
+            "tailscale0": "-1\n",
+            "wlan0": {
+              "error": "[Errno 22] Invalid argument"
+            }
+          },
+          "network_addresses": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:63:85\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.150\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":5592,\"preferred_life_time\":5592},{\"family\":\"inet6\",\"local\":\"fe80::2bcd:9e10:5d17:c7d4\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:63:87\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.91.135.18\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::b34a:8713\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::3738:19d:803e:171a\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n"
+          },
+          "nfs_client_package": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "nfs-common install ok installed 1:2.6.2-4+deb12u1\n"
+          },
+          "nfs_client_tools": {
+            "findmnt": "/usr/bin/findmnt",
+            "mount.nfs": null,
+            "nfsstat": null,
+            "rpcinfo": "/usr/bin/rpcinfo"
+          },
+          "nfs_mounts": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\n   \"filesystems\": [\n      {\n         \"source\": \"192.168.10.150:/srv/nfs/cifar10_data\",\n         \"target\": \"/mnt/nfs_share\",\n         \"fstype\": \"nfs4\",\n         \"options\": \"rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.150\"\n      }\n   ]\n}\n"
+          },
+          "paths": {
+            ".": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o775",
+              "symlink": false,
+              "uid": 1000
+            },
+            "checkpoints": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1000
+            },
+            "logs": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o775",
+              "symlink": false,
+              "uid": 1000
+            },
+            "worker-storage": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1000
+            },
+            "worker-storage/environments": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1000
+            },
+            "worker-storage/inputs": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1000
+            },
+            "worker-storage/jobs": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1000
+            },
+            "worker-storage/leases": {
+              "device": 45826,
+              "free_bytes": 12503453696,
+              "free_inodes": 1613682,
+              "gid": 1000,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1000
+            }
+          },
+          "probe_mount_namespace": "mnt:[4026531841]",
+          "python_base": "3.11.2",
+          "source_hashes": {
+            "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+            "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+            "agent/custom_runner.py": "404e33d9932c89a850ae8f1e9f22081aea7e577768dd68aef9eb85814a97a810",
+            "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+            "agent/environment_worker.py": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875",
+            "agent/execution_lease.py": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83",
+            "agent/lease_runner.py": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5",
+            "config/execution_leases.json": "0c487e5d01a121f2b26ea81aa9f6cf1f30b1736d7addc925bf1303935faf30f8"
+          },
+          "timestamp": 1794056129.2427638,
+          "uid": 1000,
+          "user": "pi",
+          "venv_config": "home = /home/pi/.local/share/uv/python/cpython-3.11-linux-aarch64-gnu/bin\nimplementation = CPython\nuv = 0.12.21\nversion_info = 3.11\ninclude-system-site-packages = false\nprompt = distributed-dl-system\n",
+          "venv_package_metadata": {
+            "flask": "3.1.3",
+            "numpy": "2.4.6",
+            "psutil": "7.2.2",
+            "requests": "2.34.2",
+            "torch": "2.14.1",
+            "torchvision": "0.29.1",
+            "waitress": "3.0.2"
+          },
+          "worker_root_assumed_from_inventory": "/home/pi/distributed-dl-system"
+        }
+      },
+      "http": {
+        "health": {
+          "url": "http://100.91.135.18:5000/health",
+          "status": 200,
+          "data": {
+            "node": "pi02",
+            "status": "ONLINE",
+            "architecture": "aarch64",
+            "python": "3.11.16",
+            "execution_ownership": {
+              "protocol": 1
+            }
+          },
+          "identity_matches": true
+        },
+        "resources": {
+          "url": "http://100.91.135.18:5000/resources",
+          "status": 200,
+          "data": {
+            "node": "pi02",
+            "node_state": "IDLE",
+            "timestamp": 1794056129.6681745,
+            "slots": {
+              "available": 1,
+              "total": 1
+            },
+            "cpu": {
+              "available_cores": 4,
+              "frequency_mhz": 1800.0,
+              "logical_cores": 4,
+              "physical_cores": 4,
+              "usage_percent": 0.0
+            },
+            "memory": {
+              "available_gb": 7.25,
+              "total_gb": 7.87,
+              "usage_percent": 7.9,
+              "used_gb": 0.62
+            },
+            "disk": {
+              "free_gb": 11.64,
+              "total_gb": 28.68,
+              "usage_percent": 57.2
+            },
+            "network": {
+              "download_mbps": 0.007,
+              "interface": "eth0",
+              "upload_mbps": 0.009
+            },
+            "execution_ownership": {
+              "protocol": 1
+            }
+          },
+          "identity_matches": true
+        }
+      }
+    },
+    {
+      "node": "pi03",
+      "inventory_address": "100.64.202.71",
+      "started_at_utc": "2026-11-07T12:55:29.052381+00:00",
+      "ssh": {
+        "command": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=5",
+          "-o",
+          "ConnectionAttempts=1",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "ControlPersist=no",
+          "-o",
+          "ServerAliveInterval=5",
+          "-o",
+          "ServerAliveCountMax=1",
+          "pi03",
+          "python3 -I -B - distributed-dl-system"
+        ],
+        "returncode": 0,
+        "stderr": "",
+        "elapsed_seconds": 0.639,
+        "data": {
+          "agent_mount_namespace": "mnt:[4026531841]",
+          "agent_service": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "MainPID=917\nWorkingDirectory=/home/pi/distributed-dl-system\nUser=pi\nGroup=\nReadOnlyPaths=\nInaccessiblePaths=\nPrivateMounts=no\nProtectHome=no\nProtectSystem=no\nNoNewPrivileges=no\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/dl-node-agent.service\n"
+          },
+          "architecture": "aarch64",
+          "cache_filesystem": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\n   \"filesystems\": [\n      {\n         \"source\": \"/dev/mmcblk0p2\",\n         \"target\": \"/\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,noatime\"\n      }\n   ]\n}\n"
+          },
+          "gid": 1002,
+          "hostname": "pi03",
+          "kernel": "6.12.25+rpt-rpi-2712",
+          "kernel_nfs_filesystems": [
+            "nodev\tnfs",
+            "nodev\tnfs4"
+          ],
+          "link_speeds_mbps": {
+            "eth0": "100\n",
+            "lo": {
+              "error": "[Errno 22] Invalid argument"
+            },
+            "tailscale0": "-1\n",
+            "wlan0": {
+              "error": "[Errno 22] Invalid argument"
+            }
+          },
+          "network_addresses": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:83\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.101\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":4117,\"preferred_life_time\":4117},{\"family\":\"inet6\",\"local\":\"fe80::373f:1d3d:1391:6828\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:84\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.64.202.71\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::a04a:ca48\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::f95a:dfb9:c8e5:fa44\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n"
+          },
+          "nfs_client_package": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "nfs-common install ok installed 1:2.6.2-4+deb12u1\n"
+          },
+          "nfs_client_tools": {
+            "findmnt": "/usr/bin/findmnt",
+            "mount.nfs": null,
+            "nfsstat": null,
+            "rpcinfo": "/usr/bin/rpcinfo"
+          },
+          "nfs_mounts": {
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\n   \"filesystems\": [\n      {\n         \"source\": \"192.168.10.150:/srv/nfs/cifar10_data\",\n         \"target\": \"/mnt/nfs_share\",\n         \"fstype\": \"nfs4\",\n         \"options\": \"rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.150\"\n      }\n   ]\n}\n"
+          },
+          "paths": {
+            ".": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o775",
+              "symlink": false,
+              "uid": 1002
+            },
+            "checkpoints": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1002
+            },
+            "logs": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o775",
+              "symlink": false,
+              "uid": 1002
+            },
+            "worker-storage": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1002
+            },
+            "worker-storage/environments": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1002
+            },
+            "worker-storage/inputs": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1002
+            },
+            "worker-storage/jobs": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1002
+            },
+            "worker-storage/leases": {
+              "device": 45826,
+              "free_bytes": 9307586560,
+              "free_inodes": 1531307,
+              "gid": 1002,
+              "mode": "0o755",
+              "symlink": false,
+              "uid": 1002
+            }
+          },
+          "probe_mount_namespace": "mnt:[4026531841]",
+          "python_base": "3.11.2",
+          "source_hashes": {
+            "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+            "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+            "agent/custom_runner.py": "404e33d9932c89a850ae8f1e9f22081aea7e577768dd68aef9eb85814a97a810",
+            "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+            "agent/environment_worker.py": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875",
+            "agent/execution_lease.py": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83",
+            "agent/lease_runner.py": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5",
+            "config/execution_leases.json": "0c487e5d01a121f2b26ea81aa9f6cf1f30b1736d7addc925bf1303935faf30f8"
+          },
+          "timestamp": 1794056129.5004978,
+          "uid": 1002,
+          "user": "pi",
+          "venv_config": "home = /home/pi/.local/share/uv/python/cpython-3.11-linux-aarch64-gnu/bin\nimplementation = CPython\nuv = 0.12.21\nversion_info = 3.11\ninclude-system-site-packages = false\nprompt = distributed-dl-system\n",
+          "venv_package_metadata": {
+            "flask": "3.1.3",
+            "numpy": "2.4.6",
+            "psutil": "7.2.2",
+            "requests": "2.34.2",
+            "torch": "2.14.1",
+            "torchvision": "0.29.1",
+            "waitress": "3.0.2"
+          },
+          "worker_root_assumed_from_inventory": "/home/pi/distributed-dl-system"
+        }
+      },
+      "http": {
+        "health": {
+          "url": "http://100.64.202.71:5000/health",
+          "status": 200,
+          "data": {
+            "node": "pi03",
+            "status": "ONLINE",
+            "architecture": "aarch64",
+            "python": "3.11.16",
+            "execution_ownership": {
+              "protocol": 1
+            }
+          },
+          "identity_matches": true
+        },
+        "resources": {
+          "url": "http://100.64.202.71:5000/resources",
+          "status": 200,
+          "data": {
+            "node": "pi03",
+            "node_state": "IDLE",
+            "timestamp": 1794056129.9055908,
+            "slots": {
+              "available": 1,
+              "total": 1
+            },
+            "cpu": {
+              "available_cores": 4,
+              "frequency_mhz": 2400.0,
+              "logical_cores": 4,
+              "physical_cores": 4,
+              "usage_percent": 0.0
+            },
+            "memory": {
+              "available_gb": 7.25,
+              "total_gb": 7.86,
+              "usage_percent": 7.8,
+              "used_gb": 0.61
+            },
+            "disk": {
+              "free_gb": 8.67,
+              "total_gb": 28.69,
+              "usage_percent": 68.1
+            },
+            "network": {
+              "download_mbps": 0.006,
+              "interface": "eth0",
+              "upload_mbps": 0.008
+            },
+            "execution_ownership": {
+              "protocol": 1
+            }
+          },
+          "identity_matches": true
+        }
+      }
+    }
+  ],
+  "controller_readiness": {
+    "observed_at_utc": "2026-11-07T12:56:31.835320+00:00",
+    "hostname": "rana-ROG-Strix-G513RC-G513RC",
+    "architecture": "x86_64",
+    "execution_context": "Observed from the command execution environment; unavailable host/service views are not treated as absence.",
+    "paths": {
+      "controller/jobs.db": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o644",
+        "free_bytes": 43972718592,
+        "free_inodes": 10057595,
+        "mount": {
+          "returncode": 0,
+          "stderr": "",
+          "data": {
+            "filesystems": [
+              {
+                "source": "/dev/nvme0n1p4",
+                "target": "/",
+                "fstype": "ext4",
+                "options": [
+                  "rw",
+                  "relatime"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "storage/jobs": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o775",
+        "free_bytes": 43972718592,
+        "free_inodes": 10057595,
+        "mount": {
+          "returncode": 0,
+          "stderr": "",
+          "data": {
+            "filesystems": [
+              {
+                "source": "/dev/nvme0n1p4",
+                "target": "/",
+                "fstype": "ext4",
+                "options": [
+                  "rw",
+                  "relatime"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "storage": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o775",
+        "free_bytes": 43972718592,
+        "free_inodes": 10057595,
+        "mount": {
+          "returncode": 0,
+          "stderr": "",
+          "data": {
+            "filesystems": [
+              {
+                "source": "/dev/nvme0n1p4",
+                "target": "/",
+                "fstype": "ext4",
+                "options": [
+                  "rw",
+                  "relatime"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "checkpoints": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o775",
+        "free_bytes": 43972718592,
+        "free_inodes": 10057595,
+        "mount": {
+          "returncode": 0,
+          "stderr": "",
+          "data": {
+            "filesystems": [
+              {
+                "source": "/dev/nvme0n1p4",
+                "target": "/",
+                "fstype": "ext4",
+                "options": [
+                  "rw",
+                  "relatime"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "logs": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o775",
+        "free_bytes": 43972718592,
+        "free_inodes": 10057595,
+        "mount": {
+          "returncode": 0,
+          "stderr": "",
+          "data": {
+            "filesystems": [
+              {
+                "source": "/dev/nvme0n1p4",
+                "target": "/",
+                "fstype": "ext4",
+                "options": [
+                  "rw",
+                  "relatime"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "tools": {
+      "exportfs": null,
+      "rpcinfo": null,
+      "findmnt": "/usr/bin/findmnt",
+      "mount.nfs": null,
+      "nfsstat": null,
+      "ss": "/usr/bin/ss",
+      "ip": "/usr/sbin/ip"
+    },
+    "nfs_server_package": {
+      "returncode": 0,
+      "stdout": "nfs-kernel-server unknown ok not-installed \n",
+      "stderr": ""
+    },
+    "nfs_client_package": {
+      "returncode": 0,
+      "stdout": "nfs-common unknown ok not-installed \n",
+      "stderr": ""
+    },
+    "nfs_mounts": {
+      "returncode": 0,
+      "stdout": "{\n   \"filesystems\": [\n\n   ]\n}\n",
+      "stderr": ""
+    },
+    "exports_files": {
+      "/etc/exports": {
+        "error": "[Errno 2] No such file or directory: '/etc/exports'"
+      }
+    },
+    "active_exports": {
+      "error": "exportfs not installed or not on PATH"
+    },
+    "nfs_service": {
+      "returncode": 0,
+      "stdout": "ActiveState=inactive\nSubState=dead\nFragmentPath=\n\nActiveState=inactive\nSubState=dead\nFragmentPath=\n",
+      "stderr": ""
+    },
+    "controller_services": {
+      "returncode": 0,
+      "stdout": "WorkingDirectory=/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system\nActiveState=active\nSubState=running\nFragmentPath=/home/rana/.config/systemd/user/dl-dispatcher.service\n\nWorkingDirectory=/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system\nActiveState=active\nSubState=running\nFragmentPath=/home/rana/.config/systemd/user/dl-student-portal.service\n",
+      "stderr": ""
+    },
+    "nfs_listeners": {
+      "returncode": 0,
+      "stdout": "State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\n",
+      "stderr": ""
+    },
+    "fstab_nfs_entries": [],
+    "network_addresses": {
+      "returncode": 0,
+      "stderr": "",
+      "data": [
+        {
+          "interface": "lo",
+          "state": "UNKNOWN",
+          "ipv4": [
+            "127.0.0.1"
+          ]
+        },
+        {
+          "interface": "enp4s0",
+          "state": "DOWN",
+          "ipv4": []
+        },
+        {
+          "interface": "wlo1",
+          "state": "UP",
+          "ipv4": [
+            "192.168.10.214"
+          ]
+        },
+        {
+          "interface": "tailscale0",
+          "state": "UNKNOWN",
+          "ipv4": [
+            "100.73.90.91"
+          ]
+        }
+      ]
+    },
+    "network_addresses_sandbox": {
+      "returncode": 1,
+      "stderr": "Cannot open netlink socket: Operation not permitted\n"
+    }
+  },
+  "existing_nfs": [
+    {
+      "node": "pi02",
+      "command": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=5",
+        "-o",
+        "ConnectionAttempts=1",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "pi02",
+        "python3 -I -B -"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "data": {
+        "exports_files": {
+          "/etc/exports": {
+            "lines": [
+              "/srv/nfs/cifar10_data *(rw,sync,no_subtree_check,no_root_squash)"
+            ]
+          }
+        },
+        "tools": {
+          "mount.nfs": {
+            "/usr/sbin/mount.nfs": {
+              "exists": true,
+              "executable": true
+            },
+            "/sbin/mount.nfs": {
+              "exists": true,
+              "executable": true
+            }
+          },
+          "nfsstat": {
+            "/usr/sbin/nfsstat": {
+              "exists": true,
+              "executable": true
+            },
+            "/sbin/nfsstat": {
+              "exists": true,
+              "executable": true
+            }
+          },
+          "exportfs": {
+            "/usr/sbin/exportfs": {
+              "exists": true,
+              "executable": true
+            },
+            "/sbin/exportfs": {
+              "exists": true,
+              "executable": true
+            }
+          }
+        },
+        "fstab_nfs_entries": [
+          {
+            "source": "192.168.10.150:/srv/nfs/cifar10_data",
+            "target": "/mnt/nfs_share",
+            "fstype": "nfs",
+            "options": "defaults,_netdev"
+          }
+        ],
+        "active_exports": {
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "exportfs: could not open /var/lib/nfs/.etab.lock for locking: errno 13 (Permission denied)\n"
+        },
+        "server_service": {
+          "returncode": 0,
+          "stdout": "ActiveState=active\nSubState=exited\nFragmentPath=/lib/systemd/system/nfs-server.service\n\nActiveState=active\nSubState=exited\nFragmentPath=/lib/systemd/system/nfs-server.service\n",
+          "stderr": ""
+        },
+        "nfs_listeners": {
+          "returncode": 0,
+          "stdout": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nLISTEN 0      64           0.0.0.0:2049      0.0.0.0:*          \nLISTEN 0      64              [::]:2049         [::]:*          \n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "node": "pi03",
+      "command": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=5",
+        "-o",
+        "ConnectionAttempts=1",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "pi03",
+        "python3 -I -B -"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "data": {
+        "exports_files": {
+          "/etc/exports": {
+            "error": "[Errno 2] No such file or directory: '/etc/exports'"
+          }
+        },
+        "tools": {
+          "mount.nfs": {
+            "/usr/sbin/mount.nfs": {
+              "exists": true,
+              "executable": true
+            },
+            "/sbin/mount.nfs": {
+              "exists": true,
+              "executable": true
+            }
+          },
+          "nfsstat": {
+            "/usr/sbin/nfsstat": {
+              "exists": true,
+              "executable": true
+            },
+            "/sbin/nfsstat": {
+              "exists": true,
+              "executable": true
+            }
+          },
+          "exportfs": {
+            "/usr/sbin/exportfs": {
+              "exists": false,
+              "executable": false
+            },
+            "/sbin/exportfs": {
+              "exists": false,
+              "executable": false
+            }
+          }
+        },
+        "fstab_nfs_entries": [
+          {
+            "source": "192.168.10.150:/srv/nfs/cifar10_data",
+            "target": "/mnt/nfs_share",
+            "fstype": "nfs",
+            "options": "defaults,_netdev"
+          }
+        ],
+        "active_exports": {
+          "error": "[Errno 2] No such file or directory: '/usr/sbin/exportfs'"
+        },
+        "server_service": {
+          "returncode": 0,
+          "stdout": "ActiveState=inactive\nSubState=dead\nFragmentPath=\n\nActiveState=inactive\nSubState=dead\nFragmentPath=\n",
+          "stderr": ""
+        },
+        "nfs_listeners": {
+          "returncode": 0,
+          "stdout": "State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\n",
+          "stderr": ""
+        }
+      }
+    }
+  ],
+  "probe_scripts": {
+    "probe_cluster.py": "from pathlib import Path\nfrom concurrent.futures import ThreadPoolExecutor\nfrom datetime import datetime,timezone\nimport json,subprocess,time,urllib.request\n\nAUDIT=Path(__file__).resolve().parent\nAPP=Path('/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system')\nnodes=json.loads((APP/'config/nodes.json').read_text())['nodes']\nremote=(AUDIT/'remote_readiness.py').read_text()\n\ndef probe(node):\n result={'node':node['id'],'inventory_address':node['ip'],'started_at_utc':datetime.now(timezone.utc).isoformat(),'ssh':{},'http':{}}\n command=['ssh','-T','-o','BatchMode=yes','-o','ConnectTimeout=5','-o','ConnectionAttempts=1','-o','StrictHostKeyChecking=yes','-o','UpdateHostKeys=no','-o','ControlMaster=no','-o','ControlPath=none','-o','ControlPersist=no','-o','ServerAliveInterval=5','-o','ServerAliveCountMax=1',node['id'],'python3 -I -B - '+node.get('worker_root','distributed-dl-system')]\n result['ssh']['command']=command\n try:\n  start=time.time();p=subprocess.run(command,input=remote,capture_output=True,text=True,timeout=35)\n  result['ssh'].update(returncode=p.returncode,stderr=p.stderr[:4096],elapsed_seconds=round(time.time()-start,3))\n  if p.returncode==0:\n   try:result['ssh']['data']=json.loads(p.stdout)\n   except ValueError:result['ssh']['invalid_json_output']=p.stdout[:4096]\n except (OSError,subprocess.TimeoutExpired) as error:result['ssh']['error']=str(error)\n opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))\n for route in ['health','resources']:\n  url=f\"http://{node['ip']}:{node['port']}/{route}\"\n  try:\n   with opener.open(url,timeout=3) as response:\n    data=json.loads(response.read(131072))\n    fields=['node','status','architecture','python','execution_ownership'] if route=='health' else ['node','node_state','timestamp','slots','cpu','memory','disk','network','execution_ownership']\n    result['http'][route]={'url':url,'status':response.status,'data':{k:data.get(k) for k in fields},'identity_matches':data.get('node')==node['id']}\n  except (OSError,ValueError) as error:result['http'][route]={'url':url,'error':str(error)}\n return result\n\nwith ThreadPoolExecutor(max_workers=3) as executor:results=list(executor.map(probe,nodes))\n(AUDIT/'cluster-readiness.json').write_text(json.dumps(results,indent=2)+'\\n')\nfor result in results:\n ssh=result['ssh'];data=ssh.get('data')\n print(json.dumps({'node':result['node'],'ssh_returncode':ssh.get('returncode'),'ssh_error':ssh.get('error') or ssh.get('stderr'),'hostname':data.get('hostname') if data else None,'architecture':data.get('architecture') if data else None,'http':{route:entry.get('status',entry.get('error')) for route,entry in result['http'].items()}}),flush=True)\n",
+    "probe_controller.py": "from pathlib import Path\nfrom datetime import datetime,timezone\nfrom importlib import metadata\nimport json,os,platform,shutil,subprocess\nAUDIT=Path(__file__).resolve().parent\nAPP=Path('/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system')\ndef command(args):\n try:\n  p=subprocess.run(args,capture_output=True,text=True,timeout=4)\n  return {'returncode':p.returncode,'stdout':p.stdout[:16384],'stderr':p.stderr[:2048]}\n except (OSError,subprocess.TimeoutExpired) as error:return {'error':str(error)}\ndef mount_info(path):\n r=command(['findmnt','-J','-T',str(path),'-o','SOURCE,TARGET,FSTYPE,OPTIONS'])\n if r.get('returncode')==0:\n  try:\n   data=json.loads(r.pop('stdout'))\n   for row in data.get('filesystems',[]):\n    options=row.get('options','').split(',')\n    row['options']=[o for o in options if o.split('=',1)[0] in {'ro','rw','nosuid','nodev','noexec','vers','nfsvers','sec','proto','hard','soft','sync','async','relatime','noatime'}]\n   r['data']=data\n  except ValueError:pass\n return r\nr={'observed_at_utc':datetime.now(timezone.utc).isoformat(),'hostname':platform.node(),'architecture':platform.machine(),'execution_context':'Observed from the command execution environment; unavailable host/service views are not treated as absence.','paths':{},'tools':{name:shutil.which(name) for name in ['exportfs','rpcinfo','findmnt','mount.nfs','nfsstat','ss','ip']}}\nfor name in ['controller/jobs.db','storage/jobs','storage','checkpoints','logs']:\n p=APP/name\n try:\n  st=p.stat();v=os.statvfs(p)\n  r['paths'][name]={'uid':st.st_uid,'gid':st.st_gid,'mode':oct(st.st_mode&0o7777),'free_bytes':v.f_bavail*v.f_frsize,'free_inodes':v.f_favail,'mount':mount_info(p)}\n except OSError as error:r['paths'][name]={'error':str(error)}\nr['nfs_server_package']=command(['dpkg-query','-W','-f=${Package} ${Status} ${Version}\\n','nfs-kernel-server'])\nr['nfs_client_package']=command(['dpkg-query','-W','-f=${Package} ${Status} ${Version}\\n','nfs-common'])\nr['nfs_mounts']=command(['findmnt','-J','-t','nfs,nfs4','-o','SOURCE,TARGET,FSTYPE,OPTIONS'])\nr['exports_files']={}\nfor path in [Path('/etc/exports'),*Path('/etc/exports.d').glob('*.exports')]:\n try:r['exports_files'][str(path)]={'lines':[line for line in path.read_text().splitlines() if line.strip() and not line.lstrip().startswith('#')]}\n except OSError as error:r['exports_files'][str(path)]={'error':str(error)}\nr['active_exports']=command(['exportfs','-v']) if r['tools']['exportfs'] else {'error':'exportfs not installed or not on PATH'}\nr['nfs_service']=command(['systemctl','show','nfs-server.service','nfs-kernel-server.service','--no-pager','--property=ActiveState','--property=SubState','--property=FragmentPath'])\nr['controller_services']=command(['systemctl','--user','show','dl-dispatcher.service','dl-student-portal.service','--no-pager','--property=ActiveState','--property=SubState','--property=WorkingDirectory','--property=FragmentPath'])\nr['nfs_listeners']=command(['ss','-lnt','sport = :2049'])\nr['fstab_nfs_entries']=[]\ntry:\n for line in Path('/etc/fstab').read_text().splitlines():\n  fields=line.split()\n  if len(fields)>=4 and not line.lstrip().startswith('#') and fields[2] in ('nfs','nfs4'):\n   r['fstab_nfs_entries'].append({'source':fields[0],'target':fields[1],'fstype':fields[2],'options':[o for o in fields[3].split(',') if o.split('=',1)[0] in {'ro','rw','nosuid','nodev','noexec','vers','nfsvers','sec','proto','hard','soft','sync','async','_netdev','nofail'}]})\nexcept OSError as error:r['fstab_error']=str(error)\n(AUDIT/'controller-readiness.json').write_text(json.dumps(r,indent=2)+'\\n')\nsummary={'tools':r['tools'],'packages':{name:r[name] for name in ['nfs_server_package','nfs_client_package']},'exports_files':r['exports_files'],'nfs_service':r['nfs_service'],'controller_services':r['controller_services'],'path_summary':{name:{k:v for k,v in item.items() if k!='mount'} for name,item in r['paths'].items()}}\nprint(json.dumps(summary,indent=2))\n",
+    "probe_existing_nfs.py": "from pathlib import Path\nfrom concurrent.futures import ThreadPoolExecutor\nimport json,subprocess\nAUDIT=Path(__file__).resolve().parent\nremote=r'''\nimport json,os,subprocess\nfrom pathlib import Path\n\ndef command(args):\n try:\n  r=subprocess.run(args,capture_output=True,text=True,timeout=4)\n  return {'returncode':r.returncode,'stdout':r.stdout[:32768],'stderr':r.stderr[:4096]}\n except (OSError,subprocess.TimeoutExpired) as e:return {'error':str(e)}\nr={'exports_files':{},'tools':{},'fstab_nfs_entries':[]}\nfor p in [Path('/etc/exports'),*Path('/etc/exports.d').glob('*.exports')]:\n try:r['exports_files'][str(p)]={'lines':[s for s in p.read_text().splitlines() if s.strip() and not s.lstrip().startswith('#')]}\n except OSError as e:r['exports_files'][str(p)]={'error':str(e)}\nfor name in ['mount.nfs','nfsstat','exportfs']:\n r['tools'][name]={str(p):{'exists':p.exists(),'executable':os.access(p,os.X_OK)} for p in [Path('/usr/sbin')/name,Path('/sbin')/name]}\np=Path('/etc/fstab')\ntry:\n for line in p.read_text().splitlines():\n  fields=line.split()\n  if len(fields)>=4 and not line.lstrip().startswith('#') and fields[2] in ('nfs','nfs4'):\n   r['fstab_nfs_entries'].append({'source':fields[0],'target':fields[1],'fstype':fields[2],'options':fields[3]})\nexcept OSError as e:r['fstab_error']=str(e)\nr['active_exports']=command(['/usr/sbin/exportfs','-v'])\nr['server_service']=command(['systemctl','show','nfs-server.service','nfs-kernel-server.service','--no-pager','--property=ActiveState','--property=SubState','--property=FragmentPath'])\nr['nfs_listeners']=command(['ss','-lnt','sport = :2049'])\nprint(json.dumps(r))\n'''\ndef probe(node):\n command=['ssh','-T','-o','BatchMode=yes','-o','ConnectTimeout=5','-o','ConnectionAttempts=1','-o','StrictHostKeyChecking=yes','-o','UpdateHostKeys=no','-o','ControlMaster=no','-o','ControlPath=none',node,'python3 -I -B -']\n result=subprocess.run(command,input=remote,capture_output=True,text=True,timeout=25)\n r={'node':node,'command':command,'returncode':result.returncode,'stderr':result.stderr}\n if result.returncode==0:r['data']=json.loads(result.stdout)\n return r\nwith ThreadPoolExecutor(max_workers=2) as e:rows=list(e.map(probe,['pi02','pi03']))\n(AUDIT/'existing-nfs.json').write_text(json.dumps(rows,indent=2)+'\\n')\nfor row in rows:print(json.dumps(row,indent=2))\n",
+    "remote_readiness.py": "import hashlib,json,os,platform,pwd,grp,shutil,subprocess,sys,time\nfrom pathlib import Path\nfrom importlib import metadata\n\ndef read(path,limit=262144):\n try:\n  with Path(path).open() as stream:return stream.read(limit)\n except OSError as error:return {'error':str(error)}\n\ndef command(args):\n try:\n  result=subprocess.run(args,capture_output=True,text=True,timeout=4)\n  return {'returncode':result.returncode,'stdout':result.stdout[:65536],'stderr':result.stderr[:4096]}\n except (OSError,subprocess.TimeoutExpired) as error:return {'error':str(error)}\n\nroot=Path(sys.argv[1]);root=root if root.is_absolute() else Path.home()/root\nreport={'hostname':platform.node(),'architecture':platform.machine(),'kernel':platform.release(),'python_base':platform.python_version(),'timestamp':time.time(),'uid':os.getuid(),'gid':os.getgid(),'user':pwd.getpwuid(os.getuid()).pw_name,'worker_root_assumed_from_inventory':str(root),'paths':{},'source_hashes':{}}\nfor relative in ['.','worker-storage','worker-storage/inputs','worker-storage/environments','worker-storage/jobs','worker-storage/leases','checkpoints','logs']:\n p=root/relative\n try:\n  info=p.lstat();v=os.statvfs(p)\n  report['paths'][relative]={'uid':info.st_uid,'gid':info.st_gid,'mode':oct(info.st_mode & 0o7777),'symlink':p.is_symlink(),'free_bytes':v.f_bavail*v.f_frsize,'free_inodes':v.f_favail,'device':info.st_dev}\n except OSError as error:report['paths'][relative]={'error':str(error)}\nfor relative in ['agent/agent.py','agent/environment_worker.py','agent/custom_runner.py','agent/dl_checkpoint.py','agent/checkpoint_protocol.py','agent/execution_lease.py','agent/lease_runner.py','config/execution_leases.json']:\n p=root/relative\n try:report['source_hashes'][relative]=hashlib.sha256(p.read_bytes()).hexdigest()\n except OSError as error:report['source_hashes'][relative]={'error':str(error)}\nreport['venv_config']=read(root/'.venv/pyvenv.cfg')\nsites=list((root/'.venv/lib').glob('python*/site-packages')) if (root/'.venv/lib').is_dir() else []\nwanted={'torch','torchvision','numpy','flask','requests','psutil','waitress'}\nreport['venv_package_metadata']={}\nfor site in sites:\n try:\n  for dist in metadata.distributions(path=[str(site)]):\n   name=dist.metadata.get('Name','').lower().replace('_','-')\n   if name in wanted:report['venv_package_metadata'][name]=dist.version\n except (OSError,ValueError) as error:report['venv_package_metadata_error']=str(error)\nreport['network_addresses']=command(['ip','-j','address','show'])\nreport['link_speeds_mbps']={}\nfor p in Path('/sys/class/net').glob('*/speed'):\n report['link_speeds_mbps'][p.parent.name]=read(p,128)\nreport['nfs_mounts']=command(['findmnt','-J','-t','nfs,nfs4','-o','SOURCE,TARGET,FSTYPE,OPTIONS'])\nreport['cache_filesystem']=command(['findmnt','-J','-T',str(root/'worker-storage'),'-o','SOURCE,TARGET,FSTYPE,OPTIONS'])\nreport['nfs_client_tools']={name:shutil.which(name) for name in ['mount.nfs','nfsstat','rpcinfo','findmnt']}\nfilesystems=read('/proc/filesystems')\nreport['kernel_nfs_filesystems']=[line.strip() for line in filesystems.splitlines() if 'nfs' in line] if isinstance(filesystems,str) else filesystems\nreport['nfs_client_package']=command(['dpkg-query','-W','-f=${Package} ${Status} ${Version}\\n','nfs-common'])\nproperties=['ActiveState','SubState','User','Group','WorkingDirectory','MainPID','FragmentPath','PrivateMounts','ProtectSystem','ProtectHome','NoNewPrivileges','ReadOnlyPaths','InaccessiblePaths']\nreport['agent_service']=command(['systemctl','show','dl-node-agent.service','--no-pager',*['--property='+name for name in properties]])\ntry:\n report['probe_mount_namespace']=os.readlink('/proc/self/ns/mnt')\n service=report['agent_service'].get('stdout','')\n pid=next((line.split('=',1)[1] for line in service.splitlines() if line.startswith('MainPID=')),'0')\n if pid.isdigit() and int(pid)>0:report['agent_mount_namespace']=os.readlink('/proc/'+pid+'/ns/mnt')\nexcept OSError as error:report['namespace_error']=str(error)\nprint(json.dumps(report,sort_keys=True))\n"
+  },
+  "safe_test_scripts": {
+    "run_selected.py": "from pathlib import Path\nimport json,os,re,subprocess,sys,time\nAUDIT=Path(__file__).resolve().parent\nsnapshot=AUDIT/'source'\nplan=json.loads((AUDIT/'plan.json').read_text())\nenv={k:v for k,v in os.environ.items() if not k.startswith('DL_')}\nenv.update(PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',PIP_NO_INDEX='1',PIP_DISABLE_PIP_VERSION_CHECK='1',TMPDIR=str(AUDIT/'tmp'),XDG_CACHE_HOME=str(AUDIT/'cache'),TORCH_HOME=str(AUDIT/'cache/torch'),PIP_CACHE_DIR=str(AUDIT/'cache/pip'),PATH=str(AUDIT/'guard-bin')+os.pathsep+env.get('PATH',''))\n(AUDIT/'tmp').mkdir(exist_ok=True);(AUDIT/'cache').mkdir(exist_ok=True)\nresults=[]\nfor row in plan:\n if not row['selected']:continue\n command=[sys.executable,'-B',str(snapshot/'tests'/row['file']),*row['selected'],'-v']\n start=time.monotonic();timeout=False\n log_path=AUDIT/'logs'/(row['file']+'.log')\n with log_path.open('w') as log:\n  try:\n   completed=subprocess.run(command,cwd=snapshot,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=90)\n   code=completed.returncode\n  except subprocess.TimeoutExpired:\n   code=124;timeout=True\n output=log_path.read_text()\n ran=re.search(r'Ran (\\d+) tests? in ',output)\n record={'file':row['file'],'selected_count':len(row['selected']),'ran_count':int(ran.group(1)) if ran else None,'returncode':code,'timeout':timeout,'elapsed_seconds':round(time.monotonic()-start,3),'log':str(log_path),'command':command,'deferred':row['deferred']}\n results.append(record)\n (AUDIT/'results.json').write_text(json.dumps(results,indent=2)+'\\n')\n print(('PASS' if code==0 else 'FAIL'),row['file'],str(record['ran_count'])+' tests',flush=True)\n if code:print('\\n'.join(output.splitlines()[-18:]),flush=True)\nprint('Result files:',len(results),'unit methods run:',sum(r['ran_count'] or 0 for r in results),'failures:',sum(r['returncode']!=0 for r in results),flush=True)\nraise SystemExit(int(any(r['returncode'] for r in results)))\n",
+    "check_apis.py": "from pathlib import Path\nfrom importlib import metadata\nimport inspect,io,json,random,sys\nimport numpy as np\nimport torch\nimport torch.distributed as dist\nfrom torch.nn.parallel import DistributedDataParallel\nfrom torch.utils.data import DistributedSampler,TensorDataset\nAUDIT=Path(__file__).resolve().parent\ntorch.set_num_threads(1);torch.manual_seed(23)\nmodel=torch.nn.Linear(2,1);optimizer=torch.optim.Adam(model.parameters(),lr=0.01)\nscheduler=torch.optim.lr_scheduler.StepLR(optimizer,step_size=1)\nprevious=model.weight.detach().clone()\nloss=model(torch.tensor([[1.,2.],[2.,3.]])).square().mean()\nloss.backward();optimizer.step();scheduler.step()\nassert not torch.equal(previous,model.weight)\nstate={'model':model.state_dict(),'optimizer':optimizer.state_dict(),'scheduler':scheduler.state_dict(),'rng':torch.get_rng_state(),'progress':{'next_step':1}}\nstream=io.BytesIO();torch.save(state,stream);stream.seek(0)\nloaded=torch.load(stream,map_location='cpu',weights_only=True)\nother=torch.nn.Linear(2,1);other.load_state_dict(loaded['model'])\nother_optimizer=torch.optim.Adam(other.parameters(),lr=0.01);other_optimizer.load_state_dict(loaded['optimizer'])\nother_scheduler=torch.optim.lr_scheduler.StepLR(other_optimizer,step_size=1);other_scheduler.load_state_dict(loaded['scheduler'])\nassert torch.equal(model.weight,other.weight)\nassert len(other_optimizer.state)==len(optimizer.state)==2\nassert other_scheduler.state_dict()==scheduler.state_dict()\ntorch.set_rng_state(loaded['rng']);expected=torch.rand(3);torch.set_rng_state(loaded['rng']);assert torch.equal(expected,torch.rand(3))\nrandom.seed(4);rng=random.getstate();expected=random.random();random.setstate(rng);assert expected==random.random()\nnp.random.seed(4);rng=np.random.get_state();expected=np.random.random();np.random.set_state(rng);assert expected==np.random.random()\ndataset=TensorDataset(torch.arange(8))\nshards=[set(DistributedSampler(dataset,num_replicas=2,rank=rank,shuffle=False)) for rank in range(2)]\nassert not shards[0]&shards[1] and shards[0]|shards[1]==set(range(8))\nassert 'weights_only' in inspect.signature(torch.load).parameters\nrecord={'python':sys.version.splitlines()[0],'packages':{},'torch_runtime_version':str(torch.__version__),'torch_cuda_build':torch.version.cuda,'torch_load_weights_only_parameter':True,'cpu_forward_backward_adam_step':True,'weights_only_model_optimizer_scheduler_roundtrip':True,'python_numpy_torch_rng_roundtrip':True,'distributed_sampler_two_logical_ranks':True,'distributed_build_available':dist.is_available(),'gloo_build_available':dist.is_gloo_available(),'ddp_class_importable':DistributedDataParallel is not None,'collective_apis':{name:callable(getattr(dist,name,None)) for name in ['init_process_group','gather_object','all_gather_object','broadcast_object_list','barrier']},'process_group_initialized':dist.is_initialized(),'limits':'No process group, network socket, GPU workload, training benchmark, or Pi operation was run.'}\nfor name in ['Flask','Werkzeug','requests','psutil','waitress','torch','torchvision','numpy','pip']:\n try:record['packages'][name]=metadata.version(name)\n except metadata.PackageNotFoundError:record['packages'][name]=None\nassert not record['process_group_initialized']\n(AUDIT/'apis.json').write_text(json.dumps(record,indent=2)+'\\n')\nprint(json.dumps(record,indent=2))\n"
+  },
+  "historical_test_failures": {
+    "source": "/tmp/distributed-dl-baseline/",
+    "cause": "Sandbox denied socket creation for real DDP tests before hybrid work.",
+    "errors_by_file": {
+      "test_distributed_dispatch.py": 1,
+      "test_group_checkpoint.py": 7,
+      "test_group_recovery.py": 7
+    },
+    "historical_followup": "/tmp/distributed-dl-ddp-tests.log recorded all three passing with loopback access; not a fresh 0.3 rerun."
+  },
+  "mutations": {
+    "application_code": false,
+    "database": false,
+    "config": false,
+    "remote_files": false,
+    "service_operations": "show/read only; no start/stop/restart/install",
+    "nfs_operations": "mount/export/fstab state read only; no reconfiguration",
+    "document_additions": [
+      "docs/storage/00-audit.md",
+      "docs/storage/00-audit-evidence.json"
+    ],
+    "gitignore": "One-line correction: storage/ -> /storage/ so runtime storage remains ignored and docs/storage is visible; other pre-existing edits preserved."
+  },
+  "limits": [
+    "pi01 SSH and HTTP timed out after a network-enabled retry; cause unknown.",
+    "pi02 active export table unreadable to pi user; exportfs -v returned a permission message despite exit code zero. No sudo retry.",
+    "Only file metadata/source hashes, service properties and health/resource HTTP reads were performed; no training/GPU/DDP/throughput/NFS writes.",
+    "Host SSH keys were required and updates disabled.",
+    "Reachable worker package versions are distribution metadata plus agent-reported Python, not worker Torch API execution."
+  ],
+  "additional_read_only_commands": [
+    [
+      "ip",
+      "-j",
+      "address",
+      "show"
+    ],
+    [
+      "ssh",
+      "-G",
+      "-o",
+      "CanonicalizeHostname=no",
+      "pi01"
+    ],
+    [
+      "ssh",
+      "-G",
+      "-o",
+      "CanonicalizeHostname=no",
+      "pi02"
+    ],
+    [
+      "ssh",
+      "-G",
+      "-o",
+      "CanonicalizeHostname=no",
+      "pi03"
+    ]
+  ]
+}

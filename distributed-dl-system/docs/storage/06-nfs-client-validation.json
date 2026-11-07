@@ -1,0 +1,235 @@
+{
+  "subphase": "2.3",
+  "recorded_at_utc": "2026-11-07T15:08:43.526367+00:00",
+  "status": "Preparation PASS; no deployment/live applicability acceptance",
+  "default_preview": {
+    "command": "env PYTHONDONTWRITEBYTECODE=1 python3 tools/nfs_client_setup.py --dry-run",
+    "returncode": 2,
+    "plan": {
+      "activation_after_separate_approval": [
+        "systemctl daemon-reload",
+        "systemctl enable --now srv-mlnfs-inputs.automount"
+      ],
+      "apply_ready": false,
+      "blockers": [
+        "pi01: verified LAN address missing; deployment remains deferred",
+        "Fresh local inspection on each Pi and explicit 2.4 approval required"
+      ],
+      "clients": {
+        "pi01": {
+          "address": null,
+          "files": {
+            "/etc/systemd/system/ml-nfs-ready.service": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML input mount admission (pi01)\nRequires=srv-mlnfs-inputs.mount\nAfter=srv-mlnfs-inputs.mount\n[Service]\nType=oneshot\nUser=root\nGroup=root\nUMask=0077\nExecStart=/usr/bin/python3 -I /usr/local/libexec/distributed-ml/nfs_mount.py --source 192.168.10.214:/srv/ml-shared/objects\nNoNewPrivileges=yes\nProtectSystem=strict\nProtectHome=yes\nPrivateTmp=yes\nTimeoutStartSec=5s\n",
+            "/etc/systemd/system/srv-mlnfs-inputs.automount": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML on-demand input automount (pi01)\n[Automount]\nWhere=/srv/mlnfs/inputs\nDirectoryMode=0700\nTimeoutIdleSec=0\n[Install]\nWantedBy=multi-user.target\n",
+            "/etc/systemd/system/srv-mlnfs-inputs.mount": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML trusted input mount (pi01)\n[Mount]\nWhat=192.168.10.214:/srv/ml-shared/objects\nWhere=/srv/mlnfs/inputs\nType=nfs\nOptions=ro,nosuid,nodev,noexec,hard,vers=4.1,proto=tcp,sec=sys,resvport,timeo=50,retrans=2,retry=0,nofail\nTimeoutSec=15s\nDirectoryMode=0700\n",
+            "/usr/local/libexec/distributed-ml/nfs_mount.py": "# Managed by distributed-dl-system nfs-client v1\n\"\"\"Read-only NFS mount admission check, also installable as a standalone guard.\n\nThis reads kernel metadata only: it never looks up a file in the mount, triggers\nan automount, stages inputs or authorizes/launches training. The future trusted\nstager must use the check in its own mount namespace before accessing inputs.\n\"\"\"\n\nimport argparse\nimport ipaddress\nimport json\nfrom pathlib import Path\nimport re\n\nINPUTS = \"/srv/mlnfs/inputs\"\nEXPORT = \"/srv/ml-shared/objects\"\nREQUIRED = {\"ro\", \"nosuid\", \"nodev\", \"noexec\", \"hard\", \"proto=tcp\", \"sec=sys\", \"vers=4.1\"}\nFORBIDDEN = {\"rw\", \"soft\", \"softerr\", \"softreval\", \"suid\", \"dev\", \"exec\", \"user\", \"users\"}\n\n\nclass MountNotReady(ValueError):\n    \"\"\"The visible mount metadata does not meet the reviewed input contract.\"\"\"\n\n\ndef unescape(value):\n    return re.sub(r\"\\\\([0-7]{3})\", lambda match: chr(int(match[1], 8)), value)\n\n\ndef parse_mountinfo(text):\n    mounts = []\n    for line in text.splitlines():\n        if not line:\n            continue\n        try:\n            left, right = line.split(\" - \", 1)\n            a, b = left.split(), right.split()\n            mounts.append({\"id\": int(a[0]), \"parent\": int(a[1]), \"device\": a[2],\n                           \"root\": unescape(a[3]), \"target\": unescape(a[4]),\n                           \"vfs_options\": a[5].split(\",\"), \"fstype\": b[0],\n                           \"source\": unescape(b[1]), \"fs_options\": b[2].split(\",\")})\n        except (ValueError, IndexError) as error:\n            raise MountNotReady(\"Malformed kernel mount metadata\") from error\n    return mounts\n\n\ndef validate_source(source):\n    try:\n        host, path = source.split(\":\", 1)\n        ip = ipaddress.IPv4Address(host)\n    except (ValueError, AttributeError) as error:\n        raise MountNotReady(\"Expected a literal IPv4 controller and fixed input export\") from error\n    if path != EXPORT or ip.is_loopback or ip.is_multicast or ip.is_unspecified or ip.is_reserved or ip.is_link_local:\n        raise MountNotReady(\"Unsafe controller input source\")\n    return str(ip) + \":\" + EXPORT\n\n\ndef require_input_mount(source, mountinfo=None):\n    source = validate_source(source)\n    text = Path(\"/proc/self/mountinfo\").read_text() if mountinfo is None else mountinfo\n    mounts = parse_mountinfo(text)\n    exact = [m for m in mounts if m[\"target\"] == INPUTS]\n    nfs = [m for m in exact if m[\"fstype\"] in (\"nfs\", \"nfs4\")]\n    if len(nfs) != 1 or any(m[\"fstype\"] not in (\"autofs\", \"nfs\", \"nfs4\") for m in exact) or len(exact) > 2:\n        raise MountNotReady(\"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\")\n    mount = nfs[0]\n    if mount[\"source\"] != source or mount[\"root\"] != \"/\":\n        raise MountNotReady(\"Wrong input source or bind-subdirectory mount\")\n    by_id = {item[\"id\"]: item for item in mounts}\n    if len(by_id) != len(mounts):\n        raise MountNotReady(\"Duplicate kernel mount identity\")\n    ancestors = set()\n    current = mount\n    while current is not None:\n        if current[\"id\"] in ancestors:\n            raise MountNotReady(\"Cyclic kernel mount ancestry\")\n        ancestors.add(current[\"id\"])\n        current = by_id.get(current[\"parent\"])\n    for item in mounts:\n        target = item[\"target\"]\n        if target != INPUTS and (target == \"/\" or INPUTS.startswith(target.rstrip(\"/\") + \"/\")) and item[\"id\"] not in ancestors:\n            raise MountNotReady(\"Input mount hidden by an ancestor overmount\")\n    values = set(mount[\"vfs_options\"]) | set(mount[\"fs_options\"])\n    if not REQUIRED <= values or values & FORBIDDEN or \"ro\" not in mount[\"vfs_options\"]:\n        raise MountNotReady(\"Input mount lacks required read-only/security/protocol options\")\n    if any(m[\"target\"].startswith(INPUTS + \"/\") for m in mounts):\n        raise MountNotReady(\"Unexpected nested mount inside input tree\")\n    return {\"ready\": True, \"mount_id\": mount[\"id\"], \"source\": source, \"target\": INPUTS,\n            \"version\": \"4.1\", \"scope\": \"Metadata admission only; not server liveness, authorization or byte verification\"}\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"--source\", required=True)\n    args = parser.parse_args(argv)\n    try:\n        print(json.dumps(require_input_mount(args.source), sort_keys=True))\n        return 0\n    except (MountNotReady, OSError) as error:\n        print(json.dumps({\"ready\": False, \"error\": str(error)}, sort_keys=True))\n        return 2\n\n\nif __name__ == \"__main__\":\n    raise SystemExit(main())\n"
+          }
+        },
+        "pi02": {
+          "address": "192.168.10.150",
+          "files": {
+            "/etc/systemd/system/ml-nfs-ready.service": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML input mount admission (pi02)\nRequires=srv-mlnfs-inputs.mount\nAfter=srv-mlnfs-inputs.mount\n[Service]\nType=oneshot\nUser=root\nGroup=root\nUMask=0077\nExecStart=/usr/bin/python3 -I /usr/local/libexec/distributed-ml/nfs_mount.py --source 192.168.10.214:/srv/ml-shared/objects\nNoNewPrivileges=yes\nProtectSystem=strict\nProtectHome=yes\nPrivateTmp=yes\nTimeoutStartSec=5s\n",
+            "/etc/systemd/system/srv-mlnfs-inputs.automount": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML on-demand input automount (pi02)\n[Automount]\nWhere=/srv/mlnfs/inputs\nDirectoryMode=0700\nTimeoutIdleSec=0\n[Install]\nWantedBy=multi-user.target\n",
+            "/etc/systemd/system/srv-mlnfs-inputs.mount": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML trusted input mount (pi02)\n[Mount]\nWhat=192.168.10.214:/srv/ml-shared/objects\nWhere=/srv/mlnfs/inputs\nType=nfs\nOptions=ro,nosuid,nodev,noexec,hard,vers=4.1,proto=tcp,sec=sys,resvport,timeo=50,retrans=2,retry=0,nofail\nTimeoutSec=15s\nDirectoryMode=0700\n",
+            "/usr/local/libexec/distributed-ml/nfs_mount.py": "# Managed by distributed-dl-system nfs-client v1\n\"\"\"Read-only NFS mount admission check, also installable as a standalone guard.\n\nThis reads kernel metadata only: it never looks up a file in the mount, triggers\nan automount, stages inputs or authorizes/launches training. The future trusted\nstager must use the check in its own mount namespace before accessing inputs.\n\"\"\"\n\nimport argparse\nimport ipaddress\nimport json\nfrom pathlib import Path\nimport re\n\nINPUTS = \"/srv/mlnfs/inputs\"\nEXPORT = \"/srv/ml-shared/objects\"\nREQUIRED = {\"ro\", \"nosuid\", \"nodev\", \"noexec\", \"hard\", \"proto=tcp\", \"sec=sys\", \"vers=4.1\"}\nFORBIDDEN = {\"rw\", \"soft\", \"softerr\", \"softreval\", \"suid\", \"dev\", \"exec\", \"user\", \"users\"}\n\n\nclass MountNotReady(ValueError):\n    \"\"\"The visible mount metadata does not meet the reviewed input contract.\"\"\"\n\n\ndef unescape(value):\n    return re.sub(r\"\\\\([0-7]{3})\", lambda match: chr(int(match[1], 8)), value)\n\n\ndef parse_mountinfo(text):\n    mounts = []\n    for line in text.splitlines():\n        if not line:\n            continue\n        try:\n            left, right = line.split(\" - \", 1)\n            a, b = left.split(), right.split()\n            mounts.append({\"id\": int(a[0]), \"parent\": int(a[1]), \"device\": a[2],\n                           \"root\": unescape(a[3]), \"target\": unescape(a[4]),\n                           \"vfs_options\": a[5].split(\",\"), \"fstype\": b[0],\n                           \"source\": unescape(b[1]), \"fs_options\": b[2].split(\",\")})\n        except (ValueError, IndexError) as error:\n            raise MountNotReady(\"Malformed kernel mount metadata\") from error\n    return mounts\n\n\ndef validate_source(source):\n    try:\n        host, path = source.split(\":\", 1)\n        ip = ipaddress.IPv4Address(host)\n    except (ValueError, AttributeError) as error:\n        raise MountNotReady(\"Expected a literal IPv4 controller and fixed input export\") from error\n    if path != EXPORT or ip.is_loopback or ip.is_multicast or ip.is_unspecified or ip.is_reserved or ip.is_link_local:\n        raise MountNotReady(\"Unsafe controller input source\")\n    return str(ip) + \":\" + EXPORT\n\n\ndef require_input_mount(source, mountinfo=None):\n    source = validate_source(source)\n    text = Path(\"/proc/self/mountinfo\").read_text() if mountinfo is None else mountinfo\n    mounts = parse_mountinfo(text)\n    exact = [m for m in mounts if m[\"target\"] == INPUTS]\n    nfs = [m for m in exact if m[\"fstype\"] in (\"nfs\", \"nfs4\")]\n    if len(nfs) != 1 or any(m[\"fstype\"] not in (\"autofs\", \"nfs\", \"nfs4\") for m in exact) or len(exact) > 2:\n        raise MountNotReady(\"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\")\n    mount = nfs[0]\n    if mount[\"source\"] != source or mount[\"root\"] != \"/\":\n        raise MountNotReady(\"Wrong input source or bind-subdirectory mount\")\n    by_id = {item[\"id\"]: item for item in mounts}\n    if len(by_id) != len(mounts):\n        raise MountNotReady(\"Duplicate kernel mount identity\")\n    ancestors = set()\n    current = mount\n    while current is not None:\n        if current[\"id\"] in ancestors:\n            raise MountNotReady(\"Cyclic kernel mount ancestry\")\n        ancestors.add(current[\"id\"])\n        current = by_id.get(current[\"parent\"])\n    for item in mounts:\n        target = item[\"target\"]\n        if target != INPUTS and (target == \"/\" or INPUTS.startswith(target.rstrip(\"/\") + \"/\")) and item[\"id\"] not in ancestors:\n            raise MountNotReady(\"Input mount hidden by an ancestor overmount\")\n    values = set(mount[\"vfs_options\"]) | set(mount[\"fs_options\"])\n    if not REQUIRED <= values or values & FORBIDDEN or \"ro\" not in mount[\"vfs_options\"]:\n        raise MountNotReady(\"Input mount lacks required read-only/security/protocol options\")\n    if any(m[\"target\"].startswith(INPUTS + \"/\") for m in mounts):\n        raise MountNotReady(\"Unexpected nested mount inside input tree\")\n    return {\"ready\": True, \"mount_id\": mount[\"id\"], \"source\": source, \"target\": INPUTS,\n            \"version\": \"4.1\", \"scope\": \"Metadata admission only; not server liveness, authorization or byte verification\"}\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"--source\", required=True)\n    args = parser.parse_args(argv)\n    try:\n        print(json.dumps(require_input_mount(args.source), sort_keys=True))\n        return 0\n    except (MountNotReady, OSError) as error:\n        print(json.dumps({\"ready\": False, \"error\": str(error)}, sort_keys=True))\n        return 2\n\n\nif __name__ == \"__main__\":\n    raise SystemExit(main())\n"
+          }
+        },
+        "pi03": {
+          "address": "192.168.10.101",
+          "files": {
+            "/etc/systemd/system/ml-nfs-ready.service": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML input mount admission (pi03)\nRequires=srv-mlnfs-inputs.mount\nAfter=srv-mlnfs-inputs.mount\n[Service]\nType=oneshot\nUser=root\nGroup=root\nUMask=0077\nExecStart=/usr/bin/python3 -I /usr/local/libexec/distributed-ml/nfs_mount.py --source 192.168.10.214:/srv/ml-shared/objects\nNoNewPrivileges=yes\nProtectSystem=strict\nProtectHome=yes\nPrivateTmp=yes\nTimeoutStartSec=5s\n",
+            "/etc/systemd/system/srv-mlnfs-inputs.automount": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML on-demand input automount (pi03)\n[Automount]\nWhere=/srv/mlnfs/inputs\nDirectoryMode=0700\nTimeoutIdleSec=0\n[Install]\nWantedBy=multi-user.target\n",
+            "/etc/systemd/system/srv-mlnfs-inputs.mount": "# Managed by distributed-dl-system nfs-client v1\n[Unit]\nDescription=Distributed ML trusted input mount (pi03)\n[Mount]\nWhat=192.168.10.214:/srv/ml-shared/objects\nWhere=/srv/mlnfs/inputs\nType=nfs\nOptions=ro,nosuid,nodev,noexec,hard,vers=4.1,proto=tcp,sec=sys,resvport,timeo=50,retrans=2,retry=0,nofail\nTimeoutSec=15s\nDirectoryMode=0700\n",
+            "/usr/local/libexec/distributed-ml/nfs_mount.py": "# Managed by distributed-dl-system nfs-client v1\n\"\"\"Read-only NFS mount admission check, also installable as a standalone guard.\n\nThis reads kernel metadata only: it never looks up a file in the mount, triggers\nan automount, stages inputs or authorizes/launches training. The future trusted\nstager must use the check in its own mount namespace before accessing inputs.\n\"\"\"\n\nimport argparse\nimport ipaddress\nimport json\nfrom pathlib import Path\nimport re\n\nINPUTS = \"/srv/mlnfs/inputs\"\nEXPORT = \"/srv/ml-shared/objects\"\nREQUIRED = {\"ro\", \"nosuid\", \"nodev\", \"noexec\", \"hard\", \"proto=tcp\", \"sec=sys\", \"vers=4.1\"}\nFORBIDDEN = {\"rw\", \"soft\", \"softerr\", \"softreval\", \"suid\", \"dev\", \"exec\", \"user\", \"users\"}\n\n\nclass MountNotReady(ValueError):\n    \"\"\"The visible mount metadata does not meet the reviewed input contract.\"\"\"\n\n\ndef unescape(value):\n    return re.sub(r\"\\\\([0-7]{3})\", lambda match: chr(int(match[1], 8)), value)\n\n\ndef parse_mountinfo(text):\n    mounts = []\n    for line in text.splitlines():\n        if not line:\n            continue\n        try:\n            left, right = line.split(\" - \", 1)\n            a, b = left.split(), right.split()\n            mounts.append({\"id\": int(a[0]), \"parent\": int(a[1]), \"device\": a[2],\n                           \"root\": unescape(a[3]), \"target\": unescape(a[4]),\n                           \"vfs_options\": a[5].split(\",\"), \"fstype\": b[0],\n                           \"source\": unescape(b[1]), \"fs_options\": b[2].split(\",\")})\n        except (ValueError, IndexError) as error:\n            raise MountNotReady(\"Malformed kernel mount metadata\") from error\n    return mounts\n\n\ndef validate_source(source):\n    try:\n        host, path = source.split(\":\", 1)\n        ip = ipaddress.IPv4Address(host)\n    except (ValueError, AttributeError) as error:\n        raise MountNotReady(\"Expected a literal IPv4 controller and fixed input export\") from error\n    if path != EXPORT or ip.is_loopback or ip.is_multicast or ip.is_unspecified or ip.is_reserved or ip.is_link_local:\n        raise MountNotReady(\"Unsafe controller input source\")\n    return str(ip) + \":\" + EXPORT\n\n\ndef require_input_mount(source, mountinfo=None):\n    source = validate_source(source)\n    text = Path(\"/proc/self/mountinfo\").read_text() if mountinfo is None else mountinfo\n    mounts = parse_mountinfo(text)\n    exact = [m for m in mounts if m[\"target\"] == INPUTS]\n    nfs = [m for m in exact if m[\"fstype\"] in (\"nfs\", \"nfs4\")]\n    if len(nfs) != 1 or any(m[\"fstype\"] not in (\"autofs\", \"nfs\", \"nfs4\") for m in exact) or len(exact) > 2:\n        raise MountNotReady(\"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\")\n    mount = nfs[0]\n    if mount[\"source\"] != source or mount[\"root\"] != \"/\":\n        raise MountNotReady(\"Wrong input source or bind-subdirectory mount\")\n    by_id = {item[\"id\"]: item for item in mounts}\n    if len(by_id) != len(mounts):\n        raise MountNotReady(\"Duplicate kernel mount identity\")\n    ancestors = set()\n    current = mount\n    while current is not None:\n        if current[\"id\"] in ancestors:\n            raise MountNotReady(\"Cyclic kernel mount ancestry\")\n        ancestors.add(current[\"id\"])\n        current = by_id.get(current[\"parent\"])\n    for item in mounts:\n        target = item[\"target\"]\n        if target != INPUTS and (target == \"/\" or INPUTS.startswith(target.rstrip(\"/\") + \"/\")) and item[\"id\"] not in ancestors:\n            raise MountNotReady(\"Input mount hidden by an ancestor overmount\")\n    values = set(mount[\"vfs_options\"]) | set(mount[\"fs_options\"])\n    if not REQUIRED <= values or values & FORBIDDEN or \"ro\" not in mount[\"vfs_options\"]:\n        raise MountNotReady(\"Input mount lacks required read-only/security/protocol options\")\n    if any(m[\"target\"].startswith(INPUTS + \"/\") for m in mounts):\n        raise MountNotReady(\"Unexpected nested mount inside input tree\")\n    return {\"ready\": True, \"mount_id\": mount[\"id\"], \"source\": source, \"target\": INPUTS,\n            \"version\": \"4.1\", \"scope\": \"Metadata admission only; not server liveness, authorization or byte verification\"}\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"--source\", required=True)\n    args = parser.parse_args(argv)\n    try:\n        print(json.dumps(require_input_mount(args.source), sort_keys=True))\n        return 0\n    except (MountNotReady, OSError) as error:\n        print(json.dumps({\"ready\": False, \"error\": str(error)}, sort_keys=True))\n        return 2\n\n\nif __name__ == \"__main__\":\n    raise SystemExit(main())\n"
+          }
+        }
+      },
+      "config": {
+        "clients": {
+          "pi01": null,
+          "pi02": "192.168.10.150",
+          "pi03": "192.168.10.101"
+        },
+        "schema_version": 1,
+        "server_address": "192.168.10.214"
+      },
+      "fstab_policy": "Never written; existing mount and agent units unchanged",
+      "mode": "offline-three-client-preview",
+      "package_if_missing_after_approval": [
+        "/usr/bin/apt-get",
+        "--no-download",
+        "--no-remove",
+        "--assume-yes",
+        "install",
+        "nfs-common"
+      ],
+      "runtime_enablement": "Blocked until authorization, job isolation and supervised staging are implemented",
+      "version": 1
+    }
+  },
+  "tests": {
+    "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py test_nfs_client_setup.py test_nfs_server_setup.py test_storage_config.py test_storage_backends.py",
+    "returncode": 0,
+    "passed": 85,
+    "failed": 0,
+    "skipped": 0,
+    "files": {
+      "test_nfs_client_setup.py": 25,
+      "test_nfs_server_setup.py": 19,
+      "test_storage_config.py": 17,
+      "test_storage_backends.py": 24
+    },
+    "log_path": "/tmp/hybrid-storage-2-3-ldwdb41s/test-results.log",
+    "log_sha256": "5a2008724c3250f8522b4e9e24113b43b1da1e947da174c3c162e796d8c9a7ee",
+    "log": "\nRunning test_nfs_client_setup.py\ntest_active_autofs_or_nfs_paths_are_not_traversed_during_setup (__main__.ClientSetupTests.test_active_autofs_or_nfs_paths_are_not_traversed_during_setup) ... ok\ntest_all_three_stage_idempotently_preserving_fstab_and_without_activation (__main__.ClientSetupTests.test_all_three_stage_idempotently_preserving_fstab_and_without_activation) ... ok\ntest_backup_failure_prevents_all_config_and_mount_directory_changes (__main__.ClientSetupTests.test_backup_failure_prevents_all_config_and_mount_directory_changes) ... ok\ntest_cli_preview_is_default_and_local_actions_require_node_and_digest (__main__.ClientSetupTests.test_cli_preview_is_default_and_local_actions_require_node_and_digest) ... ok\ntest_concurrent_unit_edit_is_never_overwritten (__main__.ClientSetupTests.test_concurrent_unit_edit_is_never_overwritten) ... ok\ntest_direct_mount_boot_dependency_is_rejected (__main__.ClientSetupTests.test_direct_mount_boot_dependency_is_rejected) ... ok\ntest_existing_fstab_collision_is_not_rewritten (__main__.ClientSetupTests.test_existing_fstab_collision_is_not_rewritten) ... ok\ntest_existing_unit_override_prevents_shadowed_policy (__main__.ClientSetupTests.test_existing_unit_override_prevents_shadowed_policy) ... ok\ntest_missing_pi_or_wrong_local_node_or_package_blocks_staging (__main__.ClientSetupTests.test_missing_pi_or_wrong_local_node_or_package_blocks_staging) ... ok\ntest_nonempty_unmarked_root_and_mountpoint_data_are_preserved (__main__.ClientSetupTests.test_nonempty_unmarked_root_and_mountpoint_data_are_preserved) ... ok\ntest_offline_default_covers_all_three_without_host_commands_or_changes (__main__.ClientSetupTests.test_offline_default_covers_all_three_without_host_commands_or_changes) ... ok\ntest_package_failure_propagates_and_never_stages_units (__main__.ClientSetupTests.test_package_failure_propagates_and_never_stages_units) ... ok\ntest_package_step_is_conditional_offline_and_does_not_stage_units (__main__.ClientSetupTests.test_package_step_is_conditional_offline_and_does_not_stage_units) ... ok\ntest_partial_multifile_staging_resumes_with_backup_and_preserves_prior_files (__main__.ClientSetupTests.test_partial_multifile_staging_resumes_with_backup_and_preserves_prior_files) ... ok\ntest_schema_literal_hosts_unknown_identity_and_duplicates (__main__.ClientSetupTests.test_schema_literal_hosts_unknown_identity_and_duplicates) ... ok\ntest_stale_digest_and_non_admin_prevent_changes (__main__.ClientSetupTests.test_stale_digest_and_non_admin_prevent_changes) ... ok\ntest_symlinks_world_writable_parents_and_unowned_units_fail_closed (__main__.ClientSetupTests.test_symlinks_world_writable_parents_and_unowned_units_fail_closed) ... ok\ntest_units_keep_boot_and_legacy_agent_independent_of_network_mount (__main__.ClientSetupTests.test_units_keep_boot_and_legacy_agent_independent_of_network_mount) ... ok\ntest_absent_empty_local_directory_and_autofs_only_never_admit (__main__.MountAdmissionTests.test_absent_empty_local_directory_and_autofs_only_never_admit) ... ok\ntest_ancestor_overmount_cannot_make_a_hidden_nfs_mount_count_as_ready (__main__.MountAdmissionTests.test_ancestor_overmount_cannot_make_a_hidden_nfs_mount_count_as_ready) ... ok\ntest_guard_cli_exit_codes_use_metadata_only (__main__.MountAdmissionTests.test_guard_cli_exit_codes_use_metadata_only) ... ok\ntest_malformed_metadata_and_unsafe_source_fail_closed (__main__.MountAdmissionTests.test_malformed_metadata_and_unsafe_source_fail_closed) ... ok\ntest_shadowed_duplicate_and_nested_mounts_are_rejected (__main__.MountAdmissionTests.test_shadowed_duplicate_and_nested_mounts_are_rejected) ... ok\ntest_valid_mount_and_automount_overlay_admit_exact_source (__main__.MountAdmissionTests.test_valid_mount_and_automount_overlay_admit_exact_source) ... ok\ntest_wrong_source_bind_rw_soft_missing_security_or_wrong_protocol_are_rejected (__main__.MountAdmissionTests.test_wrong_source_bind_rw_soft_missing_security_or_wrong_protocol_are_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 25 tests in 0.779s\n\nOK\nPASS test_nfs_client_setup.py\n\nRunning test_nfs_server_setup.py\ntest_backup_failure_prevents_config_and_input_directory_creation (__main__.ServerSetupTests.test_backup_failure_prevents_config_and_input_directory_creation) ... ok\ntest_changed_allowlist_has_new_backup_and_keeps_existing_inputs (__main__.ServerSetupTests.test_changed_allowlist_has_new_backup_and_keeps_existing_inputs) ... ok\ntest_cli_default_is_dry_run_and_apply_needs_explicit_review_digest (__main__.ServerSetupTests.test_cli_default_is_dry_run_and_apply_needs_explicit_review_digest) ... ok\ntest_config_changed_during_staging_is_not_overwritten (__main__.ServerSetupTests.test_config_changed_during_staging_is_not_overwritten) ... ok\ntest_conservative_exports_syntax_and_policy_reject_unsafe_rows (__main__.ServerSetupTests.test_conservative_exports_syntax_and_policy_reject_unsafe_rows) ... ok\ntest_dry_run_is_read_only_and_renders_only_literal_clients (__main__.ServerSetupTests.test_dry_run_is_read_only_and_renders_only_literal_clients) ... ok\ntest_existing_active_exports_must_be_only_our_exact_safe_scope (__main__.ServerSetupTests.test_existing_active_exports_must_be_only_our_exact_safe_scope) ... ok\ntest_interrupted_marked_setup_can_resume_without_deleting_data (__main__.ServerSetupTests.test_interrupted_marked_setup_can_resume_without_deleting_data) ... ok\ntest_missing_pi01_publisher_packages_or_server_address_prevent_staging (__main__.ServerSetupTests.test_missing_pi01_publisher_packages_or_server_address_prevent_staging) ... ok\ntest_no_subtree_requires_verified_whole_dedicated_filesystem (__main__.ServerSetupTests.test_no_subtree_requires_verified_whole_dedicated_filesystem) ... ok\ntest_nonempty_unmarked_root_is_never_adopted_or_exposed (__main__.ServerSetupTests.test_nonempty_unmarked_root_is_never_adopted_or_exposed) ... ok\ntest_remote_or_automount_layout_is_not_traversed (__main__.ServerSetupTests.test_remote_or_automount_layout_is_not_traversed) ... ok\ntest_review_digest_and_admin_gate_prevent_unreviewed_changes (__main__.ServerSetupTests.test_review_digest_and_admin_gate_prevent_unreviewed_changes) ... ok\ntest_schema_keys_types_and_duplicate_json_fields_are_rejected (__main__.ServerSetupTests.test_schema_keys_types_and_duplicate_json_fields_are_rejected) ... ok\ntest_stage_backs_up_before_changes_and_is_idempotent_without_activation (__main__.ServerSetupTests.test_stage_backs_up_before_changes_and_is_idempotent_without_activation) ... ok\ntest_symlink_and_unprotected_config_paths_fail_closed (__main__.ServerSetupTests.test_symlink_and_unprotected_config_paths_fail_closed) ... ok\ntest_unrelated_exports_and_unowned_managed_filename_are_preserved (__main__.ServerSetupTests.test_unrelated_exports_and_unowned_managed_filename_are_preserved) ... ok\ntest_unsafe_backup_parent_is_rejected_during_read_only_plan (__main__.ServerSetupTests.test_unsafe_backup_parent_is_rejected_during_read_only_plan) ... ok\ntest_wildcards_subnets_hostnames_injection_and_duplicate_clients_are_rejected (__main__.ServerSetupTests.test_wildcards_subnets_hostnames_injection_and_duplicate_clients_are_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 19 tests in 0.330s\n\nOK\nPASS test_nfs_server_setup.py\n\nRunning test_storage_config.py\ntest_all_24_combinations_are_checked (__main__.ConfigTests.test_all_24_combinations_are_checked) ... ok\ntest_booleans_do_not_coerce_integers_strings_or_null (__main__.ConfigTests.test_booleans_do_not_coerce_integers_strings_or_null) ... ok\ntest_cli_checks_legacy_and_rejects_unimplemented_features (__main__.ConfigTests.test_cli_checks_legacy_and_rejects_unimplemented_features) ... ok\ntest_duplicate_malformed_nonfinite_and_invalid_utf8_json_are_rejected (__main__.ConfigTests.test_duplicate_malformed_nonfinite_and_invalid_utf8_json_are_rejected) ... ok\ntest_import_and_loading_have_no_db_or_backend_side_effects (__main__.ConfigTests.test_import_and_loading_have_no_db_or_backend_side_effects) ... ok\ntest_invalid_enums_and_nonobject_values_fail_closed (__main__.ConfigTests.test_invalid_enums_and_nonobject_values_fail_closed) ... ok\ntest_missing_empty_partial_and_explicit_off_are_identical (__main__.ConfigTests.test_missing_empty_partial_and_explicit_off_are_identical) ... ok\ntest_missing_file_creates_nothing (__main__.ConfigTests.test_missing_file_creates_nothing) ... ok\ntest_oversized_and_excessively_nested_documents_are_rejected (__main__.ConfigTests.test_oversized_and_excessively_nested_documents_are_rejected) ... ok\ntest_permission_and_io_errors_do_not_fall_back (__main__.ConfigTests.test_permission_and_io_errors_do_not_fall_back) ... ok\ntest_settings_are_immutable_and_direct_construction_validates (__main__.ConfigTests.test_settings_are_immutable_and_direct_construction_validates) ... ok\ntest_symlinks_fifo_and_directory_are_not_treated_as_missing_config (__main__.ConfigTests.test_symlinks_fifo_and_directory_are_not_treated_as_missing_config) ... ok\ntest_unknown_and_old_draft_names_are_not_silently_ignored (__main__.ConfigTests.test_unknown_and_old_draft_names_are_not_silently_ignored) ... ok\ntest_dispatcher_off_and_missing_preserve_reconcile_monitor_dispatch_order (__main__.LegacyStartupTests.test_dispatcher_off_and_missing_preserve_reconcile_monitor_dispatch_order) ... ok\ntest_enabled_config_blocks_dispatcher_before_lock_or_renewals (__main__.LegacyStartupTests.test_enabled_config_blocks_dispatcher_before_lock_or_renewals) ... ok\ntest_enabled_or_malformed_config_blocks_portal_before_auth_storage (__main__.LegacyStartupTests.test_enabled_or_malformed_config_blocks_portal_before_auth_storage) ... ok\ntest_off_and_missing_preserve_uploaded_inputs_and_resource_selection (__main__.LegacyStartupTests.test_off_and_missing_preserve_uploaded_inputs_and_resource_selection) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 1.029s\n\nOK\nPASS test_storage_config.py\n\nRunning test_storage_backends.py\ntest_bad_expected_metadata_is_rejected_before_creating_temporary_files (__main__.BackendTests.test_bad_expected_metadata_is_rejected_before_creating_temporary_files) ... ok\ntest_before_commit_only_private_staging_contains_partial_input (__main__.BackendTests.test_before_commit_only_private_staging_contains_partial_input) ... ok\ntest_both_adapters_implement_protocol_and_read_existing_files (__main__.BackendTests.test_both_adapters_implement_protocol_and_read_existing_files) ... ok\ntest_competing_publication_cannot_replace_winner (__main__.BackendTests.test_competing_publication_cannot_replace_winner) ... ok\ntest_construction_and_import_do_not_create_roots_or_load_controller (__main__.BackendTests.test_construction_and_import_do_not_create_roots_or_load_controller) ... ok\ntest_directory_and_fifo_are_rejected_without_waiting_for_a_writer (__main__.BackendTests.test_directory_and_fifo_are_rejected_without_waiting_for_a_writer) ... ok\ntest_directory_descriptor_keeps_read_anchored_during_parent_swap (__main__.BackendTests.test_directory_descriptor_keeps_read_anchored_during_parent_swap) ... ok\ntest_empty_artifact_can_be_published (__main__.BackendTests.test_empty_artifact_can_be_published) ... ok\ntest_expected_size_bounds_consumption_of_oversized_input (__main__.BackendTests.test_expected_size_bounds_consumption_of_oversized_input) ... ok\ntest_hash_or_size_mismatch_never_publishes_partial_bytes (__main__.BackendTests.test_hash_or_size_mismatch_never_publishes_partial_bytes) ... ok\ntest_interrupted_source_and_disk_full_remove_only_own_temporary_file (__main__.BackendTests.test_interrupted_source_and_disk_full_remove_only_own_temporary_file) ... ok\ntest_io_and_permission_errors_are_not_reported_as_missing (__main__.BackendTests.test_io_and_permission_errors_are_not_reported_as_missing) ... ok\ntest_local_publication_requires_explicit_private_staging (__main__.BackendTests.test_local_publication_requires_explicit_private_staging) ... ok\ntest_missing_files_and_parents_are_misses_but_open_raises (__main__.BackendTests.test_missing_files_and_parents_are_misses_but_open_raises) ... ok\ntest_nfs_rejects_publication_even_on_writable_mock_mount (__main__.BackendTests.test_nfs_rejects_publication_even_on_writable_mock_mount) ... ok\ntest_noncanonical_and_escaping_keys_are_rejected (__main__.BackendTests.test_noncanonical_and_escaping_keys_are_rejected) ... ok\ntest_path_resolution_is_not_used_as_a_safe_open_token (__main__.BackendTests.test_path_resolution_is_not_used_as_a_safe_open_token) ... ok\ntest_post_commit_fsync_error_leaves_only_complete_file_for_reconciliation (__main__.BackendTests.test_post_commit_fsync_error_leaves_only_complete_file_for_reconciliation) ... ok\ntest_publication_never_overwrites_existing_files_or_symlinks (__main__.BackendTests.test_publication_never_overwrites_existing_files_or_symlinks) ... ok\ntest_publication_rejects_unsafe_parent_and_does_not_create_parents (__main__.BackendTests.test_publication_rejects_unsafe_parent_and_does_not_create_parents) ... ok\ntest_staging_roots_cannot_overlap_or_follow_symlinks (__main__.BackendTests.test_staging_roots_cannot_overlap_or_follow_symlinks) ... ok\ntest_symlink_files_and_parent_directories_are_rejected (__main__.BackendTests.test_symlink_files_and_parent_directories_are_rejected) ... ok\ntest_symlink_roots_and_root_ancestors_are_rejected (__main__.BackendTests.test_symlink_roots_and_root_ancestors_are_rejected) ... ok\ntest_verified_publication_is_visible_to_both_adapters (__main__.BackendTests.test_verified_publication_is_visible_to_both_adapters) ... ok\n\n----------------------------------------------------------------------\nRan 24 tests in 0.068s\n\nOK\nPASS test_storage_backends.py\n\n4/4 test files passed in 2.6s.\n",
+    "development_failures": "None; new suite passed initially, then added safety cases/hardening were rerun."
+  },
+  "native_unit_verification": {
+    "host_version": "systemd 255 (255.4-1ubuntu8.18)\n+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified\n",
+    "results": {
+      "pi01": {
+        "command": [
+          "systemd-analyze",
+          "verify",
+          "--man=no",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi01/srv-mlnfs-inputs.mount",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi01/srv-mlnfs-inputs.automount",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi01/ml-nfs-ready.service"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "standalone_guard": {
+          "command": [
+            "/usr/bin/python3",
+            "-I",
+            "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi01/nfs_mount.py",
+            "--source",
+            "192.168.10.214:/srv/ml-shared/objects"
+          ],
+          "returncode": 2,
+          "stdout": "{\"error\": \"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\", \"ready\": false}\n",
+          "stderr": ""
+        }
+      },
+      "pi02": {
+        "command": [
+          "systemd-analyze",
+          "verify",
+          "--man=no",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi02/srv-mlnfs-inputs.mount",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi02/srv-mlnfs-inputs.automount",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi02/ml-nfs-ready.service"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "standalone_guard": {
+          "command": [
+            "/usr/bin/python3",
+            "-I",
+            "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi02/nfs_mount.py",
+            "--source",
+            "192.168.10.214:/srv/ml-shared/objects"
+          ],
+          "returncode": 2,
+          "stdout": "{\"error\": \"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\", \"ready\": false}\n",
+          "stderr": ""
+        }
+      },
+      "pi03": {
+        "command": [
+          "systemd-analyze",
+          "verify",
+          "--man=no",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi03/srv-mlnfs-inputs.mount",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi03/srv-mlnfs-inputs.automount",
+          "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi03/ml-nfs-ready.service"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "standalone_guard": {
+          "command": [
+            "/usr/bin/python3",
+            "-I",
+            "/tmp/hybrid-storage-2-3-ldwdb41s/units/pi03/nfs_mount.py",
+            "--source",
+            "192.168.10.214:/srv/ml-shared/objects"
+          ],
+          "returncode": 2,
+          "stdout": "{\"error\": \"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\", \"ready\": false}\n",
+          "stderr": ""
+        }
+      }
+    },
+    "limitation": "Local controller systemd 255 only; not Pi systemd 252 runtime/boot or real NFS option validation."
+  },
+  "actual_controller_guard": {
+    "command": "env PYTHONDONTWRITEBYTECODE=1 python3 hybrid_storage/nfs_mount.py --source 192.168.10.214:/srv/ml-shared/objects",
+    "returncode": 2,
+    "result": {
+      "error": "Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready",
+      "ready": false
+    },
+    "interpretation": "Expected safe refusal of unmounted path, no input path lookup or NFS I/O."
+  },
+  "source_sha256": {
+    "hybrid_storage/nfs_client.py": "e864fc09765fc287c98652d7c073380b6f6b14a1c6f17ea955634e020c153bdd",
+    "hybrid_storage/nfs_mount.py": "753fb89fed03aa7bcf0b1b69bfa730d1f382ad9c4a094b3a7a18e05ecbf7e501",
+    "tools/nfs_client_setup.py": "5aff675a9a399553aeac399d33f41ba2f1bab61cf23be854aa9cc4f2c409b79f",
+    "config/nfs-clients.json": "0e41794e9361da091a7b6e75ede95903dbc6c592db150ebd65be95750307dafe",
+    "tests/test_nfs_client_setup.py": "43c740015edd95094eec22a90366d26405029021c62411ceee94d479b315c097"
+  },
+  "server_client_proposal_addresses_agree": true,
+  "host_observation": {
+    "current_paths": {
+      "/etc/fstab": {
+        "mode": 33188,
+        "uid": 65534,
+        "gid": 65534,
+        "symlink": false,
+        "sha256": "1f9202ac77321e3ecf307243c94dc1cfea517136679549b6b5128cc496612f37"
+      },
+      "/srv/mlnfs": {
+        "absent": true
+      },
+      "/etc/.distributed-ml-nfs-client.lock": {
+        "absent": true
+      },
+      "/var/backups/distributed-ml-nfs-client": {
+        "absent": true
+      },
+      "/usr/local/libexec/distributed-ml": {
+        "absent": true
+      },
+      "/etc/systemd/system/srv-mlnfs-inputs.mount": {
+        "absent": true
+      },
+      "/etc/systemd/system/srv-mlnfs-inputs.automount": {
+        "absent": true
+      },
+      "/etc/systemd/system/ml-nfs-ready.service": {
+        "absent": true
+      }
+    },
+    "fstab_matches_prior_2_2_record": true,
+    "baseline_note": "fstab compared with prior 2.2 evidence; new client paths are currently absent. No new pre-turn host snapshot was taken, and no live mutation command ran."
+  },
+  "remote_actions": "None; pi01 remained deferred, no fresh pi02/pi03 SSH/HTTP probe.",
+  "package_actions": "Only mocked subprocess tests; no real apt/dpkg installation. Future optional action is offline and separately approved; maintainer scripts may affect services.",
+  "not_run": [
+    "Actual root staging or package provisioning",
+    "Any live systemd or fstab mutation",
+    "Pi Python 3.11/systemd 252 execution",
+    "New-server NFS version/option negotiation or mounts",
+    "Boot/disconnect/outage/timeouts on hardware",
+    "TEST artifact SHA-256/RO write-denial/throughput",
+    "Live ML/DDP jobs or security-isolation acceptance"
+  ],
+  "primary_references": [
+    "https://www.freedesktop.org/software/systemd/man/252/systemd.automount.html",
+    "https://manpages.debian.org/bookworm/systemd/systemd.mount.5.en.html",
+    "https://manpages.debian.org/bookworm/nfs-common/nfs.5.en.html"
+  ]
+}

@@ -91,7 +91,7 @@ Temporary rules were restored after verification.
 After both single-worker jobs are completed:
 
 ```bash
-.controller-venv/bin/python tools/compare_training_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
+.controller-venv/bin/python tools/comparisons/compare_training_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
 ```
 
 Expect a nonzero recovered start step, exact model/optimizer/scheduler agreement

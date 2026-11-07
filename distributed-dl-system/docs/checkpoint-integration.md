@@ -18,7 +18,7 @@ Ctrl+C; this tool holds its lock and runs the production controller functions.
 
 ```bash
 cd '/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system'
-.controller-venv/bin/python -u tools/check_step6.py --nodes pi01 pi02 pi03 --failure process
+.controller-venv/bin/python -u tools/demos/checkpoint_recovery.py --nodes pi01 pi02 pi03 --failure process
 ```
 
 The tool submits two copies of the same stochastic MLP. It completes one as an
@@ -33,7 +33,7 @@ failure and inspect progress.
 To reboot the entire active Pi during training:
 
 ```bash
-.controller-venv/bin/python -u tools/check_step6.py --nodes pi01 pi02 pi03 --failure reboot
+.controller-venv/bin/python -u tools/demos/checkpoint_recovery.py --nodes pi01 pi02 pi03 --failure reboot
 ```
 
 This command actually reboots the worker chosen for the interrupted job. It

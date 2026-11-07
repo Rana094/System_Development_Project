@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:distributed-dl:storage:job-inputs:1",
+  "title": "DRAFT hybrid job input sidecar v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "job_id",
+    "owner",
+    "legacy_manifest_sha256",
+    "source_manifest_sha256",
+    "dataset_manifest_sha256",
+    "execution",
+    "rank_inputs"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "kind": {
+      "const": "job-inputs"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,128}(?![\\s\\S])"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.@-]{0,127}(?![\\s\\S])"
+    },
+    "legacy_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "dataset_manifest_sha256": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "world_size"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "single",
+            "ddp"
+          ]
+        },
+        "world_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "single"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "world_size": {
+                "const": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "world_size": {
+                "minimum": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "rank_inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rank"
+      },
+      "minItems": 1,
+      "maxItems": 256
+    }
+  },
+  "$defs": {
+    "path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\:\\x00-\\x1f\\x7f\\ud800-\\udfff])[^/]+(?:/[^/]+)*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "rank": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rank",
+        "source_paths",
+        "data_paths"
+      ],
+      "properties": {
+        "rank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "source_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/path"
+          },
+          "uniqueItems": true
+        },
+        "data_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/path"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

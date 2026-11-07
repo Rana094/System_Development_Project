@@ -14,7 +14,7 @@ jobs must finish before the demonstration starts.
 
 ```bash
 cd '/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system'
-.controller-venv/bin/python -u tools/check_step4.py --nodes pi01 pi02 pi03
+.controller-venv/bin/python -u tools/demos/concurrent_jobs.py --nodes pi01 pi02 pi03
 ```
 
 The tool submits four jobs with distinct student IDs, prepares their environments on all three workers,
@@ -141,7 +141,7 @@ A zero process exit and successful collection determine `COMPLETED`.
   the submitted argv. CUDA visibility matches the GPU request.
 - `job_artifacts.py` collects regular result files and logs before completion.
   Collection failure retains the job and reservation for another polling cycle.
-- `check_step4.py` exercises the public submission/preparation/queue commands and
+- `tools/demos/concurrent_jobs.py` exercises the public submission/preparation/queue commands and
   production dispatcher, then checks actual overlapping training intervals,
   changed model parameters, model hashes, finite model tensors, Adam step counters,
   collected logs and released slots.

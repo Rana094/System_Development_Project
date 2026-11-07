@@ -25,6 +25,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 import job_store as store
+import storage_selection
 from job_spec import load_spec, validate_owner, validate_spec
 from job_storage import stage_job, unpack_zip, verify_workspace
 from queue_policy import ACTIVE_STATES, fair_order, limits, load_policy
@@ -33,6 +34,9 @@ from submit_job import create_job_id
 import execution_leases as ownership
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from hybrid_storage.config import load_config, require_controller_config, select_submission_backend
+
 EXAMPLES = {'regression': 'job.integration.json', 'binary': 'job.binary.json',
             'cnn': 'job.cnn.json', 'ddp': 'job.distributed-checkpoint.json'}
 TERMINAL = ('COMPLETED', 'FAILED', 'CANCELLED')
@@ -124,6 +128,7 @@ class PreparationQueue:
             raise ValueError('Unknown environment profile')
         with closing(store.get_connection()) as db, db:
             db.execute('BEGIN IMMEDIATE')
+            storage_selection.require_execution(db, job_id)
             job = db.execute('SELECT status FROM jobs WHERE job_id=?', (job_id,)).fetchone()
             if not job or job['status'] not in ('STAGED', 'READY'):
                 raise ValueError('Only staged or ready jobs can be prepared')
@@ -150,6 +155,7 @@ class PreparationQueue:
         self.update(job['job_id'], 'PREPARING')
         process = None
         try:
+            store.require_storage_execution(job['job_id'])
             node_ids = [n['id'] for n in load_nodes()]
             if not node_ids:
                 raise ValueError('No workers configured')
@@ -238,6 +244,7 @@ class ClusterView:
 
 
 def create_app(directory=None, background=False):
+    storage_settings = require_controller_config(load_config(ROOT / 'config/storage.json'))
     directory = Path(directory or ROOT/'storage/portal')
     app = Flask(__name__, static_folder='portal_static', static_url_path='/static')
     app.secret_key = configure_storage(directory)
@@ -343,6 +350,7 @@ def create_app(directory=None, background=False):
 
     @app.post('/api/jobs')
     def submit():
+        backend = select_submission_backend(storage_settings, request.form.get('storage_backend'))
         profile = request.form.get('profile','pytorch-cpu')
         if profile not in ('pytorch-cpu','isolated','worker-base'):
             raise ValueError('Unknown environment profile')
@@ -382,13 +390,16 @@ def create_app(directory=None, background=False):
                 raise ValueError('Requested workers exceed the configured cluster size')
             job_id = create_job_id()
             store.add_job(job_id,1,spec['recovery']['max_retries'],job_type='custom',job_config=spec,
-                          status='RECEIVED',owner=session['owner'])
+                          status='RECEIVED',owner=session['owner'],storage_backend=backend)
             try:
-                stage_job(job_id)
+                stored = stage_job(job_id)
             except Exception:
                 # Temporary inputs will be removed; do not leave an unresumable receipt pending.
                 store.control_job(job_id,session['owner'],'cancel')
                 raise
+        if backend == 'nfs':
+            return jsonify(job_id=job_id,status=stored['status'],storage_backend='nfs',
+                           reason=storage_selection.NFS_HELD_REASON),202
         preparation.enqueue(job_id,profile)
         return jsonify(job_id=job_id,status='STAGED'),202
 
@@ -522,6 +533,7 @@ def main():
         add_user(directory,args.create_user,password)
         print('Student login ready:',args.create_user)
         return
+    require_controller_config(load_config(ROOT / 'config/storage.json'))
     configure_storage(directory)
     lock = (directory/'.server.lock').open('a')
     try:

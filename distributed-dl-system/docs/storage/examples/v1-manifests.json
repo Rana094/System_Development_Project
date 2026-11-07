@@ -1,0 +1,88 @@
+{
+  "note": "Synthetic Pi-less fixture; no real job, credentials or hardware result. The legacy digest has no accompanying real snapshot.",
+  "payloads": [
+    {
+      "content_utf8": "print('offline example')\n",
+      "sha256": "2aa3f385c3581ba36820a633c8754ebef9b18ac673337c6e637e013f863bae91"
+    },
+    {
+      "content_utf8": "x,y\n1,2\n",
+      "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392"
+    }
+  ],
+  "source_tree": {
+    "schema_version": 1,
+    "kind": "source-tree",
+    "directories": [
+      "empty"
+    ],
+    "files": [
+      {
+        "path": "train.py",
+        "sha256": "2aa3f385c3581ba36820a633c8754ebef9b18ac673337c6e637e013f863bae91",
+        "size_bytes": 25,
+        "executable": false
+      }
+    ]
+  },
+  "dataset_tree": {
+    "schema_version": 1,
+    "kind": "dataset-tree",
+    "directories": [],
+    "files": [
+      {
+        "path": "dataset.csv",
+        "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392",
+        "size_bytes": 8,
+        "executable": false
+      }
+    ]
+  },
+  "job_inputs": {
+    "schema_version": 1,
+    "kind": "job-inputs",
+    "job_id": "draft-job-001",
+    "owner": "student1",
+    "legacy_manifest_sha256": "4cc91a3339bc271b1007b42bb099e60edac4fbb2010bfe6345fac0a8661d5518",
+    "source_manifest_sha256": "03ae5308a8fe4e1bf314a3eba319615eec4c5cc1c92b078bf42e9bafa239f9ff",
+    "dataset_manifest_sha256": "86c5339d2840c84dbe6f83e40fb6e4f1c902af5ce5ffba3e1b5e9ced1c0d9c3a",
+    "execution": {
+      "mode": "ddp",
+      "world_size": 3
+    },
+    "rank_inputs": [
+      {
+        "rank": 0,
+        "source_paths": [
+          "train.py"
+        ],
+        "data_paths": [
+          "dataset.csv"
+        ]
+      },
+      {
+        "rank": 1,
+        "source_paths": [
+          "train.py"
+        ],
+        "data_paths": [
+          "dataset.csv"
+        ]
+      },
+      {
+        "rank": 2,
+        "source_paths": [
+          "train.py"
+        ],
+        "data_paths": [
+          "dataset.csv"
+        ]
+      }
+    ]
+  },
+  "manifest_sha256": {
+    "source_tree": "03ae5308a8fe4e1bf314a3eba319615eec4c5cc1c92b078bf42e9bafa239f9ff",
+    "dataset_tree": "86c5339d2840c84dbe6f83e40fb6e4f1c902af5ce5ffba3e1b5e9ced1c0d9c3a",
+    "job_inputs": "d9f4a56803f329c1726193c35d54f1af1f0fd54fc74fe5faf1ef54a03ab2f6dc"
+  }
+}

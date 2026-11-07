@@ -13,7 +13,7 @@ From the controller PC, copy and run:
 
 ```bash
 cd "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system"
-PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/check_step3.py \
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/demos/prepare_environments.py \
   --nodes pi01 --profile pytorch-cpu
 ```
 
@@ -38,7 +38,7 @@ The compatibility and dependency checks must still pass.
 To exercise distributed-job preparation on two Pis:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/check_step3.py \
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/demos/prepare_environments.py \
   --nodes pi01 pi02 --profile pytorch-cpu
 ```
 

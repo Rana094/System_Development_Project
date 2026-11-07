@@ -622,6 +622,11 @@ def build_start_payload(job):
 # Dispatch
 def dispatch_one_job(job):
     """Select a worker, prepare recovery data, and persist the outcome of the start request."""
+    from job_store import require_storage_execution
+    try:
+        require_storage_execution(job['job_id'])
+    except ValueError:
+        return False
     config = get_job_config(job)
     if is_distributed(job):
         from distributed_dispatch import dispatch
@@ -1185,6 +1190,11 @@ def reconcile_scheduled_jobs():
 
 def main():
     """Hold a single-controller lock and repeatedly reconcile, monitor and dispatch work."""
+    import sys
+    sys.path.insert(0, str(PROJECT_DIR))
+    from hybrid_storage.config import load_config, require_controller_config
+    require_controller_config(load_config(PROJECT_DIR / "config/storage.json"))
+
     import fcntl
 
     lock = open(CONTROLLER_DIR / ".dispatcher.lock", "w")

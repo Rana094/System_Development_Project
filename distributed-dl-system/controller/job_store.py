@@ -6,6 +6,7 @@ import os
 import time
 
 from queue_policy import ACTIVE_STATES, PENDING_STATES, fair_order, identity, limits, load_policy
+import storage_selection
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -160,6 +161,7 @@ def initialize_database():
     cursor.execute("""CREATE TABLE IF NOT EXISTS owner_service (
         owner TEXT PRIMARY KEY, last_dispatch REAL NOT NULL
     )""")
+    storage_selection.create_schema(connection)
     cursor.execute("UPDATE jobs SET queued_at=created_at WHERE status='QUEUED' AND queued_at IS NULL")
     # Reconstruct occupied slots when upgrading a database with active legacy jobs.
     cursor.execute("""INSERT OR IGNORE INTO resource_reservations
@@ -180,6 +182,8 @@ def add_job(
     job_config=None,
     status="QUEUED",
     owner=None,
+    *,
+    storage_backend="legacy",
 ):
     """Publish a complete job atomically; general submissions wait for later staging."""
     if status not in {"QUEUED", "RECEIVED"}:
@@ -188,6 +192,9 @@ def add_job(
         raise ValueError(
             "Custom submissions must start RECEIVED; staging uses an explicit transition"
         )
+    storage_selection.validate_backend(storage_backend)
+    if storage_backend != "legacy" and job_type != "custom":
+        raise ValueError("NFS selection is available only for custom submissions")
     now = time.time()
 
     connection = get_connection()
@@ -205,36 +212,59 @@ def add_job(
             connection.close()
             raise
 
-    cursor.execute(
-        """
-        INSERT INTO jobs (
-            job_id,
-            status,
-            duration,
-            created_at,
-            retry_count,
-            max_retries,
-            updated_at, job_type, job_config, owner, queued_at
+    try:
+        cursor.execute(
+            """
+            INSERT INTO jobs (
+                job_id,
+                status,
+                duration,
+                created_at,
+                retry_count,
+                max_retries,
+                updated_at, job_type, job_config, owner, queued_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                job_id,
+                status,
+                duration,
+                now,
+                0,
+                max_retries,
+                now,
+                job_type,
+                json.dumps(job_config or {}),
+                owner,
+                now if status == "QUEUED" else None,
+            ),
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            job_id,
-            status,
-            duration,
-            now,
-            0,
-            max_retries,
-            now,
-            job_type,
-            json.dumps(job_config or {}),
-            owner,
-            now if status == "QUEUED" else None,
-        ),
-    )
 
-    connection.commit()
-    connection.close()
+        if job_type == "custom":
+            storage_selection.pin(connection, job_id, storage_backend)
+        connection.commit()
+    except BaseException:
+        connection.rollback()
+        raise
+    finally:
+        connection.close()
+
+
+def get_storage_binding(job_id):
+    connection = get_connection()
+    try:
+        return storage_selection.binding(connection, job_id)
+    finally:
+        connection.close()
+
+
+def require_storage_execution(job_id):
+    connection = get_connection()
+    try:
+        storage_selection.require_execution(connection, job_id)
+    finally:
+        connection.close()
 
 
 def get_job(job_id):
@@ -288,6 +318,9 @@ def mark_staged(job_id, storage_path, manifest_sha256, execution_spec):
                 job_id,
             ),
         )
+        if storage_selection.binding(connection, job_id)["backend"] == "nfs":
+            connection.execute("UPDATE jobs SET status='HELD',queue_reason=? WHERE job_id=?",
+                               (storage_selection.NFS_HELD_REASON, job_id))
     connection.close()
 
 
@@ -319,6 +352,7 @@ def record_environment(job_id, node_id, record):
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
+            storage_selection.require_execution(connection, job_id)
             job = connection.execute(
                 "SELECT * FROM jobs WHERE job_id=?", (job_id,)
             ).fetchone()
@@ -463,6 +497,7 @@ def enqueue_custom_job(job_id, candidates):
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
+            storage_selection.require_execution(connection, job_id)
             job = connection.execute("SELECT * FROM jobs WHERE job_id=?", (job_id,)).fetchone()
             if not job or job["job_type"] != "custom" or job["status"] != "READY":
                 raise ValueError("Only READY custom jobs can be queued")
@@ -491,6 +526,7 @@ def mark_scheduled(job_id, node_id, node_ip, resources=None, workers=None, ddp=N
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
+            storage_selection.require_execution(connection, job_id)
             job = connection.execute("SELECT * FROM jobs WHERE job_id=?", (job_id,)).fetchone()
             if not job or job["status"] != "QUEUED":
                 raise ValueError("Placement requires a queued job")
@@ -764,6 +800,14 @@ def fair_queue():
         with connection:
             connection.execute('BEGIN IMMEDIATE')
             queued = [dict(row) for row in connection.execute("SELECT * FROM jobs WHERE status='QUEUED'")]
+            eligible = []
+            for job in queued:
+                if storage_selection.binding(connection, job['job_id'])["backend"] == "legacy":
+                    eligible.append(job)
+                else:
+                    connection.execute("UPDATE jobs SET queue_reason=? WHERE job_id=?",
+                                       (storage_selection.NFS_HELD_REASON, job['job_id']))
+            queued = eligible
             active = [dict(row) for row in connection.execute("SELECT * FROM jobs WHERE status IN (?,?,?)",ACTIVE_STATES)]
             service = dict(connection.execute('SELECT owner,last_dispatch FROM owner_service'))
             policy = load_policy()
@@ -796,6 +840,7 @@ def control_job(job_id, owner, action):
                 state, reason = 'HELD','Held by owner'
             elif action == 'release':
                 if state != 'HELD': raise ValueError('Only HELD jobs can be released')
+                storage_selection.require_execution(connection, job_id)
                 state, reason = 'QUEUED','Released; waiting for scheduling'
             elif action == 'cancel':
                 if state in ('COMPLETED','FAILED'): raise ValueError('Finished jobs cannot be cancelled')

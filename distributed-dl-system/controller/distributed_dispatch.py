@@ -81,6 +81,11 @@ def select_group(job, excluded, resume=None, require_ownership=False):
 
 
 def dispatch(job, excluded):
+    from job_store import require_storage_execution
+    try:
+        require_storage_execution(job['job_id'])
+    except ValueError:
+        return False
     resume = None
     if json.loads(job['job_config'])['recovery']['mode']=='checkpoint':
         from group_checkpoints import resume_metadata

@@ -99,7 +99,7 @@ twice. Leave one run uninterrupted and reboot the worker running the other.
 After both complete:
 
 ```bash
-.controller-venv/bin/python tools/compare_training_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
+.controller-venv/bin/python tools/comparisons/compare_training_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
 ```
 
 Both runs must use the same task and inputs. Expected output includes exact

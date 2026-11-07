@@ -1,0 +1,538 @@
+{
+  "subphase": "2.2",
+  "recorded_at_utc": "2026-11-07T14:52:38.712418+00:00",
+  "command": "env PYTHONDONTWRITEBYTECODE=1 python3 tools/nfs_server_setup.py --dry-run",
+  "returncode": 2,
+  "interpretation": "Expected blocked plan: prerequisites are unresolved, no host changes.",
+  "plan": {
+    "activation_after_separate_approval": [
+      "systemctl start nfs-server.service",
+      "exportfs -ra"
+    ],
+    "apply_ready": false,
+    "backup_before_changes": "/var/backups/distributed-ml-nfs",
+    "blockers": [
+      "pi01: verified client address missing; never broaden the allowlist to compensate",
+      "nfs-kernel-server missing: package provisioning needs separate approval; script never installs it",
+      "nfs-common missing: package provisioning needs separate approval; script never installs it",
+      "publisher_uid missing: review/preprovision the dedicated trusted publisher identity",
+      "publisher_gid missing: review/preprovision the dedicated trusted publisher identity"
+    ],
+    "config": {
+      "clients": {
+        "pi01": null,
+        "pi02": "192.168.10.150",
+        "pi03": "192.168.10.101"
+      },
+      "layout": "subdirectory",
+      "publisher_gid": null,
+      "publisher_uid": null,
+      "schema_version": 1,
+      "server_address": "192.168.10.214"
+    },
+    "config_file_to_stage": "/etc/exports.d/distributed-ml.exports",
+    "desired_exports": "# Managed by distributed-dl-system nfs-server v1\n/srv/ml-shared/objects 192.168.10.150(ro,sync,root_squash,subtree_check,secure,sec=sys) 192.168.10.101(ro,sync,root_squash,subtree_check,secure,sec=sys)\n",
+    "existing_data_policy": "Verify existing attributes; never recurse, delete or change them",
+    "mode": "dry-run",
+    "observed": {
+      "active_table": null,
+      "admin_directories": {
+        "/etc": {
+          "directory": true,
+          "gid": 0,
+          "mode": 493,
+          "regular": false,
+          "uid": 0
+        },
+        "/srv": {
+          "directory": true,
+          "gid": 0,
+          "mode": 493,
+          "regular": false,
+          "uid": 0
+        },
+        "/var/backups": {
+          "directory": true,
+          "gid": 0,
+          "mode": 493,
+          "regular": false,
+          "uid": 0
+        },
+        "/var/backups/distributed-ml-nfs": null
+      },
+      "config_files": {
+        "/etc/exports": null,
+        "/etc/exports.d/distributed-ml.exports": null
+      },
+      "directories": {
+        "/srv/ml-shared": null,
+        "/srv/ml-shared/.publish": null,
+        "/srv/ml-shared/objects": null
+      },
+      "exports_directory": null,
+      "facts": {
+        "addresses": [
+          "100.73.90.91",
+          "127.0.0.1",
+          "192.168.10.214"
+        ],
+        "mounts": [
+          {
+            "device": "0:25",
+            "fstype": "sysfs",
+            "root": "/",
+            "target": "/sys"
+          },
+          {
+            "device": "0:26",
+            "fstype": "proc",
+            "root": "/",
+            "target": "/proc"
+          },
+          {
+            "device": "0:7",
+            "fstype": "devtmpfs",
+            "root": "/",
+            "target": "/dev"
+          },
+          {
+            "device": "0:27",
+            "fstype": "devpts",
+            "root": "/",
+            "target": "/dev/pts"
+          },
+          {
+            "device": "0:28",
+            "fstype": "tmpfs",
+            "root": "/",
+            "target": "/run"
+          },
+          {
+            "device": "259:11",
+            "fstype": "ext4",
+            "root": "/",
+            "target": "/"
+          },
+          {
+            "device": "0:8",
+            "fstype": "securityfs",
+            "root": "/",
+            "target": "/sys/kernel/security"
+          },
+          {
+            "device": "0:29",
+            "fstype": "tmpfs",
+            "root": "/",
+            "target": "/dev/shm"
+          },
+          {
+            "device": "0:30",
+            "fstype": "tmpfs",
+            "root": "/",
+            "target": "/run/lock"
+          },
+          {
+            "device": "0:31",
+            "fstype": "cgroup2",
+            "root": "/",
+            "target": "/sys/fs/cgroup"
+          },
+          {
+            "device": "0:32",
+            "fstype": "pstore",
+            "root": "/",
+            "target": "/sys/fs/pstore"
+          },
+          {
+            "device": "0:33",
+            "fstype": "efivarfs",
+            "root": "/",
+            "target": "/sys/firmware/efi/efivars"
+          },
+          {
+            "device": "0:34",
+            "fstype": "bpf",
+            "root": "/",
+            "target": "/sys/fs/bpf"
+          },
+          {
+            "device": "0:35",
+            "fstype": "autofs",
+            "root": "/",
+            "target": "/proc/sys/fs/binfmt_misc"
+          },
+          {
+            "device": "0:9",
+            "fstype": "debugfs",
+            "root": "/",
+            "target": "/sys/kernel/debug"
+          },
+          {
+            "device": "0:23",
+            "fstype": "mqueue",
+            "root": "/",
+            "target": "/dev/mqueue"
+          },
+          {
+            "device": "0:14",
+            "fstype": "tracefs",
+            "root": "/",
+            "target": "/sys/kernel/tracing"
+          },
+          {
+            "device": "0:36",
+            "fstype": "hugetlbfs",
+            "root": "/",
+            "target": "/dev/hugepages"
+          },
+          {
+            "device": "0:37",
+            "fstype": "fusectl",
+            "root": "/",
+            "target": "/sys/fs/fuse/connections"
+          },
+          {
+            "device": "0:21",
+            "fstype": "configfs",
+            "root": "/",
+            "target": "/sys/kernel/config"
+          },
+          {
+            "device": "7:0",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/bare/5"
+          },
+          {
+            "device": "7:2",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/brave/692"
+          },
+          {
+            "device": "7:3",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/code/268"
+          },
+          {
+            "device": "7:4",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/code/269"
+          },
+          {
+            "device": "7:5",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/core20/2866"
+          },
+          {
+            "device": "7:6",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/core20/2922"
+          },
+          {
+            "device": "7:7",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/core22/2411"
+          },
+          {
+            "device": "7:8",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/core22/2955"
+          },
+          {
+            "device": "7:10",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/core24/2124"
+          },
+          {
+            "device": "7:9",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/core24/1643"
+          },
+          {
+            "device": "7:12",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/firefox/8568"
+          },
+          {
+            "device": "7:11",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/firefox/7766"
+          },
+          {
+            "device": "7:13",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/firmware-updater/258"
+          },
+          {
+            "device": "7:14",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/firmware-updater/262"
+          },
+          {
+            "device": "7:15",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/gnome-42-2204/247"
+          },
+          {
+            "device": "7:16",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/gnome-46-2404/164"
+          },
+          {
+            "device": "7:18",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/gnome-46-2404/168"
+          },
+          {
+            "device": "7:17",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/gnome-42-2204/263"
+          },
+          {
+            "device": "7:19",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/gtk-common-themes/1535"
+          },
+          {
+            "device": "7:21",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/snap-store/1367"
+          },
+          {
+            "device": "7:22",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/snap-store/1427"
+          },
+          {
+            "device": "7:20",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/mesa-2404/1781"
+          },
+          {
+            "device": "7:23",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/snapd/27406"
+          },
+          {
+            "device": "7:24",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/snapd/28254"
+          },
+          {
+            "device": "7:25",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/snapd-desktop-integration/387"
+          },
+          {
+            "device": "7:26",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/snapd-desktop-integration/391"
+          },
+          {
+            "device": "259:10",
+            "fstype": "vfat",
+            "root": "/",
+            "target": "/boot/efi"
+          },
+          {
+            "device": "0:39",
+            "fstype": "binfmt_misc",
+            "root": "/",
+            "target": "/proc/sys/fs/binfmt_misc"
+          },
+          {
+            "device": "0:48",
+            "fstype": "tmpfs",
+            "root": "/",
+            "target": "/run/user/1000"
+          },
+          {
+            "device": "0:63",
+            "fstype": "fuse.portal",
+            "root": "/",
+            "target": "/run/user/1000/doc"
+          },
+          {
+            "device": "0:28",
+            "fstype": "tmpfs",
+            "root": "/snapd/ns",
+            "target": "/run/snapd/ns"
+          },
+          {
+            "device": "0:5",
+            "fstype": "nsfs",
+            "root": "mnt:[4026532963]",
+            "target": "/run/snapd/ns/snapd-desktop-integration.mnt"
+          },
+          {
+            "device": "7:27",
+            "fstype": "squashfs",
+            "root": "/",
+            "target": "/snap/brave/703"
+          },
+          {
+            "device": "0:5",
+            "fstype": "nsfs",
+            "root": "mnt:[4026533031]",
+            "target": "/run/snapd/ns/brave.mnt"
+          },
+          {
+            "device": "0:88",
+            "fstype": "fuse.gvfsd-fuse",
+            "root": "/",
+            "target": "/run/user/1000/gvfs"
+          },
+          {
+            "device": "0:5",
+            "fstype": "nsfs",
+            "root": "mnt:[4026533044]",
+            "target": "/run/snapd/ns/snap-store.mnt"
+          }
+        ],
+        "packages": {
+          "nfs-common": false,
+          "nfs-kernel-server": false
+        }
+      },
+      "marker": null
+    },
+    "package_command_for_separate_review_only": [
+      "apt-get",
+      "--no-download",
+      "install",
+      "nfs-kernel-server",
+      "nfs-common"
+    ],
+    "plan_sha256": "e4fbd67a550cd9becd66abd8a831880393bcd9bac8f50cdc59b63e1a5aa5ffc8",
+    "proposed_directories": [
+      {
+        "gid": "admin primary group",
+        "mode": "0755",
+        "path": "/srv/ml-shared",
+        "uid": 0
+      },
+      {
+        "gid": null,
+        "mode": "0755",
+        "path": "/srv/ml-shared/objects",
+        "uid": null
+      },
+      {
+        "gid": null,
+        "mode": "0700",
+        "path": "/srv/ml-shared/.publish",
+        "uid": null
+      }
+    ],
+    "scope": "Stage configuration only; never install packages, activate exports or change services",
+    "syntax_check": "Conservative managed grammar; unmanaged files must be comments/empty. Native exportfs not invoked.",
+    "version": 1
+  },
+  "tests": {
+    "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py test_nfs_server_setup.py test_storage_config.py test_storage_backends.py",
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "files": {
+      "test_nfs_server_setup.py": 19,
+      "test_storage_config.py": 17,
+      "test_storage_backends.py": 24
+    },
+    "development_failures_fixed": [
+      "Fake administrative directories inherited group-writable umask; fixture now uses/restores 022.",
+      "Extracted staging helper referenced an out-of-scope digest variable; fixed to use reviewed plan digest."
+    ],
+    "live_apply_or_activation_tests": "Not run. Fake-host filesystem changes only."
+  },
+  "source_sha256": {
+    "hybrid_storage/nfs_server.py": "e3e4daa5a6fa021e85dce001617900e6aefcf0d130217d13880dd9c077935d43",
+    "tools/nfs_server_setup.py": "783a63c10262a33ef8a2f60c58aa957888b0a3a07ffa5d29919edd34ec32a56b",
+    "config/nfs-server.json": "96ab8c16fc3ad2b42069b7048b9cdf32db4364f844283a6d1bfa3d54eda24cb5",
+    "tests/test_nfs_server_setup.py": "025543b20a30447cc456df831b92acec87de45755553af8340a56fd5700586dc"
+  },
+  "host_state_before": {
+    "/etc/exports": {
+      "absent": true
+    },
+    "/etc/exports.d": {
+      "absent": true
+    },
+    "/srv/ml-shared": {
+      "absent": true
+    },
+    "/var/backups/distributed-ml-nfs": {
+      "absent": true
+    },
+    "/etc/.distributed-ml-nfs.lock": {
+      "absent": true
+    },
+    "/etc/fstab": {
+      "mode": 33188,
+      "uid": 65534,
+      "gid": 65534,
+      "symlink": false,
+      "sha256": "1f9202ac77321e3ecf307243c94dc1cfea517136679549b6b5128cc496612f37"
+    }
+  },
+  "host_state_after": {
+    "/etc/exports": {
+      "absent": true
+    },
+    "/etc/exports.d": {
+      "absent": true
+    },
+    "/srv/ml-shared": {
+      "absent": true
+    },
+    "/var/backups/distributed-ml-nfs": {
+      "absent": true
+    },
+    "/etc/.distributed-ml-nfs.lock": {
+      "absent": true
+    },
+    "/etc/fstab": {
+      "mode": 33188,
+      "uid": 65534,
+      "gid": 65534,
+      "symlink": false,
+      "sha256": "1f9202ac77321e3ecf307243c94dc1cfea517136679549b6b5128cc496612f37"
+    }
+  },
+  "host_state_unchanged": true,
+  "sandbox_note": "Initial dry-run refused because ip netlink access was denied; repeated outside sandbox with read-only access. No sudo, --apply, package installation, exports activation, service action or remote Pi probe.",
+  "primary_references": [
+    "https://manpages.ubuntu.com/manpages/noble/man5/exports.5.html",
+    "https://manpages.ubuntu.com/manpages/noble/man8/exportfs.8.html"
+  ],
+  "not_tested": [
+    "Native exportfs acceptance/activation",
+    "Live NFS version/throughput/write denial",
+    "All-three-Pi deployment/client boot behavior",
+    "Real administrator privileges or live backups/rollback"
+  ]
+}

@@ -141,6 +141,10 @@ class SubmissionIntegrationTests(unittest.TestCase):
             (root / "agent").mkdir()
             shutil.copyfile(ROOT / "agent/execution_lease.py", root / "agent/execution_lease.py")
             shutil.copytree(ROOT / "config", root / "config")
+            # Configured CLI submissions now share the same strict config module
+            # already required by the portal/dispatcher. Copy the full dependency.
+            shutil.copytree(ROOT / "hybrid_storage", root / "hybrid_storage",
+                            ignore=shutil.ignore_patterns("__pycache__"))
             shutil.copytree(ROOT / "examples", root / "examples")
             db = root / "controller/jobs.db"
             # An older database must retain history when the owner field is added.

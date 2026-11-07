@@ -1,16 +1,33 @@
-# Generated runtime state is local, not source code.
+# Local Python environments and generated caches.
+.controller-venv/
+.venv/
+venv/
 __pycache__/
 *.py[cod]
-.controller-venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Controller and worker runtime state. Keep these locally for recovery/history.
 controller/jobs.db*
 controller/*.lock
+config/nodes.lock
 checkpoints/*
 !checkpoints/.gitkeep
 logs/*
 !logs/.gitkeep
+/storage/
+worker-storage/
+
+# Local editor files and temporary backups.
+.idea/
+.vscode/
+*.swp
+*.swo
 *.before_*
 *.backup-*
-storage/
 
-# Lock used by atomic worker registration.
-config/nodes.lock
+# These small, synthetic datasets are source inputs, even if CSV is ignored globally.
+!examples/dataset.csv
+!examples/binary-classification.csv
+!examples/image-classification.csv

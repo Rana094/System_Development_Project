@@ -105,7 +105,7 @@ The same `ddp_project/train.py` also supports ordinary single-worker execution.
 Finish existing jobs and stop the dispatcher, then run:
 
 ```bash
-.controller-venv/bin/python -u tools/benchmark_training.py --nodes pi02 pi03 --epochs 1000 --repeats 3
+.controller-venv/bin/python -u tools/benchmarks/benchmark_training.py --nodes pi02 pi03 --epochs 1000 --repeats 3
 ```
 
 The benchmark uses one core on pi02 for individual training and one core on each
@@ -120,7 +120,7 @@ After the command finishes, restart your normal dispatcher when needed.
 To reproduce the friend's actual ResNet DDP benchmark settings:
 
 ```bash
-.controller-venv/bin/python -u tools/benchmark_training.py --workload friend-resnet18 --nodes pi02 pi03 --epochs 1 --samples 1000 --repeats 3
+.controller-venv/bin/python -u tools/benchmarks/benchmark_training.py --workload friend-resnet18 --nodes pi02 pi03 --epochs 1 --samples 1000 --repeats 3
 ```
 
 This copies the original benchmark unchanged into the run's managed project,
@@ -317,7 +317,7 @@ updates after it. You do not resubmit the failed job.
 After both jobs are completed:
 
 ```bash
-.controller-venv/bin/python tools/compare_training_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
+.controller-venv/bin/python tools/comparisons/compare_training_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
 cat "storage/jobs/$RECOVERY_ID/results/rank-0/summary.json"
 cat "storage/jobs/$RECOVERY_ID/results/rank-1/summary.json"
 ```

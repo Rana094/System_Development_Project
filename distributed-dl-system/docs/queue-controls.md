@@ -13,7 +13,7 @@ On the controller, with all three Pis powered on and idle:
 
 ```bash
 cd '/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system'
-.controller-venv/bin/python -u tools/check_step5.py --nodes pi01 pi02 pi03
+.controller-venv/bin/python -u tools/demos/fair_queue.py --nodes pi01 pi02 pi03
 ```
 
 Stop a manually running dispatcher with Ctrl+C before starting this tool. The

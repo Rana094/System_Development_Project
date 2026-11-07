@@ -98,7 +98,7 @@ Then compare the two job IDs:
 ```bash
 BASELINE_ID='paste-baseline-job-id'
 RECOVERY_ID='paste-recovered-job-id'
-.controller-venv/bin/python tools/compare_regression_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
+.controller-venv/bin/python tools/comparisons/compare_regression_jobs.py "$BASELINE_ID" "$RECOVERY_ID"
 ```
 
 Expect `pass: true`, matching model/optimizer/scheduler state, MSE and predictions,

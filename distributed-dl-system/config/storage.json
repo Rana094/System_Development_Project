@@ -1,0 +1,6 @@
+{
+  "storage_backend": "legacy",
+  "worker_cache_enabled": false,
+  "storage_aware_staging": false,
+  "scheduler_policy": "resource"
+}

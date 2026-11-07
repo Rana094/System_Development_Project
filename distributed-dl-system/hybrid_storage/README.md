@@ -1,0 +1,264 @@
+# Hybrid storage components
+
+This folder contains the new storage-specific code. Phase 1.2 provides file
+interfaces/adapters; Phase 1.4 adds configuration validation and startup guards.
+The file adapters are not used by live upload/staging/checkpoint paths. This
+package import does not select a runtime backend, initialize SQLite, install a
+service or mount NFS. Explicit administrator setup and fault-probe entry points
+are separate from runtime execution. Existing uploads, preparation, checkpoints and scheduling retain
+their current implementations.
+
+See the [architecture](../docs/storage/01-hybrid-architecture.md) and
+[implementation progress](../docs/storage/implementation-progress.md).
+
+## Input-file API
+
+`StorageBackend` is a typed, runtime-checkable `typing.Protocol`, exported from
+`hybrid_storage` along with `LegacyStorageBackend` and `NFSStorageBackend`.
+Implementations use Python's standard library and Linux filesystem operations;
+no new transport or third-party dependency is introduced.
+
+| Method | Contract |
+|---|---|
+| `artifact_exists(key: str) -> bool` | True for an accessible regular file; False for a missing file/parent. Invalid keys, links, special files, permission errors and I/O outages raise rather than masquerading as misses. |
+| `resolve_path(key: str) -> Path` | Check the existing file and return its configured path for diagnostics/integration. The returned path can become stale; it is not an authorization grant or a safe-open token. |
+| `open_artifact(key: str) -> ContextManager[BinaryIO]` | Open read-only, anchor all path components with no-follow directory descriptors, reject nonregular files, close on context exit. Caller must still verify authorized size/digest at staging time. |
+| `publish_artifact(key, source: BinaryIO, *, expected_sha256: str, expected_size: int) -> Path` | Trusted-controller-only capability: bounded copy, verify bytes, flush, publish a new name without overwriting. Read-only adapters reject it. Does not commit a manifest, DB record or recoverable checkpoint. |
+
+Keys must be canonical relative POSIX file paths. Reject absolute paths, `..`,
+empty/dot components, backslashes, colons and NULs. All configured roots must be
+explicit absolute paths other than `/`; no path component may be a symlink.
+Roots and destination parent directories must already exist. Constructors do not
+create or inspect filesystem state; filesystem validation happens at access time.
+
+## Local and NFS roles
+
+`LegacyStorageBackend(root)` gives a local read view, including files in an
+existing managed workspace. It is not a replacement for `job_storage.stage_job`,
+nor does it interpret current manifests. Publication requires the explicitly
+configured `staging_root` capability. Use only a dedicated input root for new
+publication, never checkpoints or a broad runtime directory.
+
+`LegacyStorageBackend(input_root, staging_root=private_root)` is the trusted
+controller's local publication view of its input export. The private staging
+directory must be owned by the current service UID, owner-only (0700), outside
+the input root, not an ancestor of it, on the same filesystem, and not exported
+through another NFS path. Target parents must be provisioned by the trusted
+service. SHA-256 must be lowercase hex; expected size must be a nonnegative int.
+
+Publication copies to a new private temporary file, verifies exact size/digest,
+sets mode 0444 and fsyncs before creating the final name with an exclusive
+same-filesystem link. It then fsyncs the destination directory and removes its
+own temporary name. It never links an existing student/cache input directly into
+the store. Existing targets, including symlinks, raise `FileExistsError` and are
+never replaced. The caller retains ownership of the source stream.
+
+Wrong bytes, oversized inputs and precommit failures leave no published entry;
+cleanup touches only the temporary entry created by that call. Process/power loss
+can leave private temporary files for later reconciliation. A directory-fsync
+failure after final linking can leave a complete file visible despite an exception:
+reconcile by expected identity before retrying, never blindly overwrite. Durable
+manifest registration and crash recovery are later subphases. Publication is
+bytes-only; future workspace materialization applies authorized executable modes.
+
+`NFSStorageBackend(mounted_input_root)` uses the same safe read contract on an
+already mounted input export. It **always rejects publication**, even when the
+underlying directory is writable. Controller publication goes through its local
+adapter, not a worker RW NFS mount. Administrators must verify that the configured
+controller export and worker mount represent the intended input store; the adapter
+does not infer that mapping, attest read-only mount/export flags or perform mounts.
+
+## Security and availability limits
+
+Call only from trusted services after authorizing a job/owner/attempt's exact
+input selection. A relative key or hash is not authorization. These adapters do
+not implement student authentication, privilege separation, private workspaces,
+cache inventory, lease fencing or filesystem sandboxing. Protected root/parent
+ownership and no untrusted writers are prerequisites, including protection from
+renames, bind-mount aliases and ACL-based access. Mode 0444 is defense in depth;
+it cannot stop a privileged owner from modifying a file. The NFS mount and its
+network endpoint must remain inaccessible to student code.
+
+Reads are synchronous filesystem operations. `ETIMEDOUT`, `EIO`, `ESTALE` and
+permission errors propagate; no retry, implicit legacy fallback or remote fetch
+is attempted. Kernel-blocked NFS I/O requires the supervised staging design
+described in the architecture before enabling the new mode. No upload/worker
+network protocol or checkpoint format is changed here.
+
+## Safe local verification
+
+From the application root:
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py test_storage_backends.py test_job_storage.py
+```
+
+Expected: 24 adapter tests and 9 existing storage tests pass, two files total.
+All data is temporary. NFS is represented by a local directory and mocked I/O
+failures; these tests do not prove live NFS, authentication or Pi readiness.
+
+## Phase 1.4 configuration boundary
+
+[config.py](config.py) now validates the operator's storage flags. The dispatcher
+and student portal validate them at startup; defaults keep the existing paths.
+This does not wire the file adapters into those paths. Non-default settings are
+recognized but were rejected by the Phase 1.4 runtime gate. Phase 3.3's limited
+controller metadata mode is described below; security/staging/registry/scheduler
+execution remains gated. See the historical
+[configuration guide](../docs/storage/03-configuration.md) for exact defaults,
+supported combinations, limitations and safe verification commands.
+
+## Phase 2.2 server preparation
+
+[nfs_server.py](nfs_server.py) prepares a restricted controller NFS plan and an
+idempotent, backup-first configuration-staging operation for later approval.
+The default/`--dry-run` command is read-only. No caller enables NFS or invokes
+package/service/export activation. The original controller plan was blocked on
+missing pi01/publisher details and NFS packages; see the
+[server setup guide](../docs/storage/05-nfs-server-setup.md). Application storage
+flags remain unchanged and legacy-only.
+
+## Phase 2.3 client preparation
+
+[nfs_client.py](nfs_client.py) produces offline plans for all three Pis, with
+future conditional offline package provisioning and backup-first idempotent
+configuration staging. [nfs_mount.py](nfs_mount.py) is a standalone kernel mount
+metadata guard: ordinary directories/autofs-only triggers are not ready inputs.
+Generated units keep the legacy agent independent of the on-demand mount.
+The planner does not activate units or wire them into live job staging. Authorization,
+process/network isolation, supervised I/O and all-three-Pi validation still gate
+hybrid enablement. See the [client guide](../docs/storage/06-nfs-client-setup.md).
+
+The user's 2.4 scope revision selects pi02/pi03 through optional infrastructure
+`deployment_nodes`; omission still requires all three. Excluded nodes are not
+exported, staged or inspected by the client planner. See the
+[original two-node deployment status](../docs/storage/08-nfs-two-node-deployment.md).
+That authentication blocker was resolved through normal desktop administrator
+authentication; [Phase 2 results](../docs/storage/10-phase2-completion.md) record
+the actual server/client deployment and isolated outage tests on pi02/pi03.
+
+## Administrator-only fault validation
+
+[nfs_fault_probe.py](nfs_fault_probe.py) is a disposable public-TEST fixture,
+never a training/runtime component. Its default invocation prints a plan with
+`mutations=false`. Explicit live use requires root, private mount/network/hostname
+namespaces and a protected Unix-socket gateway. It interrupts only its own relay,
+tracks pending readers/mount producers and restores transport before cleanup.
+Keep failed fixtures available for reconciliation; never force-unmount a pending
+hard NFS reader or disrupt a host interface. Exact driver sources, failed-attempt
+cleanup and both successful live results are retained in the Phase 2 evidence.
+
+The real read-only automount and mount guard are now installed on pi02/pi03.
+Only public synthetic artifacts were published. Application flags remain legacy/
+off; authenticated staging, supervised I/O and execution/network isolation are
+still required before student data can use the new backend.
+
+## Phase 3.1 strict input views
+
+[inputs.py](inputs.py) adds `LocalObjectStorageBackend` and
+`NFSObjectStorageBackend` around the existing adapters. They accept only canonical
+`sha256/<prefix>/<digest>` keys. `InputFile` and `ProjectInputView` bind approved
+relative project paths to expected identities, rejecting unlisted paths before
+disk access. Publication remains a trusted controller-local capability; worker
+and project views are read-only. Existing general-key adapters remain compatible.
+
+The explicit [controller seam](../controller/input_storage.py) has no runtime
+callers, DB side effects or config selection. See the historical
+[3.1 contracts, tests and rollback](../docs/storage/11-controller-input-adapters.md)
+and the stricter current admission below.
+
+## Phase 3.2 health and mount admission
+
+Strict NFS object reads now require an explicit expected source, exact RO mount
+and matching opened-FD mount ID. Ordinary directories and autofs-only triggers
+are rejected. Strict local publication attests actual parent/staging FDs as ext4,
+xfs or btrfs before writing. Existing general-key legacy contracts remain intact.
+
+[health.py](health.py) adds full expected size/SHA verification and a read-only
+child supervisor with bounded waits, retained pending ownership, capacity refusal
+and late-result fencing. Raw NFS reads remain synchronous; use the supervisor for
+probes. Keep it alive until its owned processes are reaped. No durable daemon
+restart journal or runtime service is installed; hybrid flags still stay off.
+See [3.2 behavior, tests and limits](../docs/storage/12-input-health.md).
+
+## Phase 3.3 pinned submission selection
+
+The controller now distinguishes a new job's selected backend from executable
+storage. Its additive [binding helper](../controller/storage_selection.py) pins
+selection in local SQLite; missing old bindings always mean legacy. Optional
+config/API/CLI NFS intent retains the existing local upload snapshot and holds
+the job. Release, preparation and single/DDP placement stay blocked for NFS.
+An explicit legacy job override still uses the existing path. Current config
+remains legacy/off/resource; no NFS execution, automatic migration or copy was
+enabled. See [3.3 interfaces, reference plan and rollback](../docs/storage/13-storage-selection.md).
+
+## Phase 4.1 explicit artifact registration
+
+[artifacts.py](artifacts.py) adds `ArtifactRegistrar(root, staging_root=private)`
+for trusted controller callers. `register(binary_stream, expected_size=exact_size,
+expected_sha256=digest_or_none)` returns a frozen `Artifact(sha256, size_bytes,
+key, created)`. It computes canonical SHA keys, streams/copies/readback-verifies
+with bounded buffers, then atomically renames a private 0444 inode without
+replacement using Linux `renameat2(RENAME_NOREPLACE)`. A duplicate is fully
+verified and byte-compared before reuse; mismatched content raises
+`ArtifactMismatch`, never overwrites. Roots/scratch must be pre-provisioned,
+protected, service-owned and on a supported local filesystem. Only derived
+SHA directory names are created. No changes to the existing publication API.
+
+This is an unwired component, not an authorization grant or student route.
+Dataset ACLs/manifests, job registry and lazy legacy enrollment are later
+subphases. No runtime flags or live data change. See [4.1 usage, tests, crash
+semantics and rollback](../docs/storage/15-artifact-registration.md).
+
+## Phase 4.2 dataset manifests and access contract
+
+[dataset_manifests.py](dataset_manifests.py) defines frozen `DatasetEntry`,
+`DatasetManifest` and current-authority `DatasetACL` snapshots. `create_dataset`
+issues an opaque dataset ID and private default ACL; `next_version` requires
+the owner and links the prior manifest hash. Strict canonical JSON and SHA-256
+identify immutable version bytes. File paths/types/sizes/hashes, parent entries,
+case/Unicode conflicts and parser bounds are validated. Read-only shares remain
+separate from manifest content so current-ACL revocation applies to old versions.
+
+[dataset_validation.py](dataset_validation.py) supplies read-only `inventory_tree`
+with no-follow FDs and file hashing, plus metadata-only `validate_zip_members`.
+It never extracts archives or registers/moves legacy data. Source protection and
+later actual-byte verification are required; inspection is not an atomic snapshot.
+
+These components have no runtime call sites or DB authority. Retrieve the current
+ACL and exact committed version/digest from trusted controller storage before
+access; parsed documents, public constructors and known hashes grant nothing.
+Persistence, unique version transactions and job bindings are 4.3. See the
+[4.2 contract, tests and rollback](../docs/storage/16-dataset-manifests.md).
+
+## Phase 4.3 persisted registry and job inputs
+
+[registry_schema.py](registry_schema.py) provides explicit `migration_plan(db)`
+and `migrate(db)` on a dedicated trusted local FULL/FK connection. Migration is
+additive, transactional, shape/checksum guarded and never runs on import/startup.
+[registry.py](registry.py) provides verified per-owner artifact/source enrollment,
+current persisted dataset ACLs, immutable versions with head compare-and-swap,
+and exact job source/data/requirements/legacy/spec bindings. A known digest or
+parsed client manifest cannot grant access. New byte ownership requires an actual
+verified stream; physical dedup does not share ownership.
+
+[input_manifests.py](input_manifests.py) retains source-tree v1 executable metadata
+and defines `JobInputs`. Binding requires a DB-pinned matching local snapshot and
+an explicitly selected HELD NFS job; it changes no job state or checkpoint format.
+Old unbound jobs remain legacy. No live DB was migrated, runtime flag enabled or
+upload/staging path wired. See [4.3 API, DDL, tests and rollback](../docs/storage/17-registry-and-job-inputs.md).
+
+## Phase 4.4 explicit legacy registration
+
+[legacy_registration.py](legacy_registration.py) registers only one requested,
+owner-authorized, committed local snapshot. The [controller facade](../controller/input_storage.py)
+requires the existing `verify_workspace` callback explicitly, so imports never
+initialize SQLite. It validates controlled roots and pinned metadata, copies
+declared files through verified CAS publication, then atomically commits source,
+private dataset and immutable job references. Exact retries/concurrent requests
+reuse one sidecar; no existing files are moved, linked, deleted or repaired.
+
+Legacy execution/backend/recovery identity remains unchanged; NFS intents stay
+HELD. There is no automatic UI/startup scan or flag activation. The existing 4.3
+schema/checksum is unchanged. See [4.4 contracts, tests, rollback and Phase 4
+local acceptance](../docs/storage/18-legacy-registration-and-phase4.md).

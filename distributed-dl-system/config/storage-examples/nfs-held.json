@@ -1,0 +1,6 @@
+{
+  "storage_backend": "nfs",
+  "worker_cache_enabled": false,
+  "storage_aware_staging": true,
+  "scheduler_policy": "resource"
+}

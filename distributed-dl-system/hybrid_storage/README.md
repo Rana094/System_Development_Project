@@ -262,3 +262,45 @@ Legacy execution/backend/recovery identity remains unchanged; NFS intents stay
 HELD. There is no automatic UI/startup scan or flag activation. The existing 4.3
 schema/checksum is unchanged. See [4.4 contracts, tests, rollback and Phase 4
 local acceptance](../docs/storage/18-legacy-registration-and-phase4.md).
+
+## Phase 5.1 persistent local worker cache
+
+[worker_cache.py](worker_cache.py) adds explicit protected local-disk metadata,
+bounded full-object verification, verification/use times, exact-attempt pins and
+current disk accounting. [The worker seam](../agent/cache_storage.py) constructs
+an inactive handle without importing the legacy HTTP launcher. Initialization
+is explicit; bytes and pins persist across process restart. Stage-time reads
+always hash the same opened FD. Inventory is advisory and never grants access.
+
+No fetching, repair, eviction, workspace creation, lifecycle wiring or feature
+activation is introduced. Existing same-UID training is not a safe cache trust
+boundary; the runtime gate stays closed. See [5.1 contracts, 33 new tests,
+limitations and rollback](../docs/storage/19-worker-cache.md).
+
+## Phase 5.2 explicit missing-only NFS cache fetch
+
+[cache_fetch.py](cache_fetch.py) adds exact-input authorization callbacks,
+verified-hit reuse, quota/free-space admission, serialized cross-process NFS
+fetches and atomic publication. [cache_copy_worker.py](cache_copy_worker.py)
+copies only through the guarded read-only NFS adapter into an inherited private
+part FD; parent publication requires reaping, verification and renewed authority.
+Timeouts retain ownership/capacity, and late readiness never publishes. Unpinned
+corruption is preserved in quarantine before repair; pinned replicas fail closed.
+
+The appended worker factory is inactive: no HTTP/API transport, startup wiring,
+flag activation or new SQLite schema. Private workspaces and lifecycle wiring
+remain 5.3. See [5.2 contracts, evidence and rollback](../docs/storage/20-cache-fetch.md).
+
+## Phase 5.3 private attempt copies and pin lifecycle
+
+[workspaces.py](workspaces.py) builds protected private source/data copies from
+verified pinned objects, preserves executable metadata and empty directories,
+and separates outputs/checkpoint candidates. Full copies are the supported
+fallback; no writable hardlinks, mounts or shared cache inodes. Durable exact
+plan/root-bound records and holders survive process restart. Terminal cleanup
+requires exact producer/guardian/descendant quiescence and retains recoverable
+pins/markers when proof or metadata operations fail. No runtime-data deletion/GC.
+
+The worker factory remains inactive, and same-UID legacy training is not a safe
+isolation boundary. Config, checkpoint formats and SQLite schemas are unchanged.
+See [5.3 APIs, 39 tests and rollback](../docs/storage/21-private-workspaces.md).

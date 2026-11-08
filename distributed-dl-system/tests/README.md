@@ -253,3 +253,50 @@ env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --i
 The [4.4/Phase 4 report](../docs/storage/18-legacy-registration-and-phase4.md)
 records the full 338-test selection, separate 15 draft tests, actual results,
 corrected fixture assertion placement, compatibility limits and rollback.
+
+### Phase 5.1 persistent local worker cache
+
+[test_worker_cache.py](test_worker_cache.py) adds 33 disposable local checks for
+verified-object metadata, stale/stage-time hashing, corruption/path protection,
+exact pins, process restart, concurrent processes, interrupted SQLite changes,
+bounded metadata lock waits and disk accounting. No NFS/Pi or live-agent action.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_worker_cache.py
+```
+
+See [5.1 report](../docs/storage/19-worker-cache.md) for the 371-test combined
+selection, exact API and still-disabled staging/cache execution boundary.
+
+### Phase 5.2 missing-only NFS cache copy
+
+[test_cache_fetch.py](test_cache_fetch.py) adds 33 local/fake tests for actual
+helper streaming, atomic publication, warm zero-NFS reuse, integrity/refetch,
+quota/reserve and ENOSPC, transient interruption, current authorization, concurrent
+processes and parent/helper failure ownership. Positive NFS mount facts are
+mocked; the real helper rejects an ordinary directory. No live NFS/Pi test.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_fetch.py test_worker_cache.py
+```
+
+Expected: 66 tests pass. [The 5.2 report](../docs/storage/20-cache-fetch.md) records
+the 404-test combined selection, corrected fixture error/warnings, exact limits
+and the 5.2-only rollback preserving earlier uncommitted 5.1 work.
+
+### Phase 5.3 private workspaces and lifecycle pins
+
+[test_private_workspaces.py](test_private_workspaces.py) adds 39 disposable local
+checks for independent full copies, modes/paths, exact pin/root isolation,
+terminal cleanup/quiescence, failures, process crash/restart and usable inputs.
+Known stdlib programs run directly and through fake-NFS component integration;
+an existing lease guardian's real local expiry is tested before unpinning.
+No live Pi/NFS, PyTorch/DDP, machine reboot or privileged sandbox is exercised.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_private_workspaces.py
+```
+
+[The 5.3 report](../docs/storage/21-private-workspaces.md) records the 443-test
+selection, corrected two-root holder regression and scoped rollback preserving
+earlier uncommitted storage work.

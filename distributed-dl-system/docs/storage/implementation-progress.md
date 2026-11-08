@@ -1162,3 +1162,127 @@ is enabled. Strict new validation may reject historical inputs for enrollment
 without changing their legacy execution lane. The central controller remains a
 SPOF; all-three-Pi future validation remains required unless expressly excepted,
 and pi01's previous deferral remains explicit. No next phase implemented.
+
+## Phase 5.1 — persistent local worker cache (8 November 2026)
+
+User supplied Phase 5 with one subphase per turn after committed Phase 4
+acceptance (`da85a0c`); the checkout was clean. Implemented **5.1 only** in
+`hybrid_storage/worker_cache.py` and inactive `agent/cache_storage.py`. Explicit
+operator paths select a protected local filesystem, never an NFS cache root.
+Initialization creates dedicated worker-local v1 SQLite metadata and private
+object directories; no live DB/setup action occurs. Full SHA/size/FD verification
+records complete replicas, verification/use times and exact job/attempt pins.
+Current free/service-available disk is observable. Stale/changed/future metadata
+forces rehashing; `open_verified` always hashes before yielding the same FD.
+
+Missing/corrupt/I/O observations fail closed without deleting data or releasing
+old pins. Unpin affects only the exact requested attempt. Pins/bytes persist
+across fresh processes, and abrupt uncommitted SQL changes roll back. No automatic
+reboot pin clearing, directory-wide adoption, copy/fetch/repair, eviction, HTTP,
+lease/lifecycle integration or feature activation. Current same-UID training is
+not an isolation boundary; cache-enabled runtime remains rejected. Legacy
+execution, scheduler, recovery, checkpoint formats and active config are intact.
+
+Baseline **338 passed, zero failures/skips, 18/18 files**. New cache suite **33
+passed**. Final isolated combined selection **371 passed, zero failures/skips,
+19/19 files**. No selected pre-existing/new-code failure was observed. Tests
+include actual independent process restart/concurrency, abrupt transaction exit,
+lock timeout, corruption/staleness, bounded reads, paths/metadata, exact pins and
+disk accounting. No machine/Pi reboot, NFS fault, hardware power loss, actual
+training/DDP or new benchmark is claimed. Production DB/config hashes match the
+turn baseline; no service, SSH/Pi, mount, `/etc` or remote mutation occurred.
+
+See [5.1 report](19-worker-cache.md) and [evidence](19-worker-cache-evidence.json)
+for exact files/APIs/commands/output, security gates, manual checks and scoped
+rollback. **5.1 local code acceptance PASS. STOP before 5.2.** Overall Phase 5
+remains incomplete: missing-only NFS transfer, usable private workspace,
+corrupt-refetch and warm zero-transfer acceptance await later subphases. The
+controller remains a SPOF; future all-three-Pi validation remains required unless
+expressly excepted. pi01's previous deferral remains explicit.
+
+## Phase 5.2 — missing-only guarded NFS cache fetch (8 November 2026)
+
+User requested 5.2 after accepted 5.1. Earlier 5.1 changes were still uncommitted
+above `da85a0c`; saved their exact contents before editing. Added `cache_fetch.py`
+and fixed `cache_copy_worker.py`, plus an inactive worker factory. Exact trusted
+manifest input lists require a current authorization callback. Fully verified
+hits never open/probe NFS; unique misses copy through the existing mount-guarded
+read-only NFS adapter into unique local parts. Bounded stream/readback hashing,
+fsync, parent revalidation and no-replace rename establish complete replicas.
+
+Per-cache OS slots serialize all processes' disk admission and NFS producers.
+Quota includes objects, parts and retained quarantine; free-space reserve is
+checked before each attempt. Transient returned I/O errors retry within finite
+limits; permission, corruption, source absence, mount admission and ENOSPC fail.
+Unpinned corrupt bytes are quarantined intact before replacement; existing pins
+block repair. No overwrite/delete of user inputs, jobs or checkpoints occurs.
+
+Parent-owned helper deadlines fence late results. Timed-out helpers retain all
+relevant FDs, parts and capacity until reconciliation. The helper inherits the
+OS slot, so surviving I/O after parent crash still excludes another producer;
+fixed helper code never publishes final names or updates SQLite. Old crash files
+remain accounted, with no automatic cleanup/adoption service. Runtime stays
+legacy/OFF/resource; no schema migration, new HTTP protocol, startup hook,
+private workspace, automatic pin lifecycle or scheduler change was added.
+
+Baseline **371 passed, zero failures/skips, 19/19 files**. Final combined
+selection **404 passed, zero failures/skips, 20/20 files**, including 33 new
+fetch tests. Initial 24 tests passed with test-only stderr pipe warnings; these
+were fixed. An expanded test-helper quoting error briefly prevented parsing;
+corrected output is retained alongside the failure. Subsequent 31-test run and
+final 33-case suite passed. No selected pre-existing failure was observed.
+Tests use actual local files, subprocesses, process crash/restart, concurrency,
+atomic renames and disk/write/read failure injection, with positive NFS mount
+metadata mocked. Real local-directory NFS admission is rejected. No live NFS/Pi,
+actual network disruption, machine reboot, training/DDP or benchmark occurred.
+
+See [5.2 report](20-cache-fetch.md) and [evidence](20-cache-fetch-evidence.json)
+for exact APIs/files/commands/output, preserved hashes and subphase-only rollback
+against the saved 5.1 contents. Live DB/config bytes and earlier 5.1 source/tests
+and evidence are preserved. No service, `/etc`, mount, SSH or remote action.
+**5.2 local/fake acceptance PASS. STOP before 5.3.** Overall Phase 5 acceptance
+remains pending. The controller remains a SPOF; all-three-Pi future validation
+remains required unless expressly excepted, with prior pi01 deferral explicit.
+
+## Phase 5.3 — private copies and durable pin lifecycle (8 November 2026)
+
+User requested 5.3 after accepted 5.2. Saved all earlier uncommitted changes and
+legacy launcher/lease sources before editing. Added `workspaces.py`, typed exact
+plans/identities and an inactive worker factory. Protected local copies preserve
+executable metadata/empty directories and separate outputs/checkpoint candidates.
+Durable control JSON follows existing worker record conventions; no SQLite
+migration, new HTTP protocol, live hook or flag activation. Actual config stays
+legacy/OFF/resource and same-UID training remains outside the hybrid gate.
+
+Persist MATERIALIZING intent before unique-digest pins; count every private copy
+for disk admission. Bounded copy/readback/hash/fsync/no-replace publication and
+complete tree validation precede READY. Roots cannot overlap cache/NFS. Full
+copies are the supported fallback; no hardlinks, bind mounts or reflink dependency.
+Pin holders/control bind workspace/cache roots and job/attempt/rank/revision.
+Reject plan/root rebinding and terminal replay. Managed success/failure/cancel/
+expiry/launch/staging/supersession/restart/interrupt paths persist ABORTING, prove
+exact producer/guardian/descendant quiescence, persist TERMINAL before unpin, and
+then record cleanup completion. Missing proof/failure retains recoverable pins.
+No automatic data deletion, GC or reboot pin clearing.
+
+Baseline **404 passed, zero failures/skips, 20/20 files**. Final selection
+**443 passed, zero failures/skips, 21/21 files**, including 39 new cases. Initial
+34 and expanded 37 passed. A review regression exposed a new-code two-root holder
+collision (3 versus 6 references), fixed with root-scoped holders/control bindings;
+before-fix failure is retained. No baseline failure was observed. Tests include
+inode independence, terminal outcomes/quiescence, ENOSPC/readback, authority and
+path guards, concurrent handles, process crash/restart, known private offline
+programs, fake-NFS-to-workspace integration and a real disposable existing lease
+watchdog stopping its group before unpin.
+
+See [5.3 report](21-private-workspaces.md) and [evidence](21-private-workspaces-evidence.json)
+for exact files/APIs/commands/output, preserved hashes and rollback against saved
+5.1/5.2 contents. Earlier source/tests/evidence, actual DB/config and legacy
+launcher/lease sources are preserved. No service, `/etc`, SSH/Pi, NFS mount,
+live setup/migration or remote action. No privileged isolation, hardware reboot/
+power loss, PyTorch/DDP or benchmark claim.
+
+**5.3 private-copy/local lifecycle acceptance PASS. STOP before 5.4.** Tenant
+isolation, authenticated grant/revision service and live-launch wiring remain
+gated. Detailed metrics, consolidated Phase 5 acceptance and all-three-Pi future
+validation remain pending; controller SPOF and prior pi01 deferral are explicit.

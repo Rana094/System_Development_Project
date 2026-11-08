@@ -51,6 +51,9 @@ Commands in these guides run from the repository root unless stated otherwise.
 | [Dataset manifests and ownership](storage/16-dataset-manifests.md) | Canonical immutable versions, current ACL contract, safe tree inspection and ZIP preflight |
 | [Registry and exact job inputs](storage/17-registry-and-job-inputs.md) | Local additive migration, verified ownership, current ACLs and immutable source/data/requirements bindings |
 | [Legacy registration / Phase 4 acceptance](storage/18-legacy-registration-and-phase4.md) | Explicit nondestructive enrollment, legacy compatibility, local execution evidence and rollback |
+| [Persistent local worker cache](storage/19-worker-cache.md) | Verified local observations, restart-persistent pins, disk accounting and disabled runtime boundary |
+| [Missing-only NFS cache fetch](storage/20-cache-fetch.md) | Authorized verified copy, quota/admission, helper ownership, atomic publication and local/fake evidence |
+| [Private workspaces and pin lifecycle](storage/21-private-workspaces.md) | Independent attempt copies, durable exact pins, terminal quiescence and local workload/watchdog tests |
 | [Repository cleanup](repository-cleanup.md) | Review decisions and old-to-new tool paths |
 
 The numbered steps in older guides describe development milestones. Use the

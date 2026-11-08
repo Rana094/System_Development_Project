@@ -13,7 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_FILE = os.path.join(BASE_DIR, "controller", "jobs.db")
 
 
-def get_connection():
+def get_connection(*, durable=False):
     """Open the local database with the connection settings used by this module."""
     connection = sqlite3.connect(DB_FILE, timeout=10)
 
@@ -21,7 +21,7 @@ def get_connection():
 
     connection.execute("PRAGMA journal_mode=WAL")
 
-    connection.execute("PRAGMA synchronous=NORMAL")
+    connection.execute("PRAGMA synchronous=FULL" if durable else "PRAGMA synchronous=NORMAL")
 
     connection.execute("PRAGMA foreign_keys=ON")
 
@@ -259,10 +259,10 @@ def get_storage_binding(job_id):
         connection.close()
 
 
-def require_storage_execution(job_id):
-    connection = get_connection()
+def require_storage_execution(job_id, *, storage_runtime=None):
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     try:
-        storage_selection.require_execution(connection, job_id)
+        storage_selection.require_execution(connection, job_id, storage_runtime=storage_runtime)
     finally:
         connection.close()
 
@@ -346,20 +346,23 @@ def get_job_environments(job_id):
         connection.close()
 
 
-def record_environment(job_id, node_id, record):
+def record_environment(job_id, node_id, record, *, storage_runtime=None):
     """READY requires enough compatible prepared candidates for the declared worker count."""
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
-            storage_selection.require_execution(connection, job_id)
+            storage_selection.require_execution(connection, job_id, storage_runtime=storage_runtime)
             job = connection.execute(
                 "SELECT * FROM jobs WHERE job_id=?", (job_id,)
             ).fetchone()
+            hybrid_hold = (storage_runtime is not None and job is not None
+                           and storage_selection.binding(connection,job_id)['backend'] == 'nfs'
+                           and job['queue_reason'] == storage_selection.NFS_HELD_REASON)
             if (
                 job is None
                 or job["job_type"] != "custom"
-                or job["status"] not in ("STAGED", "READY")
+                or job["status"] not in (("STAGED", "READY", "HELD") if hybrid_hold else ("STAGED", "READY"))
             ):
                 raise ValueError(
                     "Environment preparation requires a staged student submission"
@@ -491,13 +494,13 @@ def get_reservations():
         connection.close()
 
 
-def enqueue_custom_job(job_id, candidates):
+def enqueue_custom_job(job_id, candidates, *, storage_runtime=None):
     """Queue a prepared single-worker job or a compatible CPU DDP group."""
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
-            storage_selection.require_execution(connection, job_id)
+            storage_selection.require_execution(connection, job_id, storage_runtime=storage_runtime)
             job = connection.execute("SELECT * FROM jobs WHERE job_id=?", (job_id,)).fetchone()
             if not job or job["job_type"] != "custom" or job["status"] != "READY":
                 raise ValueError("Only READY custom jobs can be queued")
@@ -520,13 +523,13 @@ def enqueue_custom_job(job_id, candidates):
         connection.close()
 
 
-def mark_scheduled(job_id, node_id, node_ip, resources=None, workers=None, ddp=None):
+def mark_scheduled(job_id, node_id, node_ip, resources=None, workers=None, ddp=None, *, storage_runtime=None):
     """Reserve a whole worker slot and persist placement atomically before sending HTTP."""
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
-            storage_selection.require_execution(connection, job_id)
+            storage_selection.require_execution(connection, job_id, storage_runtime=storage_runtime)
             job = connection.execute("SELECT * FROM jobs WHERE job_id=?", (job_id,)).fetchone()
             if not job or job["status"] != "QUEUED":
                 raise ValueError("Placement requires a queued job")
@@ -562,12 +565,12 @@ def mark_scheduled(job_id, node_id, node_ip, resources=None, workers=None, ddp=N
         connection.close()
 
 
-def mark_running(job_id, started_at=None):
+def mark_running(job_id, started_at=None, *, storage_runtime=None):
     """Commit the running state and open its attempt-history record together."""
     if started_at is None:
         started_at = time.time()
 
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     cursor = connection.cursor()
     connection.execute('BEGIN IMMEDIATE')
     row = connection.execute('SELECT * FROM jobs WHERE job_id=?',(job_id,)).fetchone()
@@ -584,9 +587,15 @@ def mark_running(job_id, started_at=None):
         if storage_selection.binding(connection, job_id)['backend'] == 'nfs':
             from input_storage import require_staged_attempt
             require_staged_attempt(connection, job_id)
-            # 7.1 records the barrier but deliberately cannot activate the 7.2
-            # dispatch/stage/launch protocol by calling mark_running directly.
-            storage_selection.require_execution(connection, job_id)
+            # Readiness alone cannot enable execution: require the trusted runtime.
+            # Only its authenticated launch acknowledgment can reach this call.
+            storage_selection.require_execution(connection, job_id, storage_runtime=storage_runtime)
+            stage_id = connection.execute('SELECT stage_id FROM hybrid_staging_attempts WHERE job_id=? AND retry_count=?',
+                                          (job_id,job['retry_count'])).fetchone()[0]
+            if stage_id not in storage_runtime._launching:
+                raise ValueError('Authenticated launch acknowledgment required before RUNNING')
+            connection.execute("UPDATE hybrid_staging_attempts SET phase='STARTED',updated_at_ns=MAX(updated_at_ns,?) WHERE stage_id=?",
+                               (time.time_ns(),stage_id))
     except BaseException:
         connection.rollback()
         connection.close()
@@ -636,12 +645,12 @@ def mark_running(job_id, started_at=None):
     connection.close()
 
 
-def mark_completed(job_id, return_code=0, finished_at=None):
+def mark_completed(job_id, return_code=0, finished_at=None, *, storage_runtime=None):
     """Close the current attempt after the dispatcher verifies required final artifacts."""
     if finished_at is None:
         finished_at = time.time()
 
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     cursor = connection.cursor()
     connection.execute('BEGIN IMMEDIATE')
     row = connection.execute('SELECT status FROM jobs WHERE job_id=?',(job_id,)).fetchone()
@@ -649,6 +658,28 @@ def mark_completed(job_id, return_code=0, finished_at=None):
         connection.rollback()
         connection.close()
         return False
+
+    history_id=None
+    try:
+        if storage_selection.binding(connection,job_id)['backend']=='nfs':
+            from hybrid_storage.staging_lifecycle import require_running
+            from hybrid_storage import cleanup_schema
+            from staging_dispatch import StagingDispatch
+            attempt=require_running(connection,job_id)
+            history_id=attempt.attempt_id
+            if (not isinstance(storage_runtime,StagingDispatch) or attempt.stage_id not in storage_runtime._finishing
+                    or not cleanup_schema.installed(connection)):
+                raise ValueError('Authenticated fenced completion required')
+            pending=connection.execute("SELECT COUNT(*) FROM hybrid_cleanup_ranks WHERE stage_id=? AND phase='QUIESCENT'",
+                                       (attempt.stage_id,)).fetchone()[0]
+            world=connection.execute('SELECT world_size FROM hybrid_staging_attempts WHERE stage_id=?',(attempt.stage_id,)).fetchone()[0]
+            if pending!=world:raise ValueError('All ranks must be quiescent before completion')
+            connection.execute("UPDATE hybrid_staging_attempts SET phase='TERMINAL',updated_at_ns=MAX(updated_at_ns,?) WHERE stage_id=?",
+                               (time.time_ns(),attempt.stage_id))
+            connection.execute('UPDATE execution_leases SET revoked=1,renewal_blocked=1 WHERE job_id=? AND retry_count=?',
+                               (job_id,attempt.retry_count))
+    except BaseException:
+        connection.rollback();connection.close();raise
 
     cursor.execute(
         """
@@ -670,15 +701,15 @@ def mark_completed(job_id, return_code=0, finished_at=None):
             status = ?,
             finished_at = ?,
             return_code = ?
-        WHERE attempt_id = (
+        WHERE attempt_id = COALESCE(?, (
             SELECT attempt_id
             FROM job_attempts
             WHERE job_id = ?
             ORDER BY attempt_id DESC
             LIMIT 1
-        )
+        ))
         """,
-        ("COMPLETED", finished_at, return_code, job_id),
+        ("COMPLETED", finished_at, return_code, history_id, job_id),
     )
 
     cursor.execute("DELETE FROM resource_reservations WHERE job_id=?", (job_id,))
@@ -804,18 +835,19 @@ def return_to_queue(job_id, error):
     connection.close()
 
 
-def fair_queue():
+def fair_queue(*, storage_runtime=None):
     """Read one consistent policy snapshot and expose quota wait reasons."""
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     try:
         with connection:
             connection.execute('BEGIN IMMEDIATE')
             queued = [dict(row) for row in connection.execute("SELECT * FROM jobs WHERE status='QUEUED'")]
             eligible = []
             for job in queued:
-                if storage_selection.binding(connection, job['job_id'])["backend"] == "legacy":
+                try:
+                    storage_selection.require_execution(connection,job['job_id'],storage_runtime=storage_runtime)
                     eligible.append(job)
-                else:
+                except (ValueError,OSError):
                     connection.execute("UPDATE jobs SET queue_reason=? WHERE job_id=?",
                                        (storage_selection.NFS_HELD_REASON, job['job_id']))
             queued = eligible
@@ -836,9 +868,9 @@ def fair_queue():
         connection.close()
 
 
-def control_job(job_id, owner, action):
+def control_job(job_id, owner, action, *, storage_runtime=None):
     """Persist an owner-scoped hold, release or cancellation without racing placement."""
-    connection = get_connection()
+    connection = get_connection() if storage_runtime is None else get_connection(durable=True)
     try:
         with connection:
             connection.execute('BEGIN IMMEDIATE')
@@ -851,7 +883,7 @@ def control_job(job_id, owner, action):
                 state, reason = 'HELD','Held by owner'
             elif action == 'release':
                 if state != 'HELD': raise ValueError('Only HELD jobs can be released')
-                storage_selection.require_execution(connection, job_id)
+                storage_selection.require_execution(connection, job_id, storage_runtime=storage_runtime)
                 state, reason = 'QUEUED','Released; waiting for scheduling'
             elif action == 'cancel':
                 if state in ('COMPLETED','FAILED'): raise ValueError('Finished jobs cannot be cancelled')

@@ -46,6 +46,12 @@ def pin(connection, job_id, backend):
     connection.execute("INSERT INTO job_storage_bindings VALUES(?,1,?,?)", (job_id, backend, time.time()))
 
 
-def require_execution(connection, job_id):
+def require_execution(connection, job_id, *, storage_runtime=None):
     if binding(connection, job_id)["backend"] != "legacy":
+        if storage_runtime is not None:
+            from staging_dispatch import StagingDispatch
+            if not isinstance(storage_runtime, StagingDispatch):
+                raise ValueError('Expected explicit trusted staging runtime')
+            storage_runtime.authorize(connection, job_id)
+            return
         raise ValueError(NFS_HELD_REASON)

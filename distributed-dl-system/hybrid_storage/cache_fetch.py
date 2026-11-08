@@ -13,6 +13,7 @@ import fcntl
 import json
 import math
 import os
+import re
 from pathlib import Path
 import secrets
 import stat
@@ -203,6 +204,42 @@ class CacheFetcher:
                     pass
         self.reconcile()
         return self.pending()
+
+    def interrupt(self):
+        """Fence/kill current producers without closing future attempt admission."""
+        with self._guard:
+            for owned in self._owned.values():
+                owned['expired']=True
+                try:owned['process'].kill()
+                except ProcessLookupError:pass
+        self.reconcile()
+
+    def reconcile_orphans(self):
+        """Reap known helpers, then prove cache-wide producer quiescence.
+
+        An inherited fetch-slot flock fences helpers orphaned by agent death.
+        Delete only private, single-link O_EXCL-style .part names in parts/;
+        no cache objects, workspaces or unknown files are removed.
+        """
+        self.reconcile()
+        if not self._operation.acquire(blocking=False):return False
+        try:
+            if self.pending():return False
+            with ExitStack() as stack:
+                try:_,__,parts,___,____=self._slot(stack)
+                except CacheFetchBusy:return False
+                for name in os.listdir(parts):
+                    if not re.fullmatch(r'[0-9a-f]{64}\.[0-9a-f]{32}\.part',name):continue
+                    fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=parts)
+                    try:
+                        info=_protected(fd,directory=False)
+                        current=os.stat(name,dir_fd=parts,follow_symlinks=False)
+                        if (info.st_dev,info.st_ino)!=(current.st_dev,current.st_ino):raise CacheError('Orphan part changed')
+                        os.unlink(name,dir_fd=parts)
+                    finally:os.close(fd)
+                os.fsync(parts)
+                return True
+        finally:self._operation.release()
 
     def _copy(self, stack, sha, size, parts, lock):
         self.cache.metrics.add(copy_attempts=1)

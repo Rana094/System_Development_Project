@@ -135,12 +135,29 @@ out.joinpath('result.json').write_text(json.dumps({
         self.assertEqual(data['dataset'],'x,y\n1,2\n')
         self.assertEqual(data['cores'],1)
         self.assertEqual(data['threads'],'1')
+        # 7.2 local staging override uses the same installed interpreter/launcher
+        # without consulting old mutable source/data snapshots. This test does
+        # not claim OS isolation; service launch isolation is separately gated.
+        staged = self.root / 'private-attempt'
+        staged.mkdir()
+        shutil.copytree(record['source_path'],staged/'source')
+        staged_data = staged/'data'
+        staged_data.mkdir()
+        (staged_data/Path(record['dataset_path']).name).write_text('x,y\n3,4\n')
         # A tampered prepared source must fail before any submitted argv executes.
         Path(record['source_path']).joinpath('train.py').write_text('raise SystemExit(0)')
         rejected = subprocess.run([sys.executable,str(COPY / 'agent/custom_runner.py'),
             '--root',str(self.root / 'worker/worker-storage'),'--job-id',jid],
             capture_output=True,text=True,timeout=30)
         self.assertNotEqual(rejected.returncode,0)
+        staged_result = subprocess.run([sys.executable,str(COPY/'agent/custom_runner.py'),
+            '--root',str(self.root/'worker/worker-storage'),'--job-id',jid,
+            '--staged-inputs-json',json.dumps({'source':str(staged/'source'),'data':str(staged_data)})],
+            capture_output=True,text=True,timeout=30)
+        self.assertEqual(staged_result.returncode,0,staged_result.stderr)
+        staged_output = json.loads((Path(record['workspace_path'])/'results/result.json').read_text())
+        self.assertEqual(staged_output['dataset'],'x,y\n3,4\n')
+        self.assertEqual(staged_output['cwd'],str(staged/'source'))
 
     def test_real_installation_two_versions_isolation_and_cache_reuse(self):
         first = self.submit()

@@ -6,6 +6,17 @@ const terminal = ['COMPLETED','FAILED','CANCELLED'];
 const esc = value => String(value ?? '—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const badge = value => `<span class="badge ${/^[A-Z_]+$/.test(value)?value:''}">${esc(value)}</span>`;
 const stamp = value => value ? new Date(value*1000).toLocaleString() : '—';
+const inputBadge = job => job.status==='SCHEDULED' && ['STAGING','READY'].includes(job.staging?.phase) ? 'STAGING' : job.status;
+const inputBytes = value => Number.isFinite(value) ? value.toLocaleString()+' B' : 'Not recorded';
+const inputSeconds = value => Number.isFinite(value) ? (value/1e9).toFixed(3)+' s' : 'Not recorded';
+function renderStaging(view){
+  if(!view)return '';
+  const metrics=view.metrics;
+  return `<section class="input-staging" aria-label="Input preparation"><h3>Input preparation</h3><p role="status">${esc(view.label)} · ${view.ready_ranks}/${view.total_ranks} worker inputs ready</p>
+    <div class="facts"><div><small>REUSED FROM CACHE</small><strong>${inputBytes(metrics?.cache_hit_bytes)}</strong></div><div><small>STAGED TO WORKERS</small><strong>${inputBytes(metrics?.staged_bytes)}</strong></div><div><small>MEASURED RANKS</small><strong>${view.measured_ranks}/${view.total_ranks}</strong></div></div>
+    ${table(['Rank','Inputs','Cache reused','Staged','Verification','Copy'],view.ranks.map(rank=>`<tr><td>${rank.rank}</td><td>${rank.ready?'Ready':'Awaiting acknowledgement'}</td><td>${inputBytes(rank.metrics?.cache_hit_bytes)}</td><td>${inputBytes(rank.metrics?.staged_bytes)}</td><td>${inputSeconds(rank.metrics?.verification_ns)}</td><td>${inputSeconds(rank.metrics?.copy_ns)}</td></tr>`))}
+    <p class="muted small">Measurements cover acknowledged staging requests. Totals sum worker copies, including repeated data across distributed ranks. Verification and copy times overlap. Byte counts describe file sizes. Training starts after every worker is ready and execution ownership is valid.</p></section>`;
+}
 function notice(message) {
   $('notice').textContent=message; $('notice').hidden=!message;
   $('submit-error').textContent=message; $('submit-error').hidden=!message || !$('submit-dialog').open;
@@ -80,7 +91,7 @@ function renderJobs(){
   const scroll=$('jobs').scrollTop;
   $('jobs').innerHTML=jobs.length?jobs.map(j=>{
     const preparing=['PENDING','PREPARING'].includes(j.preparation?.state);
-    return `<button class="job ${j.job_id===selected?'selected':''}" data-job="${esc(j.job_id)}"><div class="job-head"><strong>${esc(j.name)}</strong>${badge(preparing?'PREPARING':j.status)}</div><p>${esc(j.execution.mode)} · ${esc(j.execution.workers)} worker(s) · ${esc(stamp(j.created_at))}</p><p>${j.position?`Queue #${j.position} · `:''}${esc(j.queue_reason || (preparing?'Preparing worker environments':j.node_id || j.preparation?.error || 'Waiting for preparation'))}</p></button>`;
+    return `<button class="job ${j.job_id===selected?'selected':''}" data-job="${esc(j.job_id)}"><div class="job-head"><strong>${esc(j.name)}</strong>${badge(preparing?'PREPARING':inputBadge(j))}</div><p>${esc(j.execution.mode)} · ${esc(j.execution.workers)} worker(s) · ${esc(stamp(j.created_at))}</p><p>${j.position?`Queue #${j.position} · `:''}${esc(j.staging?.label || j.queue_reason || (preparing?'Preparing worker environments':j.node_id || j.preparation?.error || 'Waiting for preparation'))}</p></button>`;
   }).join(''):'<div class="empty"><h2>No jobs here yet</h2><p>Submit a training example or upload your project.</p></div>';
   $('jobs').scrollTop=scroll;
   $('jobs').querySelectorAll('[data-job]').forEach(button=>button.onclick=async()=>{selected=button.dataset.job;logSelection='';rankSelection='0';renderJobs();try{await loadDetail();}catch(e){notice(e.message);}});
@@ -115,10 +126,12 @@ async function loadDetail(){
   if(['PENDING','PREPARING'].includes(prep?.state))logSelection='preparation.log';
   else if(logSelection==='preparation.log'&&['RUNNING','SCHEDULED'].includes(j.status))logSelection='';
   if(terminal.includes(j.status)&&!logSelection)logSelection=data.logs.findLast(n=>n.startsWith('attempt-')) || data.logs[0] || '';
-  const sourceOptions=[['','Live training'],...data.logs.map(name=>[name,name])];
+  if(data.staging && ['SCHEDULED','CANCELLING'].includes(j.status) && !logSelection)logSelection='@staging';
+  const sourceOptions=[['','Live training'],...('staging' in data?[['@staging','Input staging']]:[]),...data.logs.map(name=>[name,name])];
   if(logSelection&&!sourceOptions.some(([v])=>v===logSelection))sourceOptions.push([logSelection,logSelection]);
-  $('detail').innerHTML=`<div class="section-title"><h2>${esc(data.spec.name)}</h2>${badge(j.status)}</div><p class="id">${esc(j.job_id)}</p>
+  $('detail').innerHTML=`<div class="section-title"><h2>${esc(data.spec.name)}</h2>${badge(inputBadge({...j,staging:data.staging}))}</div><p class="id">${esc(j.job_id)}</p>
     <div class="facts"><div><small>EXECUTION</small><strong>${esc(data.spec.execution.mode)} · ${data.spec.execution.workers} workers</strong></div><div><small>ATTEMPT</small><strong>${j.retry_count+1}</strong></div><div><small>CENTRAL CHECKPOINT</small><strong>${ck?.global_step!==undefined?'Step '+esc(ck.global_step):'Not yet saved'}</strong></div></div>
+    ${renderStaging(data.staging)}
     <div class="actions">${controls.map(([a,label])=>`<button data-action="${a}" class="${a==='cancel'?'danger':'quiet'}">${label}</button>`).join('')}${terminal.includes(j.status)?`<a class="button" href="/api/jobs/${encodeURIComponent(id)}/results">Download results ZIP</a>`:''}</div>
     ${j.last_error||j.error||prep?.error?`<p class="warning">${esc(j.last_error || j.error || prep.error)}</p>`:''}<p class="muted small">${esc(j.queue_reason || (prep?.state==='PREPARING'?'Preparing compatible environments…':''))}</p>
     ${data.timing?'<h3>Training time</h3>'+table(['Measurement','Seconds'],[
@@ -144,7 +157,7 @@ async function loadDetail(){
 async function loadLog(){
   const id=selected, source=logSelection, rank=rankSelection;
   let data;
-  try{data=await api('/jobs/'+encodeURIComponent(id)+'/logs?'+new URLSearchParams({...(source?{file:source}:{}),rank}));}
+  try{data=await api('/jobs/'+encodeURIComponent(id)+'/logs?'+new URLSearchParams({...(source==='@staging'?{view:'staging'}:source?{file:source}:{}),rank}));}
   catch(error){data={text:error.message==='Log not collected yet'?'Waiting for the first log output…':error.message,source:source||'Live training'};}
   if(id!==selected||source!==logSelection||rank!==rankSelection)return;
   $('training-log').textContent=data.text; $('log-caption').textContent=data.source+' · most recent 64 KiB';

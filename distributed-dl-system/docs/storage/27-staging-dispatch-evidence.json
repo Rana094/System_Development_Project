@@ -1,0 +1,302 @@
+{
+  "subphase": "7.2",
+  "dates": [
+    "2026-11-08",
+    "2026-11-09"
+  ],
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "project": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "starting_commit": "68f59e9e72d8ecb2e1b5a98400be2e22051eafc4",
+    "starting_status": "clean",
+    "last_delivered_subphase": "7.1",
+    "commits_created": false
+  },
+  "acceptance": {
+    "local_restart_integration": "PASS",
+    "production_enablement": "NOT PASSED",
+    "nfs_checkpoint_job_support": "NOT PASSED",
+    "phase_7": "pending",
+    "stop_before": "7.3"
+  },
+  "scope": {
+    "explicit_runtime_only": true,
+    "normal_bootstrap_changed": false,
+    "flags_changed": false,
+    "live_database_access": false,
+    "schema_changes": false,
+    "live_services": false,
+    "ssh_or_pi_actions": false,
+    "nfs_or_etc_changes": false,
+    "artifact_http_download_api": false,
+    "live_hardware_claim": false,
+    "os_isolation_claim": false
+  },
+  "changed_files": [
+    "agent/agent.py",
+    "agent/custom_runner.py",
+    "agent/staging.py",
+    "controller/dispatcher.py",
+    "controller/job_store.py",
+    "controller/storage_selection.py",
+    "controller/staging_dispatch.py",
+    "hybrid_storage/staging_protocol.py",
+    "hybrid_storage/README.md",
+    "tests/test_staging_dispatch.py",
+    "tests/test_job_environments.py",
+    "docs/storage/27-staging-dispatch.md",
+    "docs/storage/implementation-progress.md",
+    "docs/storage/27-staging-dispatch-evidence.json"
+  ],
+  "delivered_sha256_excluding_this_file": {
+    "agent/agent.py": "281296a4b76669d0205a7ad4a723704aa47941db6d24ab30587d2ab219707eec",
+    "agent/custom_runner.py": "6abb09f3e9775bf588c6e850f5ba6a2f7ba94c6a3156cb1b371dd167941c74a7",
+    "agent/staging.py": "73019fe8f8662d90599e0da7c4e99d55e649e572ef2b84e97c201c7636b983f8",
+    "controller/dispatcher.py": "2a35c2e1cd5006bdec1567df7a1db007360cffaa3f9c4e62f69ee1d4b0bc1eae",
+    "controller/job_store.py": "b4afedd2a73983cfb6dd9d1c8002606a8512603f68acfa4dcf9d4dd4fdcdec7b",
+    "controller/storage_selection.py": "857fa007b6a3808a061d3798736b9ee5f9904a53796898d6d8160f4db881d75d",
+    "controller/staging_dispatch.py": "110f37489453d2de4d61a89b8c84d7f8a6581fa931d4b34330818407f27a82ae",
+    "hybrid_storage/staging_protocol.py": "cde2d994e731d69850be19af44fe8470d7f80c310cf6a6e8de9cdb2461984c9d",
+    "hybrid_storage/README.md": "ce57407dbbdc320ecfba2d9899e81056c95b2120c794169f835673cb7de7f36e",
+    "tests/test_staging_dispatch.py": "1454696615d55164fe768b43ca360b1d2766c338014b4c98571f97ace6007c84",
+    "tests/test_job_environments.py": "394a601b323daa0e784a79773837252d40d1ddd6ed450e4be2a4cca4554d6775",
+    "docs/storage/27-staging-dispatch.md": "7c8b72ef234af7428aaa7ebd02bca587b147cc7d3f246847eee24660007ddc4c",
+    "docs/storage/implementation-progress.md": "f66d91fb7f94c1b2cfb5d80f615a380a03aa50de4e5ea58624103e6cbeb488ad"
+  },
+  "preservation": {
+    "starting_inventory": "/tmp/hybrid-7-2/starting.sha256",
+    "preserved_count": 246,
+    "changed_tracked": [
+      "agent/agent.py",
+      "agent/custom_runner.py",
+      "controller/dispatcher.py",
+      "controller/job_store.py",
+      "controller/storage_selection.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "tests/test_job_environments.py"
+    ],
+    "unexpected_changes": []
+  },
+  "runs": [
+    {
+      "name": "baseline",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_lifecycle.py test_storage_selection.py test_storage_config.py test_job_environments.py",
+      "raw_log": "/tmp/hybrid-7-2-baseline.log",
+      "log_sha256": "5df50f7cbb4c1aee967a3f270c7a5b2f46770cdfcc19d43cf93b584b3a449d44",
+      "tests": 64,
+      "passed": 64,
+      "errors": 0,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_lifecycle.py",
+        "test_storage_selection.py",
+        "test_storage_config.py",
+        "test_job_environments.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "4/4 test files passed in 39.2s."
+      ]
+    },
+    {
+      "name": "regression",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_staging_lifecycle.py test_storage_config.py test_storage_selection.py test_resource_allocation.py test_queue_controls.py test_execution_ownership.py test_job_environments.py test_custom_checkpoint.py test_group_checkpoint.py test_group_recovery.py test_cache_fetch.py test_private_workspaces.py test_worker_cache.py test_storage_registry.py test_legacy_registration.py test_cache_inventory.py test_cache_coverage.py test_student_portal.py",
+      "raw_log": "/tmp/hybrid-7-2-regression.log",
+      "log_sha256": "573cde88cc6e74c3b11688c726a9ca3878c259954805e36afc3c22823e97a86a",
+      "tests": 386,
+      "passed": 372,
+      "errors": 14,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_staging_lifecycle.py",
+        "test_storage_config.py",
+        "test_storage_selection.py",
+        "test_resource_allocation.py",
+        "test_queue_controls.py",
+        "test_execution_ownership.py",
+        "test_job_environments.py",
+        "test_custom_checkpoint.py",
+        "test_cache_fetch.py",
+        "test_private_workspaces.py",
+        "test_worker_cache.py",
+        "test_storage_registry.py",
+        "test_legacy_registration.py",
+        "test_cache_inventory.py",
+        "test_cache_coverage.py",
+        "test_student_portal.py"
+      ],
+      "failed_files": [
+        "test_group_checkpoint.py",
+        "test_group_recovery.py"
+      ],
+      "summary": [
+        "17/19 test files passed in 165.7s.",
+        "Failed: test_group_checkpoint.py, test_group_recovery.py"
+      ]
+    },
+    {
+      "name": "ddp-baseline",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python /tmp/hybrid-7-2/prechange/tools/run_tests.py --isolated test_group_checkpoint.py test_group_recovery.py",
+      "raw_log": "/tmp/hybrid-7-2-ddp-baseline.log",
+      "log_sha256": "7c707aa40f2ac2900424798308f074bbcd484a9e7f6e6a296aee835042c47b95",
+      "tests": 15,
+      "passed": 1,
+      "errors": 14,
+      "skips": 0,
+      "passed_files": [],
+      "failed_files": [
+        "test_group_checkpoint.py",
+        "test_group_recovery.py"
+      ],
+      "summary": [
+        "0/2 test files passed in 3.4s.",
+        "Failed: test_group_checkpoint.py, test_group_recovery.py"
+      ]
+    },
+    {
+      "name": "final-hooks",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_resource_allocation.py",
+      "raw_log": "/tmp/hybrid-7-2-final-hooks.log",
+      "log_sha256": "40766b7c46925d945d82c5fbaffc5860b20492ec39b53ccba670475bd49e8011",
+      "tests": 27,
+      "passed": 27,
+      "errors": 0,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_resource_allocation.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "2/2 test files passed in 47.7s."
+      ]
+    },
+    {
+      "name": "final-queue",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_queue_controls.py test_storage_selection.py test_storage_config.py test_resource_allocation.py test_staging_lifecycle.py",
+      "raw_log": "/tmp/hybrid-7-2-final-queue.log",
+      "log_sha256": "f2cf4bb68c97d28f38ca01b7c21dd3990e5cede7dc355325c2f77ad8eb0564b0",
+      "tests": 96,
+      "passed": 96,
+      "errors": 0,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_queue_controls.py",
+        "test_storage_selection.py",
+        "test_storage_config.py",
+        "test_resource_allocation.py",
+        "test_staging_lifecycle.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "6/6 test files passed in 48.6s."
+      ]
+    },
+    {
+      "name": "final-new",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py",
+      "raw_log": "/tmp/hybrid-7-2-final-new.log",
+      "log_sha256": "0008b10bc520b82e6f015587e68cd61329c0dc30a6d7bb2ff787722fbff3e678",
+      "tests": 23,
+      "passed": 23,
+      "errors": 0,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_dispatch.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "1/1 test files passed in 35.2s."
+      ]
+    },
+    {
+      "name": "final-boundary",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_job_environments.py test_resource_allocation.py",
+      "raw_log": "/tmp/hybrid-7-2-final-boundary.log",
+      "log_sha256": "07c26b02d0c29ad7ebd9ed03d104b835b665245f182f4588c214e8d30a0d67b5",
+      "tests": 36,
+      "passed": 36,
+      "errors": 0,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_job_environments.py",
+        "test_resource_allocation.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "3/3 test files passed in 63.8s."
+      ]
+    },
+    {
+      "name": "final-new-25",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py",
+      "raw_log": "/tmp/hybrid-7-2-final-new-25.log",
+      "log_sha256": "908936d3e5514eee3e5c982c8e8854eb043382a73035459b300e49e3636e9a6f",
+      "tests": 25,
+      "passed": 25,
+      "errors": 0,
+      "skips": 0,
+      "passed_files": [
+        "test_staging_dispatch.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "1/1 test files passed in 37.0s."
+      ]
+    }
+  ],
+  "known_limitations": [
+    "NFS custom restart mode only; checkpoint jobs held",
+    "Operator-supplied reviewed OS/network isolation adapter required; mocked in tests",
+    "Normal startup remains gated; no live credentials or deployment",
+    "7.3 authenticated stop/periodic renewal/terminal reconciliation incomplete",
+    "One ready identity retained until explicit reconciliation; warm-job fixture performs test-only terminal cleanup",
+    "Staging remains lease bounded",
+    "All three physical Pis still required for later deployment validation",
+    "Controller/NFS server remains a single point of failure"
+  ],
+  "baseline_reproduction": {
+    "restored_commit": "68f59e9e72d8ecb2e1b5a98400be2e22051eafc4",
+    "temporary_root": "/tmp/hybrid-7-2/prechange",
+    "method": "Source-only copy; replace every edited tracked file with git show HEAD:distributed-dl-system/<path>; no checkout/reset/stash",
+    "exception": "PermissionError: [Errno 1] Operation not permitted",
+    "location": "socket.socket() before training; test_group_checkpoint.py 7 errors + test_group_recovery.py 7 errors",
+    "tests_modified_to_hide_failure": false
+  },
+  "rollback": {
+    "patch": "/tmp/hybrid-7-2/7.2.patch",
+    "reverse_check_command": "git -C \"/home/rana/Projects/System Project/System_Development_Project\" apply --reverse --check /tmp/hybrid-7-2/7.2.patch",
+    "apply_after_review": "Use the same command without --check only if no later edits conflict. Preserve all runtime DBs/files and user changes.",
+    "live_data_rollback": "none; no live changes"
+  },
+  "manual_commands": [
+    "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_staging_lifecycle.py test_job_environments.py",
+    "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python -m hybrid_storage.config",
+    "git diff --check",
+    "git diff --stat",
+    "git status --short"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "Flask": "3.1.3",
+    "torch": "2.14.1",
+    "version_probe": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python -c <importlib.metadata.version probe>"
+  },
+  "checks": {
+    "git_diff_check": "PASS",
+    "changed_python_ast_parse": "PASS",
+    "all_changed_files_trailing_whitespace": "PASS",
+    "rollback_reverse_check": "PASS"
+  }
+}

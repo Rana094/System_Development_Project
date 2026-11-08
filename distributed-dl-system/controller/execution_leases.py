@@ -5,6 +5,7 @@ import sys
 import threading
 import time
 import uuid
+from contextlib import contextmanager
 import requests
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'agent'))
@@ -104,6 +105,18 @@ def matches(job,node_id,worker):
 
 
 def current(job,node_id):
+    if hybrid(job):
+        connection=get_connection(durable=True)
+        try:
+            connection.execute('BEGIN')
+            from hybrid_storage.staging_lifecycle import require_running
+            require_running(connection,job['job_id'])
+            latest=connection.execute('SELECT retry_count FROM jobs WHERE job_id=?',(job['job_id'],)).fetchone()
+            row=connection.execute('SELECT * FROM execution_leases WHERE job_id=? AND retry_count=? AND node_id=?',
+                                   (job['job_id'],job['retry_count'],node_id)).fetchone()
+            if row is None or latest[0]!=job['retry_count']:raise ValueError('FENCED: stale result attempt')
+            return dict(row)
+        finally:connection.close()
     row=get(job,node_id)
     if not row:return None  # Older attempts keep conservative, unfenced reconciliation.
     latest=get_job(job['job_id'])
@@ -111,6 +124,37 @@ def current(job,node_id):
             or latest['status'] not in ('SCHEDULED','RUNNING','CANCELLING') or row['revoked']):
         raise ValueError('FENCED: stale attempt may not publish checkpoints or results')
     return row
+
+
+def hybrid(job):
+    connection=get_connection()
+    try:
+        import storage_selection
+        return storage_selection.binding(connection,job['job_id'])['backend']=='nfs'
+    finally:connection.close()
+
+
+@contextmanager
+def publication(job,node_id):
+    """Hold cancellation/retry/lease writers out of NFS final result publication."""
+    if not hybrid(job):
+        yield
+        return
+    connection=get_connection(durable=True)
+    try:
+        connection.execute('BEGIN IMMEDIATE')
+        from hybrid_storage.staging_lifecycle import require_running
+        require_running(connection,job['job_id'])
+        latest=connection.execute('SELECT retry_count FROM jobs WHERE job_id=?',(job['job_id'],)).fetchone()
+        if latest[0]!=job['retry_count']:raise ValueError('FENCED: stale publication')
+        if not connection.execute('SELECT 1 FROM hybrid_staging_ranks r JOIN hybrid_staging_attempts a USING(stage_id) WHERE a.job_id=? AND a.retry_count=? AND r.worker_id=?',
+                                  (job['job_id'],job['retry_count'],node_id)).fetchone():
+            raise ValueError('FENCED: publication worker was not reserved')
+        yield
+        connection.commit()
+    except BaseException:
+        connection.rollback();raise
+    finally:connection.close()
 
 
 def params(job,node_id):
@@ -141,6 +185,9 @@ def response(job,node_id,headers):
 
 
 def renew(job):
+    # Hybrid leases require signed lifecycle control and its durable worker intent.
+    # Never fall back to the legacy unsigned endpoint after a controller restart.
+    if hybrid(job):return
     if not renew_lock.acquire(blocking=False):return
     try:
         connection=get_connection()

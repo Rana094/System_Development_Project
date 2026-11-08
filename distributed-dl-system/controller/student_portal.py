@@ -35,6 +35,7 @@ import execution_leases as ownership
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+import staging_view
 from hybrid_storage.config import load_config, require_controller_config, select_submission_backend
 
 EXAMPLES = {'regression': 'job.integration.json', 'binary': 'job.binary.json',
@@ -288,6 +289,22 @@ def create_app(directory=None, background=False):
             abort(404, 'Job not found')
         return job
 
+    def staging(job_id):
+        with closing(sqlite3.connect(Path(store.DB_FILE).as_uri()+'?mode=ro',uri=True)) as db:
+            db.execute('BEGIN')
+            return staging_view.read(db,job_id,session['owner'])
+
+    def hybrid_job(job_id):
+        return bool(rows("SELECT 1 FROM job_storage_bindings WHERE job_id=? AND backend='nfs'",(job_id,)))
+
+    def safe_error(record):
+        if record is None:return None
+        messages={'error':'Worker preparation or execution failed; contact the operator.',
+                  'last_error':'Worker preparation or execution failed; contact the operator.',
+                  'queue_reason':'Waiting for compatible workers or operator action.'}
+        return {key:(messages[key] if value else value) if key in messages else value
+                for key,value in record.items()}
+
     @app.get('/')
     def index():
         return app.send_static_file('index.html')
@@ -412,6 +429,7 @@ def create_app(directory=None, background=False):
                             {r['owner']:r['last_dispatch'] for r in rows('SELECT * FROM owner_service')},policy,time.time())
         positions = {j['job_id']:i+1 for i,j in enumerate(queued)}
         tasks = {t['job_id']:t for t in rows('SELECT * FROM portal_preparation')}
+        hybrid_ids={row['job_id'] for row in rows("SELECT job_id FROM job_storage_bindings WHERE backend='nfs'")}
         jobs = []
         for job in sorted(all_jobs,key=lambda j:j['created_at'],reverse=True):
             if job['owner']!=session['owner'] or job['job_type']!='custom': continue
@@ -419,6 +437,10 @@ def create_app(directory=None, background=False):
             jobs.append({**{k:job[k] for k in ('job_id','status','created_at','node_id','retry_count','queue_reason','last_error')},
                          'name':spec.get('name',job['job_id']),'execution':spec.get('execution',{}),
                          'position':positions.get(job['job_id']),'preparation':tasks.get(job['job_id'])})
+            if job['job_id'] in hybrid_ids:
+                jobs[-1]=safe_error(jobs[-1])
+                jobs[-1]['preparation']=safe_error(jobs[-1]['preparation'])
+                jobs[-1]['staging']=staging(job['job_id'])
         return jsonify(jobs=jobs,nodes=cluster.get(),dispatcher_running=dispatcher_running(),
                        limits={k:limits(policy,session['owner'])[k] for k in ('max_active_per_owner','max_pending_per_owner')},
                        timestamp=time.time())
@@ -426,20 +448,37 @@ def create_app(directory=None, background=False):
     @app.get('/api/jobs/<job_id>')
     def detail(job_id):
         job = owned(job_id)
+        hybrid=hybrid_job(job_id)
         events = rows("SELECT * FROM recovery_events WHERE job_id=? AND event_type NOT IN ('CHECKPOINT_SYNC','DDP_CHECKPOINT_COMMITTED') ORDER BY event_time DESC,id DESC LIMIT 300",(job_id,))
         for event in events:
-            event['details'] = json.loads(event.pop('details_json'))
+            event['details'] = staging_view.event_details(event) if hybrid else json.loads(event['details_json'])
+            event.pop('details_json')
         checkpoint = next(iter(rows("SELECT * FROM recovery_events WHERE job_id=? AND event_type IN ('CHECKPOINT_SYNC','DDP_CHECKPOINT_COMMITTED') ORDER BY event_time DESC,id DESC LIMIT 1",(job_id,))),None)
         if checkpoint:
-            checkpoint['details'] = json.loads(checkpoint.pop('details_json'))
+            checkpoint['details'] = {} if hybrid else json.loads(checkpoint['details_json'])
+            checkpoint.pop('details_json')
         # Only metadata already committed by the dispatcher is displayed; never unpickle training files.
         logs = sorted(p.name for p in (Path(job['storage_path'])/'logs').glob('*.log') if not p.is_symlink()) if job.get('storage_path') else []
         from job_timing import build_report
         timing = build_report(job, store.get_attempts(job_id)) if job.get('storage_path') and job['status'] in TERMINAL else None
-        return jsonify(job=job,timing=timing,spec=json.loads(job['job_config']),attempts=store.get_attempts(job_id),
-                       ranks=store.get_ranks(job_id),events=events,checkpoint=checkpoint,logs=logs,
-                       leases=rows('SELECT * FROM execution_leases WHERE job_id=? ORDER BY retry_count,node_id',(job_id,)),
-                       preparation=next(iter(rows('SELECT * FROM portal_preparation WHERE job_id=?',(job_id,))),None))
+        spec=json.loads(job['job_config'])
+        result=dict(job=job,timing=timing,spec=spec,attempts=store.get_attempts(job_id),
+                    ranks=store.get_ranks(job_id),events=events,checkpoint=checkpoint,logs=logs,
+                    leases=rows('SELECT * FROM execution_leases WHERE job_id=? ORDER BY retry_count,node_id',(job_id,)),
+                    preparation=next(iter(rows('SELECT * FROM portal_preparation WHERE job_id=?',(job_id,))),None))
+        if hybrid:
+            # Existing legacy representations stay intact. Hybrid responses never
+            # serialize controller input locations or internal lease credentials.
+            spec=dict(spec,project='Uploaded project',dataset='Uploaded dataset' if spec.get('dataset') else None)
+            result.update(staging=staging(job_id),spec=spec,
+                          job={key:value for key,value in safe_error(job).items()
+                               if key not in ('storage_path','job_config','node_ip','checkpoint_path')},
+                          preparation=safe_error(result['preparation']),
+                          attempts=[safe_error(item) for item in result['attempts']],
+                          ranks=[safe_error(item) for item in result['ranks']],
+                          leases=[{key:item[key] for key in ('retry_count','node_id','generation','expires_at','renewal_blocked','revoked')}
+                                  for item in result['leases']])
+        return jsonify(result)
 
     @app.post('/api/jobs/<job_id>/<action>')
     def control(job_id,action):
@@ -453,6 +492,10 @@ def create_app(directory=None, background=False):
     @app.get('/api/jobs/<job_id>/logs')
     def logs(job_id):
         job = owned(job_id)
+        hybrid=hybrid_job(job_id)
+        if request.args.get('view')=='staging':
+            if not hybrid:abort(404,'Input staging log not found')
+            return jsonify(text=staging_view.log_text(staging(job_id))[:LOG_BYTES],source='Input staging · controller')
         name = request.args.get('file')
         if name:
             if Path(name).name!=name or not name.endswith('.log'): abort(400,'Invalid log name')
@@ -462,6 +505,8 @@ def create_app(directory=None, background=False):
                 stream.seek(max(0,path.stat().st_size-LOG_BYTES))
                 data = stream.read(LOG_BYTES)
             return jsonify(text=data.decode(errors='replace'),source=name)
+        if hybrid and job['status'] in ('SCHEDULED','CANCELLING'):
+            return jsonify(text=staging_view.log_text(staging(job_id))[:LOG_BYTES],source='Input staging · controller')
         if job['status'] not in ACTIVE_STATES:
             return jsonify(text='Choose a collected attempt log above.',source='controller')
         rank = request.args.get('rank',0,type=int)
@@ -494,7 +539,8 @@ def create_app(directory=None, background=False):
             ownership.current(job,node_id)
             return jsonify(text=data.decode(errors='replace'),source=f"attempt {job['retry_count']+1} · {node_id} · rank {rank}")
         except (requests.RequestException,ValueError) as error:
-            return jsonify(text='Live log temporarily unavailable. Collected logs remain available.',source=str(error)),200
+            return jsonify(text='Live log temporarily unavailable. Collected logs remain available.',
+                           source='Training log' if hybrid else str(error)),200
 
     @app.get('/api/jobs/<job_id>/results')
     def download_results(job_id):

@@ -1,5 +1,6 @@
 """Worker HTTP API: report resources, launch one process at a time, and transfer checkpoints."""
 
+import hashlib
 import json
 import math
 import os
@@ -16,7 +17,7 @@ from pathlib import Path
 import platform
 
 import psutil
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, g, jsonify, request, send_file
 
 app = Flask(__name__)
 # Service settings keep logical worker IDs independent of machine hostnames.
@@ -302,8 +303,12 @@ def watch_job(process, job_id, log_file):
 
     with job_lock:
         status = "COMPLETED" if process.returncode == 0 else "FAILED"
+        staging_service=app.extensions.get('hybrid_staging')
+        accepted=(staging_service.note_exit(current_job['lease'],process.returncode)
+                  if staging_service is not None and current_job and current_job.get('pid')==process.pid else process.returncode==0)
+        if staging_service is not None and not accepted:status='FAILED'
         if current_job and current_job.get('lease') and current_job.get('pid')==process.pid:
-            try:ownership.finished(BASE_DIR,current_job['lease'],process.returncode==0)
+            try:ownership.finished(BASE_DIR,current_job['lease'],bool(accepted))
             except (OSError,ValueError):pass
 
         if (
@@ -351,6 +356,8 @@ def resources():
     node_status = (
         "BUSY" if (job_info and job_info.get("status") == "RUNNING") else "IDLE"
     )
+    staging_service=app.extensions.get('hybrid_staging')
+    if staging_service is not None and staging_service.busy():node_status='BUSY'
 
     return jsonify(
         {
@@ -359,7 +366,7 @@ def resources():
             "status": "ONLINE",
             "node_state": node_status,
             "slots": {"total":1,"available":int(node_status == "IDLE")},
-            "allocation": (job_info.get("resources", {}) if node_status == "BUSY" else {}),
+            "allocation": ((job_info or {}).get("resources", {}) if node_status == "BUSY" else {}),
             "gpu": {"total":GPU_COUNT,"available":GPU_COUNT if node_status == "IDLE" else 0},
             "cpu": {
                 "available_cores": len(os.sched_getaffinity(0)) if node_status == "IDLE" else 0,
@@ -443,7 +450,11 @@ def start_job():
     global job_process
     global job_history
 
-    data = request.get_json(silent=True) or {}
+    data = getattr(g, 'staging_body', None)
+    if data is None:
+        data = request.get_json(silent=True) or {}
+
+    staging_service = app.extensions.get('hybrid_staging')
 
     job_id = data.get("job_id")
 
@@ -603,6 +614,10 @@ def start_job():
             prepared = json.loads((directory / 'prepared.json').read_text())
             descriptor = json.loads((directory / 'request.json').read_text())
             spec = descriptor['manifest']['execution_spec']
+            if staging_service is not None:
+                from hybrid_storage.input_manifests import encoded
+                if hashlib.sha256(encoded(spec)).hexdigest() != data.get('execution_spec_sha256'):
+                    raise ValueError('Prepared execution differs from immutable job inputs')
             if (prepared['manifest_sha256'] != data['manifest_sha256']
                 or prepared['environment_key'] != data['environment_key']
                 or prepared['job_id'] != job_id
@@ -820,6 +835,20 @@ def start_job():
                 or allocation['gpus'] > GPU_COUNT):
                 return jsonify({'error':'Insufficient CPU, RAM or GPU capacity'}),409
 
+        if staging_service is not None:
+            try:
+                workspace = staging_service.launch_inputs(data)
+                # Paths originate only in the protected verified workspace manager.
+                # The launcher consumes local inputs; it never receives NFS/cache roots.
+                staged_inputs = {'source':str(workspace.source),
+                                 'data':str(workspace.data) if workspace.data else None}
+                command += ['--staged-inputs-json',json.dumps(staged_inputs)]
+                command = staging_service.isolate(command, workspace, data)
+                if type(command) is not list or not command or any(type(arg) is not str for arg in command):
+                    raise ValueError('Isolated launcher did not return an argv')
+            except (OSError,ValueError,KeyError,TypeError):
+                return jsonify({'error':'Staged workspace or isolated launcher rejected'}),409
+
         if lease:
             try:
                 ownership.accept(BASE_DIR,lease,job_id,data['attempt_token'],node_id())
@@ -855,6 +884,7 @@ def start_job():
                 start_new_session=True,
             )
             if lease:ownership.attach(BASE_DIR,lease,job_process.pid)
+            if staging_service is not None:staging_service.launched(data)
 
         except Exception as error:
             try:

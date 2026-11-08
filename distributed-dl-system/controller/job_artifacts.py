@@ -37,12 +37,13 @@ def collect(job,rank=None):
                 output.flush();os.fsync(output.fileno())
         # This second check fences transfers that began before a newer attempt.
         ownership.current(job,node['id'])
-        if completed:
-            destination.parent.mkdir(parents=True,exist_ok=True)
-            previous=stage/'previous-results'
-            if destination.exists():os.replace(destination,previous)
-            try:os.replace(results,destination)
-            except Exception:
-                if previous.exists():os.replace(previous,destination)
-                raise
-        os.replace(stage/'training.log',log_path)
+        with ownership.publication(job,node['id']):
+            if completed:
+                destination.parent.mkdir(parents=True,exist_ok=True)
+                previous=stage/'previous-results'
+                if destination.exists():os.replace(destination,previous)
+                try:os.replace(results,destination)
+                except Exception:
+                    if previous.exists():os.replace(previous,destination)
+                    raise
+            os.replace(stage/'training.log',log_path)

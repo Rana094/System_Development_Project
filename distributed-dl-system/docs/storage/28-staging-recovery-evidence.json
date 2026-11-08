@@ -1,0 +1,367 @@
+{
+  "subphase": "7.3",
+  "date": "2026-11-09",
+  "timezone": "Asia/Dhaka",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "project": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "68f59e9e72d8ecb2e1b5a98400be2e22051eafc4",
+    "starting_status": " M agent/agent.py\n M agent/custom_runner.py\n M controller/dispatcher.py\n M controller/job_store.py\n M controller/storage_selection.py\n M docs/storage/implementation-progress.md\n M hybrid_storage/README.md\n M tests/test_job_environments.py\n?? agent/staging.py\n?? controller/staging_dispatch.py\n?? docs/storage/27-staging-dispatch-evidence.json\n?? docs/storage/27-staging-dispatch.md\n?? hybrid_storage/staging_protocol.py\n?? tests/test_staging_dispatch.py\n",
+    "starting_scope": "Uncommitted 7.2 local integration; not production enablement",
+    "commit_or_stash_created": false
+  },
+  "acceptance": {
+    "local_lifecycle": "PASS",
+    "production_enablement": "pending",
+    "nfs_checkpoint_execution": "pending",
+    "phase7": "pending",
+    "stop_before": "7.4"
+  },
+  "preservation": {
+    "before_inventory": "/tmp/hybrid-7-3/before.json",
+    "before_contents": "/tmp/hybrid-7-3/before",
+    "inventory_count": 260,
+    "unchanged_count": 246,
+    "changed_existing": [
+      "agent/staging.py",
+      "controller/staging_dispatch.py",
+      "hybrid_storage/staging_protocol.py",
+      "tests/test_staging_dispatch.py",
+      "agent/agent.py",
+      "controller/dispatcher.py",
+      "controller/execution_leases.py",
+      "controller/job_artifacts.py",
+      "controller/job_store.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/cache_fetch.py",
+      "hybrid_storage/staging_lifecycle.py",
+      "hybrid_storage/workspaces.py"
+    ],
+    "new_files": [
+      "controller/staging_recovery.py",
+      "docs/storage/28-staging-recovery.md",
+      "hybrid_storage/cleanup_schema.py",
+      "hybrid_storage/staging_journal.py",
+      "tests/test_staging_recovery.py",
+      "docs/storage/28-staging-recovery-evidence.json"
+    ],
+    "unexpected_changes": []
+  },
+  "delivered_sha256_excluding_this_file": {
+    "agent/staging.py": "b01ce4a679e3a16b4cb733da18cc57ee82ecc713ec9681decadc3f23c0fd711f",
+    "controller/staging_dispatch.py": "5f6598164840f0eb30513335298e398f334989f6154ebcf700ea339028f93a07",
+    "hybrid_storage/staging_protocol.py": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb",
+    "tests/test_staging_dispatch.py": "2ef3f9b88c4231624f35bc71c862c9662a01f27bec204c5cfae37b7f7cff54ae",
+    "agent/agent.py": "a06582a861da9fc60906e28998d3307dfd7d3c462c0f32aac1d0dc13492cb492",
+    "controller/dispatcher.py": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d",
+    "controller/execution_leases.py": "fa82ee030cc0c1b0e49e8dc9806caad80c37e69417581ff9561867afdd0d6507",
+    "controller/job_artifacts.py": "f8872c380d95783697edede27c8153aae62154c2d530012e7b7fc7ec7bbaaa99",
+    "controller/job_store.py": "41da260954d356291b494a98a339098f9fb2329b7144772b6a2b6fdb31cccc69",
+    "docs/storage/implementation-progress.md": "4d507e270e3a5fabd06c489a05170b64e9df1a685ad0461aad94ee29aa5652ca",
+    "hybrid_storage/README.md": "95b2bb2a632642070c09039eddbb82dacbe8df31ac6a90f27d57a69662db9c42",
+    "hybrid_storage/cache_fetch.py": "b81ee8cc50e80c483fe0bad7019b3b6c3a2199319bb74afb760bb13c50166c1e",
+    "hybrid_storage/staging_lifecycle.py": "9cb083de75cba88b39ac6eb5780d4ea87757f69a104072ecc597ac148e32d770",
+    "hybrid_storage/workspaces.py": "c9638fea62e81a4f270d43b7b79302239b64ce038cc4574ec099a03250d92a81",
+    "controller/staging_recovery.py": "4b3335c8454237fec9fc6fbe487ba5823f9134a15687c5ea5351fd5f967de1b1",
+    "docs/storage/28-staging-recovery.md": "a8b4b7b4783915719bb7cd79243b8ec66c2bc256d36562987e2b2a48ba9eacf1",
+    "hybrid_storage/cleanup_schema.py": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3",
+    "hybrid_storage/staging_journal.py": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd",
+    "tests/test_staging_recovery.py": "b2c498d27d5eefc1d3b773942fa33b67bfdca2bb35eb7ebf2ca812a87c5c1f05"
+  },
+  "runs": [
+    {
+      "name": "baseline",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_staging_lifecycle.py test_execution_ownership.py test_queue_controls.py",
+      "tests": 67,
+      "passed": 67,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_staging_lifecycle.py",
+        "test_execution_ownership.py",
+        "test_queue_controls.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "4/4 test files passed in 46.9s."
+      ],
+      "raw_log": "/tmp/hybrid-7-3-baseline.log",
+      "log_sha256": "c71e92db07a06b38f1578542c50f7dfb1546b117a2965153fcb55495a2a00001"
+    },
+    {
+      "name": "worker",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_cache_fetch.py",
+      "tests": 58,
+      "passed": 57,
+      "errors": 1,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_cache_fetch.py"
+      ],
+      "failed_files": [
+        "test_staging_dispatch.py"
+      ],
+      "summary": [
+        "1/2 test files passed in 48.0s.",
+        "Failed: test_staging_dispatch.py"
+      ],
+      "raw_log": "/tmp/hybrid-7-3-worker.log",
+      "log_sha256": "ab809117ee8a5a889ff59c95c1e95fa80ed36ccd4f9be81db4e6f187ead98374"
+    },
+    {
+      "name": "new",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py",
+      "tests": 21,
+      "passed": 20,
+      "errors": 0,
+      "failures": 1,
+      "skipped": 0,
+      "passed_files": [],
+      "failed_files": [
+        "test_staging_recovery.py"
+      ],
+      "summary": [
+        "0/1 test files passed in 41.5s.",
+        "Failed: test_staging_recovery.py"
+      ],
+      "raw_log": "/tmp/hybrid-7-3-new.log",
+      "log_sha256": "c99ce5aa5ef1b8b75937f6f549ecaa5dccfc2a200e8eeb347a01f52c4b4bac68"
+    },
+    {
+      "name": "integrated",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_staging_lifecycle.py test_execution_ownership.py test_queue_controls.py",
+      "tests": 67,
+      "passed": 67,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_staging_lifecycle.py",
+        "test_execution_ownership.py",
+        "test_queue_controls.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "4/4 test files passed in 50.0s."
+      ],
+      "raw_log": "/tmp/hybrid-7-3-integrated.log",
+      "log_sha256": "b03c60b78a6d2a4da7d50e5b2ea9424692dc4f10abf04a41d25e8fdd2394153e"
+    },
+    {
+      "name": "regression",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py test_staging_dispatch.py test_staging_lifecycle.py test_cache_fetch.py test_private_workspaces.py test_execution_ownership.py test_queue_controls.py test_resource_allocation.py test_storage_selection.py test_storage_config.py test_custom_checkpoint.py test_student_portal.py test_job_environments.py",
+      "tests": 236,
+      "passed": 235,
+      "errors": 0,
+      "failures": 1,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_dispatch.py",
+        "test_staging_lifecycle.py",
+        "test_cache_fetch.py",
+        "test_private_workspaces.py",
+        "test_execution_ownership.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py",
+        "test_storage_selection.py",
+        "test_storage_config.py",
+        "test_custom_checkpoint.py",
+        "test_student_portal.py",
+        "test_job_environments.py"
+      ],
+      "failed_files": [
+        "test_staging_recovery.py"
+      ],
+      "summary": [
+        "12/13 test files passed in 182.4s.",
+        "Failed: test_staging_recovery.py"
+      ],
+      "raw_log": "/tmp/hybrid-7-3-regression.log",
+      "log_sha256": "11df7d10adad28f23677ab245fe11f2f211af9cf3cf32678129ce54e4b27ba7b"
+    },
+    {
+      "name": "final",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py test_staging_dispatch.py test_staging_lifecycle.py test_cache_fetch.py test_private_workspaces.py test_execution_ownership.py test_queue_controls.py test_resource_allocation.py test_storage_selection.py test_storage_config.py test_custom_checkpoint.py test_student_portal.py test_job_environments.py",
+      "tests": 240,
+      "passed": 240,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_recovery.py",
+        "test_staging_dispatch.py",
+        "test_staging_lifecycle.py",
+        "test_cache_fetch.py",
+        "test_private_workspaces.py",
+        "test_execution_ownership.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py",
+        "test_storage_selection.py",
+        "test_storage_config.py",
+        "test_custom_checkpoint.py",
+        "test_student_portal.py",
+        "test_job_environments.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "13/13 test files passed in 200.3s."
+      ],
+      "raw_log": "/tmp/hybrid-7-3-final.log",
+      "log_sha256": "31a8f44e6478e8e6af353f6d2f3ec02d2be97a69486427d5c1547edffd373ef8"
+    },
+    {
+      "name": "final-fences",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py test_staging_dispatch.py test_execution_ownership.py test_custom_checkpoint.py test_queue_controls.py test_resource_allocation.py",
+      "tests": 89,
+      "passed": 89,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_recovery.py",
+        "test_staging_dispatch.py",
+        "test_execution_ownership.py",
+        "test_custom_checkpoint.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "6/6 test files passed in 155.2s."
+      ],
+      "raw_log": "/tmp/hybrid-7-3-final-fences.log",
+      "log_sha256": "6e61d5853e62dc044fd59e01f0b217eaccc0e7e51785227e8208e661206a8426"
+    },
+    {
+      "name": "final-boundary",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py test_staging_dispatch.py test_resource_allocation.py",
+      "tests": 64,
+      "passed": 64,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_recovery.py",
+        "test_staging_dispatch.py",
+        "test_resource_allocation.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "3/3 test files passed in 150.5s."
+      ],
+      "raw_log": "/tmp/hybrid-7-3-final-boundary.log",
+      "log_sha256": "d7fcef987ed731cbda4d29e05a3b8e471c164eb40e355d95c121616ad407db01"
+    },
+    {
+      "name": "final-recovery",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py",
+      "tests": 34,
+      "passed": 34,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed_files": [
+        "test_staging_recovery.py"
+      ],
+      "failed_files": [],
+      "summary": [
+        "",
+        "1/1 test files passed in 72.5s."
+      ],
+      "raw_log": "/tmp/hybrid-7-3-final-recovery.log",
+      "log_sha256": "68127b0c9f1005e0f425571d8fe5b31c806d30e9f1176ba1e5757b9cf3e0461e"
+    }
+  ],
+  "interrupted_run": {
+    "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py test_staging_dispatch.py test_staging_lifecycle.py test_cache_fetch.py test_private_workspaces.py test_execution_ownership.py test_queue_controls.py test_resource_allocation.py test_storage_selection.py test_storage_config.py test_custom_checkpoint.py test_student_portal.py test_job_environments.py",
+    "raw_log": "/tmp/hybrid-7-3-final-regression.log",
+    "exit_code": 130,
+    "reason": "Shared fixture watcher mock suppressed ThreadPoolExecutor worker threads. Interrupted only this disposable test session via its exec session; restored actual threads and reran. Not counted as a pass or skipped test."
+  },
+  "schema": {
+    "namespace": "hybrid_cleanup",
+    "version": 1,
+    "checksum": "e6963ae1f9b86dd87f5fd766c1206afb90a75c01c6c635b32583eb516245e95c",
+    "tables": 2,
+    "indexes": 1,
+    "triggers": 4,
+    "live_applied": false,
+    "automatic_migration": false,
+    "sqlite_local": true,
+    "foreign_keys": true,
+    "synchronous": "FULL",
+    "user_version_changed": false
+  },
+  "api": {
+    "path": "/jobs/staging-control",
+    "actions": [
+      "status",
+      "cancel",
+      "renew"
+    ],
+    "authentication": "Existing per-worker Credential, separate POST/path/direction HMAC domain, nonce/freshness and exact-request-bound reply",
+    "artifact_transport_changed": false,
+    "worker_journal_version": 1,
+    "production_callbacks": [
+      "isolate(command, workspace, data)",
+      "terminate(identity, record)",
+      "quiescent(identity, record)"
+    ]
+  },
+  "checks": {
+    "git_diff_check": "PASS",
+    "changed_python_ast": "PASS",
+    "all_changed_file_whitespace": "PASS",
+    "config_output": {
+      "runtime": "legacy",
+      "settings": {
+        "storage_backend": "legacy",
+        "worker_cache_enabled": false,
+        "storage_aware_staging": false,
+        "scheduler_policy": "resource"
+      }
+    },
+    "config_command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python -m hybrid_storage.config",
+    "reverse_patch_check": "PASS"
+  },
+  "safety": {
+    "live_db_access_or_migration": false,
+    "config_or_credentials_changed": false,
+    "services_or_etc_changed": false,
+    "ssh_pi_nfs_actions": false,
+    "internet_dependent_runtime_transfers": false,
+    "physical_hardware_claim": false,
+    "production_os_isolation_claim": false,
+    "test_processes": "Only disposable owned helper/guardian process groups and the interrupted hung local test session"
+  },
+  "limitations": [
+    "Reviewed OS/UID/network containment and exact terminate/quiescent providers required; no production adapter supplied",
+    "Default normal bootstrap stays legacy/OFF/resource",
+    "Long staging remains bounded by leases",
+    "Offline LEASE_FENCED proof does not assert remote unpin; retained for later cleanup",
+    "No live migration/credential deployment or all-three-Pi validation",
+    "NFS checkpoint jobs remain held; legacy formats/APIs preserved",
+    "Failure/cancel logs stay on worker where strict publication fencing withholds them; UI work is 7.4",
+    "Retain journal/workspace/cleanup history; no history GC",
+    "Controller/NFS central server remains SPOF",
+    "Known previously reproduced sandbox DDP socket EPERM suites not rerun or claimed passing"
+  ],
+  "rollback": {
+    "patch": "/tmp/hybrid-7-3/7.3.patch",
+    "relative_to": "Saved working-tree contents before 7.3, including uncommitted 7.2 files; not Git HEAD",
+    "check_command": "git -C \"/home/rana/Projects/System Project/System_Development_Project\" apply --reverse --check /tmp/hybrid-7-3/7.3.patch",
+    "apply_only_after_review": "Same command without --check; preserve later user changes and all runtime DB/data. No live data rollback needed; retain schema/history if later deployed."
+  },
+  "manual_command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_recovery.py test_staging_dispatch.py test_execution_ownership.py test_queue_controls.py"
+}

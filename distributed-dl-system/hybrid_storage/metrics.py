@@ -33,13 +33,15 @@ class StorageMetrics:
 
     Related fetch/workspace handles share cache.metrics. Fresh processes/handles
     start at zero unless callers explicitly share a collector in that process.
-    Snapshots are immutable; there is no disk log or metrics endpoint. A future
-    trusted telemetry owner can consume snapshots without involving job state.
+    Snapshots are immutable; this collector has no disk log or metrics endpoint.
+    Explicit trusted staging code consumes request observations for numeric-only
+    telemetry without granting execution authority.
     """
 
     def __init__(self):
         self._values = asdict(MetricsSnapshot())
         self._lock = threading.Lock()
+        self._local = threading.local()
 
     def add(self, **values):
         if any(name not in self._values or type(value) is not int or value < 0
@@ -48,6 +50,23 @@ class StorageMetrics:
         with self._lock:
             for name, value in values.items():
                 self._values[name] += value
+        for observer in getattr(self._local, 'observers', ()):
+            observer.add(**values)
+
+    @contextmanager
+    def observe(self):
+        """Collect this thread's request without mixing concurrent inventory reads.
+
+        Cumulative counters remain unchanged. Child helper CPU/network traffic is
+        not measured here; only existing parent-thread instrumentation is captured.
+        """
+        observer = StorageMetrics()
+        observers = getattr(self._local, 'observers', ())
+        self._local.observers = (*observers, observer)
+        try:
+            yield observer
+        finally:
+            self._local.observers = observers
 
     def snapshot(self) -> MetricsSnapshot:
         with self._lock:

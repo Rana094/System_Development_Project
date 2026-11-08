@@ -1,0 +1,229 @@
+{
+  "subphase": "7.4",
+  "date": "2026-11-09 Asia/Dhaka",
+  "acceptance": "PASS local mock/integration only; production and all-three-Pi pending",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "branch": "main",
+    "head": "68f59e9e72d8ecb2e1b5a98400be2e22051eafc4",
+    "starting_status": " M agent/agent.py\n M agent/custom_runner.py\n M controller/dispatcher.py\n M controller/execution_leases.py\n M controller/job_artifacts.py\n M controller/job_store.py\n M controller/storage_selection.py\n M docs/storage/implementation-progress.md\n M hybrid_storage/README.md\n M hybrid_storage/cache_fetch.py\n M hybrid_storage/staging_lifecycle.py\n M hybrid_storage/workspaces.py\n M tests/test_job_environments.py\n?? agent/staging.py\n?? controller/staging_dispatch.py\n?? controller/staging_recovery.py\n?? docs/storage/27-staging-dispatch-evidence.json\n?? docs/storage/27-staging-dispatch.md\n?? docs/storage/28-staging-recovery-evidence.json\n?? docs/storage/28-staging-recovery.md\n?? hybrid_storage/cleanup_schema.py\n?? hybrid_storage/staging_journal.py\n?? hybrid_storage/staging_protocol.py\n?? tests/test_staging_dispatch.py\n?? tests/test_staging_recovery.py\n",
+    "no_stash_reset_commit": true
+  },
+  "preservation": {
+    "snapshot": "/tmp/hybrid-7-4/before",
+    "starting_inventory_count": 266,
+    "unchanged_count": 256,
+    "changed_starting_files": [
+      "agent/staging.py",
+      "controller/staging_dispatch.py",
+      "controller/portal_static/portal.css",
+      "controller/portal_static/portal.js",
+      "controller/student_portal.py",
+      "docs/storage/implementation-progress.md",
+      "docs/student-interface.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/metrics.py",
+      "hybrid_storage/staging_lifecycle.py"
+    ],
+    "new_files": [
+      "controller/staging_view.py",
+      "docs/storage/29-staging-visibility-evidence.json",
+      "docs/storage/29-staging-visibility.md",
+      "hybrid_storage/staging_metrics.py",
+      "tests/test_staging_portal.py",
+      "tests/test_staging_portal_ui.cjs"
+    ],
+    "missing_starting_files": [],
+    "before_sha256": {
+      "agent/staging.py": "b01ce4a679e3a16b4cb733da18cc57ee82ecc713ec9681decadc3f23c0fd711f",
+      "controller/staging_dispatch.py": "5f6598164840f0eb30513335298e398f334989f6154ebcf700ea339028f93a07",
+      "controller/portal_static/portal.css": "0ee0a548b2d1b6f8829f0ac76b1c0f8f5b2616e46f8fb83c81fe9560bb899035",
+      "controller/portal_static/portal.js": "482c878adf87e202ce30166385083796d8e9ce3ebc5229ee50e8c118c07938c9",
+      "controller/student_portal.py": "1de1dc6086cd2d587b5bcb328e7cb87f406a96bba8f1dca6e568d737ab7992e7",
+      "docs/storage/implementation-progress.md": "4d507e270e3a5fabd06c489a05170b64e9df1a685ad0461aad94ee29aa5652ca",
+      "docs/student-interface.md": "0bb983d1adf01ff15b8f94875184947e8bfb2dceb17a91727713137b463eb650",
+      "hybrid_storage/README.md": "95b2bb2a632642070c09039eddbb82dacbe8df31ac6a90f27d57a69662db9c42",
+      "hybrid_storage/metrics.py": "d198b2b50f44a25133d9f9784162fd1f58d105102c6a79b9b0b93d0b276f2f79",
+      "hybrid_storage/staging_lifecycle.py": "9cb083de75cba88b39ac6eb5780d4ea87757f69a104072ecc597ac148e32d770"
+    },
+    "after_sha256": {
+      "agent/staging.py": "676cfd7ab24a98d46176a843fda01615679f6627ecd6af706abdb460657aa97a",
+      "controller/staging_dispatch.py": "c9194a82d84ff9be350153f3ac6104de9ebae00d44543f0cfaca411581c00e7f",
+      "controller/portal_static/portal.css": "8a9ec881f6d8827c9b3fd9ad9d681ab534dd2f6c7feb8851f151f70a9548c287",
+      "controller/portal_static/portal.js": "15a437f7e0a2867fe9f7bc61e26bd443c781f5a2e229033aa9e5590ede19d23f",
+      "controller/student_portal.py": "3848456131b824bc8e43e73e6037fa87501c2ade96b3f7ea0e9c2e94e744f5af",
+      "docs/storage/implementation-progress.md": "9caf74b03bec5fedc5535cda67d71c23db1e6ee15833bf15115ea7bac21f67b3",
+      "docs/student-interface.md": "a081920ae84d8bffae41482ef902a828e4f7eef2ec70ab92d3e017a204a627cb",
+      "hybrid_storage/README.md": "7dc847358613ab31665049dd0a4c6dd781a356729c073e1646462084459086fa",
+      "hybrid_storage/metrics.py": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149",
+      "hybrid_storage/staging_lifecycle.py": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb",
+      "controller/staging_view.py": "4309026e0b8d0913a8da58975338e8b3f25d261faea421305b230c1d9b802c0b",
+      "docs/storage/29-staging-visibility.md": "35b1557492953b4e74c2ff988683d10e4dc30f424d0be9bb72a099a443272dda",
+      "hybrid_storage/staging_metrics.py": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f",
+      "tests/test_staging_portal.py": "2208d104021683defe22da6101b0bcc17595bff0937f6a8e275728772473a4e5",
+      "tests/test_staging_portal_ui.cjs": "c0778688bbc8a9b3e84c7a01196a64d205b0e0f1253d0d15036587590852524e"
+    },
+    "exact_source_patch": "/tmp/hybrid-7-4/7.4.patch",
+    "patch_relative_to": "saved pre-7.4 working tree, NOT Git HEAD"
+  },
+  "tests": {
+    "/tmp/hybrid-7-4-baseline.log": {
+      "sha256": "aa084ea4af26fac7409ee5d6361d35bc6450efe6fb83aa29fd804d74d46b61c5",
+      "test_counts": [
+        17,
+        25
+      ],
+      "summaries": [
+        "2/2 test files passed in 49.3s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_student_portal.py test_staging_dispatch.py"
+    },
+    "/tmp/hybrid-7-4-confirmed-portal.log": {
+      "sha256": "cf75b440da378fde2c83ee556a7502f9c772b7c2142942082d9e1edfa72d90b5",
+      "test_counts": [
+        17
+      ],
+      "summaries": [
+        "1/1 test files passed in 33.5s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py"
+    },
+    "/tmp/hybrid-7-4-final-attempts.log": {
+      "sha256": "f1608ebda56317bbedf69fea23ddaad5746c4541b163414ab0edd9ec4acb368d",
+      "test_counts": [
+        15,
+        25,
+        33
+      ],
+      "summaries": [
+        "3/3 test files passed in 105.2s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py test_staging_dispatch.py test_worker_cache.py"
+    },
+    "/tmp/hybrid-7-4-final-portal.log": {
+      "sha256": "29e367b130cff72989c8cfa0d32900d8f398836374d2224b88057a308978adde",
+      "test_counts": [
+        17
+      ],
+      "summaries": [
+        "1/1 test files passed in 33.8s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py"
+    },
+    "/tmp/hybrid-7-4-final-ui-cache.log": {
+      "sha256": "e2417a08d1e779b7a7aa2e2a164c658a2fc0bd6a4e4e11a3409cf4d54a90274c",
+      "test_counts": [
+        13,
+        17,
+        33,
+        39
+      ],
+      "summaries": [
+        "4/4 test files passed in 61.7s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py test_student_portal.py test_cache_fetch.py test_private_workspaces.py"
+    },
+    "/tmp/hybrid-7-4-focused-fixed.log": {
+      "sha256": "fe52c0a8c15dfb8fbc5ea96cfaeac90d64a352d13615f248b24a28fd9a850b09",
+      "test_counts": [
+        12,
+        17
+      ],
+      "summaries": [
+        "2/2 test files passed in 35.6s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py test_student_portal.py"
+    },
+    "/tmp/hybrid-7-4-focused.log": {
+      "sha256": "c6c619b1b65a73b29313ffe1a818db29fb5eeede1fb70856c14c984f7ff425f0",
+      "test_counts": [
+        12
+      ],
+      "summaries": [
+        "0/2 test files passed in 21.0s."
+      ],
+      "failed": [
+        "FAILED (failures=1, errors=8)",
+        "FAIL test_staging_portal.py",
+        "FAIL test_student_portal.py"
+      ],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py test_student_portal.py"
+    },
+    "/tmp/hybrid-7-4-regression.log": {
+      "sha256": "dbf7103bbeb0fa8d0c1415442787f4c9d47f662c42b248b556c309042e7b724f",
+      "test_counts": [
+        25,
+        34,
+        20,
+        17,
+        21,
+        10,
+        12,
+        6
+      ],
+      "summaries": [
+        "8/8 test files passed in 154.6s."
+      ],
+      "failed": [],
+      "js_pass": false,
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_staging_recovery.py test_staging_lifecycle.py test_storage_config.py test_storage_selection.py test_queue_controls.py test_execution_ownership.py test_job_environments.py"
+    },
+    "/tmp/hybrid-7-4-ui.log": {
+      "sha256": "59523e6e3f77f03a566ff50c333574e0ad27accf8129254c545521a54fb22026",
+      "test_counts": [],
+      "summaries": [],
+      "failed": [],
+      "js_pass": true
+    }
+  },
+  "javascript": {
+    "file": "tests/test_staging_portal_ui.cjs",
+    "tool": "mcp__node_repl__js",
+    "command": "var moduleAPI = await import('node:module'); var localRequire = moduleAPI.createRequire(appRoot+'/tests/test_staging_portal_ui.cjs'); var uiTest = localRequire(appRoot+'/tests/test_staging_portal_ui.cjs'); nodeRepl.write(await uiTest.run());",
+    "appRoot": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "result": "PASS",
+    "shell_node_available": false,
+    "browser_layout_tested": false
+  },
+  "initial_failures_fixed": [
+    "Pinned backend is in actual job_storage_bindings, not a jobs.storage_backend column",
+    "Load staging_view after project import path setup for legacy portal entry point",
+    "Mock actual distributed_dispatch.select_group and its list return"
+  ],
+  "api": {
+    "worker": "optional metrics in existing signed /jobs/stage reply, receipt format unchanged",
+    "portal": "NFS-only staging in existing overview/detail; logs?view=staging, owner-gated",
+    "db": "existing recovery_events INPUTS_STAGED insert atomic with first READY; no schema migration",
+    "flags": "unchanged legacy,false,false,resource; normal runtime activation still gated"
+  },
+  "not_run": [
+    "live DB/migrations or services",
+    "SSH/NFS/Pi operations",
+    "physical all-three-Pi validation",
+    "production OS/network containment",
+    "live browser layout/accessibility",
+    "benchmarks",
+    "previously sandbox-socket-EPERM real DDP suites"
+  ],
+  "manual_and_rollback": "docs/storage/29-staging-visibility.md",
+  "final_checks": {
+    "python_syntax": "PASS ast.parse changed/new Python",
+    "whitespace": "PASS git diff --check",
+    "rollback_check": "PASS git apply --reverse --check /tmp/hybrid-7-4/7.4.patch; NOT applied",
+    "missing_starting_files": 0,
+    "latest_new_suite": "17 tests PASS, zero failures/skips; /tmp/hybrid-7-4-confirmed-portal.log"
+  }
+}

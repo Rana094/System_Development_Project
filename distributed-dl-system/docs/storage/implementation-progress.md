@@ -1486,3 +1486,140 @@ config/credential/service/NFS/Pi/SSH or /etc action. Flags remain legacy/OFF/
 resource. Trainer isolation, authenticated workspace verification, all-three-Pi
 validation, dedicated 5.4 acceptance and controller SPOF remain explicit. No
 overall Phase 7 cold/warm/cancel end-to-end acceptance is claimed.
+
+## Phase 7.2 — explicit authenticated staging/dispatch (8–9 November 2026)
+
+Started from clean `main`, commit `68f59e9e72d8ecb2e1b5a98400be2e22051eafc4`;
+7.1 was the last delivered subphase in repository evidence. Implemented this
+subphase only. No stash/reset/commit or live DB/config/service/Pi/NFS action.
+
+Added bounded, domain-separated request/reply HMAC staging metadata using the
+existing per-worker Credential type and HTTP channel. Explicit trusted controller
+runtime connects current immutable job/ACL checks, the existing fair queue,
+resource selection, quotas, exclusive reservations and leases to actual worker
+CacheFetcher/WorkspaceManager operations. Stage every actual rank's whole-file
+inputs before any launch; recheck all ranks' fences before each signed start.
+Reverify workspace bytes/pins at launch, then use the existing custom runner and
+guardian with LOCAL source/data paths. Keep existing interpreter/resource/output/
+checkpoint interfaces. Require authenticated ACKs before atomic RUNNING/history
+and side STARTED. The signed start also binds the immutable execution-spec digest;
+worker metadata drift is rejected. No schema migration or job-state enum change.
+
+Defaults remain legacy/OFF/resource; normal startup does not install/inject the
+runtime. A reviewed OS/network isolation adapter is mandatory and has no unsafe
+default. Tests mock that adapter and process launch, rather than claiming tenant
+isolation. NFS execution is restart-mode only; new NFS checkpoint jobs remain
+held pending trusted publisher integration. Existing legacy checkpoint formats/
+APIs remain. No direct-NFS training fallback or Internet runtime transfer added.
+Long staging is bounded by leases; uncertain dispatch retains reservations and
+blocks renewal. Authenticated stop/periodic renewal, terminal pin cleanup and
+restart reconciliation remain 7.3; UI remains 7.4. Warm second-job tests explicitly
+finish/reset only disposable test ownership, not production terminal handling.
+
+Successful baseline: 64 pass, four files. New final suite: **25 pass, zero
+failures/skips**. Final queue/default/barrier selection: **96 pass, six files**
+(22 new-suite methods at that snapshot; the final suite adds stale queue and
+prepared execution-spec drift and atomic late-bootstrap refusal cases). Broader selection: **372 pass / 14 errors / zero skips, 386
+methods, 17/19 files**. All 14 errors occur at sandbox-denied `socket.socket()`
+in existing group-checkpoint/recovery tests before training. Reproduced the same
+14 errors against pre-change runtime sources restored into a temporary copy;
+the other method passes. No test masking, network escalation or hardware success
+claim. Real single-worker checkpoint and offline dependency/launcher cases pass. Final
+execution-boundary verification after the last runtime change: **36 pass, 3/3
+files**, including 24 new cases, offline environment and legacy agent cases;
+then 25/25 new cases passed after the final atomic-bootstrap guard.
+
+See [7.2 report](27-staging-dispatch.md) and
+[evidence](27-staging-dispatch-evidence.json) for exact files, commands, raw result
+references, API/security limits, source preservation and scoped rollback patch.
+**7.2 local restart-mode integration PASS; production enablement/unrestricted NFS
+checkpoint support NOT PASSED. Phase 7 acceptance remains pending. STOP before
+7.3.** All-three-Pi deployment validation, trainer/service isolation, dedicated
+5.4 acceptance and central-controller SPOF remain explicit boundaries.
+
+## Phase 7.3 — durable staging cancellation/expiry/recovery (9 November 2026)
+
+Preserved the starting uncommitted/untracked 7.2 work on `main` at `68f59e9`;
+saved all 260 inventoried files before edits. Implemented only 7.3. No stash,
+reset, commit, live DB/config/credential/service/SSH/NFS/Pi or `/etc` action.
+
+Protected worker intents persist before fetch and possible launch; one journal
+owner, durable terminal tombstones, restart aborts and a watchdog prevent forgotten
+READY work from starting. Signed control reuses per-worker HMAC credentials for
+status/cancel/renew. Copy releases the agent slot lock, so cancellation persists
+while a producer is busy. Interrupt helpers and retain pins until materializer,
+cache-wide inherited fetch lock and exact training containment are quiescent.
+Remove only protected orphan parts and the recorded unpublished building tree;
+keep complete objects, published inputs, results/checkpoints and unknown files.
+Launch now requires reviewed termination and quiescence callbacks as well as
+isolation. Missing proof, live processes, corruption and disk errors fail closed.
+
+Explicit additive LOCAL FULL/FK cleanup migration: two tables, one index, four
+triggers; old schemas/checksums, user_version, states and checkpoints unchanged.
+Controller restart/outage/cancel reconciliation preserves whole-group reservations
+until exact quiescent proofs or existing conservative lease fencing. LEASE_FENCED
+does not claim remote unpin; keep tracking/retry old cleanup after reconnection.
+Atomically close exact history/current retry, revoke leases and release slots;
+preserve prior attempt history in the pre-begin gap. Signed running renewal never
+revives expired ownership. NFS result publication serializes with cancellation
+under SQLite's write lock and rechecks all-rank live fences/ACLs. Late success,
+wrong attempt/worker and unsigned fallback are refused. Default reconciliation
+with no runtime blocks hybrid renewal instead of using legacy control endpoints.
+
+Baseline **67 pass, four files**. Broad current-selection snapshot **240 pass,
+13/13 files**, zero failures/skips. Later fencing **89 pass, six files**; boundary
+**64 pass, three files**; final expanded new suite **34 pass**, zero failures/skips.
+Counts across reruns are not added. Fixtures use real local journals/SQLite/hash/
+copy helpers and signed Flask clients, plus a real watchdog, concurrent SQLite
+writers and one disposable guardian/child/grandchild shutdown test. Other trainers
+and containment providers are mocks; no production isolation or hardware claim.
+Initial harness timing/assertion issues and an interrupted mocked-thread test are
+documented, fixed and not masked. Previously documented real-DDP socket EPERM
+suites were not rerun or claimed passing here.
+
+See [7.3 report](28-staging-recovery.md) and
+[evidence](28-staging-recovery-evidence.json) for exact files/APIs/migration,
+commands/results, preserved sources, risks and rollback scoped against 7.2.
+**7.3 local lifecycle acceptance PASS. STOP before 7.4.** Defaults remain
+legacy/OFF/resource; production bootstrap/isolation/containment proof, NFS
+checkpoint publisher support, all-three-Pi validation and Phase 7 UI/acceptance
+remain pending. Long staging stays lease bounded; controller/NFS remains a SPOF.
+
+## Phase 7.4 — owner-safe staging UI/logs delivered locally
+
+9 November 2026. Preserved the starting 7.2/7.3 working tree on `main` at
+`68f59e9`, with 266 inventoried files saved before edits. Implemented only 7.4;
+no stash/reset/commit, live DB/schema/config/service, SSH, NFS or Pi changes.
+
+Existing portal detail/overview gain owner-scoped current-attempt staging state
+for pinned NFS jobs. Input preparation shows acknowledged ready ranks, cache
+reuse/staged bytes and verification/copy durations; Input staging is selectable
+in the existing log control. Numeric measurements are validated after signed
+receipt verification, matched to unique required digest bytes and recorded once
+with first READY in the existing event transaction. Concurrent inventory work is
+excluded from request timing. No schema, scheduler state, transport or checkpoint
+format change. Missing measurements stay null; retries do not inherit old totals.
+DDP totals represent actual rank copies, not unique cluster-wide content.
+
+Hybrid service messages omit input paths, raw errors and internal lease IDs;
+owner checks precede staging reads, and other users' history is not joined.
+Legacy responses/defaults remain unchanged. No metrics can grant execution.
+
+Pre-edit baseline: **42 pass**. Eight-file regression: **145 pass**. Subsequent
+portal/cache/workspace selection: **102 pass**; portal/dispatch/worker-cache:
+**73 pass**; final expanded new suite: **17 pass**. Counts across overlapping
+runs are not added; zero final failures/skips. Actual portal JavaScript passes
+a dependency-free mocked DOM/API harness. Multipart upload through held receipt,
+explicit trusted staging, mocked launcher/completion and owner UI is covered;
+warm/cancel/three-rank partial readiness, ownership, escaping, malformed telemetry,
+lost acknowledgements, deduplication and retry isolation are covered. Initial
+implementation/test integration failures were corrected and documented.
+
+See [7.4 report](29-staging-visibility.md) and
+[evidence](29-staging-visibility-evidence.json) for exact files/commands/results,
+security/compatibility limits, manual checks and source rollback scoped against
+the preserved 7.3 tree. **7.4 local acceptance PASS; STOP.** Phase 7 local mock
+lifecycle/UI acceptance is covered. Production startup remains gated and flags
+stay legacy/OFF/resource. Reviewed production isolation/containment, NFS checkpoint
+publisher, dedicated historical 5.4 acceptance and validation on pi01/pi02/pi03
+remain pending. No browser layout, live hardware or benchmark claim.

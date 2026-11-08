@@ -620,9 +620,11 @@ def build_start_payload(job):
 
 
 # Dispatch
-def dispatch_one_job(job):
+def dispatch_one_job(job, *, storage_runtime=None):
     """Select a worker, prepare recovery data, and persist the outcome of the start request."""
-    from job_store import require_storage_execution
+    from job_store import require_storage_execution, get_storage_binding
+    if storage_runtime is not None and get_storage_binding(job['job_id'])['backend'] == 'nfs':
+        return storage_runtime.dispatch(job, get_excluded_nodes())
     try:
         require_storage_execution(job['job_id'])
     except ValueError:
@@ -812,13 +814,14 @@ def dispatch_one_job(job):
 
 
 # Monitor running jobs
-def monitor_running_jobs():
+def monitor_running_jobs(*, storage_runtime=None):
     """Poll worker attempts, collect progress and finalize or retry jobs according to observed state."""
     running_jobs = get_jobs_by_status("RUNNING")
 
     active_job_ids = set()
 
     for job in running_jobs:
+        if reconcile_hybrid(job,storage_runtime):continue
 
         job_id = job["job_id"]
 
@@ -1036,24 +1039,43 @@ def handle_running_job_failure(job, error):
     print(f"{job_id} -> " f"{new_state}")
 
 
+def reconcile_hybrid(job,storage_runtime):
+    from job_store import get_storage_binding
+    if get_storage_binding(job['job_id'])['backend']!='nfs':return False
+    try:
+        if storage_runtime is not None:storage_runtime.reconcile(job)
+        else:ownership.block(job)
+    except (OSError,ValueError,sqlite3.Error,requests.RequestException):
+        print(f"[STAGING_RECONCILE_PENDING] {job['job_id']}: retained until reconciliation succeeds")
+    return True
+
+
 # Queue processing
-def dispatch_queued_jobs():
+def dispatch_queued_jobs(*, storage_runtime=None):
     """Recompute fair turns after each placement as active counts and last-service change."""
     attempted = set()
     while True:
-        queued = [job for job in fair_queue() if job['job_id'] not in attempted]
+        queue = fair_queue() if storage_runtime is None else fair_queue(storage_runtime=storage_runtime)
+        queued = [job for job in queue if job['job_id'] not in attempted]
         if not queued:
             return
         job = queued[0]
         attempted.add(job['job_id'])
-        dispatch_one_job(job)
+        if storage_runtime is None:
+            dispatch_one_job(job)
+        else:
+            try:
+                dispatch_one_job(job,storage_runtime=storage_runtime)
+            except (OSError,ValueError,sqlite3.Error,requests.RequestException):
+                print(f"[STAGING_PENDING] {job['job_id']}: launch withheld; reconcile reserved attempt")
 
 
-def reconcile_cancellations():
+def reconcile_cancellations(*, storage_runtime=None):
     """Persist cancellation through controller/network failures until the worker stops."""
     from scheduler import load_nodes
     ports = {node['id']:node['port'] for node in load_nodes()}
     for job in get_jobs_by_status('CANCELLING'):
+        if reconcile_hybrid(job,storage_runtime):continue
         if is_distributed(job):
             progress_distributed(job)
             continue
@@ -1151,9 +1173,10 @@ def record_confirmed_resume(job, worker_job):
     )
 
 
-def reconcile_scheduled_jobs():
+def reconcile_scheduled_jobs(*, storage_runtime=None):
     """Resolve uncertain starts with the original worker before risking a duplicate launch."""
     for job in get_jobs_by_status("SCHEDULED"):
+        if reconcile_hybrid(job,storage_runtime):continue
         if is_distributed(job):
             progress_distributed(job)
             continue

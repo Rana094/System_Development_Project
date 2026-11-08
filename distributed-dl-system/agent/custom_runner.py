@@ -2,12 +2,13 @@
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import ipaddress
 import socket
 
-from environment_worker import clean_environment, read_request, verify
+from environment_worker import clean_environment, read_request, verify, verify_environment
 
 
 def validate_execution(spec, ddp):
@@ -47,11 +48,29 @@ def gloo_interface(address, port):
     raise ValueError('Cannot find the network interface for DDP rendezvous')
 
 
-def run(root, job_id, attempt_token, resume_sha256=None, ddp=None):
+def run(root, job_id, attempt_token, resume_sha256=None, ddp=None, staged_inputs=None):
     # Verification runs inside the tracked process, so a slow package check cannot
     # make the HTTP launch request ambiguous or leave an untracked training process.
-    record = verify(root, job_id, [])['record']
     request = read_request(root / 'jobs' / job_id / 'request.json')
+    if staged_inputs is None:
+        record = verify(root, job_id, [])['record']
+    else:
+        # Trusted service CLI only, inside an operator-supplied OS/network
+        # boundary. Do not re-fetch or require old mutable source/data snapshots.
+        if type(staged_inputs) is not dict or set(staged_inputs) != {'source','data'}:
+            raise ValueError('Exact staged local inputs required')
+        record = json.loads((root/'jobs'/job_id/'prepared.json').read_text())
+        if record['job_id'] != job_id or record['manifest_sha256'] != request['manifest_sha256']:
+            raise ValueError('Prepared environment differs from immutable launch')
+        if (not re.fullmatch('[0-9a-f]{64}',record['environment_key'])
+                or record['python_path'] != str(root/'environments'/record['environment_key']/'bin/python')
+                or record['workspace_path'] != str(root/'jobs'/job_id)):
+            raise ValueError('Prepared interpreter/workspace paths are not controlled job paths')
+        verify_environment(root,request,record)
+        record['source_path'] = staged_inputs['source']
+        record['dataset_path'] = staged_inputs['data']
+        if staged_inputs['data'] is not None and request['manifest']['data']['kind'] == 'file':
+            record['dataset_path'] = str(Path(staged_inputs['data'])/Path(request['manifest']['execution_spec']['dataset']).name)
     spec = request['manifest']['execution_spec']
     validate_execution(spec,ddp)
     if spec['recovery']['mode'] not in ('restart','checkpoint'):
@@ -122,6 +141,8 @@ if __name__ == '__main__':
     parser.add_argument('--attempt-token',default=None)
     parser.add_argument('--resume-sha256')
     parser.add_argument('--ddp-json')
+    parser.add_argument('--staged-inputs-json')
     args = parser.parse_args()
     raise SystemExit(run(args.root.resolve(),args.job_id,args.attempt_token or args.job_id+':0',
-                        args.resume_sha256,json.loads(args.ddp_json) if args.ddp_json else None))
+                        args.resume_sha256,json.loads(args.ddp_json) if args.ddp_json else None,
+                        json.loads(args.staged_inputs_json) if args.staged_inputs_json else None))

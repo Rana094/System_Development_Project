@@ -39,7 +39,7 @@ def _current(db, job_id):
     return job
 
 
-def _placements(db, job, world_size):
+def _placements(db, job, world_size, *, running=False):
     ranks=db.execute('SELECT rank,node_id FROM job_ranks WHERE job_id=? AND retry_count=? ORDER BY rank',
                      (job['job_id'],job['retry_count'])).fetchall()
     if world_size==1 and not ranks:return [(0,job['node_id'])]
@@ -47,7 +47,7 @@ def _placements(db, job, world_size):
         raise base.RegistryError('Exact reserved rank group missing')
     group=db.execute('SELECT phase FROM distributed_attempts WHERE job_id=? AND retry_count=?',
                      (job['job_id'],job['retry_count'])).fetchone()
-    if group is None or group[0]!='STARTING':raise base.RegistryError('DDP group no longer starting')
+    if group is None or group[0]!=('RUNNING' if running else 'STARTING'):raise base.RegistryError('DDP group no longer starting')
     return [tuple(row) for row in ranks]
 
 
@@ -76,7 +76,7 @@ class StagingAttempt:
     input_binding_sha256: str
 
 
-def require_ready(db, job_id, *, wall=None, boot=None, clock=None):
+def require_ready(db, job_id, *, wall=None, boot=None, clock=None, _running=False):
     """Read barrier inside the caller's existing transaction, before RUNNING.
 
     Does not lift the separate NFS execution gate. No connection/migration and no
@@ -84,10 +84,16 @@ def require_ready(db, job_id, *, wall=None, boot=None, clock=None):
     """
     schema.require_local_read(db)
     if not schema._installed(db):raise base.RegistryError('Explicit staging migration/attempt required')
-    job=_current(db,job_id)
+    if _running:
+        row=db.execute('SELECT * FROM jobs WHERE job_id=?',(job_id,)).fetchone()
+        if row is None:raise base.RegistryError('Unknown running attempt')
+        job=dict(zip((c[1] for c in db.execute('PRAGMA table_info(jobs)')),row))
+        if job['status']!='RUNNING' or job['cancel_requested_at'] is not None:
+            raise base.RegistryError('Running attempt no longer owns publication')
+    else:job=_current(db,job_id)
     row=db.execute('''SELECT stage_id,attempt_id,input_binding_sha256,world_size,owner,phase
         FROM hybrid_staging_attempts WHERE job_id=? AND retry_count=?''',(job_id,job['retry_count'])).fetchone()
-    if row is None or row[5]!='READY' or row[4]!=job['owner']:
+    if row is None or row[5]!=('STARTED' if _running else 'READY') or row[4]!=job['owner']:
         raise base.RegistryError('All inputs/ranks must complete trusted staging before RUNNING')
     binding=db.execute('''SELECT binding_sha256,owner,legacy_manifest_sha256,execution_spec_sha256,
         source_sha256,dataset_id FROM storage_job_inputs WHERE job_id=?''',(job_id,)).fetchone()
@@ -100,9 +106,9 @@ def require_ready(db, job_id, *, wall=None, boot=None, clock=None):
         AND (owner=? OR EXISTS(SELECT 1 FROM storage_dataset_readers r WHERE r.dataset_id=d.dataset_id AND r.reader=?))''',
         (binding[5],job['owner'],job['owner'])).fetchone():raise PermissionError('Dataset access revoked')
     history=db.execute('SELECT job_id,attempt_number,status FROM job_attempts WHERE attempt_id=?',(row[1],)).fetchone()
-    if history is None or tuple(history)!=(job_id,job['retry_count']+1,'SCHEDULED'):
+    if history is None or tuple(history)!=(job_id,job['retry_count']+1,'RUNNING' if _running else 'SCHEDULED'):
         raise base.RegistryError('Staging history attempt changed')
-    placements=_placements(db,job,row[3])
+    placements=_placements(db,job,row[3],running=_running)
     stages=db.execute('''SELECT rank,worker_id,reservation_sha256,lease_id,generation,phase,receipt_sha256
         FROM hybrid_staging_ranks WHERE stage_id=? ORDER BY rank''',(row[0],)).fetchall()
     if [(r[0],r[1]) for r in stages]!=placements or any(r[5]!='READY' or r[6] is None for r in stages):
@@ -113,6 +119,11 @@ def require_ready(db, job_id, *, wall=None, boot=None, clock=None):
         if (reservation,lease['lease_id'],lease['generation'])!=tuple(stage[2:5]):
             raise base.RegistryError('Staging reservation/lease identity changed')
     return StagingAttempt(row[0],job_id,job['retry_count'],row[1],row[2])
+
+
+def require_running(db,job_id):
+    """Publication barrier: current all-rank lease/reservation, ACL and RUNNING."""
+    return require_ready(db,job_id,_running=True)
 
 
 class StagingLifecycle:
@@ -175,7 +186,7 @@ class StagingLifecycle:
                 [(stage,*row,now) for row in expected])
             return StagingAttempt(stage,job_id,job['retry_count'],history[0][0],binding.sha256)
 
-    def record_ready(self, actor, attempt, rank, *, plan_sha256, receipt_sha256):
+    def record_ready(self, actor, attempt, rank, *, plan_sha256, receipt_sha256, metrics=None):
         """Trusted coordinator ONLY, after workspace/auth verification in 7.2.
 
         Does not authenticate a student-provided hash or inspect a remote path.
@@ -205,6 +216,15 @@ class StagingLifecycle:
                 now=time.time_ns()
                 db.execute("UPDATE hybrid_staging_ranks SET phase='READY',receipt_sha256=?,updated_at_ns=? WHERE stage_id=? AND rank=?",
                            (receipt_sha256,now,attempt.stage_id,rank))
+                from .staging_metrics import validated
+                metrics=validated(metrics)
+                # Reuse the existing controller event log, in the SAME commit as
+                # first READY. No schema mutation, repeated READY event or remote text.
+                if metrics is not None and db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='recovery_events'").fetchone():
+                    db.execute('''INSERT INTO recovery_events(job_id,event_type,node_id,event_time,details_json)
+                        VALUES (?,?,?,?,?)''',(attempt.job_id,'INPUTS_STAGED',stage[0],now/1e9,
+                        json.dumps(dict(schema_version=1,stage_id=attempt.stage_id,
+                                        attempt=attempt.retry_count+1,rank=rank,metrics=metrics))))
                 if db.execute("SELECT COUNT(*) FROM hybrid_staging_ranks WHERE stage_id=? AND phase='READY'",(attempt.stage_id,)).fetchone()[0]==row[6]:
                     for saved in db.execute('''SELECT worker_id,reservation_sha256,lease_id,generation
                         FROM hybrid_staging_ranks WHERE stage_id=?''',(attempt.stage_id,)).fetchall():

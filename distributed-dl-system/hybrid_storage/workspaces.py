@@ -516,6 +516,52 @@ class WorkspaceManager:
         with self._locked(plan) as (_, state, __):
             return self._read(state, plan)
 
+    def cleanup_temporary(self,plan,*,quiescent):
+        """Remove only this terminal materializer's unpublished .building tree.
+
+        Preflight the whole tree before unlinking anything. Keep every published
+        workspace, output/checkpoint, unknown entry, symlink and linked inode.
+        """
+        with self._locked(plan) as (_,state,attempts):
+            record=self._read(state,plan)
+            if (record is None or record['phase']!='TERMINAL' or not record['pins_released']
+                    or not record['work_name'] or not record['work_name'].startswith('.building-')):return 0
+            if quiescent(plan.identity) is not True:raise WorkspaceBusy('Temporary producer not proven stopped')
+            directories={'inputs','inputs/source','inputs/data','outputs','checkpoints'}
+            files=set()
+            for name,entries,_ in self._trees(plan):
+                for entry in entries:
+                    path='inputs/'+name+'/'+entry.path
+                    (directories if entry.type=='directory' else files).add(path)
+            found=[]
+            def inspect(parent,prefix=''):
+                for name in os.listdir(parent):
+                    path=prefix+name
+                    if len(found)>2*MAX_ENTRIES+32:raise WorkspaceError('Unexpected scratch size')
+                    info=os.stat(name,dir_fd=parent,follow_symlinks=False)
+                    if stat.S_ISDIR(info.st_mode) and path in directories:
+                        with _child(parent,name) as child:inspect(child,path+'/')
+                    elif (stat.S_ISREG(info.st_mode) and (path in files or
+                          (prefix.rstrip('/') in directories and prefix.startswith('inputs/')
+                           and re.fullmatch(r'\.input-[0-9a-f]{32}\.part',name)))):
+                        fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=parent)
+                        try:_protected(fd,directory=False)
+                        finally:os.close(fd)
+                    else:raise WorkspaceError('Unknown scratch contents retained')
+                    found.append((path,stat.S_ISDIR(info.st_mode),info.st_dev,info.st_ino))
+            try:
+                with _child(attempts,record['work_name']) as work:
+                    inspect(work)
+                    for path,directory,dev,ino in found:
+                        parts=path.split('/')
+                        with self._relative(work,parts[:-1]) as parent:
+                            info=os.stat(parts[-1],dir_fd=parent,follow_symlinks=False)
+                            if (info.st_dev,info.st_ino)!=(dev,ino):raise WorkspaceError('Scratch changed')
+                            (os.rmdir if directory else os.unlink)(parts[-1],dir_fd=parent)
+                os.rmdir(record['work_name'],dir_fd=attempts);os.fsync(attempts)
+                return len(found)+1
+            except FileNotFoundError:return 0  # Idempotent after complete removal.
+
     @contextmanager
     def attempt(self, plan, *, authorize: Callable, quiescent: Callable):
         """Managed lifecycle for a future trusted launcher using existing leases.

@@ -369,3 +369,62 @@ job-store NFS RUNNING transition checks readiness and retains the separate
 execution gate, so no hybrid job starts in this subphase. Default legacy paths
 and website/API states remain unchanged. No automatic migration, RPC or cleanup.
 See [7.1 APIs, 20 new tests and rollback](../docs/storage/26-staging-lifecycle.md).
+
+## Phase 7.2 explicit authenticated dispatch/staging integration
+
+`controller/staging_dispatch.py` connects existing resource selection, exclusive
+reservations and leases to `agent/staging.py` on the existing HTTP channel.
+`hybrid_storage/staging_protocol.py` authenticates bounded metadata with the
+existing per-worker credential type and a separate HMAC domain. Artifact bytes
+still come only from the read-only NFS backend. Private inputs are reverified at
+launch and passed to the existing `custom_runner.py` as local paths.
+
+This is explicitly injected integration, exercised with disposable databases,
+fake NFS identity and mocked isolation/process launch. Normal controller/agent
+bootstrap remains legacy. Flags alone cannot enable it. A reviewed OS/network
+isolation launcher is mandatory; no same-UID fallback is supplied. New NFS
+checkpoint jobs remain held pending trusted publisher integration; legacy
+checkpoint APIs/formats remain unchanged. Stage duration is bounded by leases.
+Terminal pin release, restart reconciliation, authenticated stop/renewal and
+production activation remain gated on subsequent lifecycle work. See the
+[7.2 report](../docs/storage/27-staging-dispatch.md) for exact scope and evidence.
+
+## Phase 7.3 durable cancellation, expiry and recovery
+
+`staging_journal.py` records worker copy/launch intent and terminal tombstones on
+protected LOCAL disk. Signed `/jobs/staging-control` messages cancel, query or
+renew the exact stage/plan/lease. A watchdog fences expired attempts. Restarted
+workers never restore launch permission from a READY record. `CacheFetcher` can
+interrupt producers and reconcile only owned scratch parts after proving the
+cache-wide fetch lock is free. Private workspace pins release only after exact
+producer/containment quiescence; published inputs/outputs/checkpoints are retained.
+
+`cleanup_schema.py` provides a separate explicit LOCAL FULL/FK migration for
+controller acknowledgments. `controller/staging_recovery.py` preserves complete
+group reservations until quiescent acknowledgments or conservative lease fencing,
+then closes the exact attempt atomically. Lease-fenced offline cleanup remains
+tracked for reconciliation when a worker returns. Result collection and completion
+recheck current attempt, all-rank leases/reservations and authorization; final
+publication serializes with cancellation. Legacy flows remain the default.
+
+Hybrid launch additionally requires reviewed termination and quiescence callbacks;
+there is no PID-gone or missing-callback shortcut. Normal startup/config remain
+gated; no live migration, credentials or deployment occurs. See the
+[7.3 report](../docs/storage/28-staging-recovery.md) for safe local commands,
+evidence, limits and rollback. UI work remains 7.4.
+
+### Phase 7.4 student visibility (local acceptance)
+
+The existing portal now projects owner/current-attempt staging side state and
+numeric measurements into Input preparation and the Input staging log. Strict
+`staging_metrics.py` validation excludes worker paths/text/credentials. The trusted
+coordinator records one event with first READY in existing local SQLite;
+`metrics.py` request observations exclude concurrent inventory work. Legacy
+representations/defaults stay unchanged, and measurements never grant launch
+authority. Missing data remains unavailable; DDP totals sum per-rank file copies,
+not unique cluster-wide bytes or wire throughput.
+
+See [7.4 report](../docs/storage/29-staging-visibility.md) and adjacent evidence for
+files, APIs, safe local commands, results, manual verification and scoped rollback.
+Explicit production bootstrap, isolation/containment and trusted NFS checkpoint
+publication remain gated; no live deployment or all-three-Pi acceptance is claimed.

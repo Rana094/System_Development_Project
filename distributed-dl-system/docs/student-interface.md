@@ -302,6 +302,8 @@ listed in section 11.
 | Student limits | Maximum active and pending submissions for that account |
 | Submit training | Choose an example or upload custom code and data |
 | Job detail | Job ID, execution mode, attempt number, central checkpoint and controls |
+| Input preparation (opt-in jobs) | Ready worker inputs, bytes reused from cache, bytes staged and measured verification/copy times |
+| Input staging log (opt-in jobs) | Controller-recorded staging acknowledgements for this attempt; available before training output |
 | Training logs | Preparation output, live training output or collected attempt logs |
 | Training rank | Choose a DDP rank's live log; for saved logs choose the corresponding file under Log source |
 | Attempts & workers | Failed, retried and successful executions of the same job |
@@ -314,6 +316,21 @@ listed in section 11.
 The page refreshes about every three seconds; fast transitions can occur between
 refreshes. The central checkpoint can lag the log because it must be transferred
 and validated before publication.
+
+For an explicitly enabled hybrid job, **STAGING** is a display label while the
+stored scheduler state remains SCHEDULED. Input preparation shows acknowledged
+private workspaces by rank. Missing measurements say “Not recorded”; totals cover
+only measured ranks. Cache/staged bytes count unique file content per rank, so
+distributed ranks can each stage the same data. Copy time includes verification
+and filesystem waits; verification and copy durations overlap. These are file
+sizes and durations, not network throughput or training progress. Choose **Input
+staging** in Log source for the controller's numeric summary. Retries use their
+own measurements. Training logs remain separate and contain student program output.
+
+This display does not enable hybrid execution. The shipped configuration remains
+legacy/OFF/resource, and normal startup still requires the documented reviewed
+bootstrap and isolation work before hybrid jobs can run. See
+[the 7.4 local acceptance report](storage/29-staging-visibility.md).
 
 ### States and actions
 

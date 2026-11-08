@@ -580,6 +580,17 @@ def mark_running(job_id, started_at=None):
         connection.rollback()
         connection.close()
         return
+    try:
+        if storage_selection.binding(connection, job_id)['backend'] == 'nfs':
+            from input_storage import require_staged_attempt
+            require_staged_attempt(connection, job_id)
+            # 7.1 records the barrier but deliberately cannot activate the 7.2
+            # dispatch/stage/launch protocol by calling mark_running directly.
+            storage_selection.require_execution(connection, job_id)
+    except BaseException:
+        connection.rollback()
+        connection.close()
+        raise
     attempt_number = job['retry_count'] + 1
 
     cursor.execute(

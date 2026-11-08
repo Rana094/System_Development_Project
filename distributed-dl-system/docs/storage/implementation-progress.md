@@ -1286,3 +1286,203 @@ power loss, PyTorch/DDP or benchmark claim.
 isolation, authenticated grant/revision service and live-launch wiring remain
 gated. Detailed metrics, consolidated Phase 5 acceptance and all-three-Pi future
 validation remain pending; controller SPOF and prior pi01 deferral are explicit.
+
+## Phase 6.1 — explicit controller-local cache registry schema (8 November 2026)
+
+User moved to Phase 6 after requesting a commit message during 5.4. New user
+commit `89e2135` contains prior cache work and the metric edits; the checkout was
+clean at the 6.1 baseline. Last recorded acceptance remains 5.3: dedicated 5.4
+metric/fault acceptance was not completed, and Phase 5 is not silently marked
+complete. This turn implements only 6.1 and preserves that committed code.
+
+Added `cache_registry_schema.py`: explicit plan/apply/require migration after
+artifact registry v1, with six tables, seven indexes and twenty triggers. Reuse
+exact artifact SHA/size FKs; bind worker, cache ID/epoch, boot/controller/session
+identity, inventory sequence/body, verification observations, disk capacity and
+controller receipt/freshness/last-seen timestamps. Keep high-water/replay history;
+default disabled/UNENROLLED/UNVERIFIED. Guard epoch/identity/cursor rollback,
+stale-session reactivation and verified-byte mismatches; invalidate sessions on
+revocation/retirement without deleting observations. No auto-backfill/enrollment.
+
+Actual audit found operator SSH registration plus unauthenticated HTTP probes/
+resource/job polling; no authenticated runtime worker heartbeat path exists to
+reuse. Execution lease fencing is not worker authentication. No credentials,
+ingest endpoint or auth assertion was invented. 6.2 requires an authenticated
+channel bound to operator enrollment and current cache/worker sessions before
+accepting reports. Schema constraints alone do not implement protocol/security
+or live freshness eligibility.
+
+Migration requires an explicit dedicated controller-local FULL/FK connection,
+checks actual local FD identity, uses BEGIN IMMEDIATE and a separate checksum
+namespace, preserves user_version/all old rows and refuses unknown shapes.
+No live DB migration, startup hook, flag, existing schema/state/checkpoint,
+scheduler/resource/fairness rule, live service, `/etc`, mount or SSH/Pi change.
+
+Baseline **443 passed, zero failures/skips, 21/21 files**. Initial new suite 19
+passed; expanded 21 plus prior coverage passed 464. Final boot-ID hardening and
+its case yield **465 passed, zero failures/skips, 22/22 files**, including 22
+new copied-controller/local SQLite cases. No selected failure was observed.
+Tests include interrupted rollback, concurrent migrations, prior-row preservation,
+FK/index/schema guards and synthetic untrusted/authenticated metadata fixtures;
+they do not prove real authentication or runtime inventory updates.
+
+See [6.1 report](22-cache-registry-schema.md) and [evidence](22-cache-registry-schema-evidence.json)
+for exact files/API/DDL/checksum, raw commands/output, preserved hashes and scoped
+rollback. **6.1 schema/local acceptance PASS. STOP before 6.2.** 6.2–6.4 and the
+0/2/502 MB coverage fixture remain unimplemented. Actual config stays legacy/OFF/
+resource; controller SPOF, unfinished 5.4 acceptance and all-three-Pi future
+validation requirements (with prior pi01 deferral explicit) remain documented.
+
+## Phase 6.2 — authenticated inventory and reconciliation (8 November 2026)
+
+Preserved all eight uncommitted/untracked 6.1 files/edits from the starting
+checkout. Implemented only 6.2; dedicated 5.4 acceptance is still unfinished.
+
+Added bounded strict HMAC metadata protocol, protected local credential loader,
+explicit persistent worker cache ID/epoch reporter and explicit controller-local
+SQLite ingest owner. Actual operator `cluster_setup.register`, Flask agent and
+resource heartbeat now have opt-in tested integration seams. No authenticated
+runtime channel previously existed; only this metadata endpoint is authenticated,
+not legacy launch/resources/checkpoints. No new artifact transfer protocol.
+
+Require operator-issued unique per-worker keys/principals, exact controller
+challenge/nonce/session, monotonic cache epoch/cursor, immutable replay history,
+transactional FULL/CACHE_ADDED/CACHE_REMOVED and signed unchanged heartbeats.
+Duplicates extend no TTL; controller forces periodic full verification. Restart/
+reconnect requires a new full snapshot. Authentication/HTTP/verification failure
+invalidates live cache admission before attempting durable STALE persistence;
+read-only/full/unavailable DB cannot leave old observations eligible.
+
+Schema/checksum unchanged from 6.1; no live DB migration, key provisioning,
+config activation, job/checkpoint/lease/resource/fairness/reservation/concurrency
+change, service or remote action. Actual configuration stays legacy/OFF/resource.
+Same-UID training can steal service keys, so production activation remains gated
+on isolated service/trainer identities and reviewed deployment. Component settings
+in tests do not remove the portal/dispatcher execution gate.
+
+Selected baseline: 110 tests passed, 4/4 files. Initial 25-case new suite exposed
+one retry error (pending session unnecessarily replaced after a lost first
+response), fixed and retained in evidence. Expanded 32 passed. Final current
+source: **523 passed, zero failures/skips, 25/25 files**, including 38 new inventory
+cases. Real Flask local test client plus mocked transport; no hardware or real
+network listener claim. Existing execution-ownership/deployment regressions pass.
+
+See [6.2 report](23-authenticated-cache-inventory.md) and [evidence](23-authenticated-cache-inventory-evidence.json)
+for exact files/APIs, commands/raw results, preserved hashes and scoped rollback
+relative to saved 6.1 contents. **6.2 local component/integration acceptance PASS.
+STOP before 6.3.** Coverage/job/dataset/per-rank API and exact 0/2/502 MB fixture
+remain pending. All-three-Pi validation is still required for deployment; no new
+pi01 waiver or overall Phase 6 pass. Central controller remains a SPOF.
+
+## Phase 6.3 — authorized dataset/job/rank coverage (8 November 2026)
+
+Preserved earlier uncommitted/untracked 6.1/6.2 work. Added controller-side typed
+`CoverageAPI`, immutable result and exact-job-bound `RankRequirements`. Reuse
+existing owner/ACL/canonical manifest/version/job source/requirements checks in
+a single read snapshot. Deduplicate SHA-256 across paths/source/data/requirements;
+return exact integer required/verified/missing bytes, missing hashes, byte ratio,
+inventory age and diagnostic session/cursor. Inventory auth/freshness uses the
+exact live context/session on the same actual controller-local DB. Unknown/
+stale/offline/revoked/invalid inventory counts as all misses. Authority failures
+raise; unregistered legacy jobs keep their old fallback with no automatic moves
+or registration. No object I/O, row writes, schema/config/lease/scheduler changes.
+
+Default DDP coverage includes all source/data on every rank, matching current
+DistributedSampler trainers. A trusted explicit whole-file dataset set must match
+the immutable job binding/rank/world size; common source is always included.
+No fabricated sample-level caching, stage grant, rank launch or group reservation.
+
+Initial baseline: 123 pass, 4/4 files. Initial new 25 pass; expanded focused 154
+pass, 5/5 files, including 31 coverage cases. Final broader run: 561 tests, 560
+pass/one error/zero skips, 26/27 files. The original 26-file storage/auth/queue/
+lease/deployment selection has 554 passing tests. Added DDP file has six pass
+and one sandbox `socket.socket()` EPERM error before training launched. Repeated
+the unchanged file with saved pre-6.3 runtime sources in a disposable copy and
+reproduced the same error. No test or DDP code changed to mask it. No unrestricted
+DDP/hardware success claimed. Three-worker fixture checks exact 0/2/502 **bytes**
+using real local hashed objects; the requested MB fixture remains 6.4.
+
+See [6.3 report](24-cache-coverage.md) and [evidence](24-cache-coverage-evidence.json)
+for exact files/API/commands/results, preservation and scoped rollback against
+starting contents. **6.3 local coverage API acceptance PASS; broader regression
+has the documented pre-existing sandbox limitation. STOP before 6.4.** Config
+stays legacy/OFF/resource. No live DB migration/service/credential/NFS/Pi/SSH or
+`/etc` action. All-three-Pi deployment validation, trainer/service isolation,
+dedicated 5.4 acceptance and central-controller SPOF remain explicit boundaries.
+
+## Phase 6.4 — local registry fault/concurrency acceptance (8 November 2026)
+
+Preserved earlier uncommitted/untracked 6.1–6.3 work. Added 16 consolidated local
+acceptance tests. **No runtime/API/schema/auth/config changes were needed.**
+
+The exact fixture streams real 500,000,000-byte and 2,000,000-byte objects through
+the registrar and full cache verification, with separate protected cache inodes.
+Three authenticated local pi01/pi02/pi03 identities report respectively
+502,000,000 / 500,000,000 / 0 cached bytes and exactly
+0 / 2,000,000 / 502,000,000 missing bytes. MB means 1,000,000 bytes. A duplicated
+logical path for the large digest does not inflate the 502 MB required total.
+Known-offline/stale identities contribute no trusted hits. This is real local
+fixture data, not live Pis, NFS throughput or simulated large-file presence.
+
+Matrix covers empty/full/add/remove/reconcile, actual corrupt/deleted replicas,
+missing DB observations, duplicates/reordered/late/in-flight reports, stale TTLs,
+expired execution leases (coverage does not grant execution), abrupt worker
+process exit with durable cache epoch, abrupt uncommitted SQLite writer exit,
+real independent-process SQLite contention, concurrent worker/duplicate commits,
+busy retry/reconnect and injected second-entry disk-full rollback. Existing rows,
+event/cursor consistency, integrity and foreign keys are verified. Tests use only
+temporary stores/processes; no live jobs, migrations, data deletion or network.
+
+Baseline: **91 pass, 3/3 files, zero failures/skips**. Initial new suite: **16
+pass, zero failures/skips**. Final selected regression: **570 pass, 27/27 files,
+zero failures/skips**, 115.7 seconds. Exact MB fixture passed both runs; about
+1.504 GB of fixture-only object storage, bounded buffers, explicit free-space
+skip guard (no skip occurred). No new-code or selected baseline failure.
+
+See [6.4 report](25-cache-registry-acceptance.md) and [evidence](25-cache-registry-acceptance-evidence.json)
+for exact files/commands/results/digests, preserved hashes and scoped rollback.
+**6.4 / Phase 6 local registry acceptance PASS. STOP.** Current config remains
+legacy/OFF/resource. No scheduler integration, OS isolation, credential deployment,
+service/SSH/Pi/NFS or `/etc` change. Live all-three-Pi validation is still required;
+no new pi01 waiver or production/whole-repository pass. The prior sandbox socket
+EPERM on real DDP remains documented in 6.3, not rerun or hidden here. Dedicated
+5.4 acceptance and central-controller SPOF remain explicit outstanding boundaries.
+
+## Phase 7.1 — fenced staging side state / RUNNING barrier (8 November 2026)
+
+Preserved earlier uncommitted/untracked 6.1–6.4 work. Implemented 7.1 only.
+Explicit migration adds three tables, two indexes and nine triggers. jobs.status
+remains SCHEDULED while per-attempt/rank side phase is STAGING, preserving existing
+active quotas, reservations, queue fairness, cancellation and website/API enums.
+Bind unchanged job_id:retry token, actual history attempt_id, committed input
+binding, full exact rank plans, reservation fingerprints and existing lease
+IDs/generations. Require full rank receipts and all current fences for READY.
+
+Trusted begin/record_ready/read barrier recheck owner/current dataset ACL, job
+state/retry, committed identities, placement and reservation, lease revocation/
+renewal uncertainty, controller boot, wall and BOOTTIME expiry. Exact repeats
+are idempotent; different identities/receipts cannot overwrite history. Existing
+job_store.mark_running now rejects NFS without readiness and still rejects even
+READY NFS through the separate execution gate. No runtime activation. Legacy
+transition behavior remains unchanged. Read barrier attests local DB even for
+job-store NORMAL connections; migration needs dedicated LOCAL FULL/FK.
+
+Tests explicitly synthesize NFS SCHEDULED/reservation prerequisites on disposable
+DBs because normal NFS enqueue/dispatch remains gated. Actual lease/history APIs
+and mark_running are exercised; receipt digests are synthetic trusted metadata,
+not proof of remote workspace checks. No RPC/launcher/private dataset path,
+producer cleanup/reconciliation or UI metrics implemented: those are 7.2–7.4.
+
+Baseline 98 pass, 5/5 files. Initial new 16 pass; expanded focused 41 pass, 3/3
+files. Final current source: **590 pass, 28/28 files, zero failures/skips**,
+including 20 staging cases. No selected failure. All prior Phase 6 acceptance,
+legacy portal/queue/storage and execution ownership regressions pass. Prior
+real-DDP sandbox socket limitation remains documented; no hardware claim.
+
+See [7.1 report](26-staging-lifecycle.md) and [evidence](26-staging-lifecycle-evidence.json)
+for exact files/schema/API/commands/results, preservation and scoped rollback.
+**7.1 local state/barrier acceptance PASS. STOP before 7.2.** No live migration,
+config/credential/service/NFS/Pi/SSH or /etc action. Flags remain legacy/OFF/
+resource. Trainer isolation, authenticated workspace verification, all-three-Pi
+validation, dedicated 5.4 acceptance and controller SPOF remain explicit. No
+overall Phase 7 cold/warm/cancel end-to-end acceptance is claimed.

@@ -43,3 +43,18 @@ def private_workspaces(cache: WorkerCache, workspace_root: Path, *, max_input_by
     """
     from hybrid_storage.workspaces import WorkspaceManager
     return WorkspaceManager(cache, workspace_root, max_input_bytes=max_input_bytes, **limits)
+
+
+def install_inventory_reporter(app, reporter):
+    """Explicit trusted bootstrap only; never accept a key/path from an HTTP job.
+
+    Caller must isolate service UID, credentials and cache from training processes.
+    The current same-UID legacy launcher does not meet that deployment prerequisite.
+    No reporter, cache or credential is created by importing the normal agent.
+    """
+    from hybrid_storage.inventory_reporter import InventoryReporter
+    if not isinstance(reporter, InventoryReporter) or reporter._owner is None:
+        raise ValueError('Expected an explicitly initialized trusted inventory reporter')
+    if 'cache_inventory' in app.extensions:
+        raise ValueError('Inventory reporter already installed')
+    app.extensions['cache_inventory'] = reporter

@@ -409,6 +409,32 @@ def resources():
     )
 
 
+@app.route('/resources/cache-inventory', methods=['POST'])
+def cache_inventory():
+    """Opt-in authenticated metadata; student sessions and lease IDs grant nothing."""
+    reporter = app.extensions.get('cache_inventory')
+    if reporter is None:
+        return jsonify(error='Not found'), 404
+    import cache_storage  # Adds the existing project package root for script startup.
+    from hybrid_storage import inventory_protocol as protocol
+    if reporter.credential.worker != node_id():
+        return jsonify(error='Inventory identity unavailable'), 503
+    if request.content_length is not None and request.content_length > protocol.MAX_BYTES:
+        return jsonify(error='Inventory request too large'), 413
+    try:
+        raw = request.stream.read(protocol.MAX_BYTES + 1)
+        body, signature = reporter.reply(raw, request.headers.get('X-DL-Inventory-MAC', ''),
+                                         request.headers.get('X-DL-Worker-Key', ''))
+        return app.response_class(body, mimetype='application/json',
+                                  headers={'X-DL-Inventory-MAC':signature, 'Cache-Control':'no-store'})
+    except protocol.AuthenticationError:
+        return jsonify(error='Inventory authentication failed'), 401
+    except protocol.InventoryError:
+        return jsonify(error='Inventory reconciliation required'), 409
+    except (OSError, ValueError):
+        return jsonify(error='Inventory unavailable'), 503
+
+
 # Start job
 @app.route("/jobs/start", methods=["POST"])
 def start_job():

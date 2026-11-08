@@ -36,7 +36,7 @@ for node in nodes:
 
 
 # Query one Node Agent
-def check_node(node):
+def check_node(node, *, cache_inventory=None):
     """Track consecutive missed resource polls for the read-only cluster dashboard."""
     node_id = node["id"]
 
@@ -62,9 +62,17 @@ def check_node(node):
 
         node_states[node_id]["last_seen"] = datetime.now().strftime("%H:%M:%S")
 
+        if cache_inventory is not None:
+            # Optional authenticated inventory failure must not rewrite resource
+            # telemetry or make the legacy resource scheduler trust cache claims.
+            cache_inventory.poll(node)
+
         return node_id, resources
 
     except requests.RequestException:
+
+        if cache_inventory is not None:
+            cache_inventory.offline(node_id)
 
         # Heartbeat failed
 
@@ -177,13 +185,19 @@ def display_cluster(results):
 
 
 # Main Controller
-def main():
+def main(*, cache_inventory=None):
     """Refresh the cluster dashboard using concurrent read-only worker polls."""
     while True:
 
+        if cache_inventory is not None:
+            cache_inventory.reconcile()
+
         with ThreadPoolExecutor(max_workers=len(nodes)) as executor:
 
-            results = list(executor.map(check_node, nodes))
+            if cache_inventory is None:
+                results = list(executor.map(check_node, nodes))
+            else:
+                results = list(executor.map(lambda node:check_node(node, cache_inventory=cache_inventory), nodes))
 
         display_cluster(results)
 

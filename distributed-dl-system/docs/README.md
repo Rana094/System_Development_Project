@@ -54,6 +54,11 @@ Commands in these guides run from the repository root unless stated otherwise.
 | [Persistent local worker cache](storage/19-worker-cache.md) | Verified local observations, restart-persistent pins, disk accounting and disabled runtime boundary |
 | [Missing-only NFS cache fetch](storage/20-cache-fetch.md) | Authorized verified copy, quota/admission, helper ownership, atomic publication and local/fake evidence |
 | [Private workspaces and pin lifecycle](storage/21-private-workspaces.md) | Independent attempt copies, durable exact pins, terminal quiescence and local workload/watchdog tests |
+| [Controller-local cache registry schema](storage/22-cache-registry-schema.md) | Additive schema, untrusted defaults, actual authentication gap and safe migration tests |
+| [Authenticated cache inventory](storage/23-authenticated-cache-inventory.md) | Opt-in HMAC worker reports, full/delta reconciliation, replay and offline fencing |
+| [Authorized cache coverage](storage/24-cache-coverage.md) | Exact unique-byte dataset/job/rank coverage, current ACLs and live-session freshness |
+| [Cache registry acceptance](storage/25-cache-registry-acceptance.md) | Exact 0/2/502 MB local fixture, crash/replay/offline/SQLite concurrency matrix |
+| [Staging lifecycle state](storage/26-staging-lifecycle.md) | Attempt/rank side state, reservation/lease fencing and RUNNING guard; execution still gated |
 | [Repository cleanup](repository-cleanup.md) | Review decisions and old-to-new tool paths |
 
 The numbered steps in older guides describe development milestones. Use the

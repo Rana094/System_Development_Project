@@ -304,3 +304,68 @@ pins/markers when proof or metadata operations fail. No runtime-data deletion/GC
 The worker factory remains inactive, and same-UID legacy training is not a safe
 isolation boundary. Config, checkpoint formats and SQLite schemas are unchanged.
 See [5.3 APIs, 39 tests and rollback](../docs/storage/21-private-workspaces.md).
+
+## Phase 6.1 controller-local advisory cache schema
+
+[cache_registry_schema.py](cache_registry_schema.py) adds an explicit transactional
+plan/apply/require migration after artifact-registry v1. Six new tables retain
+worker auth metadata, cache high-water identities, inventory sessions, verified
+entries and replay history, with seven indexes and twenty defensive triggers.
+No connection, auto-enrollment, HTTP ingest or scheduler change on import/startup.
+New workers/sessions default disabled/untrusted. Actual runtime worker HTTP
+authentication is absent; 6.2 must establish it before accepting inventory.
+
+Existing schema/config/source remain unchanged. See [6.1 contracts, actual auth
+finding, 22 tests and rollback](../docs/storage/22-cache-registry-schema.md).
+
+## Phase 6.2 authenticated cache inventory
+
+[inventory_protocol.py](inventory_protocol.py), [inventory_reporter.py](inventory_reporter.py)
+and [cache_inventory.py](cache_inventory.py) implement explicit per-worker HMAC
+metadata reports over the existing HTTP agent: startup/reconnect full snapshots,
+add/remove events, unchanged heartbeats, cache epochs, strict sequence/session
+fencing, TTL/offline exclusion and controller-requested full reconciliation.
+Actual operator registration and resource polling have optional tested adapters.
+No auto-enrollment, key provisioning, schema migration or runtime activation.
+The default endpoint is disabled; shared-UID legacy training is unsafe for keys,
+so OS isolation remains a production enablement prerequisite. Existing execution
+gates, config defaults, job leases and scheduling remain unchanged.
+See [6.2 report, 38 new tests, evidence and rollback](../docs/storage/23-authenticated-cache-inventory.md).
+
+## Phase 6.3 authorized dataset/job/rank coverage
+
+[cache_coverage.py](cache_coverage.py) exposes controller-side `CoverageAPI` for
+exact dataset versions or immutable job bindings. Count each digest once across
+paths/source/data/requirements; return exact required/hit/missing bytes, missing
+hashes, ratio and inventory age/eligibility. Current ACLs and the exact current
+authenticated session are checked in one read snapshot. Missing/stale/offline
+inventory contributes zero hits; unregistered legacy jobs remain unchanged and
+return an explicit unavailable error to this API.
+
+Each rank defaults to all source/data. Optional trusted whole-file dataset sets
+are checked against the pinned job/rank/world size; no sample-level caching or
+execution change. Same-UID isolation and runtime gates remain. See [6.3 API, 31
+tests, evidence and rollback](../docs/storage/24-cache-coverage.md).
+
+## Phase 6.4 local registry acceptance
+
+`tests/test_cache_registry_acceptance.py` exercises initial/full and incremental
+reports, real file corruption/deletion, process restart/SQLite crash, expired
+execution ownership, stale/offline and reordered/duplicate reports, missing
+observations, write contention and transactional error recovery. Real locally
+published/verified files give pi01/pi02/pi03 fixture misses exactly 0/2/502 MB
+(decimal MB). These are isolated local caches, not a live Pi cluster.
+
+No runtime/API/schema/config changes. Legacy defaults and execution gates remain.
+See [6.4 acceptance, commands, evidence and rollback](../docs/storage/25-cache-registry-acceptance.md).
+
+## Phase 7.1 staging side state and readiness barrier
+
+[staging_schema.py](staging_schema.py) and [staging_lifecycle.py](staging_lifecycle.py)
+add explicit local migration and trusted metadata APIs. Keep jobs SCHEDULED
+while side phase STAGING binds exact input/attempt/history/rank/reservation/lease
+identity. Require all rank receipts and current fences for READY. The actual
+job-store NFS RUNNING transition checks readiness and retains the separate
+execution gate, so no hybrid job starts in this subphase. Default legacy paths
+and website/API states remain unchanged. No automatic migration, RPC or cleanup.
+See [7.1 APIs, 20 new tests and rollback](../docs/storage/26-staging-lifecycle.md).

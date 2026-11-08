@@ -300,3 +300,80 @@ env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --i
 [The 5.3 report](../docs/storage/21-private-workspaces.md) records the 443-test
 selection, corrected two-root holder regression and scoped rollback preserving
 earlier uncommitted storage work.
+
+### Phase 6.1 local cache registry schema
+
+[test_cache_registry_schema.py](test_cache_registry_schema.py) adds 22 checks
+against copied-controller temporary DBs: non-destructive/idempotent/concurrent
+migration, rollback, indexes/FKs, untrusted defaults, high-water/session/cursor
+guards, disk/size constraints and base registry compatibility. Synthetic SQL auth
+metadata tests constraints, not real worker authentication. No live DB/worker use.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_registry_schema.py
+```
+
+See [6.1 evidence and boundary](../docs/storage/22-cache-registry-schema.md) for
+the 465-test selected run, the actual runtime-auth gap and pending 5.4 acceptance.
+
+## Phase 6.2 authenticated cache inventory
+
+`test_cache_inventory.py` has 38 disposable local cache/SQLite tests using the
+actual Flask agent, registration and heartbeat adapters. Covers signed full/delta/
+unchanged reports, startup/reconnect, missing/corrupt objects, duplicate/out-of-order
+replay, spoofing/rotation/revocation, freshness, concurrent duplicate writes and
+failed offline persistence. No SSH/Pi/NFS/network listener or credentials required.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_inventory.py test_cluster_setup.py test_cache_registry_schema.py
+```
+
+Expected: 68 tests pass. Final broader selection: 523 tests, 25/25 files passed.
+See [exact commands, initial new-code failure and limitations](../docs/storage/23-authenticated-cache-inventory.md).
+
+## Phase 6.3 cache coverage
+
+`test_cache_coverage.py`: 31 safe disposable registry/cache/auth integration cases
+for deduplication, ACLs, exact job/dataset versions, DDP whole-file requirements,
+freshness and read snapshots. Three authenticated fixture workers have exactly
+0/2/502 **bytes** missing from actual local objects; this is not the 6.4 MB fixture.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_coverage.py
+```
+
+Expected: 31 pass. Broader run: 554 pass across 26 files, plus six pass/one socket
+EPERM error in existing `test_distributed_dispatch.py`. That same localhost-socket
+error reproduces with pre-6.3 runtime sources in a disposable copy; test unchanged.
+See [exact commands/results and limitations](../docs/storage/24-cache-coverage.md).
+
+## Phase 6.4 registry fault/concurrency acceptance
+
+`test_cache_registry_acceptance.py` adds 16 isolated local cases, including the
+exact 0/2/502 MB fixture using actual 500 MB and 2 MB objects. MB = 1,000,000
+bytes; the fixture writes about 1.504 GB under a temporary directory and skips
+explicitly if its free-disk requirement is unmet (a skip is not acceptance).
+No Pi/SSH/NFS/network listener or Internet transfer. Process abort, actual SQLite
+write contention and injected SQL disk-full errors affect disposable fixtures only.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_registry_acceptance.py test_cache_registry_schema.py test_cache_inventory.py test_cache_coverage.py
+```
+
+Expected: 107 tests pass with no skips. See [exact fixture, results and residual
+limitations](../docs/storage/25-cache-registry-acceptance.md). The previously
+reproduced sandbox socket EPERM in the real DDP test remains documented separately.
+
+## Phase 7.1 staging lifecycle metadata
+
+`test_staging_lifecycle.py` has 20 isolated local migration/state/fencing cases.
+NFS reservation prerequisites are synthetic fixture rows; actual lease APIs,
+job-store RUNNING rejection and unchanged legacy run/completion are exercised.
+No hybrid dispatch, real workspace verification, remote staging or training claim.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_lifecycle.py
+```
+
+Expected: 20 pass. Final selected regression: 590 tests, 28/28 files, no failures
+or skips. See [exact contracts and limitations](../docs/storage/26-staging-lifecycle.md).

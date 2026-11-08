@@ -402,26 +402,30 @@ class StorageRegistry:
             self._pin(binding)
             return binding
 
+    def _job_inputs(self, actor, identity):
+        """Existing binding checks inside a caller-owned registry transaction."""
+        job = self._job(identity, actor)
+        binding = self._binding(identity)
+        if binding is None:
+            return None  # Explicit old-job fallback, independent of settings.
+        if binding.owner != actor or binding.legacy_manifest_sha256 != job[4]:
+            raise ArtifactMismatch('Job owner/legacy pin changed')
+        if hashlib.sha256(encoded(json.loads(job[3]))).hexdigest() != binding.execution_spec_sha256:
+            raise ArtifactMismatch('Pinned execution specification changed')
+        source = self._source(actor, binding.source_sha256)
+        file = next((file for file in source.files if file.path == binding.requirements_path), None)
+        if (file is None or file.sha256 != binding.requirements_sha256
+                or file.size_bytes != binding.requirements_size_bytes
+                or json.loads(job[3])['environment']['requirements'] != binding.requirements_path):
+            raise ArtifactMismatch('Requirements identity changed')
+        if binding.dataset_id is not None:
+            data = self._dataset(binding.dataset_id, binding.dataset_version, actor)
+            if data.sha256 != binding.dataset_sha256:
+                raise ArtifactMismatch('Pinned dataset identity changed')
+        return binding
+
     def get_job_inputs(self, actor, identity):
         principal(actor)
         job_identity(identity)
         with self._tx(write=False):
-            job = self._job(identity, actor)
-            binding = self._binding(identity)
-            if binding is None:
-                return None  # Explicit old-job fallback, independent of settings.
-            if binding.owner != actor or binding.legacy_manifest_sha256 != job[4]:
-                raise ArtifactMismatch('Job owner/legacy pin changed')
-            if hashlib.sha256(encoded(json.loads(job[3]))).hexdigest() != binding.execution_spec_sha256:
-                raise ArtifactMismatch('Pinned execution specification changed')
-            source = self._source(actor, binding.source_sha256)
-            file = next((file for file in source.files if file.path == binding.requirements_path), None)
-            if (file is None or file.sha256 != binding.requirements_sha256
-                    or file.size_bytes != binding.requirements_size_bytes
-                    or json.loads(job[3])['environment']['requirements'] != binding.requirements_path):
-                raise ArtifactMismatch('Requirements identity changed')
-            if binding.dataset_id is not None:
-                data = self._dataset(binding.dataset_id, binding.dataset_version, actor)
-                if data.sha256 != binding.dataset_sha256:
-                    raise ArtifactMismatch('Pinned dataset identity changed')
-            return binding
+            return self._job_inputs(actor, identity)

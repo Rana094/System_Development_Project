@@ -49,3 +49,12 @@ def register_legacy_inputs(registry, actor, job_id, *, managed_root: Path, verif
     """
     from hybrid_storage.legacy_registration import register_legacy_inputs as register
     return register(registry, actor, job_id, managed_root=managed_root, verify_workspace=verify_workspace)
+
+
+def require_staged_attempt(connection, job_id):
+    """Read staging barrier inside job_store's existing transition transaction.
+
+    Never lifts the separate NFS execution gate or creates schema/state itself.
+    """
+    from hybrid_storage.staging_lifecycle import require_ready
+    return require_ready(connection, job_id)

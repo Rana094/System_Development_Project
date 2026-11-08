@@ -67,9 +67,13 @@ def load_nodes(path=INVENTORY):
     return nodes
 
 
-def register(node, path=INVENTORY):
+def register(node, path=INVENTORY, *, cache_inventory=None):
     """Replace one verified inventory entry atomically; keep unrelated node settings."""
     validate_node(node)
+    if cache_inventory is not None:
+        # Operator-injected enrollment only; never derive a credential from an
+        # address, self-reported ID, student request or execution lease token.
+        cache_inventory.offline(node['id'])
     with path.with_suffix('.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         document = json.loads(path.read_text()) if path.exists() else {'nodes': []}
@@ -95,6 +99,8 @@ def register(node, path=INVENTORY):
                 os.close(descriptor)
         finally:
             Path(name).unlink(missing_ok=True)
+    if cache_inventory is not None:
+        cache_inventory.enroll(node['id'])
 
 
 def assert_no_active_jobs(root=ROOT):

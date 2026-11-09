@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
@@ -81,7 +82,8 @@ class DispatchTests(unittest.TestCase):
         self.addCleanup(lambda: [call.kwargs['stdout'].close() for call in self.popen.call_args_list])
         # Use real Popen for cache helper: patching the shared module above would
         # otherwise replace it too. Saved callable below predates the patch.
-        self.stack.enter_context(patch.object(self.agent.threading,'Thread'))
+        # Suppress only the mocked trainer watcher, not staging executor threads.
+        self.suppress_watcher(self.agent)
         self.stack.enter_context(patch.object(dispatcher,'select_best_node',return_value={'node':self.node,'resources':{}}))
         self.stack.enter_context(patch.object(leases,'supported',return_value=True))
         self.stack.enter_context(patch.object(dispatcher,'get_excluded_nodes',return_value=set()))
@@ -89,6 +91,9 @@ class DispatchTests(unittest.TestCase):
         self.prepare_environment()
 
     real_popen = staticmethod(subprocess.Popen)
+
+    def suppress_watcher(self, agent):
+        self.stack.enter_context(patch.object(agent,'threading',SimpleNamespace(Thread=Mock())))
 
     def fake_spawn(self, request, output, lock):
         return self.real_popen([sys.executable,'-I','-B','-c',copy_fixture.FAKE_HELPER,str(ROOT),json.dumps(request)],
@@ -116,10 +121,10 @@ class DispatchTests(unittest.TestCase):
         result._content=response.data;result._content_consumed=True;result.headers.update(response.headers)
         return result
 
-    def ddp_job(self):
+    def ddp_job(self, *, workers=3, dataset_owner='alice', dataset_readers=()):
         document=json.loads((ROOT/'examples/job.single.json').read_text())
         document.update(project=str(self.fixture.project),dataset=str(self.fixture.data),
-                        execution=dict(mode='distributed',workers=3))
+                        execution=dict(mode='distributed',workers=workers))
         spec=fixtures.validate_spec(document,self.fixture.base)
         self.job_id='ddp-staged'
         fixtures.store.add_job(self.job_id,1,job_type='custom',owner='alice',status='RECEIVED',
@@ -127,13 +132,13 @@ class DispatchTests(unittest.TestCase):
         workspace=Path(fixtures.job_storage.stage_job(self.job_id)['storage_path'])
         self.fixture.raw=(workspace/'manifest.json').read_bytes()
         source=self.fixture.source(self.registry,workspace=workspace)
-        data=self.fixture.dataset(self.registry,workspace=workspace)
+        data=self.fixture.dataset(self.registry,owner=dataset_owner,readers=dataset_readers,workspace=workspace)
         self.registry.bind_job('alice',self.job_id,legacy_manifest_bytes=self.fixture.raw,
             source_sha256=source.sha256,dataset_id=data.dataset_id,dataset_version=1)
         self.prepare_environment(enqueue=False)
         nodes=[self.node]
         self.extra_services=[]
-        for number in (2,3):
+        for number in range(2,workers+1):
             node=dict(id=f'pi{number:02}',ip=f'192.0.2.{number}',port=5000);nodes.append(node)
             key=Credential(node['id'],str(number)*32,bytes([number])*32)
             self.client.credentials[node['id']]=key
@@ -153,6 +158,7 @@ class DispatchTests(unittest.TestCase):
             with patch.object(subprocess,'run',return_value=Mock(returncode=1)):
                 module_spec.loader.exec_module(agent)
             agent.BASE_DIR=base;agent.LOG_DIR=base/'logs';agent.node_id=lambda name=node['id']:name
+            self.suppress_watcher(agent)
             service=StagingService(fetch,manager,key,worker_root=base,ownership=worker_lease,
                                     cancelled=agent.attempt_cancelled,isolate=self.isolate,
                                     quiescent=lambda *_:False,terminate=Mock())
@@ -334,15 +340,17 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual(self.popen.call_count,3)
         self.assertEqual([body['ddp']['rank'] for path,body in self.calls if path==START_PATH],[0,1,2])
 
-    def test_failed_third_rank_keeps_entire_group_reserved_and_launches_none(self):
+    def test_failed_third_rank_cancels_entire_group_and_releases_only_quiescent_slots(self):
         import distributed_dispatch as ddp
         nodes=self.ddp_job()
         with patch.object(ddp,'select_group',return_value=nodes), \
              patch.object(self.extra_services[-1].fetcher,'ensure',side_effect=OSError('fixture NFS outage')):
             with self.assertRaises(Exception):self.dispatch()
-        self.assertEqual([path for path,_ in self.calls],[STAGE_PATH]*3)
-        self.assertEqual(len(fixtures.store.get_reservations()),3)
-        self.assertEqual(fixtures.store.get_job(self.job_id)['status'],'SCHEDULED')
+        self.assertEqual(sum(path==STAGE_PATH for path,_ in self.calls),3)
+        self.assertFalse(any(path==START_PATH for path,_ in self.calls))
+        self.assertEqual(fixtures.store.get_reservations(),[])
+        self.assertEqual(fixtures.store.get_job(self.job_id)['status'],'QUEUED')
+        self.assertEqual([row[0] for row in self.db.execute('SELECT phase FROM hybrid_cleanup_ranks')],['QUIESCENT']*3)
         self.popen.assert_not_called()
 
     def test_validly_signed_but_wrong_ready_receipt_never_opens_running_barrier(self):

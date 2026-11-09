@@ -1,0 +1,1112 @@
+{
+  "phase": "9.4",
+  "status": "LOCAL MATRIX PASS; OVERALL PHASE 9 NOT PASSED \u2014 PHYSICAL THREE-PI ACCEPTANCE PENDING; STOP",
+  "date": "2026-11-09 Asia/Dhaka",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "application": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "de297dc7d99eb80e52498145fe05b033e5afdaad",
+    "starting_status": " M controller/checkpoint_recovery.py\n M controller/staging_dispatch.py\n M docs/storage/implementation-progress.md\n M hybrid_storage/checkpoint_publication.py\n M tests/README.md\n M tests/test_checkpoint_publication.py\n M tests/test_hybrid_checkpoint_recovery.py\n M tests/test_staging_dispatch.py\n M tests/test_staging_recovery.py\n?? docs/storage/34-ddp-audit-evidence.json\n?? docs/storage/34-ddp-audit.md\n?? docs/storage/35-ddp-staging-evidence.json\n?? docs/storage/35-ddp-staging.md\n?? docs/storage/36-ddp-checkpoint-publication-evidence.json\n?? docs/storage/36-ddp-checkpoint-publication.md\n?? tests/test_ddp_checkpoint_publication.py\n?? tests/test_ddp_staging.py\n",
+    "no_stash_reset_commit": true
+  },
+  "preservation": {
+    "baseline_files": 301,
+    "unchanged_original_files": 296,
+    "changed_original_files": [
+      "controller/job_store.py",
+      "docs/storage/implementation-progress.md",
+      "tests/README.md",
+      "tests/test_hybrid_checkpoint_ddp_resume.py",
+      "tests/test_hybrid_checkpoint_recovery.py"
+    ],
+    "new_files": [
+      "tests/test_ddp_acceptance.py",
+      "docs/storage/37-ddp-acceptance.md",
+      "docs/storage/37-ddp-acceptance-evidence.json"
+    ],
+    "missing_files": [],
+    "prior_9_1_through_9_3_preserved": true,
+    "progress_and_test_guide_prefixes_preserved": true,
+    "snapshot": "/tmp/hybrid-9-4/before",
+    "before_hashes": {
+      "docs/storage/34-ddp-audit-evidence.json": "49005009497129bbd2a8eca6cf7fe5534b08c97984a0b6cc6283f0420d890a7a",
+      "docs/storage/34-ddp-audit.md": "655a6f5f65775cc9820a6ad22734dd357ce014eb0416219e1c5cdbb8e85f22b2",
+      "docs/storage/35-ddp-staging-evidence.json": "a33f43f84d61b7f29ebdcc9d2f3f5ebcb3ec9c51e7b06ed618fafda12c3589e1",
+      "docs/storage/35-ddp-staging.md": "e7222df6a81d3b809a785ec1e43f38c4eff6ae0b899d2463144054323c4d466c",
+      "docs/storage/36-ddp-checkpoint-publication-evidence.json": "ab383d09000fd3a56ca75b9915a68f7c3302053d51fbac5ac3d223421af3e648",
+      "docs/storage/36-ddp-checkpoint-publication.md": "7d3cec3c0a960d303218c03d18055d21433c6179a9eceb4ba304ede86785e227",
+      "tests/test_ddp_checkpoint_publication.py": "255984362b7849d3ba4f893dc46179abfe4a1534a3c1e3a5512223429a3cf624",
+      "tests/test_ddp_staging.py": "f0b69aad8f4c979305cff50f0f27cf61addc486ef3eb748a1a86fc4a860637ba",
+      ".gitignore": "5b0f8e5b23a07066d93631d6cd142d6d5366c390890a0e5ee30874cbe4230179",
+      "README.md": "5ce735da31bab38a800bad7d9b276bb969aeefebbdd46c622917122bc3393929",
+      "agent/agent.py": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a",
+      "agent/cache_storage.py": "8018b2482e70f115463926d003fa41b65e9dab5015a6c7389700162087f13bb0",
+      "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+      "agent/checkpoint_restore_service.py": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2",
+      "agent/checkpoint_service.py": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f",
+      "agent/custom_runner.py": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130",
+      "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+      "agent/environment_worker.py": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875",
+      "agent/execution_lease.py": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83",
+      "agent/lease_runner.py": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5",
+      "agent/staging.py": "70b79f9cef898dea2cec67b8fee9420fdbaab9984ef038d0e198cae9214887d4",
+      "checkpoints/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "config/README.md": "42cbfb2914f78105591527949cd7bab357967474e678a5d1e396ccee4f4a9601",
+      "config/execution_leases.json": "0c487e5d01a121f2b26ea81aa9f6cf1f30b1736d7addc925bf1303935faf30f8",
+      "config/job.schema.json": "8531e354517de209fe12e300b2e93effc1468c00a002e465d8a3f4f77e0e128d",
+      "config/nfs-clients.json": "c45ffd428c3237cc4c1d1f4be689479fc98cc1a1ab9f4960a997b4b885ef1421",
+      "config/nfs-server.json": "29b721f25d5eeb9d0405b15affbfb5140bfc639f27b46163023a129e9f572146",
+      "config/nodes.json": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf",
+      "config/queue_policy.json": "d20d13c1987f69419c190fd09d52f9cdffd297cbc8ecf3c3f694fe2e612fba90",
+      "config/runtime-requirements.txt": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c",
+      "config/storage-examples/README.md": "eb668492a805b11e923a3666b76c863ebee6eff1540fe1054d09db00bfe9b690",
+      "config/storage-examples/legacy.json": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+      "config/storage-examples/nfs-held.json": "8b320a9482a5fe93f0d800a7ff5f4d4186dd75898e0fcaf8514863d6391132f0",
+      "config/storage.json": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+      "controller/cache_inventory.py": "e1641f5ce95213e0db1fa3d5d52a0435e867949944008f777b75e15afceaa945",
+      "controller/checkpoint_recovery.py": "bc24731dacdc212c8e2816ad391d30be6f55f766ae5c666ac8ad0153b4f431a2",
+      "controller/checkpoint_store.py": "e9df700d4da0f150a8055cd05b1cf611a2d3aedc8a9157de16b3571e5addf7da",
+      "controller/controller.py": "ca132e660fb9bacbd3fe00290a82ec44de90d789efd771abf84fa92d816d2f44",
+      "controller/custom_checkpoints.py": "4266dfd77fbab12c0905e340d9f35e1b6bc965821cb5da1f7c1bcccc0fd66299",
+      "controller/dispatcher.py": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d",
+      "controller/distributed_dispatch.py": "260d4efe0ca3fbf269b84f51e2db041093d928e67fe2d7e73f5875b166c5c26a",
+      "controller/execution_leases.py": "fa82ee030cc0c1b0e49e8dc9806caad80c37e69417581ff9561867afdd0d6507",
+      "controller/group_checkpoints.py": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2",
+      "controller/input_storage.py": "42ec1ef34eabd99f1bb9922304cd580c48d3be5bb630470a79ecc90994e213d9",
+      "controller/job_artifacts.py": "f8872c380d95783697edede27c8153aae62154c2d530012e7b7fc7ec7bbaaa99",
+      "controller/job_spec.py": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a",
+      "controller/job_status.py": "12d84f2cb1f082fb1de67ee9329115be4352b4f844db0e970b4fd44a0801b20b",
+      "controller/job_storage.py": "01d935c9240ec11873e7c592d019596da5ed86b93497ce29aca4218019b1f79b",
+      "controller/job_store.py": "bba46a55574d1339a654793d0beb570ecaf0f6187a855c6a5e97568ea6e8ffe6",
+      "controller/job_timing.py": "dee072e79474e08bbdc97c8fb60584bf9c6ce7707536ce13ee3c194b67b201bf",
+      "controller/migrate_pytorch_jobs.py": "9c52a62a6cd1db3d92a893a8893f050348002ff5291d5f7d0a3c1e41fe2444b6",
+      "controller/portal_static/index.html": "e944aaf3a9942784e1616f56a388778334bf5ba304ba38de749773c0c09406c4",
+      "controller/portal_static/portal.css": "8a9ec881f6d8827c9b3fd9ad9d681ab534dd2f6c7feb8851f151f70a9548c287",
+      "controller/portal_static/portal.js": "15a437f7e0a2867fe9f7bc61e26bd443c781f5a2e229033aa9e5590ede19d23f",
+      "controller/prepare_job.py": "ab8bef60c8eb184040dda0d2c7a58a76485e9bbab6ae8c0349a16c4379a91976",
+      "controller/queue_ctl.py": "c9dead51875b1af7122351c35d1244aa93cc8a6e16e0212f50f4eabdbc63ad26",
+      "controller/queue_job.py": "18d5409d76c074d4bc586ecc6dda2e3049965b7a0dacc1427ef7e4e05a9fccc3",
+      "controller/queue_policy.py": "4a47c261a65b087904d7505a54255593449f8422949d0c34d39cef89cd11260b",
+      "controller/recovery_metrics.py": "dedbe915127817acca96fc0722108eb329f733d80900fcb1089aff8432973809",
+      "controller/recovery_report.py": "edaa3be7b94237a12d5b80ddde611afd666ffa5dd450d2433f149e63f1d9e38c",
+      "controller/scheduler.py": "577f915ed80b44dec1f798c6d7166a5100a276cab4ba12f07f9033c38cc8c58b",
+      "controller/stage_job.py": "79e49d26131e6a453b2414a7a4cf2a3ad51e6041e307a74c433ddadea3debf86",
+      "controller/staging_dispatch.py": "75e85bd91a7e8175c79690b8c1d44c62010cd34b1986d8f5bc656cfdfec571bb",
+      "controller/staging_recovery.py": "a8b2d1fea6e63a900f3a92b97e93bb2da898b1f59ff0dddb2e8287a8d1b45f34",
+      "controller/staging_view.py": "6e851fb5eedf3be5275bd0dbd93c0d399e4f39938ab0c6a7a51794988f22cc85",
+      "controller/storage_selection.py": "857fa007b6a3808a061d3798736b9ee5f9904a53796898d6d8160f4db881d75d",
+      "controller/student_portal.py": "269119d1d26b3f6db8616081a688008b84c25beda6670b785008c1ccedadf6c0",
+      "controller/submit_job.py": "540b36a9fec28c608e79c5d2148e1b9c17039dee5fbd032fe064ac82c4368247",
+      "docs/README.md": "d907ef8e7614e0a1dbbfdc3b6ed4c19d95f20a7bc88d7fd789f94fb43199883c",
+      "docs/architecture.md": "28db000c8cc8244fc924ca167c1bdeaff2ddf327880b788def383d9a18f39f6d",
+      "docs/benchmarks.md": "db93d197e4c9721b8855d34d0cdde5c0de45cdf41d3644131c61ebde67f928dc",
+      "docs/checkpoint-integration.md": "b4abea6b21fa05bf181daf176c2819b38573a88fa6ea809377ef8080f0396db2",
+      "docs/deployment.md": "7991b67a272b8c4e441f08b9c78a7f2df9af8b2b01d533ba1c32005ec492f9c7",
+      "docs/distributed-training.md": "f6cd0efbcfbeb6ea42509a2c8d977852f17f57ea9d97161ee9c8f8ab9a8329d2",
+      "docs/environments.md": "43f3ed8a8904da5911f0199819674a671497a5ff69eb5b6b1e242d8da2303657",
+      "docs/execution-ownership.md": "615bf84ad411e03c88a4b392b027cb9f81d4f1afe61c9c9107ec0ce7a05f7e4e",
+      "docs/integration-instructions.md": "34a06505b15670fcf0593a42ce4a22cc722dbbb95ce3165b3d5181adcb2d0dc2",
+      "docs/project-map.md": "e3291a0ab6343d2c09dad170c036ad1b907e8ae90d4b3aa43613ec236b3a3881",
+      "docs/queue-controls.md": "8d594a7c86f70435c439054f20067d24c615f95607c62ce9c25acb8e3d2813bd",
+      "docs/repository-cleanup.md": "6093551a64e1ba28059b854978f2ef61468ad35f4d931a8dbfb4aacf78210526",
+      "docs/scheduling.md": "4ea90f320127bdcede02ed2ef7aaca64b0beb19b3d25a095575b3b6657452e7a",
+      "docs/storage.md": "b2e1f591c8669d89f6ca4bb61803ceb52eb2795f11ca5904c0bd7b9debec935f",
+      "docs/storage/00-audit-evidence.json": "413a8f03fc72a0e011fd5159d879ca3d610ecb7d658dccc6e82fda19bba6d612",
+      "docs/storage/00-audit.md": "301b5750fbbf87fedbc07c85f34d5ee7a2832f53e236c7b2649fb246756a660c",
+      "docs/storage/01-hybrid-architecture.md": "773755f3e403a7c0a12a29fa38cc50c96eabfc1f8b6d7a1075b423140c83e676",
+      "docs/storage/02-manifests-and-lifecycle.md": "dddd5a542d0e3165419b45a32b4062606643423b173475742d5e6a8aede0c26b",
+      "docs/storage/03-config-validation-evidence.json": "7f2ff0f4473e5a388ee0fd3d543296163707c85e575155ad47548ba0ed16a697",
+      "docs/storage/03-configuration.md": "7fbbb53b836b88b2cdbd4900b98f610bf324a529e5e1c8ff96464de5fb03e07f",
+      "docs/storage/04-nfs-topology-evidence.json": "d1e922abd102d1e79842305ec8f91ce3688765f607eef4a88d879907ada70626",
+      "docs/storage/04-nfs-topology.md": "24c8266168f8109a259d00a9c956b0694caafa162eb2868226b6feaf695329ba",
+      "docs/storage/05-nfs-server-dry-run.json": "67d6e80401f299a65eba1dd5babd7d1e219e186c00e6dd1bc76167288cc3e31f",
+      "docs/storage/05-nfs-server-setup.md": "b905697ce3e80e8909d7e50c8e04a127e2b723fbfe0927d6dab33514a199926b",
+      "docs/storage/06-nfs-client-setup.md": "4043fe881deb19968215a2527b8ffd4fed4511255ff640af3813dd3e7504e791",
+      "docs/storage/06-nfs-client-validation.json": "059455022316af72324afc9ca2d7b07764ad1b1f3f6ff5e4debad01403d39250",
+      "docs/storage/07-nfs-deployment-evidence.json": "54400fb7d7e8927b26746560db4d0c88a233097075117afdc1c29824bef61d06",
+      "docs/storage/07-nfs-deployment.md": "5753bf10a60a8f8914ffdd9067d5829d8cbc0c4e320cd374d28c983771ec4a99",
+      "docs/storage/08-nfs-two-node-deployment.md": "293affc41fdecf4354ba443f432aec8bfbdf5766216c9807498e4aede55165ac",
+      "docs/storage/08-nfs-two-node-evidence.json": "b808b491d5e42fde7e21755806dce2035f1d368d46e9c91978a84edcc96590a5",
+      "docs/storage/09-nfs-outage-evidence.json": "64ba929145bce4d7a5bd23db88f137eb9fecc742ce04eb40abcfd0c1489f4766",
+      "docs/storage/09-nfs-outage-validation.md": "bf63d2e33dba91caf7febc5f7f2ae1ec2aed7032d155f69549871328200bcf23",
+      "docs/storage/10-phase2-completion.md": "a5d1b048a945e7336d8d9064fa4552134c478ce950633707b0b79776946b66b6",
+      "docs/storage/10-phase2-live-evidence.json": "f1ea1f12460adcda73c939738793623ce1e59efd6123c395facaeec715d7e787",
+      "docs/storage/11-controller-input-adapters.md": "95a8c707daaca3375c28719323ac97f504dc4c20402f93668646cb734a6fd97a",
+      "docs/storage/11-controller-input-evidence.json": "0eb6a5efdfa6b3a995ee21adea76c1b9f1b78e34ff3be9dfd1c590b708d66945",
+      "docs/storage/12-input-health-evidence.json": "ca67d791133022f22d0b42bf3105be6d9be3ebc4a00305b2d12ee73423db8a1b",
+      "docs/storage/12-input-health.md": "773a6e918ce3e8174f89c4676201ee806bd3d516efc14a7ffe9b248c9a78f662",
+      "docs/storage/13-storage-selection-evidence.json": "e056bc05aad67f0bcf3ec476cd7a450071591a536b9dbac08f91d92eb0adef45",
+      "docs/storage/13-storage-selection.md": "1eb5652b1057070c89c91aae46b187ef97011aacfc47548503c8c9586ab7f77a",
+      "docs/storage/14-phase3-validation-evidence.json": "e2e579c17dff0a427ee6384aefde9f9735ba50b6fbb20a01b1a2acf352c6460a",
+      "docs/storage/14-phase3-validation.md": "6ff417ebc5ef3a9d4d02d847fb64f28857f629e7933e01d57d6a994d779c81ff",
+      "docs/storage/15-artifact-registration-evidence.json": "88b55faded29f78a89160302b9287c6b4a3fc7914e663a6ee04bb795e91795ac",
+      "docs/storage/15-artifact-registration.md": "1b0e6cdc5df092b067828384b3a55d553c9b7e5397bed825578668c989e9c9e1",
+      "docs/storage/16-dataset-manifests-evidence.json": "2433cbebc3e042616aea0e09c0b88b334aff86820e397f2dc5487dfb56abf91d",
+      "docs/storage/16-dataset-manifests.md": "ed1a52faec2db6fc6667a2c9a536ef891b903c7d795196b02c30f7f14951696d",
+      "docs/storage/17-registry-and-job-inputs-evidence.json": "b6bccf67a79e29fca48499df761fc0fbfc3d81f6f6390ba663730d9d416085db",
+      "docs/storage/17-registry-and-job-inputs.md": "1f8bc1a59ec6d82ca1fcf73803bb0c806324fe65724ffa50bd69b60f56844165",
+      "docs/storage/18-legacy-registration-and-phase4.md": "6b0e2821bf4afca9381d8091a4c5d71b00cb452be7ea85b9ae522c48e3163c94",
+      "docs/storage/18-legacy-registration-evidence.json": "d8e4ba9326a98fe71c879b11e5aaa71721be8138f02b504e8ef9cb2c92624e91",
+      "docs/storage/19-worker-cache-evidence.json": "13b56def3bed0656d0c912dc255e2a82dde44f4a99adb8ed2daa42898586ffbf",
+      "docs/storage/19-worker-cache.md": "c4a387e8432d109dd2a3b304f3efd71c9849e99420955f56ad609b94a4a66e56",
+      "docs/storage/20-cache-fetch-evidence.json": "ed2fbd68feb0e394c9c2a8d4006b717e5bfad83c98b96c275257ceb8562d2419",
+      "docs/storage/20-cache-fetch.md": "b976bcc60ea69fd51111bb78d60fbb1b7d8fea7ab946787bb9f990c8a8a3e3b9",
+      "docs/storage/21-private-workspaces-evidence.json": "bf8ec208894586eb142dd92d8e3ff48ec0f67568cbf8c7237dfb7aaa7f48d81c",
+      "docs/storage/21-private-workspaces.md": "edd71ad04a9d3dbae47ac40d92fc7671785105f0495bbd769ae1c82573455f84",
+      "docs/storage/22-cache-registry-schema-evidence.json": "e8ac00bb51012e81b9ef97892518da4b97e3709ec71b4c97bef9c50a463e3501",
+      "docs/storage/22-cache-registry-schema.md": "8e13239d484b46860929320f51cf04528995956cf2ade186983a1528c89c7165",
+      "docs/storage/23-authenticated-cache-inventory-evidence.json": "4314a5f94c329dd3a485c9b653f579bd957a9363cc807fd6127e70087bd1842a",
+      "docs/storage/23-authenticated-cache-inventory.md": "c28405268b7eb249f56ad828f044ea1ef1d1934b1c934e29ce56ef2c5ec64bd9",
+      "docs/storage/24-cache-coverage-evidence.json": "d4f6a88b0b2f7190fe980941cb49afb92177c496cd2a1995537d07dcdfe0ec8a",
+      "docs/storage/24-cache-coverage.md": "694129a72e2f443ce00b55d6b058b17b778308aaf9fe309d917024ed05959bad",
+      "docs/storage/25-cache-registry-acceptance-evidence.json": "0256578314aa11d34c7c1cd1d687683a09baaaa832ddfe7c5e519c7755d517a0",
+      "docs/storage/25-cache-registry-acceptance.md": "b5f28e5aa87e95b04c93582bc311171d6b644e02b5854f932176c354f59761ad",
+      "docs/storage/26-staging-lifecycle-evidence.json": "2c8186dc532f2f1c162798cd68a0a8ad2e3c730ca461e49bb362933285dd2cd3",
+      "docs/storage/26-staging-lifecycle.md": "cc24079f970db220c3366ba0a2f07edab6c90a7e6e1af4988905c69297e8f696",
+      "docs/storage/27-staging-dispatch-evidence.json": "a4b5e11a5b21adbf15aa1eae6c56cada8df2d89a3c6e6ec28fa33171b91f7f9d",
+      "docs/storage/27-staging-dispatch.md": "7c8b72ef234af7428aaa7ebd02bca587b147cc7d3f246847eee24660007ddc4c",
+      "docs/storage/28-staging-recovery-evidence.json": "a3aefc9da953764e6edb3140978d8b8303ffc917cda76145be801d704dd9ef02",
+      "docs/storage/28-staging-recovery.md": "a8b4b7b4783915719bb7cd79243b8ec66c2bc256d36562987e2b2a48ba9eacf1",
+      "docs/storage/29-staging-visibility-evidence.json": "08ffe64f3a15a7f77f40c4cc9beaaab27c56ef13db924d5a3b56fac121540f2b",
+      "docs/storage/29-staging-visibility.md": "35b1557492953b4e74c2ff988683d10e4dc30f424d0be9bb72a099a443272dda",
+      "docs/storage/30-checkpoint-audit-evidence.json": "33fc367b5ff08f10d48ab2e7fff525f5d6743d5e5c2e854200c689fba22e8c51",
+      "docs/storage/30-checkpoint-audit.md": "2a4453b72877a9242d0434910257b813a3dc3b1de3ab5467e711380acab434eb",
+      "docs/storage/31-checkpoint-publication-evidence.json": "f5abf440cbc205b532245712f2394bae4448411164f809870892d5e58fc41d6f",
+      "docs/storage/31-checkpoint-publication.md": "ae804f7cef7da36533704d8828d206e8661d173a66255f794b9231dfe022a4a2",
+      "docs/storage/32-checkpoint-recovery-evidence.json": "32b9754c69b7e082816a5204373c92315f6692765c4f52a0394a91113d1296af",
+      "docs/storage/32-checkpoint-recovery.md": "4718e27ff3c9b21df20d0aea38a440ad725a2ca71e0e24681adecf82b43ccc1d",
+      "docs/storage/33-checkpoint-fault-acceptance-evidence.json": "c8b65a88655e2c9d13bd8fdc6d53742c9899f946611adf483f7b3ea0142b38fc",
+      "docs/storage/33-checkpoint-fault-acceptance.md": "223c744d59d2797d4c41c1e6253fb9742a40003809fbc9d869be19c452b51f8f",
+      "docs/storage/examples/dataset-manifest-v1.json": "a5c28aa8a08a11a68da49a4c45957c18716b3d59255341e7bf20a82f87a7fecb",
+      "docs/storage/examples/v1-manifests.json": "1f69da4994a5516e5d49ccc7879b5b526cb8b96941b8611cfacd4657f757b508",
+      "docs/storage/implementation-progress.md": "cdd6448b830f9558eeabc9d988089b62372febd63518a5831a29eca9ec3396cb",
+      "docs/storage/schemas/dataset-manifest-v1.schema.json": "34d66a9458318a5085056321def414d394d7b417cfedd5ae5c87da6ec66df21e",
+      "docs/storage/schemas/input-tree-v1.schema.json": "9e9fa3bd4f0353a426e2fff93023648a3444452dc59b1c8fd6ce0797da89573c",
+      "docs/storage/schemas/job-inputs-v1.schema.json": "41d5b425e31dac70648d6f7f782a4745316d73a1955957f547d8636aa14e6777",
+      "docs/student-interface.md": "a081920ae84d8bffae41482ef902a828e4f7eef2ec70ab92d3e017a204a627cb",
+      "docs/submission.md": "13f351e4c2e9e6400965b9fc54bd0af76268042b067aeb302c1f71163acffd5b",
+      "docs/tailscale.md": "c2f83e0858d9515f19f09c24625426e4d9790af9887b642c914732579a59b918",
+      "docs/training-examples.md": "ddb2b814b21a26ea423abfb0aa4ac719db56737b00b972ea829a3da768ea3ae4",
+      "examples/README.md": "a96b9136bfdeac0bd43db04ac05885155a0ec3c53a76234ef015fa1f1eeb53ae",
+      "examples/binary-classification.csv": "8ac0e49a95697b9fc58d3140ba16cb525ad624045d86d1b5656af27ffab50ea7",
+      "examples/checkpoint_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+      "examples/checkpoint_project/train.py": "e332f68f6ce2f6e04c97ed999c5e13dfd501cd7bb9ec259e16ca7074e0eedbb0",
+      "examples/classification_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+      "examples/classification_project/train.py": "7a2bdcaad5f9b31243206db84215a3c5526f0186690001e3d28fcdbd870b9a26",
+      "examples/dataset.csv": "7eff226b1ae4ee6fc085d8c5cf07a6aafddfc6c53b0cb948e624ca2807ce6267",
+      "examples/ddp_project/requirements.txt": "f73b60233c38d0441cebc453b4ef0f3407b685d46b260698127b768a229d42a6",
+      "examples/ddp_project/train.py": "998f21faac1647d2ef878b9841b6ce0c9195146f8ecdffa6942422eff3d4bd90",
+      "examples/image-classification.csv": "67429253845791ddd6e29447fb6e35a909579385b8d3c0dd9a8123529b8fd9a4",
+      "examples/job.binary.json": "9347b10d9faafb366ee6e7459817285709c922aa97b0c99c5e6681e2ff9391ce",
+      "examples/job.checkpoint.json": "64f9f47737ef76c3d8fc512d9b15ddd32f38494379be3dc2160ce0842ca3b4be",
+      "examples/job.cnn.json": "c375bda1de98a4138e82c77874a57e46af772b6857abc3e527107e4f85e9c649",
+      "examples/job.distributed-checkpoint.json": "c3e5a2db1389977a0b896ba87a247d598bcc7da876ff51436453ef1fa04e083e",
+      "examples/job.distributed.json": "32cdf89f1a3f52d60ed6f0e1dcc40998cb4d8101239f4d025965f79295ff76f8",
+      "examples/job.integration.json": "7b838f4207e2b1f148d1fcf867d5bc4640b279fe95274d9efcc3aa2e9a156bd3",
+      "examples/job.scheduling.json": "6bff0921169035c206fdd47e604f99cb163fc2ab66ad7f7a2533f7a6b6179860",
+      "examples/job.single.json": "ffc110dd5f8316f7a517d56319fa87c3b134d8f568eb2b46d64016d1dca4188e",
+      "examples/scheduling_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+      "examples/scheduling_project/train.py": "0814c62294b589205d4f711cca0a89167e37c4ef85265ad56edde9b56792a723",
+      "examples/student_project/requirements.txt": "6647b8314a965c8c1c888a358ad46dcd51955fdad5bc439a26fe0efd6aca8933",
+      "examples/student_project/train.py": "069b415415a344ff59e709c911940abd865f22dd52713ba4c348f463ad132897",
+      "hybrid_storage/README.md": "a8b2bc514443e877bbf3e0b1cd71eaa969e0e5a0bb7f5cead5029d49d6456b7a",
+      "hybrid_storage/__init__.py": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57",
+      "hybrid_storage/artifacts.py": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b",
+      "hybrid_storage/backends.py": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0",
+      "hybrid_storage/cache_copy_worker.py": "d1877711ee6518fc19a16e3f12066a34a0d7ed1dc3a670e5171990b2c1977d98",
+      "hybrid_storage/cache_coverage.py": "e563ec4993e536f3614cd562007d79d5d880bb54163af479e227e1afd9d2993a",
+      "hybrid_storage/cache_fetch.py": "b81ee8cc50e80c483fe0bad7019b3b6c3a2199319bb74afb760bb13c50166c1e",
+      "hybrid_storage/cache_inventory.py": "14c0e4126baabd8aa0a740923e8ca65d307e25f390367d0f3267076922e6699f",
+      "hybrid_storage/cache_registry_schema.py": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112",
+      "hybrid_storage/checkpoint_files.py": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850",
+      "hybrid_storage/checkpoint_publication.py": "1b76141edc2fae8a765585ba4597691cefc3eb9aa9a1bb7eedd56e1eed7fc83b",
+      "hybrid_storage/checkpoint_restore.py": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab",
+      "hybrid_storage/checkpoint_schema.py": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12",
+      "hybrid_storage/checkpoint_transfer.py": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6",
+      "hybrid_storage/cleanup_schema.py": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3",
+      "hybrid_storage/config.py": "e293551514595c315cc318c863c2011e097d459c199cc3c9378df61bdcd64870",
+      "hybrid_storage/dataset_manifests.py": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d",
+      "hybrid_storage/dataset_validation.py": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c",
+      "hybrid_storage/health.py": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6",
+      "hybrid_storage/health_worker.py": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01",
+      "hybrid_storage/input_manifests.py": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a",
+      "hybrid_storage/inputs.py": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc",
+      "hybrid_storage/inventory_protocol.py": "72b5e96964742f275942e6d4ab61ffcad0bf2724819dd3c3bde72a0f479fdc84",
+      "hybrid_storage/inventory_reporter.py": "097a394dc8777fcc026c7a94fe91ef088cad9ed0dd0767e50018022d94e9c2fb",
+      "hybrid_storage/legacy_registration.py": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640",
+      "hybrid_storage/metrics.py": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149",
+      "hybrid_storage/mount_identity.py": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f",
+      "hybrid_storage/nfs_client.py": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a",
+      "hybrid_storage/nfs_fault_probe.py": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d",
+      "hybrid_storage/nfs_mount.py": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8",
+      "hybrid_storage/nfs_server.py": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea",
+      "hybrid_storage/registry.py": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529",
+      "hybrid_storage/registry_schema.py": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc",
+      "hybrid_storage/restore_schema.py": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7",
+      "hybrid_storage/staging_journal.py": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd",
+      "hybrid_storage/staging_lifecycle.py": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb",
+      "hybrid_storage/staging_metrics.py": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f",
+      "hybrid_storage/staging_protocol.py": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb",
+      "hybrid_storage/staging_schema.py": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9",
+      "hybrid_storage/worker_cache.py": "0f6a5484d8f08f265c740e269b6dc57d02ad0fe560052dedd6c9e1b1dcde1bbf",
+      "hybrid_storage/workspaces.py": "c9638fea62e81a4f270d43b7b79302239b64ce038cc4574ec099a03250d92a81",
+      "logs/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/README.md": "12fac62dc9f1ee545b67a03f7ad3aa68eaa57a9289530ca5567fc7d05748efc1",
+      "tests/test_artifact_registration.py": "af078d4e1c48acb68ef0c58e45a4d418b724f7a9d1832e9e0f38f37a070ecfdc",
+      "tests/test_cache_coverage.py": "1ed2021b8628ef3ab685a5e613eb1cbe927cf7ce969f717a5f3f0e8953775e27",
+      "tests/test_cache_fetch.py": "af5104be41257917824e3a26d9e3e1f8fa8a391780d23150c7de6683b8ae91b2",
+      "tests/test_cache_inventory.py": "dd2eebc36e0c198a62fb1476a9919abfcb9e911daa310ba8a26d999e8552fb5d",
+      "tests/test_cache_registry_acceptance.py": "2a14c7fd955ab0a8f1e45baa2d36ae0bde7940e169013d4d2f7fafacca6024a8",
+      "tests/test_cache_registry_schema.py": "37a5677fc88f11d0c563eb76a50b13455ce64c110fdb7b45a0fa7796636ef0bd",
+      "tests/test_checkpoint_publication.py": "c050b85dfbe84b759497f6d11ff86f76d323e249ed37a8734d8169539bec2e5c",
+      "tests/test_checkpoint_recovery.py": "555a56baf60305d1dfb4984c691fda7781e7a297a8fc52c4a65c9f559e13e42c",
+      "tests/test_cluster_setup.py": "fe70c35f8b690c67c56379f39ab356d3f533472a38ce7e09623673eeea40f4bc",
+      "tests/test_custom_checkpoint.py": "2fe23cee72038561e722710e4791a294e8832dc6f66085aa94c4caeb0fb102a5",
+      "tests/test_dataset_manifests.py": "56442c8ee4875507633ca658614a04d3a22d0af78d0e6613db5555872fdf3601",
+      "tests/test_dataset_validation.py": "bf6f151378933448b43eb232732d7186f87c097d76a7aebcd6dfe5cc45cee35a",
+      "tests/test_distributed_dispatch.py": "24fb466c0f83674fe4a1b7fada4d42ee9fea541c592ad8109736a8d611325a9b",
+      "tests/test_execution_ownership.py": "cb7974a9368800081880a3195f2781dafa8ee7be174fa9f7c2dd289823210a11",
+      "tests/test_group_checkpoint.py": "e5a0ebf6b21890bae12463644922a4b95d16714962bf3161cdb8701913b00e00",
+      "tests/test_group_recovery.py": "acea76283873375c05927f21c2d9b363a82a54d5ed405e8e3958ce092daaa15a",
+      "tests/test_hybrid_checkpoint_ddp_resume.py": "d5fbdf76dd3133cc0dd77b4dd23fabffe8eda1bb460dbd13d2d5d1ac63108118",
+      "tests/test_hybrid_checkpoint_faults.py": "b181bf65ef6c440d2f7f5242395f24ed861d0c471a060648b8d6432597e1273f",
+      "tests/test_hybrid_checkpoint_recovery.py": "a0e27053ced5353fc715196be8c264df6280342dab40176550f842d711650a64",
+      "tests/test_job_environments.py": "394a601b323daa0e784a79773837252d40d1ddd6ed450e4be2a4cca4554d6775",
+      "tests/test_job_storage.py": "09176eac3ce31891285f9051510e1827184484b0fbfefe42b45f63c0bea41605",
+      "tests/test_job_submission.py": "4bfc020e01fe176c6eda3eb69e88bfdae7005f61d63b590e188ef0948ee7716e",
+      "tests/test_job_timing.py": "f0bcfa50e82ef2f6da12b29944913a69a4f84853634e900cfc6812e1f026273c",
+      "tests/test_legacy_registration.py": "118daa1dc243431f0328f42d6f2bfe840e189dc1123498aac9d550851338538c",
+      "tests/test_nfs_client_setup.py": "8318ea3a2311a6c9e5a602ff97d05a056ac2892092f5195d86e393825a9c4253",
+      "tests/test_nfs_fault_probe.py": "02f22d85be67f33fa359f3628ab4fc85e5f8b5206c95df03c3261aa0adbffcb1",
+      "tests/test_nfs_server_setup.py": "c3c759540196489e19d6f29efa6efef98bd48ac0775af0f44be1ed64340dbed0",
+      "tests/test_private_workspaces.py": "68c8d4948332fa964f91f2574400e190c95185b332f6d8524e52b8b3840cc398",
+      "tests/test_queue_controls.py": "3c7841bbd93b05afdf3ff4aff75aabd3c37d175eb752b97712f8f05e4f06b77f",
+      "tests/test_resource_allocation.py": "3c3dca7a08db818b42c992cfcee9f61e53c7e67d85bcab9201a26eb3985d41ae",
+      "tests/test_staging_dispatch.py": "f3cc92e4267a3ebafb00f645d1e9dcb97d43ee4736aeca6e8c2c373ed61bc0c5",
+      "tests/test_staging_lifecycle.py": "453118cb55b2aed397a6aa80efbcfe2f3bfcacde0a016bc086aba6a3faed8df7",
+      "tests/test_staging_portal.py": "2208d104021683defe22da6101b0bcc17595bff0937f6a8e275728772473a4e5",
+      "tests/test_staging_portal_ui.cjs": "c0778688bbc8a9b3e84c7a01196a64d205b0e0f1253d0d15036587590852524e",
+      "tests/test_staging_recovery.py": "b0602ab31d4daf907f079099c7bc72336443c8bde77c6f40dd5435e8a91ad950",
+      "tests/test_storage_backends.py": "ffe2827a6260b705b8aed4d42b6c45262c32b5b08f753aaf3e7eaed12d36cb9f",
+      "tests/test_storage_config.py": "be07391f151164ad9e1e49c52762509acc7eaaedb9a0dffac00829c1a05b7e14",
+      "tests/test_storage_health.py": "d9039596f50f323031c2c7fca51374e749f610176d82aa8b564588e853658f49",
+      "tests/test_storage_inputs.py": "f5ae2788b7bb9ddac3d7bdff7983cece201dba8f5f55e900caba1f17cb2af924",
+      "tests/test_storage_manifest_drafts.py": "875f0786901d419064294dc9a239a34d2ad370e80938ec864c026c3b0ded5247",
+      "tests/test_storage_readers.py": "199b2cad890550a60390d11a55e16ec8888a54cbf57f6ceca2dcc1de74fefbd8",
+      "tests/test_storage_registry.py": "43242693fbab19733c6b8e91a6bf26ac0fc969027055cf32078fc213229e36ef",
+      "tests/test_storage_selection.py": "1cf11d870a28bab20fa9c6ab6be94952c66fd19c78c3d9bf81ab142b3db459c1",
+      "tests/test_student_portal.py": "7ce93e5db7b246e5692043b416a59806d5789d3944a847624e1c4daf1f385f94",
+      "tests/test_worker_cache.py": "321e391fc2c1f8024423da4da0e0f414c83a58458ab52de7bf4a661d4758c750",
+      "tools/README.md": "06012a45e688558d95727a75dc8136c2f88c926d635fc815d7a4d7314dfa64c5",
+      "tools/benchmarks/benchmark_training.py": "d11d4a97a57da6e1b13ee1b390bb9b4a47a3d8e32767e1d2c0ef34519c0eea75",
+      "tools/benchmarks/run_reference.py": "87d08f05f24ab6c60a6083c10ee6a3c1188aefcc980005104d9c0c56d40b7625",
+      "tools/benchmarks/verify_reference.py": "b7f6e720cfe26a0b4ad7a7c913cdb59692f1cefd371ee2f87349d748eb036620",
+      "tools/cluster_setup.py": "2abe9336d86de8e1417b4e6ce100b0a79f42f5c8c94e5d46d4a20e01e17f0c90",
+      "tools/comparisons/compare_regression_jobs.py": "9d664928238a26b0ab10c4a726c405bdfcbfddfe1506dea9e615c75f686c9ecc",
+      "tools/comparisons/compare_training_jobs.py": "024826ab2de508aa89e3e341357de114d94bd00f549d546be6b8c3b345f57b7a",
+      "tools/demos/checkpoint_recovery.py": "a09c272f3ace8758c62efd6ad7643187631e2235c85dd8acc70b3db46023bb6d",
+      "tools/demos/concurrent_jobs.py": "2f26762418051833be0851e084b6c809a1b2389b98a8c19e2876565e8c7d8360",
+      "tools/demos/fair_queue.py": "8bf4f74d365dc44418fe88a0eda30d2da326698cc574df0a94c9329496a7ef34",
+      "tools/demos/prepare_environments.py": "3bbe45fa5fa15748147d7c857d9b2e8dfeb15807470ffaccbffa6c320a7418b7",
+      "tools/demos/reboot_recovery.py": "392ebeaabed6ca60cf7d7971c26c761532ca6130c496349c00793263c16f1378",
+      "tools/nfs_client_setup.py": "3b62d8477ee30c2826e0149dd39dc9c7ecf5c5463c2ff6ea41f6ccef7393098f",
+      "tools/nfs_server_setup.py": "783a63c10262a33ef8a2f60c58aa957888b0a3a07ffa5d29919edd34ec32a56b",
+      "tools/run_tests.py": "97d643ea81ec9925c4a0eeadc5ad0db29f7ca410ea8abbc6a0de3278fa155fe0",
+      "training/README.md": "32c56be0170da0ff86b4a5417bfec46d105c4eabe842e078e9d1bcaddc41a52d",
+      "training/benchmark_job.py": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76",
+      "training/demo_job.py": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49",
+      "training/evaluate_checkpoint.py": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41",
+      "training/pytorch_job.py": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0",
+      "training/reference/README.md": "dbb0280c71ebdfac65e998dca2cf9ff9d24db074fe2f2f7bc37163e3fcaeadd8",
+      "training/reference/equation.py": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb",
+      "training/reference/logistic.py": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98",
+      "training/reference/logistic_train.py": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f",
+      "training/reference/numpy_mlp.py": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160",
+      "training/reference/numpy_mlp_train.py": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac",
+      "training/reference/provenance.json": "a9135e6445300673b3d80c9f310d0cc24e30c29b209a852d7d32eaac6c251e91",
+      "training/reference/resnet18.py": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e",
+      "training/reference/resnet18_inference.py": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c",
+      "training/reference/resnet18_train.py": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0",
+      "training/reference/tiny_cnn.py": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0",
+      "training/reference/tiny_cnn_inference.py": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15",
+      "training/reference/tiny_cnn_train.py": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+    },
+    "after_hashes": {
+      "controller/job_store.py": "a1d55ddb81f94649e4c78fea2849b89968aede677bdaa696e0d795d6f15d3f88",
+      "docs/storage/implementation-progress.md": "e61967da0f704e00d9efcfccf33c725f9c8f1e069c117e9a701d0625c802f292",
+      "tests/README.md": "4a1c4903b428d97d1a5506afb5bbb5436622d1d0dda0d354e4cf4942adca15c6",
+      "tests/test_hybrid_checkpoint_ddp_resume.py": "4ddacfd34ff4ef7e0135579daf46c4f0c8d759717849c12603cad7224cb78564",
+      "tests/test_hybrid_checkpoint_recovery.py": "78a5801e6527bb64704484d511a8c701d1e1f08d6450d42bdac40ec3ffce3f0d",
+      "tests/test_ddp_acceptance.py": "b79c995156235714aaf944612b9cb725fa38689ff53ad99b86f8e6335165fe7c",
+      "docs/storage/37-ddp-acceptance.md": "9a33975f1830c89116f749165942dfe07c35b534c0d31426bdf546e210016ed6"
+    },
+    "unchanged_core_and_prior_artifacts": {
+      "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+      "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+      "agent/checkpoint_service.py": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f",
+      "agent/checkpoint_restore_service.py": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2",
+      "agent/custom_runner.py": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130",
+      "controller/group_checkpoints.py": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2",
+      "controller/checkpoint_recovery.py": "bc24731dacdc212c8e2816ad391d30be6f55f766ae5c666ac8ad0153b4f431a2",
+      "controller/staging_dispatch.py": "75e85bd91a7e8175c79690b8c1d44c62010cd34b1986d8f5bc656cfdfec571bb",
+      "hybrid_storage/checkpoint_publication.py": "1b76141edc2fae8a765585ba4597691cefc3eb9aa9a1bb7eedd56e1eed7fc83b",
+      "hybrid_storage/checkpoint_schema.py": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12",
+      "hybrid_storage/staging_lifecycle.py": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb",
+      "config/storage.json": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+      "config/nodes.json": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf",
+      "docs/storage/34-ddp-audit.md": "655a6f5f65775cc9820a6ad22734dd357ce014eb0416219e1c5cdbb8e85f22b2",
+      "docs/storage/34-ddp-audit-evidence.json": "49005009497129bbd2a8eca6cf7fe5534b08c97984a0b6cc6283f0420d890a7a",
+      "docs/storage/35-ddp-staging.md": "e7222df6a81d3b809a785ec1e43f38c4eff6ae0b899d2463144054323c4d466c",
+      "docs/storage/35-ddp-staging-evidence.json": "a33f43f84d61b7f29ebdcc9d2f3f5ebcb3ec9c51e7b06ed618fafda12c3589e1",
+      "docs/storage/36-ddp-checkpoint-publication.md": "7d3cec3c0a960d303218c03d18055d21433c6179a9eceb4ba304ede86785e227",
+      "docs/storage/36-ddp-checkpoint-publication-evidence.json": "ab383d09000fd3a56ca75b9915a68f7c3302053d51fbac5ac3d223421af3e648",
+      "tests/test_ddp_staging.py": "f0b69aad8f4c979305cff50f0f27cf61addc486ef3eb748a1a86fc4a860637ba",
+      "tests/test_ddp_checkpoint_publication.py": "255984362b7849d3ba4f893dc46179abfe4a1534a3c1e3a5512223429a3cf624"
+    }
+  },
+  "production_fix": {
+    "file": "controller/job_store.py",
+    "function": "mark_completed",
+    "trigger": "Recovered hybrid DDP completed successfully but current job_ranks remained RUNNING.",
+    "behavior": "After existing exact final-checkpoint/all-quiescence checks, update current retry rank/group history to COMPLETED inside existing job/attempt/lease-revocation/reservation-release transaction; prior retries and other jobs untouched.",
+    "lines_added": 8,
+    "legacy_schema_api_flags_format_world_size_changes": false
+  },
+  "test_fixture_changes": "Existing default-three native fixture is parameterized for isolated 2/3-rank tests and pause markers; checkpoint recovery fixture ddp accepts workers keyword; no elastic production behavior.",
+  "runtime": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.14.1",
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2"
+    },
+    "sources": {
+      "controller/job_store.py": {
+        "sha256": "a1d55ddb81f94649e4c78fea2849b89968aede677bdaa696e0d795d6f15d3f88",
+        "definitions": {
+          "get_connection": 16,
+          "column_exists": 31,
+          "initialize_database": 42,
+          "add_job": 177,
+          "get_storage_binding": 254,
+          "require_storage_execution": 262,
+          "get_job": 270,
+          "mark_staged": 290,
+          "record_staging_error": 327,
+          "get_job_environments": 337,
+          "record_environment": 349,
+          "invalidate_environment": 413,
+          "get_jobs_by_status": 448,
+          "get_all_jobs": 469,
+          "get_reservations": 486,
+          "enqueue_custom_job": 497,
+          "mark_scheduled": 526,
+          "mark_running": 568,
+          "mark_completed": 648,
+          "requeue_after_failure": 736,
+          "return_to_queue": 815,
+          "fair_queue": 847,
+          "control_job": 880,
+          "finish_cancellation": 912,
+          "get_attempts": 929,
+          "get_ranks": 950
+        }
+      },
+      "tests/test_hybrid_checkpoint_ddp_resume.py": {
+        "sha256": "4ddacfd34ff4ef7e0135579daf46c4f0c8d759717849c12603cad7224cb78564",
+        "definitions": {
+          "RealHybridDDPTests": 36,
+          "setUp": 39,
+          "reap": 53,
+          "context": 61,
+          "run_group": 66,
+          "states": 110,
+          "equal": 116,
+          "assert_state": 123,
+          "differences": 138,
+          "test_sigkill_rank_then_committed_three_rank_resume_matches_baseline_with_stated_fp32_tolerance": 152
+        }
+      },
+      "tests/test_hybrid_checkpoint_recovery.py": {
+        "sha256": "78a5801e6527bb64704484d511a8c701d1e1f08d6450d42bdac40ec3ffce3f0d",
+        "definitions": {
+          "checkpoint_job": 34,
+          "RecoveryTests": 44,
+          "setUp": 45,
+          "coordinator": 63,
+          "install_worker": 69,
+          "response": 75,
+          "http": 81,
+          "get": 85,
+          "post": 88,
+          "job": 93,
+          "cold": 95,
+          "raw": 101,
+          "save": 123,
+          "fail": 129,
+          "ack": 142,
+          "test_cold_commit_recover_warm_private_copy_sdk_barrier_and_final_commit": 152,
+          "test_missing_or_corrupt_committed_head_refuses_cold_restart": 184,
+          "test_restore_failure_never_launches_and_retains_reservation": 191,
+          "test_final_metrics_not_completed_from_old_or_nonfinal_checkpoint": 198,
+          "test_restart_reconciles_acknowledged_launch_without_relaunch": 206,
+          "test_wrong_sdk_ack_stays_pending_and_expired_lease_cannot_start": 211,
+          "test_explicit_migration_idempotent_and_frozen_source_immutable": 218,
+          "test_restore_authentication_tamper_and_corrupt_private_copy_never_launch": 227,
+          "test_cancellation_after_restore_before_start_never_launches": 254,
+          "test_known_checkpoint_missing_head_never_cold_starts": 265,
+          "test_student_checkpoint_projection_allows_numeric_progress_only": 271,
+          "replacement": 278,
+          "test_replacement_worker_selected_by_existing_resources_restages_only_missing_inputs": 307,
+          "test_original_job_version_drift_refuses_dispatch_before_reservation": 317,
+          "ddp": 325,
+          "test_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group": 336,
+          "test_ddp_last_restore_failure_launches_zero_ranks": 363,
+          "test_real_cpu_committed_bytes_resume_model_optimizer_scheduler_rng_exactly": 375,
+          "test_checkpoint_cold_launch_without_trusted_worker_service_fails_closed": 434,
+          "test_unsigned_restore_rejected_and_no_staging_receipt_cannot_restore": 441,
+          "reset": 56,
+          "tamper": 231,
+          "corrupt": 243,
+          "cancel": 257,
+          "checkpoint_spec": 327,
+          "fail_last": 366,
+          "environment": 397,
+          "execute": 404,
+          "equal": 427
+        }
+      },
+      "tests/test_ddp_acceptance.py": {
+        "sha256": "b79c995156235714aaf944612b9cb725fa38689ff53ad99b86f8e6335165fe7c",
+        "definitions": {
+          "NativeMatrixTests": 32,
+          "ControllerMatrixTests": 173,
+          "setUp": 174,
+          "foreign_state": 46,
+          "cold": 53,
+          "fail_owned_group": 57,
+          "complete": 73,
+          "test_two_rank_native_committed_full_group_recovery_and_state_match": 88,
+          "test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage": 93,
+          "test_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group": 106,
+          "test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training": 140,
+          "test_controller_rejects_changed_world_size_before_any_new_reservation_or_launch": 178,
+          "test_competing_full_group_recoveries_reserve_launch_and_confirm_once": 186,
+          "selected": 195,
+          "run": 196
+        }
+      }
+    },
+    "storage_config": {
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false,
+      "storage_aware_staging": false,
+      "scheduler_policy": "resource"
+    }
+  },
+  "tests": {
+    "baseline.log": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_staging.py test_ddp_checkpoint_publication.py",
+      "path": "/tmp/hybrid-9-4/baseline.log",
+      "sha256": "4df7e898753cab35495c0c6dad3712ebe43342775aa24c778c11c1225ef8bf75",
+      "exit_code": 0,
+      "files": {
+        "test_ddp_staging.py": {
+          "count": 16,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/baseline.log"
+        },
+        "test_ddp_checkpoint_publication.py": {
+          "count": 15,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/baseline.log"
+        }
+      },
+      "output": "Running from a temporary source copy; live databases/runtime roots excluded.\n\nRunning test_ddp_staging.py\ntest_authorization_revoked_after_ready_cannot_launch (__main__.DDPStagingTests.test_authorization_revoked_after_ready_cannot_launch) ... ok\ntest_changed_reservation_after_ready_is_retained_for_review (__main__.DDPStagingTests.test_changed_reservation_after_ready_is_retained_for_review) ... ok\ntest_every_rank_requires_full_source_and_data_not_sampler_indices (__main__.DDPStagingTests.test_every_rank_requires_full_source_and_data_not_sampler_indices) ... ok\ntest_failure_stops_admission_of_unsubmitted_ranks (__main__.DDPStagingTests.test_failure_stops_admission_of_unsubmitted_ranks) ... ok\ntest_lost_ready_reply_tombstones_attempt_and_rejects_delayed_replay (__main__.DDPStagingTests.test_lost_ready_reply_tombstones_attempt_and_rejects_delayed_replay) ... ok\ntest_offline_member_retains_all_reservations_until_lease_fenced (__main__.DDPStagingTests.test_offline_member_retains_all_reservations_until_lease_fenced) ... ok\ntest_one_missing_object_aborts_whole_group_without_running (__main__.DDPStagingTests.test_one_missing_object_aborts_whole_group_without_running) ... ok\ntest_owner_cancellation_during_parallel_stage_never_launches (__main__.DDPStagingTests.test_owner_cancellation_during_parallel_stage_never_launches) ... ok\ntest_parallelism_two_bounds_outstanding_calls_for_three_ranks (__main__.DDPStagingTests.test_parallelism_two_bounds_outstanding_calls_for_three_ranks) ... ok\ntest_partial_failure_cancels_inflight_private_copies_then_releases_group (__main__.DDPStagingTests.test_partial_failure_cancels_inflight_private_copies_then_releases_group) ... ok\ntest_partial_launch_failure_aborts_all_and_retains_live_rank_reservations (__main__.DDPStagingTests.test_partial_launch_failure_aborts_all_and_retains_live_rank_reservations) ... ok\ntest_peer_lease_expiry_after_last_ready_still_prevents_any_launch (__main__.DDPStagingTests.test_peer_lease_expiry_after_last_ready_still_prevents_any_launch) ... ok\ntest_serial_operator_limit_is_supported_and_invalid_limits_rejected (__main__.DDPStagingTests.test_serial_operator_limit_is_supported_and_invalid_limits_rejected) ... ok\ntest_three_rank_overlap_reverse_replies_preserve_rank_binding_and_db_thread (__main__.DDPStagingTests.test_three_rank_overlap_reverse_replies_preserve_rank_binding_and_db_thread) ... ok\ntest_two_rank_group_uses_same_full_plan_barrier_and_launcher (__main__.DDPStagingTests.test_two_rank_group_uses_same_full_plan_barrier_and_launcher) ... ok\ntest_wrong_signed_ready_aborts_every_rank (__main__.DDPStagingTests.test_wrong_signed_ready_aborts_every_rank) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 46.048s\n\nOK\nPASS test_ddp_staging.py\n\nRunning test_ddp_checkpoint_publication.py\ntest_authenticated_existing_route_retry_returns_same_canonical_save (__main__.DistributedSaveTests.test_authenticated_existing_route_retry_returns_same_canonical_save) ... ok\ntest_concurrent_conflicting_save_identity_has_only_one_winner (__main__.DistributedSaveTests.test_concurrent_conflicting_save_identity_has_only_one_winner) ... ok\ntest_conflicting_bytes_cannot_reuse_checkpoint_id (__main__.DistributedSaveTests.test_conflicting_bytes_cannot_reuse_checkpoint_id) ... ok\ntest_duplicate_older_save_acknowledges_without_rewinding_newer_head (__main__.DistributedSaveTests.test_duplicate_older_save_acknowledges_without_rewinding_newer_head) ... ok\ntest_expected_group_and_every_rank_current_fence_are_required (__main__.DistributedSaveTests.test_expected_group_and_every_rank_current_fence_are_required) ... ok\ntest_fresh_transfer_id_for_same_save_returns_canonical_without_head_or_event_change (__main__.DistributedSaveTests.test_fresh_transfer_id_for_same_save_returns_canonical_without_head_or_event_change) ... ok\ntest_independent_concurrent_collectors_commit_same_save_once (__main__.DistributedSaveTests.test_independent_concurrent_collectors_commit_same_save_once) ... ok\ntest_interrupted_orphan_is_not_adopted_when_same_save_is_retried (__main__.DistributedSaveTests.test_interrupted_orphan_is_not_adopted_when_same_save_is_retried) ... ok\ntest_missing_extra_duplicate_empty_or_corrupt_rank_member_never_commits (__main__.DistributedSaveTests.test_missing_extra_duplicate_empty_or_corrupt_rank_member_never_commits) ... ok\ntest_missing_reordered_negative_or_mixed_save_acknowledgments_are_rejected (__main__.DistributedSaveTests.test_missing_reordered_negative_or_mixed_save_acknowledgments_are_rejected) ... ok\ntest_new_coordinated_save_id_at_same_step_is_distinct (__main__.DistributedSaveTests.test_new_coordinated_save_id_at_same_step_is_distinct) ... ok\ntest_new_save_cannot_regress_group_progress_or_completion (__main__.DistributedSaveTests.test_new_save_cannot_regress_group_progress_or_completion) ... ok\ntest_old_attempt_new_transfer_cannot_advance_latest (__main__.DistributedSaveTests.test_old_attempt_new_transfer_cannot_advance_latest) ... ok\ntest_one_committed_manifest_preserves_all_rank_members_hashes_and_acks (__main__.DistributedSaveTests.test_one_committed_manifest_preserves_all_rank_members_hashes_and_acks) ... ok\ntest_peer_revocation_during_duplicate_stream_cannot_bypass_authority (__main__.DistributedSaveTests.test_peer_revocation_during_duplicate_stream_cannot_bypass_authority) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 7.564s\n\nOK\nPASS test_ddp_checkpoint_publication.py\n\n2/2 test files passed in 54.2s.\n"
+    },
+    "native-verification.log": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_acceptance.py test_hybrid_checkpoint_ddp_resume.py test_group_checkpoint.py test_group_recovery.py test_distributed_dispatch.py",
+      "path": "/tmp/hybrid-9-4/native-verification.log",
+      "sha256": "4379e99353c1214cf420e0359f672542fc582409edc399ffdba925b529bc753c",
+      "exit_code": 1,
+      "files": {
+        "test_ddp_acceptance.py": {
+          "count": 6,
+          "pass": false,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/native-verification.log"
+        },
+        "test_hybrid_checkpoint_ddp_resume.py": {
+          "count": 1,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/native-verification.log"
+        },
+        "test_group_checkpoint.py": {
+          "count": 8,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/native-verification.log"
+        },
+        "test_group_recovery.py": {
+          "count": 7,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/native-verification.log"
+        },
+        "test_distributed_dispatch.py": {
+          "count": 7,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/native-verification.log"
+        }
+      },
+      "output": "Running from a temporary source copy; live databases/runtime roots excluded.\n\nRunning test_ddp_acceptance.py\ntest_competing_full_group_recoveries_reserve_launch_and_confirm_once (__main__.ControllerMatrixTests.test_competing_full_group_recoveries_reserve_launch_and_confirm_once) ... ok\ntest_controller_rejects_changed_world_size_before_any_new_reservation_or_launch (__main__.ControllerMatrixTests.test_controller_rejects_changed_world_size_before_any_new_reservation_or_launch) ... ok\ntest_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training (__main__.NativeMatrixTests.test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training) ... ERROR\ntest_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group (__main__.NativeMatrixTests.test_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group) ... ACK_CRASH_THREE_RANK_STATE_DIFFERENCES {\"0\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}], \"1\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}], \"2\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}]}\nok\ntest_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage (__main__.NativeMatrixTests.test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage) ... ok\ntest_two_rank_native_committed_full_group_recovery_and_state_match (__main__.NativeMatrixTests.test_two_rank_native_committed_full_group_recovery_and_state_match) ... TWO_RANK_STATE_DIFFERENCES {\"0\": [], \"1\": []}\nUNINTERRUPTED_TWO_RANK_DIFFERENCES {\"0\": [], \"1\": []}\nok\n\n======================================================================\nERROR: test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training (__main__.NativeMatrixTests.test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/distributed-ml-tests-7yk20s3f/tests/test_ddp_acceptance.py\", line 159, in test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training\n    processes.append(self.f.real_popen([sys.executable,str(script),'world-mismatch'],env=env,stdout=log,stderr=subprocess.STDOUT))\n                                                                                                               ^^^^^^^^^^\nNameError: name 'subprocess' is not defined. Did you forget to import 'subprocess'\n\n----------------------------------------------------------------------\nRan 6 tests in 59.664s\n\nFAILED (errors=1)\nFAIL test_ddp_acceptance.py\n\nRunning test_hybrid_checkpoint_ddp_resume.py\ntest_sigkill_rank_then_committed_three_rank_resume_matches_baseline_with_stated_fp32_tolerance (__main__.RealHybridDDPTests.test_sigkill_rank_then_committed_three_rank_resume_matches_baseline_with_stated_fp32_tolerance) ... THREE_RANK_STATE_DIFFERENCES {\"0\": [{\"dtype\": \"torch.float32\", \"max_abs\": 1.862645149230957e-09, \"path\": \"state.optimizer.state.4.exp_avg_sq\", \"shape\": [1, 4]}], \"1\": [{\"dtype\": \"torch.float32\", \"max_abs\": 1.862645149230957e-09, \"path\": \"state.optimizer.state.4.exp_avg_sq\", \"shape\": [1, 4]}], \"2\": [{\"dtype\": \"torch.float32\", \"max_abs\": 1.862645149230957e-09, \"path\": \"state.optimizer.state.4.exp_avg_sq\", \"shape\": [1, 4]}]}\nUNINTERRUPTED_THREE_RANK_DIFFERENCES {\"0\": [], \"1\": [], \"2\": []}\nok\n\n----------------------------------------------------------------------\nRan 1 test in 20.269s\n\nOK\nPASS test_hybrid_checkpoint_ddp_resume.py\n\nRunning test_group_checkpoint.py\n........\n----------------------------------------------------------------------\nRan 8 tests in 25.054s\n\nOK\n[DDP_CHECKPOINT] group: step=2 acknowledged=2/2 completed=True\n[DDP_CHECKPOINT_PENDING] group: Rank 1 state hash mismatch\n[DDP_CHECKPOINT_PENDING] group: Group checkpoint is not acknowledged by every rank\n[DDP_CHECKPOINT_PENDING] group: Group checkpoint must contain every rank exactly once\n[DDP_CHECKPOINT_PENDING] group: Group checkpoint belongs to a different attempt\n[DDP_CHECKPOINT_PENDING] group: Checkpoint belongs to a different rendezvous group\n[DDP_CHECKPOINT_PENDING] group: Group checkpoint progress regressed\n[DDP_RUNNING] group: 2 ranks\n[DDP_FINAL_CHECKPOINT_PENDING] group\n[DDP_FINAL_CHECKPOINT_PENDING] group\n[DDP_FINAL_CHECKPOINT_PENDING] group\n[DDP_STOPPING] group: Trainer exited without a complete acknowledged final DDP checkpoint\n[DDP_RESTART] group: FAILED; all ranks stopped\nPASS test_group_checkpoint.py\n\nRunning test_group_recovery.py\n.......\n----------------------------------------------------------------------\nRan 7 tests in 46.192s\n\nOK\n[DDP_RESTORE_PENDING] group: offline\n[DDP_RESTORE_PREPARED] group: step=2 ranks=2\n[DDP_RESUMED] group: step=2 acknowledged=2/2\n[DDP_RUNNING] group: 2 ranks\n[DDP_RESUMED] group: step=2 acknowledged=2/2\n[DDP_RUNNING] group: 2 ranks\n[DDP_STOPPING] group: Rank 1 did not confirm the required DDP restore\nPASS test_group_recovery.py\n\nRunning test_distributed_dispatch.py\n.......\n----------------------------------------------------------------------\nRan 7 tests in 6.837s\n\nOK\n[DDP_RUNNING] group: 2 ranks\n[DDP_CONTACT_PENDING] group rank=0: offline\n[DDP_CONTACT_PENDING] group rank=1: offline\n[DDP_STOPPING] group: Cancelled by owner\n[DDP_STOPPING] group: Rank 1 launch rejected: HTTP 409\n[DDP_STOP_PENDING] group rank=1: offline\n[DDP_RESTART] group: QUEUED; all ranks stopped\n[DDP_CONTACT_PENDING] group rank=1: lost reply\n[DDP_RUNNING] group: 2 ranks\n[DDP_COMPLETED] group: all 2 ranks finished\nPASS test_distributed_dispatch.py\n\n4/5 test files passed in 160.8s.\nFailed: test_ddp_acceptance.py\n"
+    },
+    "regression-verification.log": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_staging.py test_ddp_checkpoint_publication.py test_hybrid_checkpoint_faults.py test_hybrid_checkpoint_recovery.py test_staging_recovery.py test_storage_config.py test_queue_controls.py test_resource_allocation.py test_execution_ownership.py",
+      "path": "/tmp/hybrid-9-4/regression-verification.log",
+      "sha256": "b92c463c0c5031947d0b7148be3604b1d7d019bc72a538db35a3f551557a3ca8",
+      "exit_code": 0,
+      "files": {
+        "test_ddp_staging.py": {
+          "count": 16,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_ddp_checkpoint_publication.py": {
+          "count": 15,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_hybrid_checkpoint_faults.py": {
+          "count": 16,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_hybrid_checkpoint_recovery.py": {
+          "count": 18,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_staging_recovery.py": {
+          "count": 34,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_storage_config.py": {
+          "count": 17,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_queue_controls.py": {
+          "count": 10,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_resource_allocation.py": {
+          "count": 6,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        },
+        "test_execution_ownership.py": {
+          "count": 12,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/regression-verification.log"
+        }
+      },
+      "output": "Running from a temporary source copy; live databases/runtime roots excluded.\n\nRunning test_ddp_staging.py\ntest_authorization_revoked_after_ready_cannot_launch (__main__.DDPStagingTests.test_authorization_revoked_after_ready_cannot_launch) ... ok\ntest_changed_reservation_after_ready_is_retained_for_review (__main__.DDPStagingTests.test_changed_reservation_after_ready_is_retained_for_review) ... ok\ntest_every_rank_requires_full_source_and_data_not_sampler_indices (__main__.DDPStagingTests.test_every_rank_requires_full_source_and_data_not_sampler_indices) ... ok\ntest_failure_stops_admission_of_unsubmitted_ranks (__main__.DDPStagingTests.test_failure_stops_admission_of_unsubmitted_ranks) ... ok\ntest_lost_ready_reply_tombstones_attempt_and_rejects_delayed_replay (__main__.DDPStagingTests.test_lost_ready_reply_tombstones_attempt_and_rejects_delayed_replay) ... ok\ntest_offline_member_retains_all_reservations_until_lease_fenced (__main__.DDPStagingTests.test_offline_member_retains_all_reservations_until_lease_fenced) ... ok\ntest_one_missing_object_aborts_whole_group_without_running (__main__.DDPStagingTests.test_one_missing_object_aborts_whole_group_without_running) ... ok\ntest_owner_cancellation_during_parallel_stage_never_launches (__main__.DDPStagingTests.test_owner_cancellation_during_parallel_stage_never_launches) ... ok\ntest_parallelism_two_bounds_outstanding_calls_for_three_ranks (__main__.DDPStagingTests.test_parallelism_two_bounds_outstanding_calls_for_three_ranks) ... ok\ntest_partial_failure_cancels_inflight_private_copies_then_releases_group (__main__.DDPStagingTests.test_partial_failure_cancels_inflight_private_copies_then_releases_group) ... ok\ntest_partial_launch_failure_aborts_all_and_retains_live_rank_reservations (__main__.DDPStagingTests.test_partial_launch_failure_aborts_all_and_retains_live_rank_reservations) ... ok\ntest_peer_lease_expiry_after_last_ready_still_prevents_any_launch (__main__.DDPStagingTests.test_peer_lease_expiry_after_last_ready_still_prevents_any_launch) ... ok\ntest_serial_operator_limit_is_supported_and_invalid_limits_rejected (__main__.DDPStagingTests.test_serial_operator_limit_is_supported_and_invalid_limits_rejected) ... ok\ntest_three_rank_overlap_reverse_replies_preserve_rank_binding_and_db_thread (__main__.DDPStagingTests.test_three_rank_overlap_reverse_replies_preserve_rank_binding_and_db_thread) ... ok\ntest_two_rank_group_uses_same_full_plan_barrier_and_launcher (__main__.DDPStagingTests.test_two_rank_group_uses_same_full_plan_barrier_and_launcher) ... ok\ntest_wrong_signed_ready_aborts_every_rank (__main__.DDPStagingTests.test_wrong_signed_ready_aborts_every_rank) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 50.874s\n\nOK\nPASS test_ddp_staging.py\n\nRunning test_ddp_checkpoint_publication.py\ntest_authenticated_existing_route_retry_returns_same_canonical_save (__main__.DistributedSaveTests.test_authenticated_existing_route_retry_returns_same_canonical_save) ... ok\ntest_concurrent_conflicting_save_identity_has_only_one_winner (__main__.DistributedSaveTests.test_concurrent_conflicting_save_identity_has_only_one_winner) ... ok\ntest_conflicting_bytes_cannot_reuse_checkpoint_id (__main__.DistributedSaveTests.test_conflicting_bytes_cannot_reuse_checkpoint_id) ... ok\ntest_duplicate_older_save_acknowledges_without_rewinding_newer_head (__main__.DistributedSaveTests.test_duplicate_older_save_acknowledges_without_rewinding_newer_head) ... ok\ntest_expected_group_and_every_rank_current_fence_are_required (__main__.DistributedSaveTests.test_expected_group_and_every_rank_current_fence_are_required) ... ok\ntest_fresh_transfer_id_for_same_save_returns_canonical_without_head_or_event_change (__main__.DistributedSaveTests.test_fresh_transfer_id_for_same_save_returns_canonical_without_head_or_event_change) ... ok\ntest_independent_concurrent_collectors_commit_same_save_once (__main__.DistributedSaveTests.test_independent_concurrent_collectors_commit_same_save_once) ... ok\ntest_interrupted_orphan_is_not_adopted_when_same_save_is_retried (__main__.DistributedSaveTests.test_interrupted_orphan_is_not_adopted_when_same_save_is_retried) ... ok\ntest_missing_extra_duplicate_empty_or_corrupt_rank_member_never_commits (__main__.DistributedSaveTests.test_missing_extra_duplicate_empty_or_corrupt_rank_member_never_commits) ... ok\ntest_missing_reordered_negative_or_mixed_save_acknowledgments_are_rejected (__main__.DistributedSaveTests.test_missing_reordered_negative_or_mixed_save_acknowledgments_are_rejected) ... ok\ntest_new_coordinated_save_id_at_same_step_is_distinct (__main__.DistributedSaveTests.test_new_coordinated_save_id_at_same_step_is_distinct) ... ok\ntest_new_save_cannot_regress_group_progress_or_completion (__main__.DistributedSaveTests.test_new_save_cannot_regress_group_progress_or_completion) ... ok\ntest_old_attempt_new_transfer_cannot_advance_latest (__main__.DistributedSaveTests.test_old_attempt_new_transfer_cannot_advance_latest) ... ok\ntest_one_committed_manifest_preserves_all_rank_members_hashes_and_acks (__main__.DistributedSaveTests.test_one_committed_manifest_preserves_all_rank_members_hashes_and_acks) ... ok\ntest_peer_revocation_during_duplicate_stream_cannot_bypass_authority (__main__.DistributedSaveTests.test_peer_revocation_during_duplicate_stream_cannot_bypass_authority) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 8.027s\n\nOK\nPASS test_ddp_checkpoint_publication.py\n\nRunning test_hybrid_checkpoint_faults.py\ntest_controller_host_boot_mismatch_never_renews_old_owner_or_reuses_live_slot (__main__.CheckpointFaultTests.test_controller_host_boot_mismatch_never_renews_old_owner_or_reuses_live_slot) ... ok\ntest_corrupt_committed_final_never_publishes_results_or_completes (__main__.CheckpointFaultTests.test_corrupt_committed_final_never_publishes_results_or_completes) ... ok\ntest_ddp_stale_rank_checkpoint_result_rejected_for_entire_group (__main__.CheckpointFaultTests.test_ddp_stale_rank_checkpoint_result_rejected_for_entire_group) ... ok\ntest_incomplete_new_ddp_bundle_never_displaces_last_recoverable_commit (__main__.CheckpointFaultTests.test_incomplete_new_ddp_bundle_never_displaces_last_recoverable_commit) ... ok\ntest_interrupted_upload_and_real_connection_reopen_keep_only_previous_commit (__main__.CheckpointFaultTests.test_interrupted_upload_and_real_connection_reopen_keep_only_previous_commit) ... ok\ntest_lost_restore_reply_and_controller_restart_never_blindly_launches (__main__.CheckpointFaultTests.test_lost_restore_reply_and_controller_restart_never_blindly_launches) ... ok\ntest_lost_start_reply_on_recovery_fences_instead_of_starting_twice (__main__.CheckpointFaultTests.test_lost_start_reply_on_recovery_fences_instead_of_starting_twice) ... ok\ntest_missing_old_checkpoint_is_not_hidden_by_newer_incomplete_or_legacy_file (__main__.CheckpointFaultTests.test_missing_old_checkpoint_is_not_hidden_by_newer_incomplete_or_legacy_file) ... ok\ntest_nfs_outage_warm_recovery_uses_zero_missing_bytes_and_cold_replacement_fails_closed (__main__.CheckpointFaultTests.test_nfs_outage_warm_recovery_uses_zero_missing_bytes_and_cold_replacement_fails_closed) ... ok\ntest_partial_restore_body_and_no_space_never_publish_private_resume_or_launch (__main__.CheckpointFaultTests.test_partial_restore_body_and_no_space_never_publish_private_resume_or_launch) ... ok\ntest_process_death_after_checkpoint_rename_does_not_promote_orphan_on_restart (__main__.CheckpointFaultTests.test_process_death_after_checkpoint_rename_does_not_promote_orphan_on_restart) ... ok\ntest_restart_after_sdk_proof_event_before_running_is_idempotent (__main__.CheckpointFaultTests.test_restart_after_sdk_proof_event_before_running_is_idempotent) ... ok\ntest_restore_connection_dies_after_partial_read_no_receipt_or_private_file_accepted (__main__.CheckpointFaultTests.test_restore_connection_dies_after_partial_read_no_receipt_or_private_file_accepted) ... ok\ntest_sigkill_controller_publisher_process_after_rename_preserves_head_on_reopen (__main__.CheckpointFaultTests.test_sigkill_controller_publisher_process_after_rename_preserves_head_on_reopen) ... ok\ntest_two_sqlite_connections_competing_recovery_reserve_and_launch_once (__main__.CheckpointFaultTests.test_two_sqlite_connections_competing_recovery_reserve_and_launch_once) ... ok\ntest_worker_connection_loss_retains_reservation_until_fenced_then_late_result_rejected (__main__.CheckpointFaultTests.test_worker_connection_loss_retains_reservation_until_fenced_then_late_result_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 56.560s\n\nOK\nPASS test_hybrid_checkpoint_faults.py\n\nRunning test_hybrid_checkpoint_recovery.py\ntest_cancellation_after_restore_before_start_never_launches (__main__.RecoveryTests.test_cancellation_after_restore_before_start_never_launches) ... ok\ntest_checkpoint_cold_launch_without_trusted_worker_service_fails_closed (__main__.RecoveryTests.test_checkpoint_cold_launch_without_trusted_worker_service_fails_closed) ... ok\ntest_cold_commit_recover_warm_private_copy_sdk_barrier_and_final_commit (__main__.RecoveryTests.test_cold_commit_recover_warm_private_copy_sdk_barrier_and_final_commit) ... ok\ntest_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group (__main__.RecoveryTests.test_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group) ... ok\ntest_ddp_last_restore_failure_launches_zero_ranks (__main__.RecoveryTests.test_ddp_last_restore_failure_launches_zero_ranks) ... ok\ntest_explicit_migration_idempotent_and_frozen_source_immutable (__main__.RecoveryTests.test_explicit_migration_idempotent_and_frozen_source_immutable) ... ok\ntest_final_metrics_not_completed_from_old_or_nonfinal_checkpoint (__main__.RecoveryTests.test_final_metrics_not_completed_from_old_or_nonfinal_checkpoint) ... ok\ntest_known_checkpoint_missing_head_never_cold_starts (__main__.RecoveryTests.test_known_checkpoint_missing_head_never_cold_starts) ... ok\ntest_missing_or_corrupt_committed_head_refuses_cold_restart (__main__.RecoveryTests.test_missing_or_corrupt_committed_head_refuses_cold_restart) ... ok\ntest_original_job_version_drift_refuses_dispatch_before_reservation (__main__.RecoveryTests.test_original_job_version_drift_refuses_dispatch_before_reservation) ... ok\ntest_real_cpu_committed_bytes_resume_model_optimizer_scheduler_rng_exactly (__main__.RecoveryTests.test_real_cpu_committed_bytes_resume_model_optimizer_scheduler_rng_exactly) ... ok\ntest_replacement_worker_selected_by_existing_resources_restages_only_missing_inputs (__main__.RecoveryTests.test_replacement_worker_selected_by_existing_resources_restages_only_missing_inputs) ... ok\ntest_restart_reconciles_acknowledged_launch_without_relaunch (__main__.RecoveryTests.test_restart_reconciles_acknowledged_launch_without_relaunch) ... ok\ntest_restore_authentication_tamper_and_corrupt_private_copy_never_launch (__main__.RecoveryTests.test_restore_authentication_tamper_and_corrupt_private_copy_never_launch) ... ok\ntest_restore_failure_never_launches_and_retains_reservation (__main__.RecoveryTests.test_restore_failure_never_launches_and_retains_reservation) ... ok\ntest_student_checkpoint_projection_allows_numeric_progress_only (__main__.RecoveryTests.test_student_checkpoint_projection_allows_numeric_progress_only) ... ok\ntest_unsigned_restore_rejected_and_no_staging_receipt_cannot_restore (__main__.RecoveryTests.test_unsigned_restore_rejected_and_no_staging_receipt_cannot_restore) ... ok\ntest_wrong_sdk_ack_stays_pending_and_expired_lease_cannot_start (__main__.RecoveryTests.test_wrong_sdk_ack_stays_pending_and_expired_lease_cannot_start) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 64.141s\n\nOK\nPASS test_hybrid_checkpoint_recovery.py\n\nRunning test_staging_recovery.py\ntest_actual_disposable_guardian_descendants_stop_before_pins_release (__main__.RecoveryTests.test_actual_disposable_guardian_descendants_stop_before_pins_release) ... ok\ntest_authenticated_control_cannot_spoof_other_worker_or_stale_fence (__main__.RecoveryTests.test_authenticated_control_cannot_spoof_other_worker_or_stale_fence) ... ok\ntest_background_watchdog_cleans_expired_staging_without_new_request (__main__.RecoveryTests.test_background_watchdog_cleans_expired_staging_without_new_request) ... ok\ntest_cancel_before_stage_delivery_installs_durable_tombstone (__main__.RecoveryTests.test_cancel_before_stage_delivery_installs_durable_tombstone) ... ok\ntest_cancel_during_private_copy_does_not_wait_for_materializer_or_start_training (__main__.RecoveryTests.test_cancel_during_private_copy_does_not_wait_for_materializer_or_start_training) ... ok\ntest_cancel_preserves_published_private_outputs_checkpoints_and_input_objects (__main__.RecoveryTests.test_cancel_preserves_published_private_outputs_checkpoints_and_input_objects) ... ok\ntest_cancel_ready_tombstones_releases_pins_and_rejects_delayed_start (__main__.RecoveryTests.test_cancel_ready_tombstones_releases_pins_and_rejects_delayed_start) ... ok\ntest_cleanup_migration_idempotent_full_local_and_retains_existing_history (__main__.RecoveryTests.test_cleanup_migration_idempotent_full_local_and_retains_existing_history) ... ok\ntest_cleanup_schema_partial_or_interrupted_migration_does_not_repair_existing_data (__main__.RecoveryTests.test_cleanup_schema_partial_or_interrupted_migration_does_not_repair_existing_data) ... ok\ntest_completion_closes_exact_bound_attempt_not_later_noncurrent_history (__main__.RecoveryTests.test_completion_closes_exact_bound_attempt_not_later_noncurrent_history) ... ok\ntest_controller_gap_before_lease_or_stage_does_not_rewrite_previous_attempt (__main__.RecoveryTests.test_controller_gap_before_lease_or_stage_does_not_rewrite_previous_attempt) ... ok\ntest_controller_restart_aborts_forgotten_staging_instead_of_launching (__main__.RecoveryTests.test_controller_restart_aborts_forgotten_staging_instead_of_launching) ... ok\ntest_default_reconciliation_and_renewal_never_send_unsigned_hybrid_requests (__main__.RecoveryTests.test_default_reconciliation_and_renewal_never_send_unsigned_hybrid_requests) ... ok\ntest_expired_ready_attempt_self_fences_without_controller_request (__main__.RecoveryTests.test_expired_ready_attempt_self_fences_without_controller_request) ... ok\ntest_inherited_cache_slot_retains_pins_until_orphan_producer_reaped (__main__.RecoveryTests.test_inherited_cache_slot_retains_pins_until_orphan_producer_reaped) ... ok\ntest_interrupted_fresh_migration_rolls_back_and_concurrent_repeats_preserve_old_rows (__main__.RecoveryTests.test_interrupted_fresh_migration_rolls_back_and_concurrent_repeats_preserve_old_rows) ... ok\ntest_journal_conflicting_identity_or_corruption_fails_closed (__main__.RecoveryTests.test_journal_conflicting_identity_or_corruption_fails_closed) ... ok\ntest_late_success_and_publication_after_expiry_are_rejected (__main__.RecoveryTests.test_late_success_and_publication_after_expiry_are_rejected) ... ok\ntest_launch_without_termination_or_quiescence_provider_is_rejected (__main__.RecoveryTests.test_launch_without_termination_or_quiescence_provider_is_rejected) ... ok\ntest_live_known_process_or_false_containment_proof_keeps_pins (__main__.RecoveryTests.test_live_known_process_or_false_containment_proof_keeps_pins) ... ok\ntest_missing_cleanup_migration_refuses_dispatch_before_reservation (__main__.RecoveryTests.test_missing_cleanup_migration_refuses_dispatch_before_reservation) ... ok\ntest_normal_completion_releases_pins_and_commits_only_authenticated_current_outcome (__main__.RecoveryTests.test_normal_completion_releases_pins_and_commits_only_authenticated_current_outcome) ... ok\ntest_offline_worker_keeps_reservation_until_safe_expiry_and_cleans_on_return (__main__.RecoveryTests.test_offline_worker_keeps_reservation_until_safe_expiry_and_cleans_on_return) ... ok\ntest_orphan_parts_cleanup_preserves_unknown_files_and_cache_objects (__main__.RecoveryTests.test_orphan_parts_cleanup_preserves_unknown_files_and_cache_objects) ... ok\ntest_orphan_symlink_is_never_followed_or_deleted (__main__.RecoveryTests.test_orphan_symlink_is_never_followed_or_deleted) ... ok\ntest_publication_serializes_with_cancellation_and_rejects_unreserved_worker (__main__.RecoveryTests.test_publication_serializes_with_cancellation_and_rejects_unreserved_worker) ... ok\ntest_replayed_cleanup_for_terminal_attempt_does_not_terminate_another_owner (__main__.RecoveryTests.test_replayed_cleanup_for_terminal_attempt_does_not_terminate_another_owner) ... ok\ntest_restarted_running_worker_retains_pins_without_descendant_proof (__main__.RecoveryTests.test_restarted_running_worker_retains_pins_without_descendant_proof) ... ok\ntest_signed_running_renewal_preserves_identity_and_extends_both_deadlines (__main__.RecoveryTests.test_signed_running_renewal_preserves_identity_and_extends_both_deadlines) ... ok\ntest_single_service_lock_prevents_two_bootstraps_from_reconciling_each_other (__main__.RecoveryTests.test_single_service_lock_prevents_two_bootstraps_from_reconciling_each_other) ... ok\ntest_three_rank_cancellation_preserves_group_until_every_rank_is_quiescent (__main__.RecoveryTests.test_three_rank_cancellation_preserves_group_until_every_rank_is_quiescent) ... ok\ntest_unpin_disk_error_retains_controller_reservation_until_idempotent_retry (__main__.RecoveryTests.test_unpin_disk_error_retains_controller_reservation_until_idempotent_retry) ... ok\ntest_unpublished_partial_workspace_removed_but_published_outputs_retained (__main__.RecoveryTests.test_unpublished_partial_workspace_removed_but_published_outputs_retained) ... ok\ntest_worker_restart_never_resurrects_ready_workspace (__main__.RecoveryTests.test_worker_restart_never_resurrects_ready_workspace) ... ok\n\n----------------------------------------------------------------------\nRan 34 tests in 68.062s\n\nOK\nPASS test_staging_recovery.py\n\nRunning test_storage_config.py\ntest_all_24_combinations_are_checked (__main__.ConfigTests.test_all_24_combinations_are_checked) ... ok\ntest_booleans_do_not_coerce_integers_strings_or_null (__main__.ConfigTests.test_booleans_do_not_coerce_integers_strings_or_null) ... ok\ntest_cli_checks_legacy_held_nfs_and_rejects_unimplemented_features (__main__.ConfigTests.test_cli_checks_legacy_held_nfs_and_rejects_unimplemented_features) ... ok\ntest_duplicate_malformed_nonfinite_and_invalid_utf8_json_are_rejected (__main__.ConfigTests.test_duplicate_malformed_nonfinite_and_invalid_utf8_json_are_rejected) ... ok\ntest_import_and_loading_have_no_db_or_backend_side_effects (__main__.ConfigTests.test_import_and_loading_have_no_db_or_backend_side_effects) ... ok\ntest_invalid_enums_and_nonobject_values_fail_closed (__main__.ConfigTests.test_invalid_enums_and_nonobject_values_fail_closed) ... ok\ntest_missing_empty_partial_and_explicit_off_are_identical (__main__.ConfigTests.test_missing_empty_partial_and_explicit_off_are_identical) ... ok\ntest_missing_file_creates_nothing (__main__.ConfigTests.test_missing_file_creates_nothing) ... ok\ntest_oversized_and_excessively_nested_documents_are_rejected (__main__.ConfigTests.test_oversized_and_excessively_nested_documents_are_rejected) ... ok\ntest_permission_and_io_errors_do_not_fall_back (__main__.ConfigTests.test_permission_and_io_errors_do_not_fall_back) ... ok\ntest_settings_are_immutable_and_direct_construction_validates (__main__.ConfigTests.test_settings_are_immutable_and_direct_construction_validates) ... ok\ntest_symlinks_fifo_and_directory_are_not_treated_as_missing_config (__main__.ConfigTests.test_symlinks_fifo_and_directory_are_not_treated_as_missing_config) ... ok\ntest_unknown_and_old_draft_names_are_not_silently_ignored (__main__.ConfigTests.test_unknown_and_old_draft_names_are_not_silently_ignored) ... ok\ntest_dispatcher_defaults_and_held_nfs_preserve_legacy_monitor_order (__main__.LegacyStartupTests.test_dispatcher_defaults_and_held_nfs_preserve_legacy_monitor_order) ... ok\ntest_off_and_missing_preserve_uploaded_inputs_and_resource_selection (__main__.LegacyStartupTests.test_off_and_missing_preserve_uploaded_inputs_and_resource_selection) ... ok\ntest_unsupported_cache_blocks_dispatcher_before_lock_or_renewals (__main__.LegacyStartupTests.test_unsupported_cache_blocks_dispatcher_before_lock_or_renewals) ... ok\ntest_unsupported_or_malformed_config_blocks_portal_before_auth_storage (__main__.LegacyStartupTests.test_unsupported_or_malformed_config_blocks_portal_before_auth_storage) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 1.168s\n\nOK\nPASS test_storage_config.py\n\nRunning test_queue_controls.py\n..........\n----------------------------------------------------------------------\nRan 10 tests in 0.644s\n\nOK\n[CANCEL_PENDING] a1: lost stop\n[CANCEL_PENDING] a1: offline\n[CANCEL_PENDING] a1: original attempt identity not confirmed\nPASS test_queue_controls.py\n\nRunning test_resource_allocation.py\n......\n----------------------------------------------------------------------\nRan 6 tests in 0.630s\n\nOK\n[SCHEDULER] candidate=pi02 cpu=1% available_ram=3GB\n\nScheduling uncertain (dummy) on pi01\npi01 marked unhealthy for 20s\nDispatch to pi01 failed.\n[START_UNCERTAIN] uncertain: waiting for original worker: offline\nPASS test_resource_allocation.py\n\nRunning test_execution_ownership.py\n............\n----------------------------------------------------------------------\nRan 12 tests in 2.301s\n\nOK\n\n[FAILURE_DETECTED] j\nNode: unit-node\nReason: Original network lease failure\n[FAILED_ARTIFACTS_UNAVAILABLE] j: FENCED stale files\nj -> QUEUED\n[LEASE_RENEWAL_BLOCKED] j: reply lost\n[CUSTOM_CHECKPOINT] j: step=5 completed=False\n[CUSTOM_CHECKPOINT_PENDING] j: FENCED: stale attempt may not publish checkpoints or results\nPASS test_execution_ownership.py\n\n9/9 test files passed in 254.9s.\n"
+    },
+    "acceptance-final.log": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_acceptance.py",
+      "path": "/tmp/hybrid-9-4/acceptance-final.log",
+      "sha256": "3821972533313e1c7e49aa2636299cb7a3e3c69db861f669f61b7ca3900e717f",
+      "exit_code": 0,
+      "files": {
+        "test_ddp_acceptance.py": {
+          "count": 6,
+          "pass": true,
+          "skips": 0,
+          "log": "/tmp/hybrid-9-4/acceptance-final.log"
+        }
+      },
+      "output": "Running from a temporary source copy; live databases/runtime roots excluded.\n\nRunning test_ddp_acceptance.py\ntest_competing_full_group_recoveries_reserve_launch_and_confirm_once (__main__.ControllerMatrixTests.test_competing_full_group_recoveries_reserve_launch_and_confirm_once) ... ok\ntest_controller_rejects_changed_world_size_before_any_new_reservation_or_launch (__main__.ControllerMatrixTests.test_controller_rejects_changed_world_size_before_any_new_reservation_or_launch) ... ok\ntest_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training (__main__.NativeMatrixTests.test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training) ... ok\ntest_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group (__main__.NativeMatrixTests.test_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group) ... ACK_CRASH_THREE_RANK_STATE_DIFFERENCES {\"0\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}], \"1\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}], \"2\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}]}\nok\ntest_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage (__main__.NativeMatrixTests.test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage) ... ok\ntest_two_rank_native_committed_full_group_recovery_and_state_match (__main__.NativeMatrixTests.test_two_rank_native_committed_full_group_recovery_and_state_match) ... TWO_RANK_STATE_DIFFERENCES {\"0\": [], \"1\": []}\nUNINTERRUPTED_TWO_RANK_DIFFERENCES {\"0\": [], \"1\": []}\nok\n\n----------------------------------------------------------------------\nRan 6 tests in 59.609s\n\nOK\nPASS test_ddp_acceptance.py\n\n1/1 test files passed in 60.4s.\n"
+    }
+  },
+  "latest_per_file": {
+    "test_ddp_acceptance.py": {
+      "count": 6,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/acceptance-final.log"
+    },
+    "test_hybrid_checkpoint_ddp_resume.py": {
+      "count": 1,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/native-verification.log"
+    },
+    "test_group_checkpoint.py": {
+      "count": 8,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/native-verification.log"
+    },
+    "test_group_recovery.py": {
+      "count": 7,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/native-verification.log"
+    },
+    "test_distributed_dispatch.py": {
+      "count": 7,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/native-verification.log"
+    },
+    "test_ddp_staging.py": {
+      "count": 16,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_ddp_checkpoint_publication.py": {
+      "count": 15,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_hybrid_checkpoint_faults.py": {
+      "count": 16,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_hybrid_checkpoint_recovery.py": {
+      "count": 18,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_staging_recovery.py": {
+      "count": 34,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_storage_config.py": {
+      "count": 17,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_queue_controls.py": {
+      "count": 10,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_resource_allocation.py": {
+      "count": 6,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    },
+    "test_execution_ownership.py": {
+      "count": 12,
+      "pass": true,
+      "skips": 0,
+      "log": "/tmp/hybrid-9-4/regression-verification.log"
+    }
+  },
+  "final_unique_tests": 173,
+  "final_unique_files": 14,
+  "new_tests": 6,
+  "baseline_tests": 31,
+  "remaining_failures": 0,
+  "remaining_errors": 0,
+  "skips": 0,
+  "development": {
+    "initial_matrix": {
+      "path": "/tmp/hybrid-9-4/acceptance-development.log",
+      "sha256": "4c58e2f00934063202ad73f1d2f8b0c410d94bcf18c0a1f0dd0f58475cdf78fe",
+      "exit_code": 1,
+      "output": "Running from a temporary source copy; live databases/runtime roots excluded.\n\nRunning test_ddp_acceptance.py\ntest_competing_full_group_recoveries_reserve_launch_and_confirm_once (__main__.ControllerMatrixTests.test_competing_full_group_recoveries_reserve_launch_and_confirm_once) ... ok\ntest_controller_rejects_changed_world_size_before_any_new_reservation_or_launch (__main__.ControllerMatrixTests.test_controller_rejects_changed_world_size_before_any_new_reservation_or_launch) ... ok\ntest_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training (__main__.NativeMatrixTests.test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training) ... ERROR\ntest_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group (__main__.NativeMatrixTests.test_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group) ... ACK_CRASH_THREE_RANK_STATE_DIFFERENCES {\"0\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}], \"1\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}], \"2\": [{\"dtype\": \"torch.float32\", \"max_abs\": 8.881784197001252e-16, \"path\": \"state.optimizer.state.1.exp_avg\", \"shape\": [4]}]}\nok\ntest_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage (__main__.NativeMatrixTests.test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage) ... FAIL\ntest_two_rank_native_committed_full_group_recovery_and_state_match (__main__.NativeMatrixTests.test_two_rank_native_committed_full_group_recovery_and_state_match) ... TWO_RANK_STATE_DIFFERENCES {\"0\": [], \"1\": []}\nUNINTERRUPTED_TWO_RANK_DIFFERENCES {\"0\": [], \"1\": []}\nok\n\n======================================================================\nERROR: test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training (__main__.NativeMatrixTests.test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/distributed-ml-tests-68lza_r9/tests/test_ddp_acceptance.py\", line 163, in test_native_two_rank_load_rejects_real_three_rank_checkpoint_without_training\n    self.assertIn('worker count',json.loads((folder/'error.json').read_text())['error'])\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/pathlib.py\", line 1029, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/pathlib.py\", line 1015, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/tmp/storage-registry-44c4_oil/world-mismatch/0/error.json'\n\n======================================================================\nFAIL: test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage (__main__.NativeMatrixTests.test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/distributed-ml-tests-68lza_r9/tests/test_ddp_acceptance.py\", line 103, in test_three_rank_process_crash_before_training_retries_full_group_without_foreign_damage\n    self.assertEqual([row['status'] for row in fixtures.store.get_ranks(self.f.job_id,1)],['COMPLETED']*3)\nAssertionError: Lists differ: ['RUNNING', 'RUNNING', 'RUNNING'] != ['COMPLETED', 'COMPLETED', 'COMPLETED']\n\nFirst differing element 0:\n'RUNNING'\n'COMPLETED'\n\n- ['RUNNING', 'RUNNING', 'RUNNING']\n+ ['COMPLETED', 'COMPLETED', 'COMPLETED']\n\n----------------------------------------------------------------------\nRan 6 tests in 57.190s\n\nFAILED (failures=1, errors=1)\nFAIL test_ddp_acceptance.py\n\n0/1 test files passed in 58.0s.\nFailed: test_ddp_acceptance.py\n"
+    },
+    "initial_findings": [
+      "Existing completion-history defect retained RUNNING labels after a completed retry.",
+      "New world-mismatch fixture incorrectly selected two ranks for the intended real three-rank source."
+    ],
+    "later_test_error": "Import cleanup removed subprocess, still used for STDERR redirection; restored and reran affected six-case file.",
+    "combined_native_command_exit_1_retained": "Four existing native files passed; only the failed new file was superseded by acceptance-final.log. Passing results are counted once.",
+    "no_tolerance_or_security_assertion_weakened": true
+  },
+  "native_scope": {
+    "actual": "CPU Gloo, real SDK save/load, Torch optimizer/model/scheduler/RNG, owned rank SIGKILL, whole-group child reap, native 2/3-rank retries",
+    "mocked": "outer agent launcher, containment callbacks after actual child reap, NFS mount facts, Flask transport and result collection",
+    "foreign_job": "Bob-owned disposable HELD job full row/file hashes/events unchanged across all four new native scenarios; result collection only targets test job",
+    "new_three_rank_ack_crash": "Step-two private proposal exists, actual ACK collective incomplete; latest and authoritative committed cut remain step one; all three resume and complete at step six.",
+    "world_size": "Controller immutable-count rejection and actual two-rank SDK refusal of real three-rank archive before training/restore ACK",
+    "tolerance": {
+      "final_model_optimizer_atol": 1e-08,
+      "rtol": 1e-07,
+      "other_state_assertions": "exact"
+    },
+    "two_rank_reported_differences": [],
+    "ack_crash_three_rank_reported_delta": {
+      "path": "state.optimizer.state.1.exp_avg",
+      "max_abs": 8.881784197001252e-16,
+      "ranks": [
+        0,
+        1,
+        2
+      ]
+    },
+    "existing_three_rank_reported_delta": {
+      "path": "state.optimizer.state.4.exp_avg_sq",
+      "max_abs": 1.862645149230957e-09,
+      "ranks": [
+        0,
+        1,
+        2
+      ]
+    },
+    "not_a_benchmark_or_physical_result": true
+  },
+  "read_only_cluster": {
+    "facts": {
+      "time_utc": "2026-11-09T08:49:51.185509+00:00",
+      "scope": "read-only GET/SSH; no jobs, mounts, service or deployment mutations",
+      "nodes": [
+        {
+          "id": "pi01",
+          "configured_ip": "100.101.90.46",
+          "ssh_alias": "pi01",
+          "health": {
+            "error": "URLError",
+            "detail": "<urlopen error timed out>"
+          },
+          "resources": {
+            "error": "URLError",
+            "detail": "<urlopen error timed out>"
+          },
+          "ssh": {
+            "command": [
+              "ssh",
+              "-T",
+              "-o",
+              "BatchMode=yes",
+              "-o",
+              "ConnectTimeout=5",
+              "-o",
+              "ConnectionAttempts=1",
+              "-o",
+              "StrictHostKeyChecking=yes",
+              "-o",
+              "UpdateHostKeys=no",
+              "-o",
+              "ControlMaster=no",
+              "-o",
+              "ControlPath=none",
+              "-o",
+              "PermitLocalCommand=no",
+              "pi01",
+              "python3 -B -"
+            ],
+            "returncode": 255,
+            "stderr": "ssh: connect to host 100.101.90.46 port 22: Connection timed out"
+          }
+        },
+        {
+          "id": "pi02",
+          "configured_ip": "100.91.135.18",
+          "ssh_alias": "pi02",
+          "health": {
+            "identity_matches": true,
+            "node": "pi02",
+            "status": "ONLINE",
+            "architecture": "aarch64",
+            "python": "3.11.16",
+            "execution_ownership": {
+              "protocol": 1
+            }
+          },
+          "resources": {
+            "identity_matches": true,
+            "node": "pi02",
+            "status": "ONLINE",
+            "node_state": "IDLE",
+            "execution_ownership": {
+              "protocol": 1
+            },
+            "slots": {
+              "available": 1,
+              "total": 1
+            }
+          },
+          "ssh": {
+            "command": [
+              "ssh",
+              "-T",
+              "-o",
+              "BatchMode=yes",
+              "-o",
+              "ConnectTimeout=5",
+              "-o",
+              "ConnectionAttempts=1",
+              "-o",
+              "StrictHostKeyChecking=yes",
+              "-o",
+              "UpdateHostKeys=no",
+              "-o",
+              "ControlMaster=no",
+              "-o",
+              "ControlPath=none",
+              "-o",
+              "PermitLocalCommand=no",
+              "pi02",
+              "python3 -B -"
+            ],
+            "returncode": 0,
+            "stderr": "",
+            "facts": {
+              "hostname": "pi02",
+              "machine": "aarch64",
+              "python": "3.11.2",
+              "service": {
+                "returncode": 0,
+                "properties": {
+                  "WorkingDirectory": "/home/pi/distributed-dl-system",
+                  "User": "pi",
+                  "PrivateMounts": "no",
+                  "ActiveState": "active",
+                  "SubState": "running"
+                }
+              },
+              "mounts": {
+                "returncode": 0,
+                "output": "{\n   \"filesystems\": [\n      {\n         \"source\": \"192.168.10.150:/srv/nfs/cifar10_data\",\n         \"target\": \"/mnt/nfs_share\",\n         \"fstype\": \"nfs4\",\n         \"options\": \"rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.150\"\n      }\n   ]\n}"
+              },
+              "deployed_files": {
+                "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+                "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+                "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+                "agent/staging.py": null,
+                "agent/checkpoint_service.py": null,
+                "hybrid_storage/staging_protocol.py": null,
+                "hybrid_storage/worker_cache.py": null
+              },
+              "matches_checkout": {
+                "agent/agent.py": false,
+                "agent/dl_checkpoint.py": true,
+                "agent/checkpoint_protocol.py": true
+              }
+            }
+          }
+        },
+        {
+          "id": "pi03",
+          "configured_ip": "100.64.202.71",
+          "ssh_alias": "pi03",
+          "health": {
+            "identity_matches": true,
+            "node": "pi03",
+            "status": "ONLINE",
+            "architecture": "aarch64",
+            "python": "3.11.16",
+            "execution_ownership": {
+              "protocol": 1
+            }
+          },
+          "resources": {
+            "identity_matches": true,
+            "node": "pi03",
+            "status": "ONLINE",
+            "node_state": "IDLE",
+            "execution_ownership": {
+              "protocol": 1
+            },
+            "slots": {
+              "available": 1,
+              "total": 1
+            }
+          },
+          "ssh": {
+            "command": [
+              "ssh",
+              "-T",
+              "-o",
+              "BatchMode=yes",
+              "-o",
+              "ConnectTimeout=5",
+              "-o",
+              "ConnectionAttempts=1",
+              "-o",
+              "StrictHostKeyChecking=yes",
+              "-o",
+              "UpdateHostKeys=no",
+              "-o",
+              "ControlMaster=no",
+              "-o",
+              "ControlPath=none",
+              "-o",
+              "PermitLocalCommand=no",
+              "pi03",
+              "python3 -B -"
+            ],
+            "returncode": 0,
+            "stderr": "",
+            "facts": {
+              "hostname": "pi03",
+              "machine": "aarch64",
+              "python": "3.11.2",
+              "service": {
+                "returncode": 0,
+                "properties": {
+                  "WorkingDirectory": "/home/pi/distributed-dl-system",
+                  "User": "pi",
+                  "PrivateMounts": "no",
+                  "ActiveState": "active",
+                  "SubState": "running"
+                }
+              },
+              "mounts": {
+                "returncode": 0,
+                "output": "{\n   \"filesystems\": [\n      {\n         \"source\": \"192.168.10.150:/srv/nfs/cifar10_data\",\n         \"target\": \"/mnt/nfs_share\",\n         \"fstype\": \"nfs4\",\n         \"options\": \"rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.150\"\n      }\n   ]\n}"
+              },
+              "deployed_files": {
+                "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+                "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+                "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+                "agent/staging.py": null,
+                "agent/checkpoint_service.py": null,
+                "hybrid_storage/staging_protocol.py": null,
+                "hybrid_storage/worker_cache.py": null
+              },
+              "matches_checkout": {
+                "agent/agent.py": false,
+                "agent/dl_checkpoint.py": true,
+                "agent/checkpoint_protocol.py": true
+              }
+            }
+          }
+        }
+      ],
+      "remote_program": "import hashlib,json,os,platform,subprocess,sys\nfrom pathlib import Path\nresult={'hostname':platform.node(),'machine':platform.machine(),'python':platform.python_version()}\nargs=['systemctl','show','dl-node-agent.service','--no-pager','-p','ActiveState','-p','SubState','-p','User','-p','WorkingDirectory','-p','PrivateMounts']\np=subprocess.run(args,capture_output=True,text=True,timeout=5)\nresult['service']={'returncode':p.returncode,'properties':dict(line.split('=',1) for line in p.stdout.splitlines() if '=' in line)}\np=subprocess.run(['findmnt','-J','-t','nfs,nfs4','-o','SOURCE,TARGET,FSTYPE,OPTIONS'],capture_output=True,text=True,timeout=5)\nresult['mounts']={'returncode':p.returncode,'output':p.stdout.strip()}\nroot=result['service']['properties'].get('WorkingDirectory')\nresult['deployed_files']={}\nif root:\n for name in ('agent/agent.py','agent/dl_checkpoint.py','agent/checkpoint_protocol.py','agent/staging.py','agent/checkpoint_service.py','hybrid_storage/staging_protocol.py','hybrid_storage/worker_cache.py'):\n  path=Path(root)/name\n  result['deployed_files'][name]=hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None\n path=Path(root)/'config/storage.json'\n if path.is_file():\n  conf=json.loads(path.read_text());result['storage_flags']={key:conf.get(key) for key in ('storage_backend','worker_cache_enabled','storage_aware_staging','scheduler_policy')}\nprint(json.dumps(result))"
+    },
+    "input_unit_facts": {
+      "scope": "read-only unit properties on reachable nodes; no mount activation",
+      "program": "import json,subprocess; units=['srv-mlnfs-inputs.automount','srv-mlnfs-inputs.mount','ml-nfs-ready.service']; print(json.dumps({u:subprocess.run(['systemctl','show',u,'--no-pager','-p','LoadState','-p','ActiveState','-p','SubState','-p','Result'],capture_output=True,text=True,timeout=5).stdout for u in units}))",
+      "nodes": [
+        {
+          "node": "pi02",
+          "command": [
+            "ssh",
+            "-T",
+            "-o",
+            "BatchMode=yes",
+            "-o",
+            "ConnectTimeout=5",
+            "-o",
+            "ConnectionAttempts=1",
+            "-o",
+            "StrictHostKeyChecking=yes",
+            "-o",
+            "UpdateHostKeys=no",
+            "-o",
+            "ControlMaster=no",
+            "-o",
+            "ControlPath=none",
+            "-o",
+            "PermitLocalCommand=no",
+            "pi02",
+            "python3 -B -"
+          ],
+          "returncode": 0,
+          "output": "{\"srv-mlnfs-inputs.automount\": \"Result=success\\nLoadState=loaded\\nActiveState=active\\nSubState=waiting\\n\", \"srv-mlnfs-inputs.mount\": \"Result=success\\nLoadState=loaded\\nActiveState=inactive\\nSubState=dead\\n\", \"ml-nfs-ready.service\": \"Result=success\\nLoadState=loaded\\nActiveState=inactive\\nSubState=dead\\n\"}\n",
+          "stderr": ""
+        },
+        {
+          "node": "pi03",
+          "command": [
+            "ssh",
+            "-T",
+            "-o",
+            "BatchMode=yes",
+            "-o",
+            "ConnectTimeout=5",
+            "-o",
+            "ConnectionAttempts=1",
+            "-o",
+            "StrictHostKeyChecking=yes",
+            "-o",
+            "UpdateHostKeys=no",
+            "-o",
+            "ControlMaster=no",
+            "-o",
+            "ControlPath=none",
+            "-o",
+            "PermitLocalCommand=no",
+            "pi03",
+            "python3 -B -"
+          ],
+          "returncode": 0,
+          "output": "{\"srv-mlnfs-inputs.automount\": \"Result=success\\nLoadState=loaded\\nActiveState=active\\nSubState=waiting\\n\", \"srv-mlnfs-inputs.mount\": \"Result=success\\nLoadState=loaded\\nActiveState=inactive\\nSubState=dead\\n\", \"ml-nfs-ready.service\": \"Result=success\\nLoadState=loaded\\nActiveState=inactive\\nSubState=dead\\n\"}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "probe_script": "import concurrent.futures,datetime,hashlib,json,subprocess,urllib.request\nfrom pathlib import Path\nROOT=Path.cwd();nodes=json.loads((ROOT/'config/nodes.json').read_text())['nodes']\nREMOTE=r'''import hashlib,json,os,platform,subprocess,sys\nfrom pathlib import Path\nresult={'hostname':platform.node(),'machine':platform.machine(),'python':platform.python_version()}\nargs=['systemctl','show','dl-node-agent.service','--no-pager','-p','ActiveState','-p','SubState','-p','User','-p','WorkingDirectory','-p','PrivateMounts']\np=subprocess.run(args,capture_output=True,text=True,timeout=5)\nresult['service']={'returncode':p.returncode,'properties':dict(line.split('=',1) for line in p.stdout.splitlines() if '=' in line)}\np=subprocess.run(['findmnt','-J','-t','nfs,nfs4','-o','SOURCE,TARGET,FSTYPE,OPTIONS'],capture_output=True,text=True,timeout=5)\nresult['mounts']={'returncode':p.returncode,'output':p.stdout.strip()}\nroot=result['service']['properties'].get('WorkingDirectory')\nresult['deployed_files']={}\nif root:\n for name in ('agent/agent.py','agent/dl_checkpoint.py','agent/checkpoint_protocol.py','agent/staging.py','agent/checkpoint_service.py','hybrid_storage/staging_protocol.py','hybrid_storage/worker_cache.py'):\n  path=Path(root)/name\n  result['deployed_files'][name]=hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None\n path=Path(root)/'config/storage.json'\n if path.is_file():\n  conf=json.loads(path.read_text());result['storage_flags']={key:conf.get(key) for key in ('storage_backend','worker_cache_enabled','storage_aware_staging','scheduler_policy')}\nprint(json.dumps(result))'''\ndef probe(node):\n out={'id':node['id'],'configured_ip':node['ip'],'ssh_alias':node['id']}\n for route in ('health','resources'):\n  try:\n   opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))\n   with opener.open(f'http://{node[\"ip\"]}:{node[\"port\"]}/{route}',timeout=4) as response:\n    raw=response.read(256*1024+1)\n    if len(raw)>256*1024:raise ValueError('oversized response')\n    doc=json.loads(raw)\n    out[route]={'identity_matches':doc.get('node')==node['id'],**{k:doc.get(k) for k in ('node','status','node_state','architecture','python','execution_ownership','slots') if k in doc}}\n  except Exception as e:out[route]={'error':type(e).__name__,'detail':str(e)}\n args=['ssh','-T','-o','BatchMode=yes','-o','ConnectTimeout=5','-o','ConnectionAttempts=1','-o','StrictHostKeyChecking=yes','-o','UpdateHostKeys=no','-o','ControlMaster=no','-o','ControlPath=none','-o','PermitLocalCommand=no',node['id'],'python3 -B -']\n try:\n  p=subprocess.run(args,input=REMOTE,capture_output=True,text=True,timeout=16)\n  out['ssh']={'command':args,'returncode':p.returncode,'stderr':p.stderr.strip()}\n  if p.returncode==0:out['ssh']['facts']=json.loads(p.stdout)\n except Exception as e:out['ssh']={'error':type(e).__name__,'detail':str(e)}\n return out\nwith concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:results=list(pool.map(probe,nodes))\nreport={'time_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'read-only GET/SSH; no jobs, mounts, service or deployment mutations','nodes':results,'remote_program':REMOTE}\nfor row in results:\n for name,digest in row.get('ssh',{}).get('facts',{}).get('deployed_files',{}).items():\n  if digest is not None:\n   row['ssh']['facts'].setdefault('matches_checkout',{})[name]=hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest\nPath('/tmp/hybrid-9-4/readiness.json').write_text(json.dumps(report,indent=2)+'\\n')\nfor row in results:\n print(json.dumps({k:row[k] for k in ('id','health','resources','ssh')}))\n",
+    "probe_script_sha256": "8ba81b66114e3ca5e3a1741bb96b60a2e24cf9564a30e87437cdd26f6e34d2c8",
+    "raw_readiness_sha256": "4095f51053f657d892b583bcdaa22b6b527648962bcc87a0e8024d6c30ceba2c",
+    "unit_facts_sha256": "ce1a0b1310fcb32939fe53f46bc233f1a66cfe1f1d212a8fcfc0229486e2a3b6",
+    "mutations": false,
+    "live_jobs_submitted_or_faulted": false
+  },
+  "hardware_gate": {
+    "passed": false,
+    "pi01": "Configured SSH and HTTP timed out; no inferred power state/LAN/runtime.",
+    "pi02_pi03": "Matching identity and IDLE legacy services at probe time; deployed hybrid modules missing, agent hash differs; SDK/validator hashes match.",
+    "nfs": "Only legacy RW NFS4.2 observed active; intended input automount units loaded active/waiting, actual input mount/readiness inactive; not triggered or treated as absent config.",
+    "deployment": "Standard cluster_setup.bundle omits hybrid_storage; reviewed full package/bootstrap, protected service/cache/workspace/spool, provisioned auth and OS/network containment needed on all three.",
+    "approval_basis": "User standing instruction forbids Pi deployment or live service/infrastructure edits without review and explicit approval; previous Phase 2 two-node exception is not Phase 9 three-node acceptance.",
+    "plan": "docs/storage/37-ddp-acceptance.md section 5; not applied"
+  },
+  "rollback": {
+    "patch": "/tmp/hybrid-9-4/9.4.patch",
+    "directory": "/home/rana/Projects/System Project/System_Development_Project",
+    "check": "git apply --reverse --check /tmp/hybrid-9-4/9.4.patch",
+    "apply_only_after_review_quiescence": "git apply --reverse /tmp/hybrid-9-4/9.4.patch",
+    "prior_work_preserved": true,
+    "no_db_schema_downgrade_or_data_deletion": true,
+    "no_live_rollback_executed": true
+  },
+  "not_performed": [
+    "Pi deployment/physical training/fault injection",
+    "live DB import/write or migration",
+    "real NFS artifact access/automount activation/unmount/read-write probe",
+    "service/export/fstab/firewall/SSH/systemd configuration mutation",
+    "package installation or Internet-dependent worker transfer",
+    "benchmark or throughput claim",
+    "Git commit",
+    "overall Phase 9 acceptance claim"
+  ],
+  "residual_risks": [
+    "Central controller/LOCAL SQLite/checkpoint disk remains a single point of failure.",
+    "All-three-Pi readiness, real NFS/network/power durability, Pi memory limits, prepared runtime compatibility and OS/network containment remain unverified.",
+    "Foreign-job check covers an isolated held job, not active production multi-tenant validation."
+  ]
+}

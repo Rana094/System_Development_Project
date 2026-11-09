@@ -91,11 +91,12 @@ class PublicationTests(unittest.TestCase):
             states={'state.pt':b'opaque-tensor-state'}
             meta.update(state_sha256=hashlib.sha256(states['state.pt']).hexdigest(),lease_fence=worker_lease.fence(self.leases[0]))
         else:
+            save_id=hashlib.sha256(f'{step}:{completed}'.encode()).hexdigest()[:32]
             hashes={str(rank):hashlib.sha256(states[f'rank-{rank}.pt']).hexdigest() for rank in range(self.world)}
-            meta.update(kind='ddp',world_size=self.world,checkpoint_id='b'*32,
+            meta.update(kind='ddp',world_size=self.world,checkpoint_id=save_id,
                 group_id=group_identity(self.job_id,self.job_id+':0',self.job['storage_manifest_sha256'],'compat',self.context),
                 shared_state_sha256='c'*64,rank_state_sha256=hashes,
-                rank_acknowledgments=[dict(rank=rank,checkpoint_id='b'*32,state_sha256=hashes[str(rank)],accepted=True) for rank in range(self.world)],
+                rank_acknowledgments=[dict(rank=rank,checkpoint_id=save_id,state_sha256=hashes[str(rank)],accepted=True) for rank in range(self.world)],
                 rank_fences={str(rank):worker_lease.fence(lease) for rank,lease in enumerate(self.leases)})
         meta.update(changes);stream=io.BytesIO()
         with zipfile.ZipFile(stream,'w',compression=zipfile.ZIP_STORED) as archive:

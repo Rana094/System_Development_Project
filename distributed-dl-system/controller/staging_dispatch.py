@@ -1,10 +1,11 @@
 """Opt-in staging coordinator using existing selection/reservation/lease APIs.
 
 Explicit trusted bootstrap only; not installed by config or portal startup.
-Failures retain the reservation/lease for reconciliation, never blind requeue.
+Failures use exact-attempt cleanup and fencing, never blind requeue.
 """
 
 from copy import copy
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 import json
 from pathlib import Path
 
@@ -18,12 +19,15 @@ from staging_recovery import StagingRecovery
 
 
 class StagingDispatch(StagingRecovery):
-    def __init__(self, registry, client, *, settings=StorageConfig()):
+    def __init__(self, registry, client, *, settings=StorageConfig(), stage_parallelism=3):
         if not isinstance(registry, StorageRegistry) or not isinstance(client, StagingClient):
             raise TypeError('Expected explicit registry and authenticated control client')
         if settings != StorageConfig('nfs', True, True, 'resource'):
             raise StorageConfigError('Dispatch requires explicit NFS/cache/staging/resource settings')
+        if type(stage_parallelism) is not int or not 1 <= stage_parallelism <= 32:
+            raise ValueError('Stage parallelism must be an integer from 1 to 32')
         self.registry, self.client = registry, client
+        self.stage_parallelism = stage_parallelism
         self.lifecycle = StagingLifecycle(registry, settings=settings)
         self._launching = set()
         self._finishing=set();self._owned_stages=set()
@@ -95,24 +99,89 @@ class StagingDispatch(StagingRecovery):
             raise ValueError('Full reserved rank group and leases required')
         stage = self.lifecycle.begin(job['owner'],job['job_id'],plans)
         self._owned_stages.add(stage.stage_id)
-        replies = []
-        for rank,(plan,node,lease) in enumerate(zip(plans,workers,leases)):
-            fresh = self.fresh_lease(job,node)
-            if any(fresh[name] != lease[name] for name in ('node_id','lease_id','generation')):
-                raise PermissionError('Stage lease identity changed')
-            lease = fresh
-            response = self.client.call(node,STAGE_PATH,dict(stage_id=stage.stage_id,plan=plan.document(),lease=lease))
-            expected = receipt_document(stage.stage_id,plan,lease)
-            if response.get('receipt') != expected or response.get('receipt_sha256') != receipt_hash(expected):
-                raise PermissionError('Authenticated workspace receipt differs from exact placement')
-            from hybrid_storage.staging_metrics import validated
-            required=sum({item.sha256:item.size_bytes for item in plan.inputs()}.values())
-            metrics=validated(response.get('metrics'),required_bytes=required)
-            self.lifecycle.record_ready(job['owner'],stage,rank,plan_sha256=plan.sha256,
-                                        receipt_sha256=receipt_hash(expected),metrics=metrics)
-            replies.append(response)
+        if len(plans) > 1:
+            return self._stage_parallel(job,stage,plans,workers,leases)
+        body = self._stage_request(job,stage,plans[0],workers[0],leases[0])
+        response = self.client.call(workers[0],STAGE_PATH,body)
+        self._record_staged(job,stage,plans[0],body['lease'],response)
         with self.registry._tx(write=False):
             require_ready(self.registry.db,job['job_id'])
+        return stage,[response]
+
+    def _stage_request(self, job, stage, plan, node, lease):
+        """Coordinator thread only: exact reserved placement and live authority."""
+        with self.registry._tx(write=False):
+            row = self.registry.db.execute('''SELECT worker_id,lease_id,generation
+                FROM hybrid_staging_ranks WHERE stage_id=? AND rank=?''',
+                (stage.stage_id,plan.identity.rank)).fetchone()
+            if row is None or tuple(row) != (node['id'],lease['lease_id'],lease['generation']):
+                raise PermissionError('Stage request differs from reserved rank placement')
+        fresh = self.fresh_lease(job,node)
+        if any(fresh[name] != lease[name] for name in ('node_id','lease_id','generation')):
+            raise PermissionError('Stage lease identity changed')
+        return dict(stage_id=stage.stage_id,plan=plan.document(),lease=fresh)
+
+    def _record_staged(self, job, stage, plan, lease, response):
+        """Verify authenticated replies and commit receipts on the DB owner thread."""
+        expected = receipt_document(stage.stage_id,plan,lease)
+        if response.get('receipt') != expected or response.get('receipt_sha256') != receipt_hash(expected):
+            raise PermissionError('Authenticated workspace receipt differs from exact placement')
+        from hybrid_storage.staging_metrics import validated
+        required = sum({item.sha256:item.size_bytes for item in plan.inputs()}.values())
+        metrics = validated(response.get('metrics'),required_bytes=required)
+        self.lifecycle.record_ready(job['owner'],stage,plan.identity.rank,plan_sha256=plan.sha256,
+                                    receipt_sha256=receipt_hash(expected),metrics=metrics)
+
+    def _cleanup_staging_group(self, job, stage):
+        # Signed cancel installs durable tombstones even for an undelivered stage.
+        # No future cancellation or lost reply is proof that a worker is idle.
+        import requests
+        try:
+            with self.registry._tx(write=False):members = self.members(stage[0])
+            self.cleanup(job,stage,members)
+        except (OSError,ValueError,KeyError,requests.RequestException):
+            pass  # ABORTING + blocked leases/reservations persist for tick().
+
+    def _stage_parallel(self, job, stage, plans, workers, leases):
+        """Bound outstanding signed RPCs; never share SQLite with pool threads.
+
+        Each worker retains its existing single cache producer. The explicit
+        bootstrap's HTTP callable must support concurrent calls to distinct nodes.
+        Replies remain indexed by logical rank, independent of completion order.
+        """
+        pending = {}; replies = [None] * len(plans); next_rank = 0; abort = None
+        try:
+            with ThreadPoolExecutor(max_workers=min(self.stage_parallelism,len(plans)),
+                                    thread_name_prefix='ddp-stage') as pool:
+                try:
+                    while next_rank < len(plans) or pending:
+                        while next_rank < len(plans) and len(pending) < self.stage_parallelism:
+                            rank = next_rank
+                            body = self._stage_request(job,stage,plans[rank],workers[rank],leases[rank])
+                            future = pool.submit(self.client.call,workers[rank],STAGE_PATH,body)
+                            pending[future] = (rank,body['lease'])
+                            next_rank += 1
+                        done,_ = wait(pending,return_when=FIRST_COMPLETED)
+                        # Detect every completed failure before admitting more RPCs.
+                        responses = [(future,future.result()) for future in done]
+                        for future,response in responses:
+                            rank,lease = pending.pop(future)
+                            self._record_staged(job,stage,plans[rank],lease,response)
+                            replies[rank] = response
+                    with self.registry._tx(write=False):
+                        if require_ready(self.registry.db,job['job_id']) != stage:
+                            raise PermissionError('Staging group changed before launch barrier')
+                except Exception:
+                    for future in pending:future.cancel()
+                    pinned = (stage.stage_id,'ABORTING',len(plans),stage.attempt_id)
+                    self.abort_intent(job,pinned,'DDP input staging failed; aborting entire reserved group')
+                    abort = pinned
+                    self._cleanup_staging_group(job,pinned)
+                    raise
+        finally:
+            # Executor exit joins all submitted calls before the second cleanup.
+            # Late READY replies are discarded, never recorded or launched.
+            if abort is not None:self._cleanup_staging_group(job,abort)
         return stage,replies
 
     def start(self, job, node, payload, stage, receipt):
@@ -188,6 +257,7 @@ class StagingDispatch(StagingRecovery):
         store.mark_scheduled(job['job_id'],workers[0]['id'],workers[0]['ip'],spec['resources_per_worker'],
                              workers,context,storage_runtime=self)
         job = store.get_job(job['job_id'])
+        stage = None
         try:
             leases = [ownership.ensure(job,node['id']) for node in workers]
             stage,replies = self.stage_group(job,workers,leases)
@@ -205,6 +275,10 @@ class StagingDispatch(StagingRecovery):
             return True
         except Exception:
             # Remote copy/start may have happened. Preserve placement, block
-            # renewal and let existing expiry fence execution; 7.3 reconciles.
+            # renewal and use exact-group cleanup, never blind slot release.
             ownership.block(job)
+            if context is not None and stage is not None:
+                pinned = (stage.stage_id,'ABORTING',len(workers),stage.attempt_id)
+                self.abort_intent(job,pinned,'DDP restore/start failed; aborting entire reserved group')
+                self._cleanup_staging_group(job,pinned)
             raise

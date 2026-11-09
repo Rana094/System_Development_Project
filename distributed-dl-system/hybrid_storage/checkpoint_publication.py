@@ -47,6 +47,13 @@ def _row(cursor):
     return None if row is None else dict(zip((item[0] for item in cursor.description),row))
 
 
+class _CommittedSave(Exception):
+    """Internal control flow: acknowledge one verified canonical DDP save."""
+    def __init__(self, publication_id):
+        self.publication_id = publication_id
+        super().__init__('Distributed save already committed')
+
+
 class LocalCheckpointPublisher:
     """Caller is a trusted authenticated collector, never a student route.
 
@@ -172,6 +179,34 @@ class LocalCheckpointPublisher:
                                                       info['compatibility_key'],json.loads(group[0]))):
                 raise PermissionError('Incomplete or differently fenced checkpoint group')
 
+    def _require_new_distributed_save(self, job, kind, info):
+        """Within the caller's write transaction, deduplicate SDK save identity.
+
+        Transport IDs are not save IDs. Reuse the existing job/attempt index and
+        immutable committed metadata; no migration or JSON-SQL extension needed.
+        Read one metadata record at a time, never tensor state. Recheck at commit
+        to serialize concurrent collectors using independent SQLite connections.
+        """
+        if kind != 'ddp':return
+        canonical = None
+        for row in self.db.execute('''SELECT publication_id,sha256,size_bytes,metadata_json
+            FROM hybrid_checkpoint_publications
+            WHERE job_id=? AND retry_count=? AND kind='ddp' AND phase='COMMITTED' ''',
+            (job['job_id'],job['retry_count'])):
+            metadata = json.loads(row[3])
+            if metadata.get('checkpoint_id') != info['checkpoint_id']:continue
+            if row[1] != info['sha256'] or row[2] != info['size_bytes'] or metadata != info:
+                raise base.RegistryConflict('Distributed save identity reused with different checkpoint bytes')
+            if canonical is None or row[0] < canonical:canonical = row[0]
+        if canonical is not None:raise _CommittedSave(canonical)
+
+    def _reject(self, publication_id):
+        with base.transaction(self.db):
+            row = self._publication(publication_id)
+            if row is not None and row['phase'] not in ('COMMITTED','REJECTED'):
+                self.db.execute("UPDATE hybrid_checkpoint_publications SET phase='REJECTED',updated_at_ns=? WHERE publication_id=?",
+                                (time.time_ns(),publication_id))
+
     def publish(self,actor,job_id,worker_id,source,*,publication_id,expected_head,
                 expected_sha256,expected_size):
         job_identity(job_id);valid_worker(worker_id);hex_id(publication_id);object_key(expected_sha256)
@@ -220,6 +255,7 @@ class LocalCheckpointPublisher:
                             if (current_attempt!=attempt or current_binding.sha256!=binding.sha256 or current_fences!=fences):
                                 raise PermissionError('Checkpoint producing attempt changed')
                             self._metadata(current,kind,info,fences)
+                            self._require_new_distributed_save(current,kind,info)
                             self.db.execute("UPDATE hybrid_checkpoint_publications SET phase='VERIFIED',metadata_json=?,global_step=?,completed=?,updated_at_ns=? WHERE publication_id=?",
                                 (encoded(info).decode(),info['global_step'],int(info['completed']),time.time_ns(),publication_id))
                         with base.transaction(self.db):
@@ -232,6 +268,7 @@ class LocalCheckpointPublisher:
                             current,current_binding,current_attempt,current_fences=self._authorize(actor,job_id,worker_id)
                             if (current_attempt!=attempt or current_binding.sha256!=binding.sha256 or current_fences!=fences):
                                 raise PermissionError('Late checkpoint producer lost ownership')
+                            self._require_new_distributed_save(current,kind,info)
                             if self._head(job_id)!=expected_head:raise base.RegistryConflict('A different checkpoint won the head')
                             old=None if expected_head is None else self._publication(expected_head)
                             if old and (info['global_step']<old['global_step'] or old['completed']>int(info['completed'])):
@@ -250,11 +287,14 @@ class LocalCheckpointPublisher:
                                 self.db.execute('INSERT INTO recovery_events(job_id,event_type,node_id,event_time,details_json) VALUES(?,?,?,?,?)',
                                     (job_id,'DDP_CHECKPOINT_COMMITTED' if kind=='ddp' else 'CHECKPOINT_SYNC',worker_id,time.time(),encoded(details).decode()))
             return self.committed(actor,publication_id)
+        except _CommittedSave as duplicate:
+            # Reject only this redundant transport intent. The canonical manifest,
+            # head revision, event, latest path and original immutable bytes stay
+            # unchanged, including retries after a newer save became the head.
+            self._reject(publication_id)
+            return self.committed(actor,duplicate.publication_id)
         except Exception:
             # Retain candidates/orphan immutable snapshots for explicit review;
             # they never become head merely because a final-looking file exists.
-            with base.transaction(self.db):
-                row=self._publication(publication_id)
-                if row['phase'] not in ('COMMITTED','REJECTED'):
-                    self.db.execute("UPDATE hybrid_checkpoint_publications SET phase='REJECTED',updated_at_ns=? WHERE publication_id=?",(time.time_ns(),publication_id))
+            self._reject(publication_id)
             raise

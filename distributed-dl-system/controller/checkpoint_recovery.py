@@ -18,8 +18,8 @@ from staging_dispatch import StagingDispatch
 
 
 class CheckpointDispatch(StagingDispatch):
-    def __init__(self,registry,client,*,publisher,collector,restorer,settings):
-        super().__init__(registry,client,settings=settings)
+    def __init__(self,registry,client,*,publisher,collector,restorer,settings,stage_parallelism=3):
+        super().__init__(registry,client,settings=settings,stage_parallelism=stage_parallelism)
         if (not isinstance(publisher,LocalCheckpointPublisher) or publisher.registry is not registry
                 or not isinstance(collector,CheckpointCollector) or collector.publisher is not publisher
                 or not isinstance(restorer,CheckpointRestorer) or restorer.publisher is not publisher

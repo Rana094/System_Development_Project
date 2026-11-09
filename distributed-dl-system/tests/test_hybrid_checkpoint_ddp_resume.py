@@ -34,17 +34,19 @@ NATIVE_WORKER=WORKER.replace(
 
 
 class RealHybridDDPTests(unittest.TestCase):
+    world_size=3  # Test-fixture cardinality, never an elastic recovery policy.
+
     def setUp(self):
         self.r=recovery.RecoveryTests(methodName='runTest');self.addCleanup(self.r.doCleanups);self.r.setUp()
         self.f=self.r.f
-        self.nodes=self.r.ddp()
+        self.nodes=self.r.ddp(workers=self.world_size)
         # Map the three disposable agents to distinct localhost identities.
         clients=dict(self.f.http_by_ip);self.f.http_by_ip.clear()
         for number,node in enumerate(self.nodes,1):
             old=node['ip'];node['ip']=f'127.0.0.{number}'
             self.f.http_by_ip[node['ip']]=self.f.http if number==1 else clients[old]
         self.services=[self.f.service,*self.f.extra_services]
-        self.program=self.f.fixture.base/'native-three-rank.py';self.program.write_text(NATIVE_WORKER)
+        self.program=self.f.fixture.base/f'native-{self.world_size}-rank.py';self.program.write_text(NATIVE_WORKER)
         self.processes=[];self.logs=[]
         self.addCleanup(self.reap)
 
@@ -61,12 +63,12 @@ class RealHybridDDPTests(unittest.TestCase):
         return json.loads(self.r.db.execute('SELECT context_json FROM distributed_attempts WHERE job_id=? AND retry_count=?',
                                          (job['job_id'],job['retry_count'])).fetchone()[0])
 
-    def run_group(self,case,*,baseline=False,source=None):
+    def run_group(self,case,*,baseline=False,source=None,pause_marker=None,pause_ranks=None):
         job=self.r.job();token=f"{job['job_id']}:{job['retry_count']}"
         if baseline:
             with socket.socket() as temporary:
                 temporary.bind(('127.0.0.1',0));port=temporary.getsockname()[1]
-            context=dict(world_size=3,master_addr='127.0.0.1',master_port=port)
+            context=dict(world_size=self.world_size,master_addr='127.0.0.1',master_port=port)
         else:context=self.context()
         directories=[]
         for rank,service in enumerate(self.services):
@@ -74,7 +76,7 @@ class RealHybridDDPTests(unittest.TestCase):
                        service.root/'worker-storage/jobs'/job['job_id']/'checkpoints')
             directory.mkdir(parents=True,exist_ok=True);directories.append(directory)
             env={**os.environ,'PYTHONPATH':str(ROOT/'agent'),'OMP_NUM_THREADS':'1','MKL_NUM_THREADS':'1',
-                'DL_TEST_RENDEZVOUS':str(self.f.fixture.base/(case+'-rendezvous')),'GLOO_SOCKET_IFNAME':'lo','RANK':str(rank),'WORLD_SIZE':'3','MASTER_ADDR':context['master_addr'],
+                'DL_TEST_RENDEZVOUS':str(self.f.fixture.base/(case+'-rendezvous')),'GLOO_SOCKET_IFNAME':'lo','RANK':str(rank),'WORLD_SIZE':str(self.world_size),'MASTER_ADDR':context['master_addr'],
                 'MASTER_PORT':str(context['master_port']),'DL_JOB_ID':job['job_id'],
                 'DL_MANIFEST_SHA256':job['storage_manifest_sha256'],'DL_COMPATIBILITY_KEY':'c'*64,
                 'DL_ATTEMPT_TOKEN':token,'DL_DDP_GROUP_ID':group_identity(job['job_id'],token,job['storage_manifest_sha256'],'c'*64,context),
@@ -91,9 +93,11 @@ class RealHybridDDPTests(unittest.TestCase):
                 env.update(DL_RESUME_CHECKPOINT=str(private),DL_RESUME_SHA256=source.sha256)
             log=(directory/(case+'.log')).open('w');self.logs.append(log)
             self.processes.append(self.f.real_popen([sys.executable,str(self.program),case],env=env,stdout=log,stderr=subprocess.STDOUT))
-        if case=='cut':
+        if case=='cut' or pause_marker is not None:
+            marker=pause_marker or 'awaiting-crash'
+            paused=range(self.world_size) if pause_ranks is None else pause_ranks
             deadline=time.monotonic()+40
-            while not all((directory/'awaiting-crash').exists() for directory in directories):
+            while not all((directories[rank]/marker).exists() for rank in paused):
                 if any(p.poll() is not None for p in self.processes) or time.monotonic()>deadline:
                     self.fail('\n'.join((directory/(case+'.log')).read_text() for directory in directories))
                 time.sleep(0.05)
@@ -107,7 +111,7 @@ class RealHybridDDPTests(unittest.TestCase):
         with patch.object(subprocess,'Popen',self.f.real_popen):
             import torch
         with zipfile.ZipFile(path) as archive:
-            return [torch.load(io.BytesIO(archive.read(f'rank-{rank}.pt')),weights_only=True,map_location='cpu') for rank in range(3)]
+            return [torch.load(io.BytesIO(archive.read(f'rank-{rank}.pt')),weights_only=True,map_location='cpu') for rank in range(self.world_size)]
 
     def equal(self,a,b):
         import torch
@@ -176,26 +180,27 @@ class RealHybridDDPTests(unittest.TestCase):
         resumed=self.run_group('resume',source=source)[0]/'latest.dlckpt'
         self.assertEqual(self.r.runtime.reconcile(self.r.job()),'RUNNING')
         expected=self.states(baseline);actual=self.states(resumed)
-        differences={str(rank):self.differences(expected[rank],actual[rank]) for rank in range(3)}
-        print('THREE_RANK_STATE_DIFFERENCES '+json.dumps(differences,sort_keys=True),flush=True)
+        label='THREE' if self.world_size==3 else 'TWO'
+        differences={str(rank):self.differences(expected[rank],actual[rank]) for rank in range(self.world_size)}
+        print(label+'_RANK_STATE_DIFFERENCES '+json.dumps(differences,sort_keys=True),flush=True)
         comparison=self.states(control)
-        print('UNINTERRUPTED_THREE_RANK_DIFFERENCES '+json.dumps({str(rank):self.differences(expected[rank],comparison[rank]) for rank in range(3)},sort_keys=True),flush=True)
+        print('UNINTERRUPTED_'+label+'_RANK_DIFFERENCES '+json.dumps({str(rank):self.differences(expected[rank],comparison[rank]) for rank in range(self.world_size)},sort_keys=True),flush=True)
         saved=self.states(self.r.root/'commits'/(source.publication_id+'.dlckpt'))
         import torch
-        for rank in range(3):
+        for rank in range(self.world_size):
             loaded=torch.load(self.services[rank].root/'worker-storage/jobs'/self.f.job_id/'checkpoints/restored.pt',weights_only=True)
             for key in loaded:self.assertTrue(self.equal(loaded[key],saved[rank][key]),f'Rank {rank} restore {key} is not exact')
             self.assert_state(expected[rank],actual[rank])
             self.assert_state(expected[rank],comparison[rank])
         final=self.r.save(raw=resumed.read_bytes())
         self.assertEqual(final.global_step,6);self.assertTrue(final.completed);self.assertEqual(final.retry_count,1)
-        self.assertEqual(validate_group(resumed,self.f.job_id,self.r.job()['storage_manifest_sha256'])['world_size'],3)
+        self.assertEqual(validate_group(resumed,self.f.job_id,self.r.job()['storage_manifest_sha256'])['world_size'],self.world_size)
         self.f.process.poll.return_value=0
         for service in self.services:
             service.quiescent=lambda *_:True
             self.assertTrue(service.note_exit(service.module.current_job['lease'],0));service.tick()
         with patch('job_artifacts.collect') as collect:
-            self.assertEqual(self.r.runtime.reconcile(self.r.job()),'COMPLETED');self.assertEqual(collect.call_count,3)
+            self.assertEqual(self.r.runtime.reconcile(self.r.job()),'COMPLETED');self.assertEqual(collect.call_count,self.world_size)
         self.assertEqual(self.r.db.execute("SELECT COUNT(*) FROM recovery_events WHERE event_type='DDP_RESUMED'").fetchone()[0],1)
         self.assertEqual(self.r.publisher.head('alice',self.f.job_id),final)
 

@@ -679,6 +679,14 @@ def mark_completed(job_id, return_code=0, finished_at=None, *, storage_runtime=N
                                (time.time_ns(),attempt.stage_id))
             connection.execute('UPDATE execution_leases SET revoked=1,renewal_blocked=1 WHERE job_id=? AND retry_count=?',
                                (job_id,attempt.retry_count))
+            if world>1:
+                # Complete only this fenced, all-quiescent group, atomically
+                # with the job/history and slot release below. Old retries
+                # must retain their STOPPED/FAILED history.
+                connection.execute("UPDATE job_ranks SET status='COMPLETED' WHERE job_id=? AND retry_count=?",
+                                   (job_id,attempt.retry_count))
+                connection.execute("UPDATE distributed_attempts SET phase='COMPLETED' WHERE job_id=? AND retry_count=?",
+                                   (job_id,attempt.retry_count))
     except BaseException:
         connection.rollback();connection.close();raise
 

@@ -1772,3 +1772,165 @@ No live deployment, Pi/SSH, NFS/service/config/data changes, migrations or commi
 real mount outages/power durability and deployment acceptance remain NOT TESTED.
 The central controller/local SQLite/checkpoint disk remains a single point of
 failure. Legacy/OFF defaults remain unchanged.
+
+## 2026-11-09 — Phase 9.1: actual DDP implementation audit (PASS)
+
+Starting checkout clean on main, HEAD de297dc7d99eb80e52498145fe05b033e5afdaad.
+Audited the existing custom and hybrid DDP call graphs, launcher/guardian,
+rank/world-size rules, primary trainer/sampler, checkpoint writer/reader and
+publication/recovery. Documentation only; no runtime/API/schema/config changes.
+
+Actual mechanism: one logical rank per reserved worker, prepared interpreter
+launched by custom_runner (not torchrun), CPU Gloo, fixed world size on recovery.
+Rank zero publishes one v2 ZIP archive containing metadata and all rank-N.pt
+members; these are not separate rank-owned checkpoint files or PyTorch DCP.
+Keep this format and the existing trusted publication/lease fences. Final
+rank-zero results/model.pt is separate from the full recoverable checkpoint.
+
+Every primary trainer rank reads the entire CSV, builds the full TensorDataset,
+uses DistributedSampler/set_epoch and evaluates all rows. Full immutable source/
+dataset objects are required on every rank. Read-only installed-sampler probe:
+256 rows, three ranks x 86 indices = 258 including padding, 256 unique rows,
+all rank memberships change between epochs. No file-shard contract exists.
+
+Existing staging RPCs are sequential; bounded parallel staging belongs to 9.2.
+The all-rank READY/fresh-lease barrier already exists and must be retained.
+Do not share the caller-owned SQLite connection across worker threads or release
+uncertain reservations on partial failure. Existing admission has no explicit
+maximum distributed worker count, while group checkpoint validation caps at 256;
+no limit, world-size support or batch setting was changed. Three-rank example
+training requires an explicit divisible global batch such as 96 instead of 64.
+Rank-zero gather memory and reference-workload Internet/cache assumptions are
+recorded as hazards, not claims of new support.
+
+Local verification: 15 existing tests PASS (7 distributed dispatch + 8 checkpoint),
+2/2 files, zero failures/errors/skips; real localhost Gloo processes, reviewed
+socket permission, no Pi or live NFS. Twenty-two source files parsed; function
+anchors/hashes recorded. No new test implementation in this audit subphase.
+See [9.1 report](34-ddp-audit.md) and [evidence](34-ddp-audit-evidence.json) for exact
+interfaces, commands, findings, unknowns and audit-only rollback.
+**9.1 local PASS; STOP before 9.2.** Phase 9.2–9.4 and physical pi01/pi02/pi03
+validation remain pending. Default legacy/OFF/resource behavior is unchanged;
+controller/local SQLite/checkpoint storage remains a SPOF.
+
+## 2026-11-09 — Phase 9.2: bounded all-rank input staging (local PASS)
+
+Preserved the uncommitted 9.1 audit/progress and all earlier work. Existing
+resource/group selection, reservations, quota/fairness, rank/world size, Gloo
+launcher and coordinated v2 checkpoint format remain in place. Every worker
+stages its entire authorized immutable source/dataset file set; DistributedSampler
+does not authorize sample/file subsets.
+
+Explicit hybrid coordinators now support `stage_parallelism=3` (trusted optional
+constructor keyword, valid integers 1..32). At most that many stage RPCs are
+outstanding, with worker cache producer limits unchanged. Only signed RPCs use
+pool threads; local SQLite/fresh leases/receipt validation stay on the owning
+thread. Replies are indexed by rank. All READY receipts and current group/attempt,
+reservation, ACL and lease fences are checked before any existing launcher call
+and rechecked before each rank start. Single-worker staging remains synchronous.
+
+Partial staging, restore or launch failure blocks renewal and aborts the whole
+DDP group through existing signed cancellation/durable worker tombstones. In-flight
+RPCs are drained, late READY discarded and cleanup retried. Slots/pins are released
+only after all-rank quiescence or safe persisted lease fencing; offline/changed
+reservations remain held. No new transport, schema, job state, shard protocol,
+checkpoint format, world-size rule or silent direct-NFS fallback was introduced.
+
+Before changes, 59 existing staging/recovery tests passed. Final verification:
+**133 tests PASS, 9/9 files, zero failures/errors/skips**, including 16 new cases,
+existing two-rank Gloo, checkpoint/group recovery, actual localhost three-rank
+crash/committed-resume and legacy/OFF config checks. Event/barrier tests prove
+concurrency, not throughput. Development fixture errors and their corrections
+are recorded. Narrow agent-specific watcher mocks replace the old global Thread
+mock, allowing real stage executor and migration threads.
+
+See [9.2 report](35-ddp-staging.md) and [evidence](35-ddp-staging-evidence.json)
+for exact files, commands/log hashes, API/security details, scoped diff and rollback.
+No SSH, Pi, real NFS, service, exports/fstab/firewall mutation or deployment.
+Physical pi01/pi02/pi03 validation remains required; no earlier two-Pi exception
+is treated as satisfying Phase 9 acceptance. Default legacy/OFF/resource settings
+are unchanged. The central controller/local SQLite/checkpoint disk remains a
+single point of failure. **9.2 local PASS; STOP before 9.3.**
+
+## 2026-11-09 — Phase 9.3: canonical complete DDP save publication (local PASS)
+
+Preserved uncommitted 9.1/9.2 changes. Existing rank-zero coordinated v2 archive,
+all-rank SDK writer/reader, CPU Gloo/world-size rules, validator, authenticated
+worker service/collector, legacy checkpoint path and 9.2 staging are unchanged.
+Existing validation already requires every rank member/hash/ACK plus the exact
+input/group/environment and all current producer fences.
+
+Closed a publication gap: a fresh transport publication ID could previously
+commit the same SDK save again. The trusted local publisher now checks original
+job/attempt + checkpoint_id against immutable committed metadata after validation
+and again under final SQLite write serialization. Identical bytes return the
+canonical committed receipt; redundant transport intents are REJECTED. Conflicting
+bytes under the same save ID fail closed. Concurrent collectors produce one
+COMMITTED manifest/head revision/event; an old-save replay never rewinds latest.
+Current all-rank authority is checked before deduplication. Existing exact-ID
+read-only committed ACKs remain compatible. No new schema, migration, route,
+transport, tensor deserialization or DCP/version conversion was added.
+
+Two opaque DDP fixture helpers now use distinct save IDs/ACKs for distinct cuts,
+matching the unchanged real writer. New tests cover complete members/ACKs, wrong
+group/fences, fresh-ID retry, conflicting and concurrent saves, stale attempts,
+old replays, progress/completion monotonicity, orphan retention and signed HTTP.
+The initial new-test exception expectation error and correction are recorded.
+
+Baseline: 41 existing publication/fault tests PASS before edits. Final:
+**107 tests PASS, 8/8 files, zero failures/errors/skips**, including 15 new tests,
+native two-rank checkpoint/recovery and real localhost three-rank crash/committed
+resume within existing numerical tolerances. No benchmark or physical Pi claim.
+See [9.3 report](36-ddp-checkpoint-publication.md) and
+[evidence](36-ddp-checkpoint-publication-evidence.json) for exact files, commands,
+logs/hashes, compatibility/performance limits, scoped diff and rollback.
+
+No SSH/Pi, live NFS/DB, service, export/fstab/firewall/systemd, deployment, data
+deletion, package installation or commit. Legacy/OFF/resource remains the default.
+All-three-Pi validation and 9.4 remain pending. Metadata-history scan latency and
+retained redundant candidate disk usage are documented tradeoffs. Controller/
+LOCAL SQLite/authoritative checkpoint disk remains a single point of failure.
+**9.3 local PASS; STOP before 9.4.**
+
+## 2026-11-09 — Phase 9.4: local DDP matrix PASS; physical acceptance pending
+
+Preserved prior uncommitted 9.1–9.3 work. Added six local acceptance cases with
+native CPU Gloo: two-rank committed full-group crash/resume; three-rank startup
+death/cold retry; rank death during checkpoint ACK and full-group restore from
+the prior valid cut; real 3-to-2 archive resume rejection; controller immutable
+world-size drift rejection; and independent whole-group recovery competition.
+Owned native children are reaped before quiescence proof; a separate student's
+HELD job, all input/result file hashes and DB/event state remain unchanged.
+Existing suites supply missing-data, partial archive/ACK, stale-rank and legacy
+coverage. Outer launcher/isolation/mounts and results transport remain fixtures.
+
+Found/fixed an existing hybrid DDP completion-history bug: ranks could remain
+RUNNING after job completion. `job_store.mark_completed` now updates only the
+current fenced/quiescent group's rank and group history to COMPLETED in the same
+transaction as the job/attempt, lease revocation and slot release. Old retries
+retain STOPPED/FAILED history. No format/writer, world-size, API/schema/config,
+transport, security/lease rule, policy or legacy-path change was introduced.
+
+Baseline 31 existing tests PASS. Final latest-per-file results: **173 distinct
+tests PASS, 14 files, zero remaining failures/errors/skips**, including six new
+cases. The initial combined native run's failing new file was corrected/rerun;
+its existing native files passed and are not recounted. Development history
+records the real history defect plus fixture-cardinality/import mistakes. No
+numerical tolerances were weakened. See [9.4 report](37-ddp-acceptance.md) and
+[evidence](37-ddp-acceptance-evidence.json) for exact commands/results/diffs,
+read-only probes, manual verification, rollout prerequisites and source rollback.
+
+Actual read-only GET/SSH readiness: pi01 timed out at its configured address;
+pi02/pi03 matched identity and were IDLE with active legacy agents. Their service
+roots lack the hybrid modules; agent source differs, SDK/validator hashes match.
+The old RW NFS share is active. New input automount units are loaded/active/waiting,
+but the actual input mounts/readiness service are inactive; no automount activation
+was attempted. The standard deployment bundle omits hybrid_storage, and reviewed
+protected bootstrap/isolation/credentials/all-three-worker readiness are required.
+
+No live job was submitted/killed, no source deployed, no service/mount/export/
+fstab/firewall/SSH/systemd changed, no live DB/data mutation or Git commit.
+**9.4 local matrix PASS; overall Phase 9 physical acceptance NOT PASSED.**
+The earlier two-Pi Phase 2 exception does not satisfy this three-Pi requirement.
+Do not claim Phase 9 complete. Controller/LOCAL SQLite/authoritative checkpoint
+disk remains a single point of failure. **STOP at 9.4.**

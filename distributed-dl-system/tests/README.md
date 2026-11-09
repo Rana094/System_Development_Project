@@ -405,3 +405,59 @@ model/optimizer tensors use atol=1e-8, rtol=1e-7; all other comparisons are exac
 See [8.4 report and measured differences](../docs/storage/33-checkpoint-fault-acceptance.md).
 Existing exact single/two-rank tests remain unchanged. Physical pi01/pi02/pi03
 validation, real NFS outages and production isolation remain pending.
+
+## Phase 9.2 bounded DDP staging
+
+`test_ddp_staging.py` exercises two/three disposable authenticated agents, real
+local cache/private copies and a mocked trainer/isolation. Barriers prove overlap
+and the configured limit without timing/throughput assertions. Tests cover full
+input plans, rank-bound out-of-order replies, the all-ready/live-lease barrier,
+revoked access, changed reservations, cancellation, missing data, in-flight copy
+abort, lost READY replies, offline cleanup and partial launch failure. Controller
+SQLite keeps its default thread guard; only RPCs run in the staging pool.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_staging.py test_staging_dispatch.py test_staging_recovery.py test_hybrid_checkpoint_recovery.py
+```
+
+Expected: 16 + 25 + 34 + 18 tests pass. No listener, Pi, mount or service changes.
+See [9.2 implementation, verification and rollback](../docs/storage/35-ddp-staging.md).
+
+## Phase 9.3 one committed manifest per distributed save
+
+`test_ddp_checkpoint_publication.py` uses disposable local stores/SQLite and the
+existing authenticated checkpoint route. Fifteen tests cover complete rank
+members/hashes/ACKs, corrupt/partial/mixed saves, all-rank fences, canonical save
+identity under fresh transport IDs, independent concurrent collectors, stale
+attempts, progress/completion monotonicity and interrupted orphan retention.
+Opaque tensor members test the privileged boundary without deserialization.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_checkpoint_publication.py test_checkpoint_publication.py test_hybrid_checkpoint_faults.py test_hybrid_checkpoint_recovery.py
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_group_checkpoint.py test_group_recovery.py test_hybrid_checkpoint_ddp_resume.py test_storage_config.py
+```
+
+Expected: 74 + 33 tests pass. Native Gloo regressions need reviewed localhost
+socket permission. They preserve the existing writer and v2 format; production
+pi01/pi02/pi03 and live NFS validation remain pending. See the
+[9.3 report](../docs/storage/36-ddp-checkpoint-publication.md).
+
+## Phase 9.4 DDP fault/acceptance matrix
+
+`test_ddp_acceptance.py` adds six cases: native two-rank committed full-group
+resume; three-rank startup death/cold retry; rank death during checkpoint ACK
+followed by full-group committed resume; actual 3-to-2 SDK resume rejection;
+controller world-size drift rejection; and competing whole-group recovery.
+Native cases preserve a separate student's disposable job/files and reap all
+owned child processes before asserting quiescence. They verify terminal rank
+history as well as jobs, checkpoints, reservations and existing numerical limits.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_ddp_acceptance.py
+```
+
+Expected: six PASS with reviewed localhost socket access. See the
+[9.4 report and complete regression commands](../docs/storage/37-ddp-acceptance.md).
+Local PASS does not satisfy physical three-Pi acceptance. Read-only readiness
+found pi01 unreachable and the reachable agents missing the hybrid modules;
+no deployment, live rank kill, service or mount change was performed.

@@ -63,6 +63,7 @@ class RecoveryTests(unittest.TestCase):
         agent=importlib.util.module_from_spec(spec)
         with patch.object(subprocess,'run',return_value=Mock(returncode=1)):spec.loader.exec_module(agent)
         agent.BASE_DIR=f.worker;agent.LOG_DIR=f.worker/'logs';agent.node_id=lambda:'pi01'
+        f.suppress_watcher(agent)
         service=StagingService(f.fetcher,f.manager,f.key,worker_root=f.worker,ownership=worker_lease,
                               cancelled=agent.attempt_cancelled,isolate=f.isolate,**callbacks)
         install_staging_service(agent,service,watchdog=False);self.addCleanup(service.close)
@@ -349,9 +350,8 @@ class RecoveryTests(unittest.TestCase):
         jobs=[tuple(r) for r in target.db.execute('SELECT * FROM jobs')]
         def migrate(_):
             with closing(target.connect()) as db:return cleanup_schema.migrate(db)
-        # The shared agent fixture mocks Thread to suppress its watcher. Restore
-        # actual threads for this deliberate independent-SQLite-writer test.
-        with patch.object(threading,'Thread',REAL_THREAD), ThreadPoolExecutor(max_workers=3) as pool:
+        # Agent watcher mocks do not replace these real independent writer threads.
+        with ThreadPoolExecutor(max_workers=3) as pool:
             results=[future.result(timeout=10) for future in [pool.submit(migrate,n) for n in range(3)]]
         self.assertEqual(len(results),3)
         self.assertEqual(target.db.execute('SELECT COUNT(*) FROM hybrid_cleanup_migrations').fetchone()[0],1)

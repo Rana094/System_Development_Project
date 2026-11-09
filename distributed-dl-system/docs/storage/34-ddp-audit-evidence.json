@@ -1,0 +1,1071 @@
+{
+  "subphase": "9.1",
+  "date": "2026-11-09 Asia/Dhaka",
+  "acceptance": "PASS audit only; STOP before 9.2. Full Phase 9/all-three-Pi acceptance remains pending.",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "application": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "de297dc7d99eb80e52498145fe05b033e5afdaad",
+    "starting_status": "",
+    "starting_clean": true,
+    "no_stash_reset_commit": true
+  },
+  "preservation": {
+    "starting_files": 293,
+    "unchanged_starting_files": 292,
+    "modified": [
+      "docs/storage/implementation-progress.md"
+    ],
+    "added": [
+      "docs/storage/34-ddp-audit.md",
+      "docs/storage/34-ddp-audit-evidence.json"
+    ],
+    "missing": [],
+    "snapshot": "/tmp/hybrid-9-1/before",
+    "all_runtime_api_schema_config_workloads_and_tests_unchanged": true,
+    "original_progress_preserved_as_prefix": true,
+    "before_sha256": {
+      "docs/storage/implementation-progress.md": "f7d00e5c24fe6fce5d5f36aa0e3116a4bb726d2962ed8822495a2b9bd939b097"
+    },
+    "after_sha256": {
+      "docs/storage/implementation-progress.md": "02781206b2220e43b903849dfa921589c0fa753fad2fc39d311ac76ba215bbae",
+      "docs/storage/34-ddp-audit.md": "655a6f5f65775cc9820a6ad22734dd357ce014eb0416219e1c5cdbb8e85f22b2"
+    },
+    "evidence_own_hash_omitted_to_avoid_self_reference": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "local_packages": {
+      "torch": "2.14.1",
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2"
+    },
+    "physical_worker_versions_unknown": true
+  },
+  "findings": {
+    "launcher": "Existing agent Popen -> optional lease guardian/reviewed isolation -> custom_runner -> prepared interpreter entrypoint",
+    "torchrun": false,
+    "dcp": false,
+    "elastic": false,
+    "one_logical_rank_per_worker": true,
+    "backend": "CPU Gloo",
+    "rank_model": "Contiguous 0..N-1 assigned from the selected distinct worker list; LOCAL_RANK=0",
+    "attempt": "job_id:retry_count",
+    "group_identity_fields": [
+      "job_id",
+      "attempt",
+      "manifest_sha256",
+      "compatibility_key",
+      "world_size",
+      "master_addr",
+      "master_port"
+    ],
+    "checkpoint": "Rank-zero version-2 ZIP_STORED bundle containing metadata.json plus rank-N.pt serialized state members; not separate rank filesystem publications",
+    "checkpoint_aggregate_state_limit_bytes": 10737418240,
+    "checkpoint_metadata_limit_bytes": 65536,
+    "checkpoint_world_size_bounds": [
+      2,
+      256
+    ],
+    "submission_distributed_world_size_minimum": 2,
+    "submission_explicit_world_size_maximum": null,
+    "world_size_immutable_on_recovery": true,
+    "shipped_example_world_size": 2,
+    "example_default_global_batch": 64,
+    "three_rank_new_example_requires_explicit_divisible_batch": true,
+    "rank_zero_model_result_is_not_recoverable_group_checkpoint": true,
+    "current_staging": "Sequential rank RPCs; whole-group READY receipt/binding/reservation/fresh-lease barrier already exists",
+    "all_ranks_required_inputs": "Full authorized immutable source tree including requirements and full dataset manifest/objects",
+    "no_application_file_shard_contract_in_primary_trainer": true,
+    "rank_requirements_advisory_not_staging_grant": true,
+    "next_parallel_staging_must_not_share_registry_sqlite_connection_across_threads": true,
+    "reference_benchmark_caches_downloads_and_final_model_files_are_distinct_lane": true,
+    "no_controller_ha_added": true
+  },
+  "evidence_sources": {
+    "controller/dispatcher.py": {
+      "sha256": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d",
+      "functions": {
+        "get_job_type": [
+          85
+        ],
+        "get_job_config": [
+          92
+        ],
+        "get_central_pytorch_checkpoint_path": [
+          137
+        ],
+        "update_checkpoint_metadata": [
+          142
+        ],
+        "sha256_file": [
+          184
+        ],
+        "checkpoint_due": [
+          200
+        ],
+        "sync_dummy_checkpoint": [
+          214
+        ],
+        "sync_pytorch_checkpoint": [
+          270
+        ],
+        "sync_checkpoint": [
+          431
+        ],
+        "cleanup_unhealthy_nodes": [
+          452
+        ],
+        "get_excluded_nodes": [
+          471
+        ],
+        "mark_node_unhealthy": [
+          478
+        ],
+        "upload_pytorch_checkpoint": [
+          490
+        ],
+        "build_start_payload": [
+          566
+        ],
+        "dispatch_one_job": [
+          623
+        ],
+        "monitor_running_jobs": [
+          817
+        ],
+        "handle_running_job_failure": [
+          1001
+        ],
+        "reconcile_hybrid": [
+          1042
+        ],
+        "dispatch_queued_jobs": [
+          1054
+        ],
+        "reconcile_cancellations": [
+          1073
+        ],
+        "attempt_token": [
+          1121
+        ],
+        "read_valid_checkpoint": [
+          1126
+        ],
+        "record_confirmed_resume": [
+          1141
+        ],
+        "reconcile_scheduled_jobs": [
+          1176
+        ],
+        "main": [
+          1214
+        ]
+      }
+    },
+    "controller/distributed_dispatch.py": {
+      "sha256": "260d4efe0ca3fbf269b84f51e2db041093d928e67fe2d7e73f5875b166c5c26a",
+      "functions": {
+        "is_distributed": [
+          17
+        ],
+        "attempt": [
+          22
+        ],
+        "group": [
+          26
+        ],
+        "phase": [
+          36
+        ],
+        "rank_status": [
+          47
+        ],
+        "select_group": [
+          58
+        ],
+        "dispatch": [
+          83
+        ],
+        "url": [
+          130
+        ],
+        "worker": [
+          134
+        ],
+        "payload": [
+          142
+        ],
+        "launch_context": [
+          157
+        ],
+        "stop_group": [
+          161
+        ],
+        "collect_ranks": [
+          168
+        ],
+        "reconcile_stop": [
+          181
+        ],
+        "progress": [
+          220
+        ],
+        "restore_confirmed": [
+          355
+        ]
+      }
+    },
+    "controller/job_store.py": {
+      "sha256": "bba46a55574d1339a654793d0beb570ecaf0f6187a855c6a5e97568ea6e8ffe6",
+      "functions": {
+        "get_connection": [
+          16
+        ],
+        "column_exists": [
+          31
+        ],
+        "initialize_database": [
+          42
+        ],
+        "add_job": [
+          177
+        ],
+        "get_storage_binding": [
+          254
+        ],
+        "require_storage_execution": [
+          262
+        ],
+        "get_job": [
+          270
+        ],
+        "mark_staged": [
+          290
+        ],
+        "record_staging_error": [
+          327
+        ],
+        "get_job_environments": [
+          337
+        ],
+        "record_environment": [
+          349
+        ],
+        "invalidate_environment": [
+          413
+        ],
+        "get_jobs_by_status": [
+          448
+        ],
+        "get_all_jobs": [
+          469
+        ],
+        "get_reservations": [
+          486
+        ],
+        "enqueue_custom_job": [
+          497
+        ],
+        "mark_scheduled": [
+          526
+        ],
+        "mark_running": [
+          568
+        ],
+        "mark_completed": [
+          648
+        ],
+        "requeue_after_failure": [
+          728
+        ],
+        "return_to_queue": [
+          807
+        ],
+        "fair_queue": [
+          839
+        ],
+        "control_job": [
+          872
+        ],
+        "finish_cancellation": [
+          904
+        ],
+        "get_attempts": [
+          921
+        ],
+        "get_ranks": [
+          942
+        ]
+      }
+    },
+    "controller/job_spec.py": {
+      "sha256": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a",
+      "functions": {
+        "object_fields": [
+          14
+        ],
+        "text": [
+          27
+        ],
+        "integer": [
+          38
+        ],
+        "positive_number": [
+          54
+        ],
+        "validate_owner": [
+          67
+        ],
+        "local_input": [
+          76
+        ],
+        "requirements_path": [
+          90
+        ],
+        "validate_spec": [
+          128
+        ],
+        "load_spec": [
+          241
+        ],
+        "unique_fields": [
+          244
+        ],
+        "invalid_number": [
+          252
+        ]
+      }
+    },
+    "controller/staging_dispatch.py": {
+      "sha256": "bf1f8eeeb7ccd892ebcb333b9fae5915424b5aeec182749403dc69902da94ad9",
+      "functions": {
+        "__init__": [
+          21
+        ],
+        "_reader": [
+          31
+        ],
+        "authorize": [
+          49
+        ],
+        "authorize_checkpoint": [
+          61
+        ],
+        "recovery_source": [
+          64
+        ],
+        "prepare_recovery": [
+          66
+        ],
+        "recovery_payload": [
+          68
+        ],
+        "group_started": [
+          70
+        ],
+        "require_final": [
+          79
+        ],
+        "plans": [
+          81
+        ],
+        "stage_group": [
+          91
+        ],
+        "start": [
+          118
+        ],
+        "fresh_lease": [
+          136
+        ],
+        "dispatch": [
+          159
+        ],
+        "main": [
+          41
+        ]
+      }
+    },
+    "controller/checkpoint_recovery.py": {
+      "sha256": "afc9813186d3bd35bd4fc4a406ec2dc750ea2f26410954042f9205a2fb4cd779",
+      "functions": {
+        "__init__": [
+          21
+        ],
+        "authorize_checkpoint": [
+          30
+        ],
+        "_attempt": [
+          35
+        ],
+        "recovery_source": [
+          39
+        ],
+        "prepare_recovery": [
+          73
+        ],
+        "recovery_payload": [
+          95
+        ],
+        "start": [
+          99
+        ],
+        "group_started": [
+          115
+        ],
+        "confirm": [
+          125
+        ],
+        "_confirm_started": [
+          144
+        ],
+        "sync": [
+          185
+        ],
+        "require_final": [
+          191
+        ],
+        "completion_ready": [
+          202
+        ],
+        "reconcile": [
+          215
+        ]
+      }
+    },
+    "agent/agent.py": {
+      "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a",
+      "functions": {
+        "node_id": [
+          24
+        ],
+        "network_interface": [
+          28
+        ],
+        "valid_job_id": [
+          70
+        ],
+        "cancellation_path": [
+          83
+        ],
+        "attempt_cancelled": [
+          87
+        ],
+        "remember_cancellation": [
+          95
+        ],
+        "checkpoint_path_for": [
+          110
+        ],
+        "write_json_atomic": [
+          116
+        ],
+        "write_binary_atomic": [
+          130
+        ],
+        "resolve_job_type": [
+          166
+        ],
+        "get_ip_address": [
+          194
+        ],
+        "get_temperature": [
+          210
+        ],
+        "get_network_speed": [
+          226
+        ],
+        "gpu_count": [
+          275
+        ],
+        "watch_job": [
+          289
+        ],
+        "health": [
+          331
+        ],
+        "resources": [
+          346
+        ],
+        "cache_inventory": [
+          420
+        ],
+        "start_job": [
+          447
+        ],
+        "download_job_log": [
+          952
+        ],
+        "job_status": [
+          964
+        ],
+        "job_with_resume": [
+          973
+        ],
+        "get_job": [
+          1011
+        ],
+        "stop_job": [
+          1027
+        ],
+        "custom_checkpoint": [
+          1064
+        ],
+        "renew_execution_lease": [
+          1126
+        ],
+        "fence_downloads": [
+          1144
+        ],
+        "execution_headers": [
+          1163
+        ],
+        "get_checkpoint": [
+          1178
+        ],
+        "upload_checkpoint": [
+          1238
+        ]
+      }
+    },
+    "agent/custom_runner.py": {
+      "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130",
+      "functions": {
+        "validate_execution": [
+          14
+        ],
+        "gloo_interface": [
+          34
+        ],
+        "run": [
+          51
+        ]
+      }
+    },
+    "agent/lease_runner.py": {
+      "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5",
+      "functions": {
+        "clean_descendants": [
+          11
+        ],
+        "main": [
+          30
+        ]
+      }
+    },
+    "agent/dl_checkpoint.py": {
+      "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+      "functions": {
+        "atomic_json": [
+          17
+        ],
+        "safe_state": [
+          28
+        ],
+        "cpu_tree": [
+          156
+        ],
+        "tensor_bytes": [
+          170
+        ],
+        "__init__": [
+          46,
+          179
+        ],
+        "save": [
+          62,
+          273
+        ],
+        "load": [
+          118,
+          338
+        ],
+        "_capture": [
+          198
+        ],
+        "_prepare": [
+          231
+        ],
+        "_acknowledge": [
+          267
+        ]
+      }
+    },
+    "agent/checkpoint_protocol.py": {
+      "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+      "functions": {
+        "sha256": [
+          13
+        ],
+        "validate": [
+          21
+        ],
+        "group_identity": [
+          55
+        ],
+        "validate_group": [
+          62
+        ]
+      }
+    },
+    "agent/checkpoint_service.py": {
+      "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f",
+      "functions": {
+        "install_checkpoint_service": [
+          91
+        ],
+        "__init__": [
+          18,
+          28
+        ],
+        "__getattr__": [
+          19
+        ],
+        "close": [
+          20
+        ],
+        "validate_stager": [
+          40
+        ],
+        "snapshot": [
+          46
+        ],
+        "checkpoint_download": [
+          103
+        ],
+        "authority": [
+          52
+        ]
+      }
+    },
+    "agent/checkpoint_restore_service.py": {
+      "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2",
+      "functions": {
+        "source_document": [
+          17
+        ],
+        "context": [
+          25
+        ],
+        "install": [
+          42
+        ],
+        "launch_path": [
+          100
+        ]
+      }
+    },
+    "hybrid_storage/checkpoint_publication.py": {
+      "sha256": "7213826b401bd7647516650bccfaf76dbf105d607911ca22d245e3eb9685c305",
+      "functions": {
+        "_row": [
+          45
+        ],
+        "publish": [
+          40,
+          175
+        ],
+        "__init__": [
+          57
+        ],
+        "_store": [
+          70
+        ],
+        "initialize": [
+          80
+        ],
+        "_authorize": [
+          89
+        ],
+        "_head": [
+          108
+        ],
+        "_publication": [
+          112
+        ],
+        "_receipt": [
+          116
+        ],
+        "committed": [
+          120
+        ],
+        "head": [
+          138
+        ],
+        "open_committed": [
+          147
+        ],
+        "_metadata": [
+          156
+        ]
+      }
+    },
+    "hybrid_storage/checkpoint_transfer.py": {
+      "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6",
+      "functions": {
+        "path_for": [
+          25
+        ],
+        "header": [
+          30
+        ],
+        "read_header": [
+          36
+        ],
+        "signature": [
+          42
+        ],
+        "authenticate": [
+          51
+        ],
+        "request_document": [
+          57
+        ],
+        "read_request": [
+          65
+        ],
+        "__init__": [
+          79,
+          100
+        ],
+        "read": [
+          82
+        ],
+        "sync": [
+          109
+        ]
+      }
+    },
+    "hybrid_storage/checkpoint_restore.py": {
+      "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab",
+      "functions": {
+        "signature": [
+          12
+        ],
+        "authenticate": [
+          19
+        ],
+        "read_request": [
+          24
+        ],
+        "receipt": [
+          38
+        ],
+        "__init__": [
+          43
+        ],
+        "stage": [
+          50
+        ]
+      }
+    },
+    "hybrid_storage/staging_lifecycle.py": {
+      "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb",
+      "functions": {
+        "_boot": [
+          25
+        ],
+        "_clock": [
+          26
+        ],
+        "_reservation": [
+          29
+        ],
+        "_current": [
+          33
+        ],
+        "_placements": [
+          42
+        ],
+        "_fence": [
+          54
+        ],
+        "require_ready": [
+          79
+        ],
+        "require_running": [
+          124
+        ],
+        "__init__": [
+          130
+        ],
+        "_enabled": [
+          135
+        ],
+        "begin": [
+          139
+        ],
+        "record_ready": [
+          189
+        ]
+      }
+    },
+    "hybrid_storage/workspaces.py": {
+      "sha256": "c9638fea62e81a4f270d43b7b79302239b64ce038cc4574ec099a03250d92a81",
+      "functions": {
+        "__post_init__": [
+          65,
+          91
+        ],
+        "document": [
+          76,
+          109
+        ],
+        "key": [
+          81
+        ],
+        "sha256": [
+          115
+        ],
+        "input_bytes": [
+          119
+        ],
+        "inputs": [
+          125
+        ],
+        "source": [
+          141
+        ],
+        "data": [
+          143
+        ],
+        "outputs": [
+          145
+        ],
+        "checkpoints": [
+          147
+        ],
+        "__init__": [
+          158
+        ],
+        "initialize": [
+          174
+        ],
+        "pin_holder": [
+          181
+        ],
+        "_locked": [
+          188
+        ],
+        "_read": [
+          209
+        ],
+        "_save": [
+          255
+        ],
+        "_new": [
+          275
+        ],
+        "_authority": [
+          283
+        ],
+        "_relative": [
+          288
+        ],
+        "_copy_file": [
+          295
+        ],
+        "_copy_file_impl": [
+          299
+        ],
+        "_trees": [
+          335
+        ],
+        "_build": [
+          341
+        ],
+        "_verify_tree": [
+          359
+        ],
+        "_receipt": [
+          390
+        ],
+        "_pins_present": [
+          403
+        ],
+        "prepare": [
+          410
+        ],
+        "_prepare": [
+          417
+        ],
+        "mark_started": [
+          466
+        ],
+        "_finish": [
+          479
+        ],
+        "finish": [
+          502
+        ],
+        "status": [
+          514
+        ],
+        "cleanup_temporary": [
+          519
+        ],
+        "attempt": [
+          566
+        ],
+        "walk": [
+          362
+        ],
+        "inspect": [
+          537
+        ]
+      }
+    },
+    "examples/ddp_project/train.py": {
+      "sha256": "998f21faac1647d2ef878b9841b6ce0c9195146f8ecdffa6942422eff3d4bd90",
+      "functions": {
+        "model_hash": [
+          21
+        ],
+        "main": [
+          29
+        ],
+        "restore_application": [
+          78
+        ]
+      }
+    },
+    "examples/student_project/train.py": {
+      "sha256": "069b415415a344ff59e709c911940abd865f22dd52713ba4c348f463ad132897",
+      "functions": {
+        "main": [
+          17
+        ]
+      }
+    },
+    "training/benchmark_job.py": {
+      "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76",
+      "functions": {
+        "run_image_training": [
+          35
+        ],
+        "main": [
+          111
+        ],
+        "__init__": [
+          97
+        ],
+        "write": [
+          101
+        ],
+        "flush": [
+          107
+        ]
+      }
+    },
+    "training/reference/resnet18_train.py": {
+      "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0",
+      "functions": {
+        "main": [
+          14
+        ]
+      }
+    }
+  },
+  "sampler_probe": {
+    "dataset_rows": 256,
+    "world_size": 3,
+    "per_rank_epoch0_samples": [
+      86,
+      86,
+      86
+    ],
+    "total_samples_including_padding": 258,
+    "unique_epoch0_samples": 256,
+    "membership_changes_between_epochs": [
+      true,
+      true,
+      true
+    ],
+    "installed_sampler_source": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/lib/python3.12/site-packages/torch/utils/data/distributed.py",
+    "installed_sampler_sha256": "95866f953c4d71f5b9cac5d6dafbea641c14de760cca69a2ddde39ff768d73b2"
+  },
+  "runtime_source_scan": {
+    "roots": [
+      "agent",
+      "controller",
+      "training",
+      "examples",
+      "tools"
+    ],
+    "python_files": 76,
+    "hits": {
+      "torchrun": [],
+      "torch.distributed.launch": [],
+      "torch.distributed.checkpoint": [],
+      "torch.distributed.elastic": [],
+      "from torch.distributed import checkpoint": []
+    },
+    "scope": "Project runtime/workloads/tools only; arbitrary submitted code unknown"
+  },
+  "tests": {
+    "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_distributed_dispatch.py test_group_checkpoint.py",
+    "log": "/tmp/hybrid-9-1-baseline.log",
+    "log_sha256": "2f1a2021c3763a6e55142fd3a131782681926165b67fd3ee3a31ed226452c904",
+    "files_passed": 2,
+    "tests_passed": 15,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "suites": {
+      "test_distributed_dispatch.py": 7,
+      "test_group_checkpoint.py": 8
+    },
+    "real_local_cpu_gloo": true,
+    "reviewed_socket_test_permission": true,
+    "new_test_code": false,
+    "source_files_parsed": 22,
+    "sampler_probe_process_group_initialized": false,
+    "physical_pis_tested": false,
+    "internet_transfers": false,
+    "live_services_or_data_changed": false,
+    "preexisting_negative_diagnostics_expected": true
+  },
+  "config": {
+    "path": "config/storage.json",
+    "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+    "values": {
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false,
+      "storage_aware_staging": false,
+      "scheduler_policy": "resource"
+    },
+    "changed": false
+  },
+  "rollback": {
+    "patch": "/tmp/hybrid-9-1/9.1.patch",
+    "cwd": "/home/rana/Projects/System Project/System_Development_Project",
+    "check": "git apply --reverse --check /tmp/hybrid-9-1/9.1.patch",
+    "apply_only_after_review": "git apply --reverse /tmp/hybrid-9-1/9.1.patch",
+    "scope": "Audit documentation only; no live data/schema rollback"
+  },
+  "unknowns": [
+    "Current deployed controller/worker code and credentials",
+    "Pi availability, OS/PyTorch versions and filesystem/network readiness",
+    "Production containment and authorized mount isolation",
+    "Physical NFS throughput/timeouts and checkpoint peak memory",
+    "Arbitrary student sampler/transform/application-state behavior"
+  ],
+  "not_implemented": [
+    "9.2 bounded parallel staging",
+    "New application-defined file partition contract",
+    "9.3 further publication changes or format migration",
+    "9.4 requested new matrix/all-three-Pi validation",
+    "New bootstrap/config or live deployment"
+  ],
+  "residual_risks": [
+    "Central controller/local SQLite/authoritative storage SPOF",
+    "Rank-zero memory holds all rank payloads plus overhead",
+    "Submission/checkpoint count limit mismatch; no new support inferred",
+    "Reference workloads may download if caches/weights are absent",
+    "Existing transfer/lease and metadata/header bounds remain",
+    "Physical pi01/pi02/pi03 acceptance required and untested"
+  ]
+}

@@ -106,12 +106,13 @@ class RecoveryTests(unittest.TestCase):
             state={'state.pt':b'opaque-test-state'}
             meta.update(state_sha256=hashlib.sha256(state['state.pt']).hexdigest(),lease_fence=worker_lease.fence(leases.get(job,'pi01')))
         else:
+            save_id=hashlib.sha256(f'{job["retry_count"]}:{step}:{completed}'.encode()).hexdigest()[:32]
             context=json.loads(self.db.execute('SELECT context_json FROM distributed_attempts WHERE job_id=? AND retry_count=?',(job['job_id'],job['retry_count'])).fetchone()[0])
             state={f'rank-{rank}.pt':str(rank).encode() for rank in range(world)}
             hashes={str(rank):hashlib.sha256(state[f'rank-{rank}.pt']).hexdigest() for rank in range(world)}
-            meta.update(kind='ddp',world_size=world,checkpoint_id='b'*32,group_id=group_identity(job['job_id'],meta['attempt_token'],job['storage_manifest_sha256'],'c'*64,context),
+            meta.update(kind='ddp',world_size=world,checkpoint_id=save_id,group_id=group_identity(job['job_id'],meta['attempt_token'],job['storage_manifest_sha256'],'c'*64,context),
                 shared_state_sha256='d'*64,rank_state_sha256=hashes,
-                rank_acknowledgments=[dict(rank=rank,checkpoint_id='b'*32,state_sha256=hashes[str(rank)],accepted=True) for rank in range(world)],
+                rank_acknowledgments=[dict(rank=rank,checkpoint_id=save_id,state_sha256=hashes[str(rank)],accepted=True) for rank in range(world)],
                 rank_fences={str(rank):worker_lease.fence(leases.get(job,f'pi{rank+1:02}')) for rank in range(world)})
         stream=io.BytesIO()
         with zipfile.ZipFile(stream,'w',compression=zipfile.ZIP_STORED) as archive:
@@ -292,6 +293,7 @@ class RecoveryTests(unittest.TestCase):
         agent=importlib.util.module_from_spec(spec)
         with patch.object(dispatch_fixture.subprocess,'run',return_value=Mock(returncode=1)):spec.loader.exec_module(agent)
         agent.BASE_DIR=base;agent.LOG_DIR=base/'logs';agent.node_id=lambda:'pi02'
+        self.f.suppress_watcher(agent)
         service=dispatch_fixture.StagingService(fetch,manager,key,worker_root=base,ownership=worker_lease,
             cancelled=agent.attempt_cancelled,isolate=self.f.isolate,quiescent=lambda *_:False,terminate=Mock())
         dispatch_fixture.install_staging_service(agent,service,watchdog=False);self.addCleanup(service.close)
@@ -320,12 +322,12 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaises((PermissionError,ValueError)):self.f.dispatch()
         self.f.popen.assert_not_called();self.assertEqual(len(fixtures.store.get_reservations()),0)
 
-    def ddp(self):
+    def ddp(self, *, workers=3):
         original=fixtures.validate_spec
         def checkpoint_spec(document,base):
             document=dict(document,recovery=dict(mode='checkpoint',interval_seconds=5))
             return original(document,base)
-        with patch.object(fixtures,'validate_spec',side_effect=checkpoint_spec):nodes=self.f.ddp_job()
+        with patch.object(fixtures,'validate_spec',side_effect=checkpoint_spec):nodes=self.f.ddp_job(workers=workers)
         for service in self.f.extra_services:self.install_worker(service)
         self.runtime=self.coordinator();self.f.runtime=self.runtime
         self.f.stack.enter_context(patch('distributed_dispatch.select_group',return_value=nodes))
@@ -366,7 +368,9 @@ class RecoveryTests(unittest.TestCase):
             return real(actor,job_id,node,*args)
         with patch.object(self.runtime.restorer,'stage',side_effect=fail_last):
             with self.assertRaises(OSError):self.f.dispatch()
-        self.f.popen.assert_not_called();self.assertEqual(len(fixtures.store.get_reservations()),3)
+        self.f.popen.assert_not_called();self.assertEqual(fixtures.store.get_reservations(),[])
+        self.assertEqual(self.job()['status'],'QUEUED')
+        self.assertEqual([r[0] for r in self.db.execute('SELECT phase FROM hybrid_cleanup_ranks WHERE stage_id=(SELECT stage_id FROM hybrid_restore_attempts WHERE retry_count=1)')],['QUIESCENT']*3)
 
     def test_real_cpu_committed_bytes_resume_model_optimizer_scheduler_rng_exactly(self):
         # Native CPU subprocesses, no DDP socket and no mocked training claim.

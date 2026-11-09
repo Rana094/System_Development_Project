@@ -48,7 +48,7 @@ def gloo_interface(address, port):
     raise ValueError('Cannot find the network interface for DDP rendezvous')
 
 
-def run(root, job_id, attempt_token, resume_sha256=None, ddp=None, staged_inputs=None):
+def run(root, job_id, attempt_token, resume_sha256=None, ddp=None, staged_inputs=None, staged_resume=False):
     # Verification runs inside the tracked process, so a slow package check cannot
     # make the HTTP launch request ambiguous or leave an untracked training process.
     request = read_request(root / 'jobs' / job_id / 'request.json')
@@ -103,8 +103,12 @@ def run(root, job_id, attempt_token, resume_sha256=None, ddp=None, staged_inputs
         environment['DL_WORKER_ROOT']=str(root.parent)
     for name in ('DL_RESUME_CHECKPOINT','DL_RESUME_SHA256'):
         environment.pop(name,None)
+    if staged_resume and (not staged_inputs or not resume_sha256):
+        raise ValueError('Staged restore requires verified private inputs and digest')
     if resume_sha256:
         environment['DL_RESUME_CHECKPOINT']=str(Path(record['workspace_path'])/'checkpoints/resume.dlckpt')
+        if staged_resume:
+            environment['DL_RESUME_CHECKPOINT']=str(Path(staged_inputs['source']).parents[1]/'checkpoints/resume.dlckpt')
         environment['DL_RESUME_SHA256']=resume_sha256
     # Bound common tensor-library thread pools to the reserved CPU count.
     for name in ('OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS','NUMEXPR_NUM_THREADS'):
@@ -142,7 +146,8 @@ if __name__ == '__main__':
     parser.add_argument('--resume-sha256')
     parser.add_argument('--ddp-json')
     parser.add_argument('--staged-inputs-json')
+    parser.add_argument('--staged-resume',action='store_true')
     args = parser.parse_args()
     raise SystemExit(run(args.root.resolve(),args.job_id,args.attempt_token or args.job_id+':0',
                         args.resume_sha256,json.loads(args.ddp_json) if args.ddp_json else None,
-                        json.loads(args.staged_inputs_json) if args.staged_inputs_json else None))
+                        json.loads(args.staged_inputs_json) if args.staged_inputs_json else None,args.staged_resume))

@@ -143,6 +143,10 @@ class StagingService:
                 or (data.get('ddp') or {}).get('rank',0)!=plan.identity.rank):
             raise PermissionError('Start differs from live staged attempt')
         self.authority(plan,lease,stage_id)
+        publisher=self.module.app.extensions.get('checkpoint_publication')
+        if publisher is not None:
+            from checkpoint_restore_service import launch_path
+            launch_path(publisher,self.module,data)
         return plan,lease
 
     def launch_inputs(self,data):
@@ -238,9 +242,16 @@ class StagingService:
         self.tick()
         record=self._record(stage_id)
         if record is None:return dict(stage_id=stage_id,plan_sha256=plan.sha256,phase='UNKNOWN',pins_released=False,outcome=None)
-        return dict(stage_id=stage_id,plan_sha256=record['plan_sha256'],phase=record['phase'],
+        result=dict(stage_id=stage_id,plan_sha256=record['plan_sha256'],phase=record['phase'],
                     pins_released=record['pins_released'],outcome=record['outcome'],
                     lease_id=record['lease']['lease_id'],generation=record['lease']['generation'])
+        observed=self.module.current_job
+        if observed is None or observed.get('job_id')!=plan.identity.job_id:
+            observed=self.module.job_history.get(plan.identity.job_id)
+        if (observed is not None and observed.get('attempt_token')==plan.identity.attempt_token
+                and self.ownership.fence(observed.get('lease'))==self.ownership.fence(record['lease'])):
+            result['job']=self.module.job_with_resume(observed)
+        return result
 
     def tick(self):
         for record in self.journal.records():

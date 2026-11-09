@@ -1623,3 +1623,152 @@ lifecycle/UI acceptance is covered. Production startup remains gated and flags
 stay legacy/OFF/resource. Reviewed production isolation/containment, NFS checkpoint
 publisher, dedicated historical 5.4 acceptance and validation on pi01/pi02/pi03
 remain pending. No browser layout, live hardware or benchmark claim.
+
+## Phase 8.1 — authoritative checkpoint integration audit delivered
+
+9 November 2026. Started on clean `main` at
+`38d31c22bceb990166ef873f2be60b6ded1417f5`; saved all 272 inventoried files
+before edits. Implemented **audit documentation only** for 8.1. No runtime,
+configuration, schema, job, DB, checkpoint, service, SSH/Pi or NFS changes;
+no stash/reset/commit.
+
+[The checkpoint audit](30-checkpoint-audit.md) and
+[evidence](30-checkpoint-audit-evidence.json) trace dummy JSON, built-in .pt,
+custom single-worker v1 and CPU Gloo DDP v2 writers/contents, local temporary
+publication, latest selection, retention, controller sync, restore/completion
+acknowledgements, leases and actual authentication hooks. Existing central latest
+archives are mutable, replaced before separate DB/event updates; no implemented
+immutable COMMITTED journal/head exists in the audited code. The single-worker
+known-missing-checkpoint restart gap remains; DDP already rejects that case.
+Existing checkpoint multipart restore is not HMAC-authenticated and is rejected
+by installed hybrid mutating-route hooks. Hybrid checkpoint mode remains gated.
+The audit identifies exact 8.2 seams without lifting those gates or rewriting
+formats. Private checkpoints must stay outside the NFS input export; original
+manifest identity and immutable source/data version must both remain bound.
+
+Safe isolated baseline: **57 tests PASS, 4/4 files, zero failures/errors/skips**
+(custom checkpoint 4, execution ownership 12, staging lifecycle 20, storage
+selection 21). Existing real stochastic single-worker CPU resume matches model,
+Adam, scheduler and Torch RNG exactly; this is not NFS recovery acceptance.
+Networked DDP/Gloo suites, live hardware/failure tests, NFS operations and
+benchmarks were not run. Manual commands, precise symbols, limitations and
+documentation-only rollback are in the report/evidence.
+
+**8.1 audit PASS; STOP before 8.2.** Phase 8 authoritative publication/recovery/
+fault testing remains pending. Legacy/OFF/resource defaults, central SPOF,
+reviewed production isolation and all-three-Pi validation requirements remain.
+
+## Phase 8.2 — trusted immutable checkpoint publisher delivered locally
+
+9 November 2026. Preserved the uncommitted 8.1 audit/progress on `main` at
+`38d31c22bceb990166ef873f2be60b6ded1417f5`; all 274 starting inventoried files
+saved before edits. Only new publication modules/tests/docs plus appended progress/
+package README; existing runtime files, formats, config and 8.1 report/evidence
+are unchanged. No stash/reset/commit, live DB/schema/service/SSH/Pi/NFS changes.
+
+Explicit `CheckpointPublisher`/`LocalCheckpointPublisher` validates original
+manifest, immutable input binding, owner ACL, current staged RUNNING attempt,
+rank-zero producer, all peer reservations/leases/generations and complete single
+v1/DDP v2 archive metadata/hashes. Bounded private attempt-specific copy/fsync ->
+verified no-replace immutable snapshot -> atomic SQLite COMMITTED/head/job metadata
+transaction. Concurrent writers compare expected head; idempotent committed replies
+cannot rewind it. Interrupted/rejected candidates and old committed files are
+retained, never silently promoted or overwritten. No automatic old-file adoption.
+
+Explicit additive checkpoint migration: four tables, two indexes, ten triggers,
+LOCAL FULL/FK, exact checksum, no user_version or earlier schema changes. Not
+applied live. Existing HTTP checkpoint GET gains authentication only when the
+reviewed worker service is explicitly installed: fresh per-worker HMAC headers
+bind request and immutable snapshot SHA/size; controller streams bounded bytes.
+No new download route or trainer NFS RW permission. Unsigned restore POST remains
+blocked; this read protocol does not authenticate future restore uploads.
+
+Baseline **16 pass**. Eight-file regression snapshot **148 pass**. Later
+portal/legacy/publication boundary selection **60 pass**. Final expanded new suite
+**25 pass**, zero failures/errors/skips; overlapping counts are not added. Covers
+signed single/DDP existing-route transfer, independent concurrent SQLite writers,
+crash/orphan/restart boundary, cancellation/expiry veto, exact-ID idempotency,
+path/MAC/body integrity, partial/disconnected transfer, ACL/reservation loss,
+disk/root/migration guards and legacy fallback. Initial import/exception-assertion
+integration errors corrected without weakening checks/skips. New archive fixtures
+use opaque tensor bytes and synthetic valid staging rows; old stochastic CPU SDK
+test still proves exact resume. No new-mode resume or live hardware claim.
+
+See [8.2 report](31-checkpoint-publication.md) and
+[evidence](31-checkpoint-publication-evidence.json) for exact commands/files/schema,
+manual verification, setup samples, limitations and source rollback preserving
+8.1. **8.2 local PASS; STOP before 8.3.** Defaults remain legacy/OFF/resource;
+production bootstrap/isolation, authenticated restore, committed-source recovery,
+final metrics consistency, full 8.4 faults and pi01/pi02/pi03 validation remain
+pending. Central server/SQLite remains a SPOF; no live deployment was performed.
+
+## 2026-11-09 — Phase 8.3: committed-source recovery (local PASS)
+
+Explicit `CheckpointDispatch` now freezes and verifies an owned COMMITTED source
+against the original immutable job inputs, reuses resource placement/reservations,
+stages missing inputs, restores a verified private checkpoint through authenticated
+POST on the existing route, and invokes the unchanged SDK resume path. All DDP
+ranks stage/restore before any launch; recovered jobs stay SCHEDULED until exact
+SDK/process/lease restore proof. Ambiguous starts are fenced, not replayed.
+Periodic/final publication uses 8.2; completion requires a verified current-attempt
+COMMITTED final checkpoint. Copy/restore/commit events retain existing reporting
+fields and numeric-only student progress. No format, shipped flag or default
+startup changes; base StagingDispatch stays restart-only. Additive LOCAL restore
+migration is explicit and was not applied live.
+
+Baseline: **84 tests PASS, 3/3 files**. Final selections cover **157 distinct
+unittest cases across eight files plus the original executable legacy regression
+script**, all PASS, no test failures/errors/skips in those selections. Overlapping
+runs are not added. New suite: **18 PASS**, including real CPU stochastic SDK
+resume through committed publication/authenticated private restore, exact model/
+Adam/scheduler/Torch/Python/NumPy RNG equality, replacement pi02 fixture, warm-zero
+input staging, three distinct mocked DDP workers, final checkpoint gates,
+restart/lease/auth/cancel/version guards. Real DDP/Gloo/Pi execution is not claimed.
+Initial new-test fixture/import errors were corrected. The existing legacy test
+filename was restored byte-for-byte after a naming collision; new tests have a
+separate filename. Prior 8.1/8.2 source/docs are preserved by the scoped delta.
+
+See [report](32-checkpoint-recovery.md) and
+[evidence](32-checkpoint-recovery-evidence.json) for files, exact commands/logs,
+manual expectations, schema/security details and rollback preserving earlier work.
+No SSH, live NFS/Pi/service/config/data changes, commit, stash or reset.
+**8.3 local PASS; STOP before 8.4.** Production isolation/bootstrap, full 8.4
+fault matrix and pi01/pi02/pi03 physical validation remain pending. Central
+controller/SQLite/checkpoint storage remains a SPOF.
+
+## 2026-11-09 — Phase 8.4: local checkpoint fault acceptance (PASS)
+
+Added `test_hybrid_checkpoint_faults.py` (16 cases) and
+`test_hybrid_checkpoint_ddp_resume.py` (one real three-rank CPU Gloo case).
+No runtime/API/schema/config changes were necessary; all prior code/test bytes
+are preserved. Faults cover worker connection loss, partial upload/restore,
+corrupt/missing checkpoints, stale results, independent competing recovery
+connections, lost restore/start ACKs, controller restart/proof gaps, actual
+publisher SIGKILL after rename, reboot fencing and simulated NFS outage/disk full.
+No incomplete/stale source is selected; current final commit still gates results.
+
+Genuine three-rank test: two uninterrupted baselines, complete saved cut at step
+2, SIGKILL one native rank/reap all old ranks, reopen SQLite, authenticated private
+restore on all three disposable agents, unchanged SDK resume through step 6,
+all-rank proof and committed final completion. Saved-state load and final RNG/
+progress/application state are exact. Final floating model/optimizer tensors use
+atol=1e-8, rtol=1e-7; observed final Adam second-moment difference 1.862645149230957e-9.
+Existing exact single/two-rank comparisons passed unchanged. Agents/isolation and
+result transfer remain mocked; native training and process SIGKILL are real.
+
+Baseline 43 PASS; existing real Gloo 15 PASS; final fault/legacy/config/single SDK
+37 unittest cases plus executable legacy script PASS; new native three-rank case
+1 PASS. **96 distinct unittest cases across eight files plus the legacy script,
+9/9 files PASS**, zero final unittest failures/errors/skips. Overlapping runs are
+not added. Socket sandbox restrictions required reviewed local Gloo test
+permission. Early clock-fixture and final floating comparison failures are
+retained and explained; no production checks or existing assertions were removed.
+
+See [8.4 report](33-checkpoint-fault-acceptance.md) and
+[evidence](33-checkpoint-fault-acceptance-evidence.json) for exact files, commands,
+matrix, actual measurements, manual verification and turn-only rollback.
+No live deployment, Pi/SSH, NFS/service/config/data changes, migrations or commit.
+**8.4 local PASS; STOP.** Physical pi01/pi02/pi03 faults, production containment,
+real mount outages/power durability and deployment acceptance remain NOT TESTED.
+The central controller/local SQLite/checkpoint disk remains a single point of
+failure. Legacy/OFF defaults remain unchanged.

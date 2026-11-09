@@ -455,7 +455,7 @@ def create_app(directory=None, background=False):
             event.pop('details_json')
         checkpoint = next(iter(rows("SELECT * FROM recovery_events WHERE job_id=? AND event_type IN ('CHECKPOINT_SYNC','DDP_CHECKPOINT_COMMITTED') ORDER BY event_time DESC,id DESC LIMIT 1",(job_id,))),None)
         if checkpoint:
-            checkpoint['details'] = {} if hybrid else json.loads(checkpoint['details_json'])
+            checkpoint['details'] = staging_view.event_details(checkpoint) if hybrid else json.loads(checkpoint['details_json'])
             checkpoint.pop('details_json')
         # Only metadata already committed by the dispatcher is displayed; never unpickle training files.
         logs = sorted(p.name for p in (Path(job['storage_path'])/'logs').glob('*.log') if not p.is_symlink()) if job.get('storage_path') else []

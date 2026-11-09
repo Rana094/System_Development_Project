@@ -1,0 +1,230 @@
+{
+  "subphase": "8.3",
+  "date": "2026-11-09 Asia/Dhaka",
+  "acceptance": "PASS local 8.3; STOP before 8.4; production/all-three-Pi validation pending",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "application": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "38d31c22bceb990166ef873f2be60b6ded1417f5",
+    "starting_status": " M docs/storage/implementation-progress.md\n M hybrid_storage/README.md\n?? agent/checkpoint_service.py\n?? docs/storage/30-checkpoint-audit-evidence.json\n?? docs/storage/30-checkpoint-audit.md\n?? docs/storage/31-checkpoint-publication-evidence.json\n?? docs/storage/31-checkpoint-publication.md\n?? hybrid_storage/checkpoint_files.py\n?? hybrid_storage/checkpoint_publication.py\n?? hybrid_storage/checkpoint_schema.py\n?? hybrid_storage/checkpoint_transfer.py\n?? tests/test_checkpoint_publication.py\n",
+    "no_stash_reset_commit": true
+  },
+  "preservation": {
+    "starting_files": 282,
+    "unchanged_starting_files": 269,
+    "modified": [
+      "agent/agent.py",
+      "agent/checkpoint_service.py",
+      "agent/custom_runner.py",
+      "agent/staging.py",
+      "controller/job_store.py",
+      "controller/staging_dispatch.py",
+      "controller/staging_recovery.py",
+      "controller/staging_view.py",
+      "controller/student_portal.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/checkpoint_publication.py",
+      "hybrid_storage/checkpoint_transfer.py"
+    ],
+    "added": [
+      "agent/checkpoint_restore_service.py",
+      "controller/checkpoint_recovery.py",
+      "docs/storage/32-checkpoint-recovery-evidence.json",
+      "docs/storage/32-checkpoint-recovery.md",
+      "hybrid_storage/checkpoint_restore.py",
+      "hybrid_storage/restore_schema.py",
+      "tests/test_hybrid_checkpoint_recovery.py"
+    ],
+    "missing": [],
+    "snapshot": "/tmp/hybrid-8-3/before",
+    "before_sha256": {
+      "agent/agent.py": "a06582a861da9fc60906e28998d3307dfd7d3c462c0f32aac1d0dc13492cb492",
+      "agent/checkpoint_service.py": "f65cc21d1a181b1ad154a5063770d1516ae946e9d1de95b66cead01285279c03",
+      "agent/custom_runner.py": "6abb09f3e9775bf588c6e850f5ba6a2f7ba94c6a3156cb1b371dd167941c74a7",
+      "agent/staging.py": "676cfd7ab24a98d46176a843fda01615679f6627ecd6af706abdb460657aa97a",
+      "controller/job_store.py": "41da260954d356291b494a98a339098f9fb2329b7144772b6a2b6fdb31cccc69",
+      "controller/staging_dispatch.py": "c9194a82d84ff9be350153f3ac6104de9ebae00d44543f0cfaca411581c00e7f",
+      "controller/staging_recovery.py": "4b3335c8454237fec9fc6fbe487ba5823f9134a15687c5ea5351fd5f967de1b1",
+      "controller/staging_view.py": "4309026e0b8d0913a8da58975338e8b3f25d261faea421305b230c1d9b802c0b",
+      "controller/student_portal.py": "3848456131b824bc8e43e73e6037fa87501c2ade96b3f7ea0e9c2e94e744f5af",
+      "docs/storage/implementation-progress.md": "72e6c0edcbb053490e07be664c0bb635f4ef442ec6f98bb51f3c9ecad970392a",
+      "hybrid_storage/README.md": "dd960d778fac3084a1e90df4538a164a10d225ac16dee4178c2003f1317d5734",
+      "hybrid_storage/checkpoint_publication.py": "2ad3e41a4ba69f166a7b3e6a6e20844eab468959a7d4a954c7fc318958fd8e44",
+      "hybrid_storage/checkpoint_transfer.py": "a325b82f7c721916864fdf77259744c43f3eaeacd6f05103b94c50527495e6e0"
+    },
+    "after_sha256": {
+      "agent/agent.py": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a",
+      "agent/checkpoint_restore_service.py": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2",
+      "agent/checkpoint_service.py": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f",
+      "agent/custom_runner.py": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130",
+      "agent/staging.py": "70b79f9cef898dea2cec67b8fee9420fdbaab9984ef038d0e198cae9214887d4",
+      "controller/checkpoint_recovery.py": "afc9813186d3bd35bd4fc4a406ec2dc750ea2f26410954042f9205a2fb4cd779",
+      "controller/job_store.py": "bba46a55574d1339a654793d0beb570ecaf0f6187a855c6a5e97568ea6e8ffe6",
+      "controller/staging_dispatch.py": "bf1f8eeeb7ccd892ebcb333b9fae5915424b5aeec182749403dc69902da94ad9",
+      "controller/staging_recovery.py": "a8b2d1fea6e63a900f3a92b97e93bb2da898b1f59ff0dddb2e8287a8d1b45f34",
+      "controller/staging_view.py": "6e851fb5eedf3be5275bd0dbd93c0d399e4f39938ab0c6a7a51794988f22cc85",
+      "controller/student_portal.py": "269119d1d26b3f6db8616081a688008b84c25beda6670b785008c1ccedadf6c0",
+      "docs/storage/32-checkpoint-recovery.md": "4718e27ff3c9b21df20d0aea38a440ad725a2ca71e0e24681adecf82b43ccc1d",
+      "docs/storage/implementation-progress.md": "8cbdf117cfc5b80648182409383426006a08a6241fde6a28f8e626ae07a0284d",
+      "hybrid_storage/README.md": "2c4375a73597d4750652e36eae38afa17d4e514b4a6f655b3c6a612dde679bf4",
+      "hybrid_storage/checkpoint_publication.py": "7213826b401bd7647516650bccfaf76dbf105d607911ca22d245e3eb9685c305",
+      "hybrid_storage/checkpoint_restore.py": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab",
+      "hybrid_storage/checkpoint_transfer.py": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6",
+      "hybrid_storage/restore_schema.py": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7",
+      "tests/test_hybrid_checkpoint_recovery.py": "05759fe375a84b3a5cb2a9106276ae9b963cb9f56947d2db620cdbbe84c2e779"
+    },
+    "own_evidence_hash_omitted_to_avoid_self_reference": true,
+    "legacy_test_restored_exactly": true,
+    "earlier_8_1_8_2_report_files_unchanged": true,
+    "earlier_readme_progress_bytes_preserved_as_prefix": true
+  },
+  "schema": {
+    "name": "hybrid_restore_v1",
+    "checksum": "f9924c3251ec9c94b8bac3a95426acb3e3b8937c6067d3e7b78a00917407a383",
+    "tables": 3,
+    "indexes": 1,
+    "triggers": 6,
+    "local_full_fk_only": true,
+    "automatic_migration": false,
+    "live_applied": false,
+    "prior_checksums_and_user_version_unchanged": true
+  },
+  "tests": {
+    "unique_unittest_cases": 157,
+    "unittest_files": 8,
+    "additional_executable_legacy_script": "test_checkpoint_recovery.py",
+    "new_cases": 18,
+    "final_failures": 0,
+    "final_errors": 0,
+    "final_skips": 0,
+    "runs": [
+      {
+        "name": "baseline",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py test_staging_dispatch.py test_staging_recovery.py",
+        "result": "84 tests; 3/3 files PASS",
+        "log": "/tmp/hybrid-8-3-baseline.log",
+        "sha256": "44fdf20dd600fb18a03d9c55accd57ac9bcde65f9f8e11b3ae47afa90de1d979"
+      },
+      {
+        "name": "final_boundaries",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_recovery.py test_checkpoint_publication.py test_staging_dispatch.py test_student_portal.py",
+        "result": "84 tests including earlier 17-case new suite; 4/4 files PASS",
+        "log": "/tmp/hybrid-8-3-final.log",
+        "sha256": "5c25b4c20c15477bfb9f41c87cbddf7556e62379b4bbebe3f807a64883a9200b"
+      },
+      {
+        "name": "final_compatibility",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_recovery.py test_custom_checkpoint.py test_staging_recovery.py test_staging_portal.py test_storage_config.py",
+        "result": "72 unittest cases plus executable legacy script; 5/5 files PASS",
+        "log": "/tmp/hybrid-8-3-final-compatibility.log",
+        "sha256": "ea08e0a403fb48335843532ac435b674870c0e1eecaf6c1af8407325041760e9"
+      },
+      {
+        "name": "ddp_final_acceptance",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_recovery.py",
+        "result": "17 tests; 1/1 file PASS",
+        "log": "/tmp/hybrid-8-3-acceptance.log",
+        "sha256": "bcead5e389e2b943a5a03ed966c11cea2fa6ea499d13d17eeeee06aea4986693"
+      },
+      {
+        "name": "final_guard_acceptance",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_recovery.py test_custom_checkpoint.py test_staging_dispatch.py",
+        "result": "47 tests (18+4+25); 3/3 files PASS",
+        "log": "/tmp/hybrid-8-3-final-guards.log",
+        "sha256": "a6e630efe020d45f5dedd1280bf2cc7082a313fee51e0e3d8ac5bb093af64507"
+      }
+    ],
+    "overlapping_runs_not_added": true,
+    "real_cpu": {
+      "total_updates": 12,
+      "saved_after_update": 4,
+      "exit_after_update": 6,
+      "committed_publication_and_signed_worker_restore": true,
+      "outer_agent_launcher_mocked": true,
+      "equality": "torch.equal / exact recursive equality, zero tolerance",
+      "compared": [
+        "model",
+        "Adam optimizer",
+        "StepLR scheduler",
+        "Torch RNG",
+        "Python RNG",
+        "NumPy RNG"
+      ]
+    },
+    "ddp": {
+      "workers": [
+        "pi01",
+        "pi02",
+        "pi03"
+      ],
+      "transport": "three distinct Flask test clients, no network listeners",
+      "launch_and_sdk_acknowledgements_mocked": true,
+      "real_gloo_resume": false,
+      "all_ranks_restored_before_any_launch": true,
+      "final_current_attempt_group_commit_required": true
+    },
+    "preexisting_diagnostics": [
+      "Late-bootstrap publication fixture logs /resources EPERM/500 from psutil network probe both in baseline and later run; test passes.",
+      "Legacy negative tests print expected corrupt checkpoint and missing-final errors; assertions pass."
+    ],
+    "initial_development_failures": [
+      {
+        "log": "/tmp/hybrid-8-3-new.log",
+        "result": "8 tests, 2 errors",
+        "reason": "Recovery-events fixture not initialized explicitly; corrected fixture and fail-closed runtime prerequisite."
+      },
+      {
+        "log": "/tmp/hybrid-8-3-new2.log",
+        "result": "11 tests, 1 error",
+        "reason": "Parent Torch import under globally mocked Popen; corrected test import with real Popen."
+      },
+      {
+        "log": "/tmp/hybrid-8-3-regression.log",
+        "result": "5/6 files passed; 13-case new suite had 1 error",
+        "reason": "Replacement environment prepared after enqueue; fixture now prepares candidates before enqueue."
+      }
+    ]
+  },
+  "security": {
+    "no_new_endpoint": true,
+    "existing_restore_route": "/jobs/<job_id>/custom-checkpoint",
+    "authenticated_raw_post": true,
+    "unsigned_multipart_blocked_on_protected_worker": true,
+    "private_independent_copy": true,
+    "no_worker_nfs_rw": true,
+    "no_privileged_tensor_deserialization": true,
+    "header_bound_characters": 8192,
+    "freshness_seconds": 2,
+    "connect_read_timeout_seconds": [
+      2,
+      10
+    ],
+    "hmac_not_encryption": true,
+    "os_network_isolation_required_not_proven": true
+  },
+  "unchanged": {
+    "shipped_config_and_default_bootstrap": true,
+    "legacy_execution_and_checkpoint_formats": true,
+    "live_db_jobs_checkpoints_and_data": true,
+    "live_nfs_exports_fstab_firewall_ssh_systemd": true,
+    "no_live_pi_or_network_deployment": true
+  },
+  "rollback": {
+    "patch": "/tmp/hybrid-8-3/8.3.patch",
+    "cwd": "/home/rana/Projects/System Project/System_Development_Project",
+    "check": "git apply --reverse --check /tmp/hybrid-8-3/8.3.patch",
+    "apply_only_after_review_and_fencing_active_jobs": "git apply --reverse /tmp/hybrid-8-3/8.3.patch",
+    "data_or_schema_deletion": false,
+    "preserves_prior_uncommitted_8_1_8_2": true
+  },
+  "residual_risks": [
+    "Controller/local SQLite/authoritative store SPOF",
+    "Production bootstrap and OS/network containment not deployed or proven",
+    "Long transfers may outlast current leases; fail closed, no invented throughput benchmark",
+    "Private checkpoint/workspace retention needs separately reviewed garbage collection",
+    "Legacy latest-only CLI readers are not hybrid recovery authority",
+    "Full 8.4 fault matrix, real Gloo resume, NFS outage/power recovery and pi01/pi02/pi03 physical validation remain pending"
+  ]
+}

@@ -11,6 +11,15 @@ LABELS = {'STAGING': 'Preparing inputs', 'READY': 'Inputs ready; waiting for lau
 
 def event_details(event):
     """Strict allowlist for service history in hybrid student responses."""
+    if event.get('event_type') in ('CHECKPOINT_SYNC','DDP_CHECKPOINT_COMMITTED','RESUMED','DDP_RESUMED'):
+        try:
+            data=json.loads(event.get('details_json','{}'))
+            if type(data.get('global_step')) is not int or data['global_step']<0:return {}
+            result=dict(global_step=data['global_step'])
+            if type(data.get('completed')) is bool:result['completed']=data['completed']
+            if type(data.get('retry_count')) is int and data['retry_count']>=0:result['retry_count']=data['retry_count']
+            return result
+        except (ValueError,TypeError,AttributeError):return {}
     if event.get('event_type') != 'INPUTS_STAGED':
         return {}
     try:

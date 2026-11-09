@@ -55,8 +55,28 @@ class StagingDispatch(StagingRecovery):
         if binding is None:
             raise PermissionError('Explicit immutable job input registration required')
         if json.loads(row[3])['recovery']['mode'] != 'restart':
-            raise ValueError('NFS checkpoint jobs remain held pending trusted publisher integration')
+            self.authorize_checkpoint(db,job_id)
         return binding
+
+    def authorize_checkpoint(self, db, job_id):
+        raise ValueError('NFS checkpoint jobs require explicit trusted recovery coordinator')
+
+    def recovery_source(self, job):return None
+
+    def prepare_recovery(self, job, stage, workers, leases, source):pass
+
+    def recovery_payload(self, job, rank, source):return {}
+
+    def group_started(self, job, stage, workers, results, source, context):
+        import job_store as store
+        self._launching.add(stage.stage_id)
+        try:store.mark_running(job['job_id'],min(r['job']['started_at'] for r in results),storage_runtime=self)
+        finally:self._launching.discard(stage.stage_id)
+        if context is not None:
+            import distributed_dispatch as ddp
+            ddp.phase(job,'RUNNING')
+
+    def require_final(self, db, job_id):pass
 
     def plans(self, job):
         with self.registry._tx(write=False):
@@ -150,18 +170,17 @@ class StagingDispatch(StagingRecovery):
         # Validate ACL, immutable binding and every plan before reserving a slot.
         self.plans(job)
         spec = json.loads(job['job_config'])
-        # Checkpoint restoration remains on its existing authenticated publisher
-        # contract; never silently restart a checkpoint job from zero.
-        if spec['recovery']['mode'] != 'restart':
-            raise ValueError('NFS checkpoint launch awaits trusted publisher integration; retained held')
+        source=self.recovery_source(job)
         if spec['execution']['workers'] > 1:
-            workers = ddp.select_group(job,excluded,require_ownership=True)
+            workers = (ddp.select_group(job,excluded,source['metadata'],require_ownership=True) if source else
+                       ddp.select_group(job,excluded,require_ownership=True))
             if not workers:return False
             import secrets
             context = dict(world_size=len(workers),master_addr=workers[0]['ip'],
                            master_port=20000+secrets.randbelow(30000),leases_enabled=True)
         else:
-            allowed = [r['node_id'] for r in store.get_job_environments(job['job_id'])]
+            allowed = [r['node_id'] for r in store.get_job_environments(job['job_id'])
+                       if not source or r['record']['compatibility_key']==source['metadata']['compatibility_key']]
             selected = dispatcher.select_best_node(allowed_nodes=allowed,requirements=spec['resources_per_worker'],
                 reserved_nodes={r['node_id'] for r in store.get_reservations()},excluded_nodes=excluded)
             if not selected or not ownership.supported(selected.get('resources')):return False
@@ -172,19 +191,17 @@ class StagingDispatch(StagingRecovery):
         try:
             leases = [ownership.ensure(job,node['id']) for node in workers]
             stage,replies = self.stage_group(job,workers,leases)
+            self.prepare_recovery(job,stage,workers,leases,source)
             started = []
             for rank,(node,receipt,lease) in enumerate(zip(workers,replies,leases)):
                 payload = (dispatcher.build_start_payload(job) if context is None else
                            ddp.payload(job,store.get_ranks(job['job_id'],job['retry_count'])[rank],context))
                 payload.update(attempt_token=f"{job['job_id']}:{job['retry_count']}",lease=self.fresh_lease(job,node))
+                payload.update(self.recovery_payload(job,rank,source))
                 result = self.start(job,node,payload,stage,receipt)
-                started.append(result['job']['started_at'])
+                started.append(result)
                 if context is not None:ddp.rank_status(job,rank,'RUNNING',result['job']['started_at'])
-            # Only this coordinator's authenticated ACK path may lift mark_running.
-            self._launching.add(stage.stage_id)
-            try:store.mark_running(job['job_id'],min(started),storage_runtime=self)
-            finally:self._launching.discard(stage.stage_id)
-            if context is not None:ddp.phase(job,'RUNNING')
+            self.group_started(job,stage,workers,started,source,context)
             return True
         except Exception:
             # Remote copy/start may have happened. Preserve placement, block

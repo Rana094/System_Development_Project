@@ -141,6 +141,8 @@ class StagingRecovery:
             db.execute('UPDATE distributed_attempts SET phase=? WHERE job_id=? AND retry_count=?',('CANCELLED' if cancelled else 'FAILED',job['job_id'],job['retry_count']))
             return state
 
+    def completion_ready(self,job,stage,members,replies):return True
+
     def reconcile(self,job):
         import job_store as store
         import execution_leases as ownership
@@ -178,6 +180,7 @@ class StagingRecovery:
             replies=[self.control(stage[0],member,'status') for member in members]
             if any(r.get('outcome') not in (None,'COMPLETED') for r in replies):raise ValueError('Worker attempt failed')
             if all(r.get('outcome')=='COMPLETED' and r.get('pins_released') is True for r in replies):
+                if not self.completion_ready(job,stage,members,replies):return 'FINAL_CHECKPOINT_PENDING'
                 with self.registry._tx():
                     self.ensure_cleanup(stage[0])
                     self.registry.db.execute("UPDATE hybrid_cleanup_ranks SET phase='QUIESCENT',updated_at_ns=MAX(updated_at_ns,?) WHERE stage_id=?",(time.time_ns(),stage[0]))

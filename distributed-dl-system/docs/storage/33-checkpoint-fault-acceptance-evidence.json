@@ -1,0 +1,303 @@
+{
+  "subphase": "8.4",
+  "date": "2026-11-09 Asia/Dhaka",
+  "acceptance": "PASS local fault/resume acceptance; STOP. Physical all-three-Pi NFS/power/containment deployment acceptance remains NOT TESTED.",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "application": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "38d31c22bceb990166ef873f2be60b6ded1417f5",
+    "starting_status": " M agent/agent.py\n M agent/custom_runner.py\n M agent/staging.py\n M controller/job_store.py\n M controller/staging_dispatch.py\n M controller/staging_recovery.py\n M controller/staging_view.py\n M controller/student_portal.py\n M docs/storage/implementation-progress.md\n M hybrid_storage/README.md\n?? agent/checkpoint_restore_service.py\n?? agent/checkpoint_service.py\n?? controller/checkpoint_recovery.py\n?? docs/storage/30-checkpoint-audit-evidence.json\n?? docs/storage/30-checkpoint-audit.md\n?? docs/storage/31-checkpoint-publication-evidence.json\n?? docs/storage/31-checkpoint-publication.md\n?? docs/storage/32-checkpoint-recovery-evidence.json\n?? docs/storage/32-checkpoint-recovery.md\n?? hybrid_storage/checkpoint_files.py\n?? hybrid_storage/checkpoint_publication.py\n?? hybrid_storage/checkpoint_restore.py\n?? hybrid_storage/checkpoint_schema.py\n?? hybrid_storage/checkpoint_transfer.py\n?? hybrid_storage/restore_schema.py\n?? tests/test_checkpoint_publication.py\n?? tests/test_hybrid_checkpoint_recovery.py\n",
+    "no_stash_reset_commit": true
+  },
+  "preservation": {
+    "starting_files": 289,
+    "unchanged_starting_files": 286,
+    "modified": [
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "tests/README.md"
+    ],
+    "added": [
+      "docs/storage/33-checkpoint-fault-acceptance-evidence.json",
+      "docs/storage/33-checkpoint-fault-acceptance.md",
+      "tests/test_hybrid_checkpoint_ddp_resume.py",
+      "tests/test_hybrid_checkpoint_faults.py"
+    ],
+    "missing": [],
+    "runtime_schema_config_and_preexisting_test_files_all_unchanged": true,
+    "prior_readme_progress_prefix_preserved": true,
+    "snapshot": "/tmp/hybrid-8-4/before",
+    "before_sha256": {
+      "docs/storage/implementation-progress.md": "8cbdf117cfc5b80648182409383426006a08a6241fde6a28f8e626ae07a0284d",
+      "hybrid_storage/README.md": "2c4375a73597d4750652e36eae38afa17d4e514b4a6f655b3c6a612dde679bf4",
+      "tests/README.md": "3df134d1b31219ca8f5696015f43b85d60e4a6e095751484ba7b703a8bd8295e"
+    },
+    "after_sha256": {
+      "docs/storage/33-checkpoint-fault-acceptance.md": "223c744d59d2797d4c41c1e6253fb9742a40003809fbc9d869be19c452b51f8f",
+      "docs/storage/implementation-progress.md": "f7d00e5c24fe6fce5d5f36aa0e3116a4bb726d2962ed8822495a2b9bd939b097",
+      "hybrid_storage/README.md": "a8b2bc514443e877bbf3e0b1cd71eaa969e0e5a0bb7f5cead5029d49d6456b7a",
+      "tests/README.md": "f6d0499bc9d8293b19925a652c19435da4c0385d64142d90119b485710b6b927",
+      "tests/test_hybrid_checkpoint_ddp_resume.py": "d5fbdf76dd3133cc0dd77b4dd23fabffe8eda1bb460dbd13d2d5d1ac63108118",
+      "tests/test_hybrid_checkpoint_faults.py": "b181bf65ef6c440d2f7f5242395f24ed861d0c471a060648b8d6432597e1273f"
+    },
+    "evidence_own_hash_omitted_to_avoid_self_reference": true
+  },
+  "changes": {
+    "runtime": false,
+    "api": false,
+    "schema": false,
+    "configuration": false,
+    "bootstrap": false,
+    "security_policy": false,
+    "new_test_cases": {
+      "tests/test_hybrid_checkpoint_faults.py": [
+        "test_worker_connection_loss_retains_reservation_until_fenced_then_late_result_rejected",
+        "test_interrupted_upload_and_real_connection_reopen_keep_only_previous_commit",
+        "test_process_death_after_checkpoint_rename_does_not_promote_orphan_on_restart",
+        "test_sigkill_controller_publisher_process_after_rename_preserves_head_on_reopen",
+        "test_missing_old_checkpoint_is_not_hidden_by_newer_incomplete_or_legacy_file",
+        "test_corrupt_committed_final_never_publishes_results_or_completes",
+        "test_partial_restore_body_and_no_space_never_publish_private_resume_or_launch",
+        "test_lost_restore_reply_and_controller_restart_never_blindly_launches",
+        "test_lost_start_reply_on_recovery_fences_instead_of_starting_twice",
+        "test_restart_after_sdk_proof_event_before_running_is_idempotent",
+        "test_nfs_outage_warm_recovery_uses_zero_missing_bytes_and_cold_replacement_fails_closed",
+        "test_ddp_stale_rank_checkpoint_result_rejected_for_entire_group",
+        "test_restore_connection_dies_after_partial_read_no_receipt_or_private_file_accepted",
+        "test_controller_host_boot_mismatch_never_renews_old_owner_or_reuses_live_slot",
+        "test_incomplete_new_ddp_bundle_never_displaces_last_recoverable_commit",
+        "test_two_sqlite_connections_competing_recovery_reserve_and_launch_once"
+      ],
+      "tests/test_hybrid_checkpoint_ddp_resume.py": [
+        "test_sigkill_rank_then_committed_three_rank_resume_matches_baseline_with_stated_fp32_tolerance"
+      ]
+    },
+    "only_tests_and_documentation": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.14.1",
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2"
+    },
+    "initial_socket_probe": "PermissionError errno 1 on socket creation/bind 127.0.0.1 in sandbox",
+    "gloo_permission": "Reviewed require_escalated invocations for disposable local tests; no sudo/system config/Pi actions",
+    "native_new_test_rendezvous": "Private local FileStore, GLOO_SOCKET_IFNAME=lo",
+    "simulated_workers": [
+      "pi01",
+      "pi02",
+      "pi03"
+    ],
+    "simulated_worker_addresses": [
+      "127.0.0.1",
+      "127.0.0.2",
+      "127.0.0.3"
+    ],
+    "physical_workers_contacted": []
+  },
+  "tests": {
+    "final_unique_unit_cases": 96,
+    "unit_files": 8,
+    "additional_legacy_script": "test_checkpoint_recovery.py",
+    "final_files_passed": 9,
+    "final_failures": 0,
+    "final_errors": 0,
+    "final_skips": 0,
+    "new_cases": 17,
+    "overlapping_runs_not_added": true,
+    "runs": [
+      {
+        "name": "pre_edit_baseline",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py test_hybrid_checkpoint_recovery.py",
+        "log": "/tmp/hybrid-8-4-baseline.log",
+        "log_sha256": "1153cdb458b47ce6b0197a8d25bf4ad44c27e790b2da6360d07d30e8a4799855",
+        "unit_cases": 43,
+        "additional_legacy_executable_script": false,
+        "result": "2/2 files PASS",
+        "test_failures": 0,
+        "test_errors": 0,
+        "test_skips": 0,
+        "reviewed_execution_outside_socket_sandbox": false
+      },
+      {
+        "name": "existing_native_gloo",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_group_checkpoint.py test_group_recovery.py",
+        "log": "/tmp/hybrid-8-4-gloo.log",
+        "log_sha256": "6130ff0ae182b2d9ab9f2d0b8f0db303400bd4e566aa24ace07f698fd460cd2e",
+        "unit_cases": 15,
+        "additional_legacy_executable_script": false,
+        "result": "2/2 files PASS",
+        "test_failures": 0,
+        "test_errors": 0,
+        "test_skips": 0,
+        "reviewed_execution_outside_socket_sandbox": true
+      },
+      {
+        "name": "final_faults_and_legacy",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_faults.py test_checkpoint_recovery.py test_storage_config.py test_custom_checkpoint.py",
+        "log": "/tmp/hybrid-8-4-final.log",
+        "log_sha256": "76e393763a7c9e03655361ed3294e2b930ff7b3e78fce0a851815e8aa504bf9e",
+        "unit_cases": 37,
+        "additional_legacy_executable_script": true,
+        "result": "4/4 files PASS",
+        "test_failures": 0,
+        "test_errors": 0,
+        "test_skips": 0,
+        "reviewed_execution_outside_socket_sandbox": false
+      },
+      {
+        "name": "final_three_rank_filestore",
+        "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_ddp_resume.py",
+        "log": "/tmp/hybrid-8-4-hybrid-gloo-filestore.log",
+        "log_sha256": "9d6e0c71221a5f86435a00e89042e7eff2d601af150321d88c5f68c5e9e05401",
+        "unit_cases": 1,
+        "additional_legacy_executable_script": false,
+        "result": "1/1 files PASS",
+        "test_failures": 0,
+        "test_errors": 0,
+        "test_skips": 0,
+        "reviewed_execution_outside_socket_sandbox": true
+      }
+    ],
+    "development_failures": [
+      {
+        "log": "/tmp/hybrid-8-4-faults.log",
+        "sha256": "f4e3621f0dd8fd7e1e99ca65e9266a538021bafcb72ceef6199de81e4577b942",
+        "reason": "Initial expiry fixture changed controller deadline without advancing independent worker clocks; corrected test fixture, no production change."
+      },
+      {
+        "log": "/tmp/hybrid-8-4-hybrid-gloo.log",
+        "sha256": "c3e020c6567b063450ea5aa654d56a61a43836704dedfe4cdca1f926522983a8",
+        "reason": "Initial strict bitwise final-state comparison failed."
+      },
+      {
+        "log": "/tmp/hybrid-8-4-hybrid-gloo-diagnostic.log",
+        "sha256": "4e6bd40b849a6bfcd3e53df9f048ce9a52655c51ad64e33024f4aa34111e5ade",
+        "reason": "Exact-state diagnostic isolated final FP32 Adam exp_avg_sq difference; saved-state/RNG/progress checks remain exact; final model/optimizer criterion explicitly stated."
+      }
+    ],
+    "preexisting_diagnostics": [
+      "Late-bootstrap fixture logs expected /resources EPERM/500 in socket sandbox while its test passes.",
+      "Legacy negative tests log expected corrupt checkpoint/missing-final failures; script/suites pass."
+    ]
+  },
+  "experiment": {
+    "real_cpu_gloo_ranks": 3,
+    "uninterrupted_runs": 2,
+    "global_steps": 6,
+    "source_committed_step": 2,
+    "resumed_steps": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "worker_rank_killed": 1,
+    "kill_signal": "SIGKILL, owned native child only",
+    "old_ranks_reaped_before_replacement": true,
+    "native_controller_publisher_sigkill_after_rename_test": true,
+    "authenticated_committed_publication_and_private_restore": true,
+    "controller_connection_reopened": true,
+    "zero_additional_input_staging_bytes_each_rank": true,
+    "actual_sdk_restore_acknowledgements": true,
+    "final_current_attempt_committed_before_completion": true,
+    "result_collection_calls": 3,
+    "outer_agent_launcher_and_isolation_mocked": true,
+    "result_transfer_mocked": true,
+    "nfs_mount_facts_and_outages_mocked": true,
+    "saved_model_optimizer_scheduler_torch_rng_load": "exact",
+    "final_rng_progress_application_state_counters_scheduler": "exact",
+    "final_model_optimizer_floating_tensors": {
+      "atol": 1e-08,
+      "rtol": 1e-07,
+      "shape_dtype_equal": true
+    },
+    "measured_resume_differences": {
+      "0": [
+        {
+          "dtype": "torch.float32",
+          "max_abs": 1.862645149230957e-09,
+          "path": "state.optimizer.state.4.exp_avg_sq",
+          "shape": [
+            1,
+            4
+          ]
+        }
+      ],
+      "1": [
+        {
+          "dtype": "torch.float32",
+          "max_abs": 1.862645149230957e-09,
+          "path": "state.optimizer.state.4.exp_avg_sq",
+          "shape": [
+            1,
+            4
+          ]
+        }
+      ],
+      "2": [
+        {
+          "dtype": "torch.float32",
+          "max_abs": 1.862645149230957e-09,
+          "path": "state.optimizer.state.4.exp_avg_sq",
+          "shape": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "measured_uninterrupted_control_differences": {
+      "0": [],
+      "1": [],
+      "2": []
+    },
+    "measured_maximum_absolute_tensor_difference": 1.862645149230957e-09,
+    "bitwise_three_rank_final_reproducibility_claimed": false,
+    "small_post_restore_floating_difference_cause_isolated": false,
+    "benchmark_claimed": false
+  },
+  "coverage": {
+    "worker_crash": "Real three-rank owned SIGKILL and existing real rank-during-ACK crash suite",
+    "worker_connection_loss": "Injected signed-control timeout; reservation held until consistent simulated lease expiry",
+    "interrupted_upload": "80 bytes received then ConnectionError; REJECTED candidate and previous head retained across reopen",
+    "interrupted_restore": "64 bytes then ECONNRESET, declared-length truncation, ENOSPC; no accepted resume/receipt/launch",
+    "corrupt_file": "Corrupt committed source/final rejected; result collection cannot run",
+    "stale_result": "Previous attempt DDP candidate and result publication rejected",
+    "double_recovery": "Two independent SQLite connections/native threads race; exactly one stage/reservation/start",
+    "controller_restart": "Native publisher SIGKILL after rename plus real DB reopen and proof-before-RUNNING idempotency",
+    "controller_reboot": "Simulated boot-ID mismatch/startup guard; no actual host reboot",
+    "missing_checkpoint": "Unlink only disposable committed file; no mutable legacy adoption or cold restart",
+    "nfs_outage": "Injected ENETUNREACH, warm zero-transfer path, cold replacement fails closed",
+    "partial_ddp": "Three-rank bundle with only two ACKs cannot replace committed head",
+    "genuine_resume": "Real CPU three-rank SDK/application-state resume and existing unchanged single/two-rank exact cases"
+  },
+  "rollback": {
+    "patch": "/tmp/hybrid-8-4/8.4.patch",
+    "cwd": "/home/rana/Projects/System Project/System_Development_Project",
+    "check": "git apply --reverse --check /tmp/hybrid-8-4/8.4.patch",
+    "apply_only_after_review": "git apply --reverse /tmp/hybrid-8-4/8.4.patch",
+    "prior_8_1_8_2_8_3_preserved": true,
+    "live_database_schema_or_data_rollback_needed": false
+  },
+  "untested": [
+    "Physical pi01/pi02/pi03 validation",
+    "Actual kernel NFS unmount/disconnect and mount timeouts",
+    "Physical power loss/storage durability",
+    "Production OS/network isolation and service deployment",
+    "Real SSH/rsync result transfer in the new native hybrid test",
+    "Throughput or hardware benchmarks",
+    "Controller HA/local-disk-loss recovery"
+  ],
+  "remaining_risks": [
+    "Central controller/local SQLite/authoritative disk SPOF",
+    "Existing HTTP HMAC authenticates without encryption",
+    "Large transfers may exceed leases; existing fail-closed behavior",
+    "Clock synchronization and WSGI timeout assumptions",
+    "Private checkpoint/workspace retention needs separately reviewed GC",
+    "Production deployment remains OFF"
+  ]
+}

@@ -627,11 +627,19 @@ def start_job():
             validate_execution(spec,data.get('ddp'))
             if spec['recovery']['mode'] not in ('restart','checkpoint'):
                 raise ValueError('Unsupported recovery mode')
+            staged_resume_path=None
+            if staging_service is not None and spec['recovery']['mode']=='checkpoint':
+                from checkpoint_restore_service import launch_path
+                publisher=app.extensions.get('checkpoint_publication')
+                if publisher is None:raise ValueError('Trusted checkpoint service required')
+                staged_resume_path=launch_path(publisher,staging_service.module,data)
             resume=data.get('resume_checkpoint')
             if resume:
                 from checkpoint_protocol import validate, validate_group
                 validator = validate_group if data.get('ddp') is not None else validate
-                info=validator(directory/'checkpoints/resume.dlckpt',job_id,prepared['manifest_sha256'])
+                resume_path=directory/'checkpoints/resume.dlckpt'
+                if staging_service is not None:resume_path=staged_resume_path
+                info=validator(resume_path,job_id,prepared['manifest_sha256'])
                 if data.get('ddp') is not None and (info['world_size'] != data['ddp']['world_size']
                         or int(info['attempt_token'].rsplit(':',1)[1]) >= int(data['attempt_token'].rsplit(':',1)[1])
                         or info['checkpoint_id'] != resume['checkpoint_id']):
@@ -843,6 +851,8 @@ def start_job():
                 staged_inputs = {'source':str(workspace.source),
                                  'data':str(workspace.data) if workspace.data else None}
                 command += ['--staged-inputs-json',json.dumps(staged_inputs)]
+                if data.get('resume_checkpoint'):
+                    command += ['--staged-resume']
                 command = staging_service.isolate(command, workspace, data)
                 if type(command) is not list or not command or any(type(arg) is not str for arg in command):
                     raise ValueError('Isolated launcher did not return an argv')

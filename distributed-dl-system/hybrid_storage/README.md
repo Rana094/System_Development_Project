@@ -428,3 +428,54 @@ See [7.4 report](../docs/storage/29-staging-visibility.md) and adjacent evidence
 files, APIs, safe local commands, results, manual verification and scoped rollback.
 Explicit production bootstrap, isolation/containment and trusted NFS checkpoint
 publication remain gated; no live deployment or all-three-Pi acceptance is claimed.
+
+### Phase 8.2 trusted checkpoint publication (explicit, inactive)
+
+`checkpoint_publication.py` supplies the typed trusted publication interface and
+an explicit private LOCAL store. `checkpoint_schema.py` adds an opt-in FULL/FK
+SQLite journal/head migration without changing earlier schemas or user_version.
+Candidates are bound to original manifest plus immutable input version and live
+all-rank fences; verified archives publish under new no-replace names, then
+conditional COMMITTED/head/job metadata updates occur in one SQLite transaction.
+Legacy latest files and SDK formats are untouched. Interrupted/rejected candidates
+never become head automatically; immutable history is retained.
+
+`checkpoint_transfer.py` and explicit `agent/checkpoint_service.py` reuse the
+existing checkpoint GET route with per-worker HMAC request/receipt headers and
+bounded streaming. Worker snapshots freeze local candidate bytes outside trainer
+directories. No new artifact API, trainer NFS RW access, automatic migration,
+default service activation or unsigned restore upload bypass is introduced.
+Restore/committed-source scheduling remains 8.3; ordinary checkpoint-mode hybrid
+execution stays gated. See [8.2 report](../docs/storage/31-checkpoint-publication.md)
+and adjacent evidence for APIs, sample bootstrap, tests, risks and scoped rollback.
+
+## 8.3 explicit committed checkpoint recovery
+
+`controller/checkpoint_recovery.py::CheckpointDispatch` connects the explicit
+publisher to existing resource placement, signed staging/control and SDK resume.
+`checkpoint_restore.py` and `agent/checkpoint_restore_service.py` authenticate
+restore on the existing HTTP route and materialize a verified independent private
+checkpoint copy. `restore_schema.py` is an explicit additive LOCAL migration;
+no automatic bootstrap/migration or config activation. The base restart-only
+coordinator and legacy/default-OFF execution remain unchanged.
+
+Recovery freezes an original-input-bound COMMITTED source, requires fresh leases,
+restores all DDP ranks before any launch, waits for existing SDK restore proof,
+and requires a current-attempt committed final checkpoint before completion.
+See [8.3 report](../docs/storage/32-checkpoint-recovery.md) and its evidence for
+actual tests, security boundaries, manual verification and scoped rollback.
+Production deployment, full 8.4 fault testing and all-three-Pi validation remain
+pending; the controller remains a single point of failure.
+
+## 8.4 local checkpoint fault acceptance
+
+Tests now cover interrupted publication/restore, stale results, competing
+recovery, controller restart/SIGKILL, missing/corrupt checkpoints and simulated
+NFS outage, plus real three-rank CPU Gloo resume through committed storage and
+private worker copies. This subphase changes tests/docs only, with no runtime,
+API, schema, config or bootstrap changes. Final selected checks: 96 unittest
+cases plus the legacy executable regression script PASS. New cases: 16 fault
+checks and one genuine three-rank test, with exact saved-state loading and the
+stated final floating tolerance. See [8.4 report](../docs/storage/33-checkpoint-fault-acceptance.md)
+and its evidence. Production enablement and physical all-three-Pi validation
+remain pending; central controller/storage remains a SPOF.

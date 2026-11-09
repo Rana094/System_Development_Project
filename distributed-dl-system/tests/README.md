@@ -377,3 +377,31 @@ env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --i
 
 Expected: 20 pass. Final selected regression: 590 tests, 28/28 files, no failures
 or skips. See [exact contracts and limitations](../docs/storage/26-staging-lifecycle.md).
+
+## Phase 8.4 hybrid checkpoint faults and native resume
+
+`test_hybrid_checkpoint_faults.py` adds 16 isolated cases using real local SQLite,
+protected files and signed Flask clients. It injects connection loss, partial
+transfers, corrupt/missing files, ENOSPC/NFS errors and restart gaps; races two
+independent SQLite connections and SIGKILLs only its own disposable publisher
+subprocess. The outer training launcher is mocked. No Pi or live mount is touched.
+
+`test_hybrid_checkpoint_ddp_resume.py` adds a real three-rank CPU Gloo experiment:
+complete cut -> authenticated COMMITTED publication -> owned rank SIGKILL ->
+reopened controller -> authenticated private restore -> native SDK resume ->
+verified final commit/completion. Agents/isolation and result transport are
+fixtures. Private FileStore rendezvous and loopback Gloo sockets are required;
+a socket-restricted sandbox needs reviewed local test permission, not changes to
+host firewall/services. All children are reaped. No Internet runtime transfer.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_faults.py
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_ddp_resume.py
+```
+
+Expected: 16 + 1 PASS, no skips. Saved model/optimizer/scheduler/Torch RNG loads
+are exact; final RNG/progress/application state remain exact. Final floating
+model/optimizer tensors use atol=1e-8, rtol=1e-7; all other comparisons are exact.
+See [8.4 report and measured differences](../docs/storage/33-checkpoint-fault-acceptance.md).
+Existing exact single/two-rank tests remain unchanged. Physical pi01/pi02/pi03
+validation, real NFS outages and production isolation remain pending.

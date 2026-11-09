@@ -1,0 +1,622 @@
+{
+  "subphase": "8.2",
+  "date": "2026-11-09 Asia/Dhaka",
+  "scope": "Explicit trusted publisher, existing HTTP authenticated GET adapter and tests; no recovery launch/activation",
+  "acceptance": "PASS local 8.2; 8.3/8.4 and physical all-three-Pi pending",
+  "git": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project",
+    "application": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "branch": "main",
+    "head": "38d31c22bceb990166ef873f2be60b6ded1417f5",
+    "starting_status": " M docs/storage/implementation-progress.md\n?? docs/storage/30-checkpoint-audit-evidence.json\n?? docs/storage/30-checkpoint-audit.md\n",
+    "no_stash_reset_commit": true
+  },
+  "preservation": {
+    "starting_files": 274,
+    "unchanged_starting_files": 272,
+    "modified": [
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md"
+    ],
+    "added": [
+      "agent/checkpoint_service.py",
+      "docs/storage/31-checkpoint-publication-evidence.json",
+      "docs/storage/31-checkpoint-publication.md",
+      "hybrid_storage/checkpoint_files.py",
+      "hybrid_storage/checkpoint_publication.py",
+      "hybrid_storage/checkpoint_schema.py",
+      "hybrid_storage/checkpoint_transfer.py",
+      "tests/test_checkpoint_publication.py"
+    ],
+    "missing": [],
+    "snapshot": "/tmp/hybrid-8-2/before",
+    "before_sha256": {
+      "docs/storage/implementation-progress.md": "9ba5b28ff870b0773d73b0fd415c5d545def5b37b3034b63f8a1025ffa27d708",
+      "hybrid_storage/README.md": "7dc847358613ab31665049dd0a4c6dd781a356729c073e1646462084459086fa"
+    },
+    "after_sha256": {
+      "docs/storage/implementation-progress.md": "72e6c0edcbb053490e07be664c0bb635f4ef442ec6f98bb51f3c9ecad970392a",
+      "hybrid_storage/README.md": "dd960d778fac3084a1e90df4538a164a10d225ac16dee4178c2003f1317d5734",
+      "agent/checkpoint_service.py": "f65cc21d1a181b1ad154a5063770d1516ae946e9d1de95b66cead01285279c03",
+      "docs/storage/31-checkpoint-publication.md": "ae804f7cef7da36533704d8828d206e8661d173a66255f794b9231dfe022a4a2",
+      "hybrid_storage/checkpoint_files.py": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850",
+      "hybrid_storage/checkpoint_publication.py": "2ad3e41a4ba69f166a7b3e6a6e20844eab468959a7d4a954c7fc318958fd8e44",
+      "hybrid_storage/checkpoint_schema.py": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12",
+      "hybrid_storage/checkpoint_transfer.py": "a325b82f7c721916864fdf77259744c43f3eaeacd6f05103b94c50527495e6e0",
+      "tests/test_checkpoint_publication.py": "7632cc58e84f658545d4caf09644bae43461f18625db4353a9623d6e1b74d91e"
+    },
+    "8.1_audit_sha256": {
+      "docs/storage/30-checkpoint-audit.md": "2a4453b72877a9242d0434910257b813a3dc3b1de3ab5467e711380acab434eb",
+      "docs/storage/30-checkpoint-audit-evidence.json": "33fc367b5ff08f10d48ab2e7fff525f5d6743d5e5c2e854200c689fba22e8c51"
+    },
+    "scoped_patch": "/tmp/hybrid-8-2/8.2.patch",
+    "patch_relative_to": "saved 8.1 working tree, not Git HEAD"
+  },
+  "schema": {
+    "version": 1,
+    "checksum": "f6daea358292dacf365eb8f3fd3097b0cac89ef20c95ac787a781ea8f87e5a10",
+    "tables": 4,
+    "indexes": 2,
+    "triggers": 10,
+    "explicit_only": true,
+    "live_applied": false,
+    "old_schemas_and_user_version": "preserved",
+    "requirements": "dedicated named LOCAL main connection, FULL/FK, existing immutable registry/staging schema"
+  },
+  "sources": {
+    "agent/checkpoint_service.py": {
+      "sha256": "f65cc21d1a181b1ad154a5063770d1516ae946e9d1de95b66cead01285279c03",
+      "symbols": {
+        "_Snapshot": {
+          "line": 16,
+          "end_line": 24
+        },
+        "_Snapshot.__init__": {
+          "line": 18,
+          "end_line": 18
+        },
+        "_Snapshot.__getattr__": {
+          "line": 19,
+          "end_line": 19
+        },
+        "_Snapshot.close": {
+          "line": 20,
+          "end_line": 24
+        },
+        "CheckpointService": {
+          "line": 27,
+          "end_line": 88
+        },
+        "CheckpointService.__init__": {
+          "line": 28,
+          "end_line": 38
+        },
+        "CheckpointService.validate_stager": {
+          "line": 40,
+          "end_line": 44
+        },
+        "CheckpointService.snapshot": {
+          "line": 46,
+          "end_line": 88
+        },
+        "install_checkpoint_service": {
+          "line": 91,
+          "end_line": 124
+        },
+        "install_checkpoint_service.checkpoint_download": {
+          "line": 103,
+          "end_line": 119
+        }
+      }
+    },
+    "hybrid_storage/checkpoint_files.py": {
+      "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850",
+      "symbols": {
+        "private_root": {
+          "line": 22,
+          "end_line": 25
+        },
+        "regular": {
+          "line": 29,
+          "end_line": 40
+        },
+        "stream_copy": {
+          "line": 43,
+          "end_line": 57
+        },
+        "space": {
+          "line": 60,
+          "end_line": 63
+        },
+        "snapshot_source": {
+          "line": 66,
+          "end_line": 73
+        },
+        "validate_fd": {
+          "line": 76,
+          "end_line": 80
+        }
+      }
+    },
+    "hybrid_storage/checkpoint_publication.py": {
+      "sha256": "2ad3e41a4ba69f166a7b3e6a6e20844eab468959a7d4a954c7fc318958fd8e44",
+      "symbols": {
+        "CommittedCheckpoint": {
+          "line": 27,
+          "end_line": 36
+        },
+        "CheckpointPublisher": {
+          "line": 39,
+          "end_line": 42
+        },
+        "CheckpointPublisher.publish": {
+          "line": 40,
+          "end_line": 42
+        },
+        "_row": {
+          "line": 45,
+          "end_line": 47
+        },
+        "LocalCheckpointPublisher": {
+          "line": 50,
+          "end_line": 243
+        },
+        "LocalCheckpointPublisher.__init__": {
+          "line": 57,
+          "end_line": 67
+        },
+        "LocalCheckpointPublisher._store": {
+          "line": 70,
+          "end_line": 78
+        },
+        "LocalCheckpointPublisher.initialize": {
+          "line": 80,
+          "end_line": 87
+        },
+        "LocalCheckpointPublisher._authorize": {
+          "line": 89,
+          "end_line": 106
+        },
+        "LocalCheckpointPublisher._head": {
+          "line": 108,
+          "end_line": 110
+        },
+        "LocalCheckpointPublisher._publication": {
+          "line": 112,
+          "end_line": 113
+        },
+        "LocalCheckpointPublisher._receipt": {
+          "line": 116,
+          "end_line": 118
+        },
+        "LocalCheckpointPublisher.committed": {
+          "line": 120,
+          "end_line": 136
+        },
+        "LocalCheckpointPublisher.head": {
+          "line": 138,
+          "end_line": 144
+        },
+        "LocalCheckpointPublisher._metadata": {
+          "line": 146,
+          "end_line": 163
+        },
+        "LocalCheckpointPublisher.publish": {
+          "line": 165,
+          "end_line": 243
+        }
+      }
+    },
+    "hybrid_storage/checkpoint_schema.py": {
+      "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12",
+      "symbols": {
+        "installed": {
+          "line": 67,
+          "end_line": 81
+        },
+        "migration_plan": {
+          "line": 84,
+          "end_line": 88
+        },
+        "migrate": {
+          "line": 91,
+          "end_line": 98
+        }
+      }
+    },
+    "hybrid_storage/checkpoint_transfer.py": {
+      "sha256": "a325b82f7c721916864fdf77259744c43f3eaeacd6f05103b94c50527495e6e0",
+      "symbols": {
+        "path_for": {
+          "line": 25,
+          "end_line": 27
+        },
+        "header": {
+          "line": 30,
+          "end_line": 33
+        },
+        "read_header": {
+          "line": 36,
+          "end_line": 39
+        },
+        "signature": {
+          "line": 42,
+          "end_line": 48
+        },
+        "authenticate": {
+          "line": 51,
+          "end_line": 54
+        },
+        "request_document": {
+          "line": 57,
+          "end_line": 62
+        },
+        "read_request": {
+          "line": 65,
+          "end_line": 75
+        },
+        "_ResponseStream": {
+          "line": 78,
+          "end_line": 95
+        },
+        "_ResponseStream.__init__": {
+          "line": 79,
+          "end_line": 80
+        },
+        "_ResponseStream.read": {
+          "line": 82,
+          "end_line": 95
+        },
+        "CheckpointCollector": {
+          "line": 98,
+          "end_line": 126
+        },
+        "CheckpointCollector.__init__": {
+          "line": 100,
+          "end_line": 107
+        },
+        "CheckpointCollector.sync": {
+          "line": 109,
+          "end_line": 126
+        }
+      }
+    },
+    "tests/test_checkpoint_publication.py": {
+      "sha256": "7632cc58e84f658545d4caf09644bae43461f18625db4353a9623d6e1b74d91e",
+      "symbols": {
+        "PublicationTests": {
+          "line": 37,
+          "end_line": 405
+        },
+        "PublicationTests.setUp": {
+          "line": 38,
+          "end_line": 83
+        },
+        "PublicationTests.archive": {
+          "line": 85,
+          "end_line": 104
+        },
+        "PublicationTests.publish": {
+          "line": 106,
+          "end_line": 109
+        },
+        "PublicationTests.test_immutable_snapshot_atomic_head_and_existing_latest_untouched": {
+          "line": 111,
+          "end_line": 123
+        },
+        "PublicationTests.test_idempotent_commit_ack_after_expiry_never_rewinds_newer_head": {
+          "line": 125,
+          "end_line": 131
+        },
+        "PublicationTests.test_wrong_owner_stale_attempt_or_revoked_lease_cannot_publish": {
+          "line": 133,
+          "end_line": 141
+        },
+        "PublicationTests.test_missing_reservation_cannot_publish": {
+          "line": 143,
+          "end_line": 146
+        },
+        "PublicationTests.test_dataset_acl_revoked_cannot_publish_registered_inputs": {
+          "line": 148,
+          "end_line": 151
+        },
+        "PublicationTests.test_cancellation_or_expiry_during_stream_cannot_commit_or_release_existing_head": {
+          "line": 153,
+          "end_line": 164
+        },
+        "PublicationTests.test_cancellation_or_expiry_during_stream_cannot_commit_or_release_existing_head.Cancelled": {
+          "line": 156,
+          "end_line": 160
+        },
+        "PublicationTests.test_cancellation_or_expiry_during_stream_cannot_commit_or_release_existing_head.Cancelled.read": {
+          "line": 157,
+          "end_line": 160
+        },
+        "PublicationTests.test_bad_sizes_hashes_names_and_metadata_never_commit": {
+          "line": 166,
+          "end_line": 177
+        },
+        "PublicationTests.test_ddp_complete_three_rank_bundle_and_all_current_fences_required": {
+          "line": 179,
+          "end_line": 185
+        },
+        "PublicationTests.test_regressing_progress_and_completion_keep_previous_committed_snapshot": {
+          "line": 187,
+          "end_line": 192
+        },
+        "PublicationTests.test_file_before_db_crash_never_selects_or_promotes_orphan_on_restart": {
+          "line": 194,
+          "end_line": 204
+        },
+        "PublicationTests.test_file_before_db_crash_never_selects_or_promotes_orphan_on_restart.Crash": {
+          "line": 195,
+          "end_line": 195
+        },
+        "PublicationTests.test_file_before_db_crash_never_selects_or_promotes_orphan_on_restart.interrupted": {
+          "line": 197,
+          "end_line": 197
+        },
+        "PublicationTests.test_disk_error_and_noreplace_failure_do_not_advance_head": {
+          "line": 206,
+          "end_line": 211
+        },
+        "PublicationTests.test_two_real_sqlite_writers_compare_and_swap_one_head_without_overwrite": {
+          "line": 213,
+          "end_line": 240
+        },
+        "PublicationTests.test_two_real_sqlite_writers_compare_and_swap_one_head_without_overwrite.Concurrent": {
+          "line": 218,
+          "end_line": 223
+        },
+        "PublicationTests.test_two_real_sqlite_writers_compare_and_swap_one_head_without_overwrite.Concurrent.read": {
+          "line": 220,
+          "end_line": 223
+        },
+        "PublicationTests.test_two_real_sqlite_writers_compare_and_swap_one_head_without_overwrite.publish": {
+          "line": 224,
+          "end_line": 233
+        },
+        "PublicationTests.test_bad_publication_key_or_declared_bound_refused_before_temp_creation": {
+          "line": 242,
+          "end_line": 250
+        },
+        "PublicationTests.test_expired_after_rename_before_commit_cannot_become_head": {
+          "line": 252,
+          "end_line": 260
+        },
+        "PublicationTests.test_expired_after_rename_before_commit_cannot_become_head.expire": {
+          "line": 254,
+          "end_line": 256
+        },
+        "PublicationTests.test_private_local_store_no_symlinks_wrong_root_or_export_overlap": {
+          "line": 262,
+          "end_line": 272
+        },
+        "PublicationTests.test_migration_idempotent_preserves_existing_rows_versions_and_rejects_partial": {
+          "line": 274,
+          "end_line": 282
+        },
+        "PublicationTests.worker": {
+          "line": 284,
+          "end_line": 302
+        },
+        "PublicationTests.get": {
+          "line": 304,
+          "end_line": 309
+        },
+        "PublicationTests.test_authenticated_existing_http_get_to_immutable_publication": {
+          "line": 311,
+          "end_line": 316
+        },
+        "PublicationTests.test_ddp_authenticated_group_transfer_keeps_one_complete_archive": {
+          "line": 318,
+          "end_line": 323
+        },
+        "PublicationTests.test_unsigned_wrong_key_stale_and_restore_post_are_rejected": {
+          "line": 325,
+          "end_line": 334
+        },
+        "PublicationTests.test_response_replay_tamper_or_truncated_stream_cannot_publish": {
+          "line": 336,
+          "end_line": 354
+        },
+        "PublicationTests.test_response_replay_tamper_or_truncated_stream_cannot_publish.replay": {
+          "line": 338,
+          "end_line": 342
+        },
+        "PublicationTests.test_response_replay_tamper_or_truncated_stream_cannot_publish.truncate": {
+          "line": 346,
+          "end_line": 347
+        },
+        "PublicationTests.test_response_replay_tamper_or_truncated_stream_cannot_publish.tamper": {
+          "line": 350,
+          "end_line": 351
+        },
+        "PublicationTests.test_transfer_connection_loss_retains_partial_without_accepting_it": {
+          "line": 356,
+          "end_line": 370
+        },
+        "PublicationTests.test_transfer_connection_loss_retains_partial_without_accepting_it.interrupted": {
+          "line": 359,
+          "end_line": 365
+        },
+        "PublicationTests.test_transfer_connection_loss_retains_partial_without_accepting_it.interrupted.chunks": {
+          "line": 361,
+          "end_line": 363
+        },
+        "PublicationTests.test_empty_http_chunks_cannot_hide_trailing_bytes_or_spin_forever": {
+          "line": 372,
+          "end_line": 377
+        },
+        "PublicationTests.test_explicit_migration_and_local_private_root_required": {
+          "line": 379,
+          "end_line": 387
+        },
+        "PublicationTests.test_bootstrap_cannot_activate_after_flask_has_served_a_request": {
+          "line": 389,
+          "end_line": 393
+        },
+        "PublicationTests.test_worker_symlink_oversize_and_busy_spool_fail_closed": {
+          "line": 395,
+          "end_line": 405
+        }
+      }
+    }
+  },
+  "tests": {
+    "baseline": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_custom_checkpoint.py test_execution_ownership.py",
+      "log": "/tmp/hybrid-8-2-baseline.log",
+      "sha256": "5c098796dd52bbc7be9843dbf995854353c6a10b7c2ad5f505a173e1e51efce6",
+      "test_counts": [
+        4,
+        12
+      ],
+      "summary": [
+        "2/2 test files passed in 11.4s."
+      ],
+      "initial_failures": []
+    },
+    "focused": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py",
+      "log": "/tmp/hybrid-8-2-focused.log",
+      "sha256": "02e302bf5461eecea00be9fb1ed34eadb976db0d0536ebdb51f498f0dda24696",
+      "test_counts": [],
+      "summary": [
+        "0/1 test files passed in 0.5s."
+      ],
+      "initial_failures": [
+        "FAIL test_checkpoint_publication.py"
+      ]
+    },
+    "focused-fixed": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py",
+      "log": "/tmp/hybrid-8-2-focused-fixed.log",
+      "sha256": "a33c92ec99b000e845d910416f16554352903598e83b6522ee20a1dda1fd77e2",
+      "test_counts": [
+        15
+      ],
+      "summary": [
+        "0/1 test files passed in 6.9s."
+      ],
+      "initial_failures": [
+        "FAILED (errors=3)",
+        "FAIL test_checkpoint_publication.py"
+      ]
+    },
+    "regression": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py test_custom_checkpoint.py test_execution_ownership.py test_staging_dispatch.py test_staging_recovery.py test_staging_lifecycle.py test_storage_config.py test_storage_selection.py",
+      "log": "/tmp/hybrid-8-2-regression.log",
+      "sha256": "1a48f4f6e1276aed5318ccdd5c54d1f6a30e69eb9d91ac523cd0ef47df975dab",
+      "test_counts": [
+        15,
+        4,
+        12,
+        25,
+        34,
+        20,
+        17,
+        21
+      ],
+      "summary": [
+        "8/8 test files passed in 136.9s."
+      ],
+      "initial_failures": []
+    },
+    "concurrency": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py",
+      "log": "/tmp/hybrid-8-2-concurrency.log",
+      "sha256": "ceebcb335344c846daf01c795eeedf21caae225829132bd1de39c47acc1fe8b6",
+      "test_counts": [
+        18
+      ],
+      "summary": [
+        "1/1 test files passed in 10.0s."
+      ],
+      "initial_failures": []
+    },
+    "final-boundaries": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py test_custom_checkpoint.py test_student_portal.py test_staging_portal.py",
+      "log": "/tmp/hybrid-8-2-final-boundaries.log",
+      "sha256": "5c392bb12cc4b17196abac0537f5f1851bcc95887416201c77cdbbbe68045e94",
+      "test_counts": [
+        22,
+        4,
+        17,
+        17
+      ],
+      "summary": [
+        "4/4 test files passed in 80.2s."
+      ],
+      "initial_failures": []
+    },
+    "final-publication": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py",
+      "log": "/tmp/hybrid-8-2-final-publication.log",
+      "sha256": "70fbbc8232cb78006019f2df53e4a3316948c694e52f29d4907d7d9d878dafb6",
+      "test_counts": [
+        24
+      ],
+      "summary": [
+        "1/1 test files passed in 10.5s."
+      ],
+      "initial_failures": []
+    },
+    "final-stream": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_checkpoint_publication.py",
+      "log": "/tmp/hybrid-8-2-final-stream.log",
+      "sha256": "a330ccd75e5c961209df71e084556f59abe74d96f886b0c6e43bb3aba126255f",
+      "test_counts": [
+        25
+      ],
+      "summary": [
+        "1/1 test files passed in 37.1s."
+      ],
+      "initial_failures": []
+    }
+  },
+  "initial_issues_corrected": [
+    "Non-package agent SDK import mismatch; existing protocol source restored byte-for-byte and reused via project import convention",
+    "Three test assertions expected ValueError while guards correctly raised PermissionError; tests corrected, guards retained",
+    "HTTP empty-chunk handling hardened and tested to prevent hidden trailing bytes/unbounded empty iteration"
+  ],
+  "flags": {
+    "storage_backend": "legacy",
+    "worker_cache_enabled": false,
+    "storage_aware_staging": false,
+    "scheduler_policy": "resource"
+  },
+  "security": {
+    "no_trainer_nfs_rw": true,
+    "existing_http_route": "GET /jobs/<job>/custom-checkpoint, explicit idle bootstrap only",
+    "auth": "per-worker Credential HMAC with method/path/request nonce/timestamp/fence and signed exact archive SHA/size reply, header limit8192",
+    "restore_POST": "remains rejected on protected worker; 8.3 must add authenticated restore adapter",
+    "file_io": "protected local root and no-follow descriptor reads, 1MiB chunks, configured size/free-space bounds, unique private attempt temp, no-replace readonly immutable snapshots",
+    "commit": "short SQLite BEGIN IMMEDIATE current ACL/binding/all-rank live lease/reservation and expected-head CAS, atomic COMMITTED/head/jobs metadata",
+    "no_automatic_salvage_or_deletion": true
+  },
+  "not_run": [
+    "live DB/migration/service/SSH/Pi/NFS/export/fstab/firewall actions",
+    "new-mode recovery/actual checkpoint-mode hybrid launcher",
+    "physical DDP or all-three-Pi tests",
+    "production isolation/privilege/WSGI deployment",
+    "NFS outage/real hardware fault injection/benchmarks",
+    "known sandbox socket-EPERM real Gloo test suites"
+  ],
+  "limitations": [
+    "Checkpoint-mode dispatch and normal bootstrap remain gated until8.3",
+    "New archive tests use opaque tensor payloads and synthetic valid RUNNING staging rows, not ML recovery",
+    "HMAC provides authentication not transport encryption; production isolation required",
+    "Retained rejected/incomplete data can consume disk; free-space admission is not a global concurrent quota",
+    "Large transfers must keep leases valid; no long-transfer renewal/throughput acceptance",
+    "No legacy checkpoint auto-import or latest mirror/reader migration; final metrics/events integration pending",
+    "Central controller/SQLite/authoritative store remains SPOF"
+  ],
+  "checks": {
+    "syntax": "PASS ast.parse all new Python",
+    "whitespace": "PASS git diff --check",
+    "source_preservation": "PASS all starting runtime/config/test files unchanged",
+    "rollback_check": "git apply --reverse --check /tmp/hybrid-8-2/8.2.patch (verified separately, not applied)"
+  },
+  "report": "docs/storage/31-checkpoint-publication.md"
+}

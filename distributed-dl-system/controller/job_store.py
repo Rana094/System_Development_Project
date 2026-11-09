@@ -674,6 +674,7 @@ def mark_completed(job_id, return_code=0, finished_at=None, *, storage_runtime=N
                                        (attempt.stage_id,)).fetchone()[0]
             world=connection.execute('SELECT world_size FROM hybrid_staging_attempts WHERE stage_id=?',(attempt.stage_id,)).fetchone()[0]
             if pending!=world:raise ValueError('All ranks must be quiescent before completion')
+            storage_runtime.require_final(connection,job_id)
             connection.execute("UPDATE hybrid_staging_attempts SET phase='TERMINAL',updated_at_ns=MAX(updated_at_ns,?) WHERE stage_id=?",
                                (time.time_ns(),attempt.stage_id))
             connection.execute('UPDATE execution_leases SET revoked=1,renewal_blocked=1 WHERE job_id=? AND retry_count=?',

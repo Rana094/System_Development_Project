@@ -1,0 +1,198 @@
+{
+  "phase": "12.3",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "PASS",
+  "stop_before": "12.4",
+  "phase12_complete": false,
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "baseline_catalog": "/tmp/hybrid-12-3/baseline.json",
+  "snapshot_files": 315,
+  "modified_existing_files": [
+    "controller/portal_static/portal.css",
+    "controller/portal_static/portal.js",
+    "controller/student_portal.py",
+    "docs/storage/implementation-progress.md",
+    "docs/student-interface.md",
+    "tests/README.md"
+  ],
+  "new_files": [
+    "controller/recovery_view.py",
+    "tests/test_recovery_portal.py",
+    "tests/test_recovery_portal_ui.cjs",
+    "docs/storage/51-student-recovery-progress.md",
+    "docs/storage/51-student-recovery-progress-evidence.json"
+  ],
+  "untouched_original_files": 309,
+  "file_hashes": {
+    "controller/portal_static/portal.css": {
+      "before": "e2a5abbf2edce30ac84daea68cb8d6e1185c90a66c49e3bc7189cdb3eb1742c0",
+      "after": "f02148a28886731ac8cfa6ba6e608322d9d88e9c76f8771f1554b6535e57d8e0"
+    },
+    "controller/portal_static/portal.js": {
+      "before": "059eba4cc42fb59cf893a02517b7945f25d535742c5b41e600488aee7efcc988",
+      "after": "43fd9db08bcce29e09e982f1eb155191647267489e64faaeb187682aa835e17a"
+    },
+    "controller/recovery_view.py": {
+      "before": null,
+      "after": "c4ab849c5ea328b584fa80f563a0de88089d3a76bd64c211872dfa5e73ef802f"
+    },
+    "controller/student_portal.py": {
+      "before": "a513840067214d5f5f9142b2bc5d11c072d1e74073b39ba1d22ea165bfe9447c",
+      "after": "350ed86665cd7bac26c0b491fc5088969b923d9a18ba83a5e9083cecb27fbe97"
+    },
+    "docs/storage/51-student-recovery-progress.md": {
+      "before": null,
+      "after": "fb5a565e8f121baaff4f473ddf43dae0b82fff98802b0f7b6159b0937b8056af"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "31482b4397e00e2b5fe6d3bf90c3389a6bb64211d5ffba0a0999d27adf79fdbf",
+      "after": "c404b9928665b82abd29a7a82aee92e63ddffd4e0c6ce39455cbb3442432403d"
+    },
+    "docs/student-interface.md": {
+      "before": "2780269a562b4b281a2be84fe8e95a8cb587a92da353059aa186c014b0b7058d",
+      "after": "c9184ef47f3b34a0a2250cd4e5a8468ef064dcaa600721710558400d54ecec85"
+    },
+    "tests/README.md": {
+      "before": "1d4b9e8086fd4cc8efb914cca75bb893d250a030575372637e5c2d64a709f5f9",
+      "after": "9e98cb86a87cf80aee951812ca50e7c33240b4b3185a689ff8e9e2fc3eaa99c7"
+    },
+    "tests/test_recovery_portal.py": {
+      "before": null,
+      "after": "9a3a580a5afe8924b6aab239728e7df6809eb84d55ca285232afd0bede2f5d8a"
+    },
+    "tests/test_recovery_portal_ui.cjs": {
+      "before": null,
+      "after": "856f4af7dc44254d30b62b820b61530764fd194aeabff1917558011d7e186e9d"
+    }
+  },
+  "tests": [
+    {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_portal.py test_student_portal.py test_hybrid_checkpoint_recovery.py",
+      "log": "/tmp/hybrid-12-3/baseline-tests.log",
+      "sha256": "3be8ba77178179681acb8d49a54f6ea32c69a210cd697b38edf90095f662b924",
+      "counts": {
+        "test_staging_portal.py": 17,
+        "test_student_portal.py": 17,
+        "test_hybrid_checkpoint_recovery.py": 18
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_recovery_portal.py test_student_portal.py test_staging_portal.py test_hybrid_checkpoint_recovery.py test_admin_storage.py test_staging_dispatch.py test_storage_events.py",
+      "log": "/tmp/hybrid-12-3/final-tests.log",
+      "sha256": "9d0e373c2b61973a392415ea1a5b03412ddea9d58e2b8eb6aa7279ef8af81d40",
+      "counts": {
+        "test_recovery_portal.py": 14,
+        "test_student_portal.py": 17,
+        "test_staging_portal.py": 17,
+        "test_hybrid_checkpoint_recovery.py": 18,
+        "test_admin_storage.py": 16,
+        "test_staging_dispatch.py": 25,
+        "test_storage_events.py": 19
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_recovery_portal.py test_staging_portal.py",
+      "log": "/tmp/hybrid-12-3/final-recovery-tests.log",
+      "sha256": "9f61891ae8f0fe635d088f908a0ce43430564780012a8ffc8007eb7edc1aedde",
+      "counts": {
+        "test_recovery_portal.py": 15,
+        "test_staging_portal.py": 17
+      },
+      "result": "PASS"
+    }
+  ],
+  "latest_distinct_counts": {
+    "test_staging_portal.py": 17,
+    "test_student_portal.py": 17,
+    "test_hybrid_checkpoint_recovery.py": 18,
+    "test_recovery_portal.py": 15,
+    "test_admin_storage.py": 16,
+    "test_staging_dispatch.py": 25,
+    "test_storage_events.py": 19
+  },
+  "latest_distinct_total": 127,
+  "remaining_failures": 0,
+  "remaining_errors": 0,
+  "remaining_skips": 0,
+  "first_focused_run": {
+    "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_recovery_portal.py",
+    "log": "/tmp/hybrid-12-3/recovery-tests.log",
+    "sha256": "8704611553ba014473853da6486b63ac986bdd5dc767d5d3ca4edaf28bf66bac",
+    "result": "13/13 PASS, not double counted"
+  },
+  "runtime_source_refinement": "Final focused15+17 tests cover cold checkpoint-mode retry without saved state as full restart, not an SDK checkpoint restore. Broad run predates only that refinement/test.",
+  "js_harnesses": {
+    "executed_by": "test_actual_portal_script_staging_and_recovery_regressions",
+    "files": [
+      "tests/test_recovery_portal_ui.cjs",
+      "tests/test_staging_portal_ui.cjs",
+      "tests/test_admin_storage_ui.cjs"
+    ],
+    "runtime": "/usr/lib/chatgpt/resources/cua_node/bin/node",
+    "result": "PASS; no dependencies installed/downloaded"
+  },
+  "ui_preview": {
+    "result": "PASS",
+    "type": "Actual current student rendering/CSS with synthetic three-rank own-job data only",
+    "screenshots": [
+      {
+        "path": "/tmp/hybrid-12-3/student-recovery-top.png",
+        "sha256": "f35ba863ced45227b9268a395551f308900f9f7c30ffede047426d379a187fe9"
+      },
+      {
+        "path": "/tmp/hybrid-12-3/student-recovery-preview.png",
+        "sha256": "dd5e1d7d41c4805fa7036a539f70320b3922f336a65e4f11f6ec59381f068c1c"
+      }
+    ],
+    "fixture": "/tmp/hybrid-12-3/preview/index.html",
+    "fixture_sha256": "8fd4bf79b4be7408bfd1bb8ebba0deec6079311acfeeb847b965fa5781b7544e",
+    "browser": "Codex in-app browser; top and scrolled milestone viewport visually inspected",
+    "network": "Approved temporary static localhost fixture127.0.0.1:39291; no backend/Pi data",
+    "cleanup": "Preview tab closed; owned fixture server interrupted/closed exit130",
+    "issue": "Full-page screenshot unavailable; documented viewport alternative succeeded",
+    "limitations": "Not a live login/backend/hardware measurement; no mobile/full accessibility acceptance"
+  },
+  "api_changes": [
+    "Hybrid-only recovery field on existing overview/detail; initial attempt null; legacy payload shape unchanged.",
+    "Existing job logs route gains view=recovery, owner scoped, static/allowlisted text and existing64KiB cap."
+  ],
+  "db_schema_changes": false,
+  "migrations": false,
+  "poll_db_writes": false,
+  "new_transport": false,
+  "new_flags": false,
+  "security": [
+    "Owner checked before private recovery tables; other owner/admin404, anonymous401.",
+    "No shared paths/hashes/publication/stage IDs/credentials/other-owner IDs in new progress fields.",
+    "Frozen current-attempt source checked against COMMITTED owner/job/input binding/older attempt/kind and typed numbers.",
+    "Staging/recovery share readonly snapshot; outer retry/status guard prevents mixed attempts.",
+    "Browser revision fences old overview/detail/log responses and clears private content/log selections.",
+    "Copies and launched processes do not count as SDK restore; group confirmation required; full restart Not required."
+  ],
+  "live_production_mutations": false,
+  "pi_contact": false,
+  "storage_defaults_unchanged": true,
+  "commit_stash_or_reset": false,
+  "residual_limits": [
+    "Controller-record projection, not live worker/lease authority; known blocked/revoked/wall-expired ownership displayed stopping.",
+    "SDK partial acknowledgments not persisted individually; confirmed ranks remain0 until full group barrier.",
+    "No inferred in-flight byte percentage or durable recovery latency.",
+    "At most256 recovery rank rows shown; aggregate counts cover group. Existing staging list limits unchanged.",
+    "Actual checkpoint file reachability is checked by unchanged runtime, not UI metadata reader.",
+    "Phase12.4 full permissions/retention/overhead/stale/timezone/UI acceptance remains pending.",
+    "Central controller/local SQLite/authoritative storage remain single point of failure.",
+    "Historical loaded-run HTTP409 unresolved; prior pi01 deferral retained; no physical Pi validation this turn."
+  ],
+  "rollback": {
+    "check": "git apply --reverse --check /tmp/hybrid-12-3/12.3.patch",
+    "apply": "git apply --reverse /tmp/hybrid-12-3/12.3.patch",
+    "verification": "/tmp/hybrid-12-3/source-verification.json",
+    "runtime_data": "No DB/schema/runtime data rollback; no user files deleted",
+    "avoid": "Do not restore entire files from HEAD; preserve previous uncommitted phases; live deployments still need reviewed procedure."
+  }
+}

@@ -1,4 +1,4 @@
-"""Explicit trusted-worker cache inventory. No fetch, eviction or runtime activation.
+"""Explicit trusted-worker cache inventory. No automatic eviction or activation.
 
 Only service-protected, administrator-provisioned local roots are accepted. A
 digest is not authorization: callers must first authorize the exact job inputs.
@@ -52,6 +52,10 @@ class CacheMiss(CacheError):
 
 class CacheCorrupt(CacheMiss):
     """Replica bytes or identity changed. Retained untouched for later repair."""
+
+
+class CacheActivityBusy(CacheError):
+    """A stager/reader or explicit maintenance owns the local activity boundary."""
 
 
 @dataclass(frozen=True)
@@ -156,7 +160,9 @@ class WorkerCache:
         self.metrics = metrics if metrics is not None else StorageMetrics()
 
     @contextmanager
-    def _session(self, *, initialize: bool = False):
+    def _session(self, *, initialize: bool = False, read_only: bool = False):
+        if type(read_only) is not bool or (read_only and initialize):
+            raise ValueError('Read-only cache sessions cannot initialize')
         with _directory(self.root) as root:
             _protected(root, directory=True)
             with _child(root, "objects", create=initialize) as objects, \
@@ -182,11 +188,13 @@ class WorkerCache:
                         except FileNotFoundError:
                             continue
                         os.close(sidecar)
-                    db = sqlite3.connect(f"/proc/self/fd/{state}/cache.sqlite3", timeout=10)
+                    name = f"/proc/self/fd/{state}/cache.sqlite3"
+                    db = sqlite3.connect('file:'+name+'?mode=ro' if read_only else name,
+                                         timeout=10, uri=read_only)
                     try:
                         db.execute("PRAGMA foreign_keys=ON")
-                        db.execute("PRAGMA synchronous=FULL")
-                        db.execute("BEGIN IMMEDIATE")
+                        db.execute("PRAGMA query_only=ON" if read_only else "PRAGMA synchronous=FULL")
+                        db.execute("BEGIN" if read_only else "BEGIN IMMEDIATE")
                         actual = sorted(row[0] for row in db.execute(
                             "SELECT sql FROM sqlite_master WHERE sql IS NOT NULL"))
                         version = db.execute("PRAGMA user_version").fetchone()[0]
@@ -200,7 +208,7 @@ class WorkerCache:
                             raise CacheError("Incompatible cache schema; never reset or overwrite it")
                         yield db, objects, root
                         db.commit()
-                        os.fsync(state)
+                        if not read_only:os.fsync(state)
                     except BaseException:
                         db.rollback()
                         raise
@@ -211,9 +219,38 @@ class WorkerCache:
 
     def initialize(self) -> None:
         """Explicit, idempotent v1 setup. No cache scan, deletion or migration."""
-        with self._session(initialize=True) as (db, _, __):
+        with self._session(initialize=True) as (db, _, root):
             if db.execute("PRAGMA quick_check").fetchall() != [("ok",)]:
                 raise CacheError("Cache metadata integrity check failed")
+            with _child(root,'state') as state:
+                fd = _private_file(state,'activity.lock',create=True)
+                os.close(fd);os.fsync(state)
+
+    @contextmanager
+    def activity(self, *, exclusive=False):
+        """Cross-process SH for trusted staging/readers, nonblocking EX for GC.
+
+        Initialize explicitly first. Fixed lock order is activity -> fetch slot
+        -> cache metadata. Persistent pins protect READY/running attempts after
+        staging releases its SH lock. No thread/process-local lock substitutes.
+        """
+        if type(exclusive) is not bool:raise ValueError('exclusive must be boolean')
+        with _directory(self.root) as root, _child(root,'state') as state:
+            _protected(root,directory=True)
+            lock = _private_file(state,'activity.lock',create=False)
+            try:
+                mode = fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH
+                try:fcntl.flock(lock,mode|fcntl.LOCK_NB)
+                except BlockingIOError:
+                    if exclusive:raise CacheActivityBusy('Staging or verified readers are active')
+                    end=time.monotonic()+2
+                    while True:
+                        try:fcntl.flock(lock,mode|fcntl.LOCK_NB);break
+                        except BlockingIOError:
+                            if time.monotonic()>=end:raise CacheActivityBusy('Cache maintenance still active')
+                            time.sleep(.01)
+                yield
+            finally:os.close(lock)
 
     def _record(self, db, sha: str) -> CacheRecord | None:
         row = db.execute("SELECT sha256,size_bytes,state,last_verified_ns,last_used_ns "
@@ -287,6 +324,14 @@ class WorkerCache:
 
     @contextmanager
     def _verified(self, sha: str, size: int, *, force: bool, touch: bool, reference=None):
+        _expected(sha,size)
+        if type(force) is not bool:raise ValueError('force must be boolean')
+        with self.activity():
+            with self._verified_active(sha,size,force=force,touch=touch,reference=reference) as value:
+                yield value
+
+    @contextmanager
+    def _verified_active(self, sha: str, size: int, *, force: bool, touch: bool, reference=None):
         _expected(sha, size)
         if type(force) is not bool:
             raise ValueError("force must be boolean")

@@ -14,18 +14,44 @@ from hybrid_storage.checkpoint_publication import LocalCheckpointPublisher
 from hybrid_storage.checkpoint_transfer import CheckpointCollector
 from hybrid_storage.checkpoint_restore import CheckpointRestorer
 from hybrid_storage.staging_lifecycle import require_ready
+from hybrid_storage import events
 from staging_dispatch import StagingDispatch
 
 
 class CheckpointDispatch(StagingDispatch):
-    def __init__(self,registry,client,*,publisher,collector,restorer,settings,stage_parallelism=3):
-        super().__init__(registry,client,settings=settings,stage_parallelism=stage_parallelism)
+    def __init__(self,registry,client,*,publisher,collector,restorer,settings,stage_parallelism=3,
+                 coverage=None,choice_logger=None):
+        super().__init__(registry,client,settings=settings,stage_parallelism=stage_parallelism,
+                         coverage=coverage,choice_logger=choice_logger)
         if (not isinstance(publisher,LocalCheckpointPublisher) or publisher.registry is not registry
                 or not isinstance(collector,CheckpointCollector) or collector.publisher is not publisher
                 or not isinstance(restorer,CheckpointRestorer) or restorer.publisher is not publisher
                 or collector.credentials!=client.credentials or restorer.credentials!=client.credentials):
             raise ValueError('Exact trusted local publisher and per-worker authenticated services required')
         self.publisher,self.collector,self.restorer=publisher,collector,restorer
+        self._recovery_clock=events.RecoveryClock()
+
+    def recovery_started(self,job,workers,source):
+        if source is None or not events.enabled():return
+        self._recovery_clock.begin(job)
+        for rank,node in enumerate(workers):
+            events.emit('storage.recovery.started',job_id=job['job_id'],
+                attempt_id=f"{job['job_id']}:{job['retry_count']}",worker_id=node['id'],rank=rank,
+                manifest_version=source['binding_sha256'],manifest_schema_version=1,
+                checkpoint_id=source['publication_id'],world_size=len(workers))
+
+    def _recovery_confirmed(self,job,stage_id,source):
+        latency=self._recovery_clock.finish(job)
+        if source is None or not events.enabled():return
+        try:
+            # Read-only diagnostics AFTER confirmation commits. Never a new grant.
+            rows=list(self.registry.db.execute('SELECT rank,worker_id FROM hybrid_staging_ranks WHERE stage_id=? ORDER BY rank',(stage_id,)))
+            for rank,worker in rows:
+                events.emit('storage.recovery.confirmed',job_id=job['job_id'],
+                    attempt_id=f"{job['job_id']}:{job['retry_count']}",worker_id=worker,rank=rank,
+                    stage_id=stage_id,manifest_version=source['binding_sha256'],manifest_schema_version=1,
+                    checkpoint_id=source['publication_id'],world_size=len(rows),recovery_latency_ns=latency)
+        except Exception:pass
 
     def authorize_checkpoint(self,db,job_id):
         if not restore_schema.installed(db):raise ValueError('Explicit LOCAL restore migration required')
@@ -140,6 +166,7 @@ class CheckpointDispatch(StagingDispatch):
                     details.update(world_size=info['world_size'],acknowledged_ranks=list(range(info['world_size'])),attempt_token=info['attempt_token'])
                 self.registry.db.execute('INSERT INTO recovery_events(job_id,event_type,node_id,event_time,details_json) VALUES(?,?,?,?,?)',
                     (job['job_id'],'DDP_RESUMED' if info.get('world_size',1)>1 else 'RESUMED',job['node_id'],time.time(),encoded(details).decode()))
+        self._recovery_confirmed(job,stage_id,source)
 
     def _confirm_started(self,job):
         import job_store as store

@@ -36,6 +36,9 @@ import execution_leases as ownership
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import staging_view
+import recovery_view
+import portal_admin
+import admin_storage_view
 from hybrid_storage.config import load_config, require_controller_config, select_submission_backend
 
 EXAMPLES = {'regression': 'job.integration.json', 'binary': 'job.binary.json',
@@ -294,6 +297,18 @@ def create_app(directory=None, background=False):
             db.execute('BEGIN')
             return staging_view.read(db,job_id,session['owner'])
 
+    def progress(job_id,expected):
+        # Both projections observe the same owner/current-attempt DB snapshot.
+        with closing(sqlite3.connect(Path(store.DB_FILE).as_uri()+'?mode=ro',uri=True,timeout=0.25)) as db:
+            deadline=time.monotonic()+0.5
+            db.set_progress_handler(lambda:int(time.monotonic()>deadline),1000)
+            db.execute('BEGIN')
+            current=db.execute('SELECT retry_count,status FROM jobs WHERE job_id=? AND owner=?',(job_id,session['owner'])).fetchone()
+            if current is None or tuple(current)!=(expected['retry_count'],expected['status']):
+                return dict(staging=None,recovery=None)  # Changed since the outer job snapshot; next poll re-reads it.
+            return dict(staging=staging_view.read(db,job_id,session['owner']),
+                        recovery=recovery_view.read(db,job_id,session['owner']))
+
     def hybrid_job(job_id):
         return bool(rows("SELECT 1 FROM job_storage_bindings WHERE job_id=? AND backend='nfs'",(job_id,)))
 
@@ -312,7 +327,7 @@ def create_app(directory=None, background=False):
     @app.get('/api/session')
     def session_info():
         session.setdefault('csrf', secrets.token_hex(24))
-        return jsonify(owner=session.get('owner'), csrf=session['csrf'])
+        return jsonify(owner=session.get('owner'), csrf=session['csrf'],is_admin=portal_admin.is_admin(directory,session.get('owner')))
 
     @app.post('/api/login')
     def login():
@@ -337,7 +352,19 @@ def create_app(directory=None, background=False):
         session.clear()
         session.permanent = True
         session.update(owner=owner, csrf=secrets.token_hex(24))
-        return jsonify(owner=owner, csrf=session['csrf'])
+        return jsonify(owner=owner, csrf=session['csrf'],is_admin=portal_admin.is_admin(directory,owner))
+
+    @app.get('/api/admin/storage')
+    def admin_storage():
+        if not portal_admin.is_admin(directory,session.get('owner')):abort(403,'Administrator access required')
+        try:
+            with closing(sqlite3.connect(Path(store.DB_FILE).as_uri()+'?mode=ro',uri=True,timeout=0.25)) as db:
+                deadline=time.monotonic()+0.5
+                db.set_progress_handler(lambda:int(time.monotonic()>deadline),1000)
+                db.execute('BEGIN')
+                return jsonify(admin_storage_view.read(db,[n['id'] for n in load_nodes()]))
+        except (OSError,ValueError,sqlite3.Error):
+            return jsonify(error='Storage observations are temporarily unavailable'),503
 
     @app.post('/api/logout')
     def logout():
@@ -440,7 +467,7 @@ def create_app(directory=None, background=False):
             if job['job_id'] in hybrid_ids:
                 jobs[-1]=safe_error(jobs[-1])
                 jobs[-1]['preparation']=safe_error(jobs[-1]['preparation'])
-                jobs[-1]['staging']=staging(job['job_id'])
+                jobs[-1].update(progress(job['job_id'],job))
         return jsonify(jobs=jobs,nodes=cluster.get(),dispatcher_running=dispatcher_running(),
                        limits={k:limits(policy,session['owner'])[k] for k in ('max_active_per_owner','max_pending_per_owner')},
                        timestamp=time.time())
@@ -470,7 +497,7 @@ def create_app(directory=None, background=False):
             # Existing legacy representations stay intact. Hybrid responses never
             # serialize controller input locations or internal lease credentials.
             spec=dict(spec,project='Uploaded project',dataset='Uploaded dataset' if spec.get('dataset') else None)
-            result.update(staging=staging(job_id),spec=spec,
+            result.update(**progress(job_id,job),spec=spec,
                           job={key:value for key,value in safe_error(job).items()
                                if key not in ('storage_path','job_config','node_ip','checkpoint_path')},
                           preparation=safe_error(result['preparation']),
@@ -496,6 +523,9 @@ def create_app(directory=None, background=False):
         if request.args.get('view')=='staging':
             if not hybrid:abort(404,'Input staging log not found')
             return jsonify(text=staging_view.log_text(staging(job_id))[:LOG_BYTES],source='Input staging · controller')
+        if request.args.get('view')=='recovery':
+            if not hybrid:abort(404,'Recovery progress log not found')
+            return jsonify(text=recovery_view.log_text(progress(job_id,job)['recovery'])[:LOG_BYTES],source='Recovery progress · controller')
         name = request.args.get('file')
         if name:
             if Path(name).name!=name or not name.endswith('.log'): abort(400,'Invalid log name')
@@ -571,8 +601,15 @@ def main():
     parser.add_argument('--port',type=int,default=8080)
     parser.add_argument('--production',action='store_true',help='Serve with Waitress (used by installed services)')
     parser.add_argument('--create-user',metavar='STUDENT_ID',help='Create/reset a student password, then exit')
+    roles=parser.add_mutually_exclusive_group()
+    roles.add_argument('--grant-admin',metavar='OWNER',help='Grant an existing login local operator-approved admin access, then exit')
+    roles.add_argument('--revoke-admin',metavar='OWNER',help='Revoke admin access immediately, then exit')
     args = parser.parse_args()
     directory = ROOT/'storage/portal'
+    if args.grant_admin or args.revoke_admin:
+        if args.create_user:parser.error('Create the login separately before changing admin access')
+        portal_admin.set_admin(directory,args.grant_admin or args.revoke_admin,enabled=bool(args.grant_admin))
+        print('Admin allowlist updated');return
     if args.create_user:
         password = getpass.getpass('New password (at least 10 characters): ')
         if password != getpass.getpass('Repeat password: '): parser.error('Passwords differ')

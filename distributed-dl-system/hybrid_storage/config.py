@@ -123,6 +123,16 @@ def require_controller_config(settings: StorageConfig) -> StorageConfig:
     return settings
 
 
+def require_staging_config(settings: StorageConfig) -> StorageConfig:
+    """Validate an explicitly constructed trusted coordinator, not auto-start it."""
+    if not isinstance(settings, StorageConfig):
+        raise StorageConfigError('Expected validated StorageConfig')
+    if (settings.storage_backend != 'nfs' or not settings.worker_cache_enabled
+            or not settings.storage_aware_staging or settings.scheduler_policy not in ('resource', 'locality', 'bandwidth')):
+        raise StorageConfigError('Trusted staging requires NFS/cache/staging and resource|locality|bandwidth')
+    return settings
+
+
 def select_submission_backend(settings: StorageConfig, requested: str | None = None) -> str:
     settings = require_controller_config(settings)
     backend = settings.storage_backend if requested is None else requested
@@ -136,13 +146,17 @@ def select_submission_backend(settings: StorageConfig, requested: str | None = N
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Check local storage configuration without starting services.")
     parser.add_argument("--config", type=Path, default=None, help="Config file; default: config/storage.json")
+    parser.add_argument('--runtime', choices=('controller', 'staging'), default='controller',
+                        help='Validate controller startup or explicit trusted staging-component settings; starts nothing')
     args = parser.parse_args(argv)
     try:
-        settings = require_controller_config(load_config(args.config))
+        settings = (require_staging_config if args.runtime == 'staging' else require_controller_config)(load_config(args.config))
     except StorageConfigError as error:
         parser.error(str(error))
     report = {"runtime": "legacy", "settings": asdict(settings)}
-    if settings.storage_backend == "nfs":
+    if args.runtime == 'staging':
+        report.update(runtime='trusted-staging-component', automatic_startup=False)
+    elif settings.storage_backend == "nfs":
         report.update(new_job_default="nfs", nfs_execution="blocked")
     print(json.dumps(report, sort_keys=True))
     return 0

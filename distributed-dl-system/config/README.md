@@ -6,7 +6,7 @@
 | [queue_policy.json](queue_policy.json) | Default/per-owner active and pending limits, queue aging | Queue admission and fair scheduling |
 | [execution_leases.json](execution_leases.json) | Enable leases and set duration/renewal interval | Execution ownership and partition recovery |
 | [storage.json](storage.json) | Legacy-default flags; optional held NFS submission mode, execution still gated | Dispatcher/portal/CLI; [selection and compatibility](../docs/storage/13-storage-selection.md) |
-| [storage-examples/](storage-examples/README.md) | Tested legacy and held-NFS config samples; precise operator paths and limits | Read-only config validation; does not activate settings |
+| [storage-examples/](storage-examples/README.md) | Legacy/held-NFS samples and explicit trusted resource/locality/bandwidth coordinator settings | Read-only validation, including `--runtime staging`; does not start or provision a runtime |
 | [nfs-server.json](nfs-server.json) | Restricted pi02/pi03 NFS export; actual controller publisher UID/GID 125; pi01 deferred | Server planner and approved local setup; [live results/rollback](../docs/storage/10-phase2-completion.md) |
 | [nfs-clients.json](nfs-clients.json) | Read-only input automount on pi02/pi03; pi01 deferred | Client planner and approved local setup; [live results/rollback](../docs/storage/10-phase2-completion.md) |
 | [job.schema.json](job.schema.json) | Published version-one submission schema | Students and external tooling; runtime validation is in `controller/job_spec.py` |

@@ -1,0 +1,365 @@
+{
+  "acceptance": {
+    "all_three_physical_pis": "NOT RUN; prior Phase9 physical gate still pending",
+    "crash_reconciliation_and_registry": "PASS local tests",
+    "dry_run_first": "PASS",
+    "phase_11": "INCOMPLETE; STOP before11.4",
+    "pinned_active_authoritative_retention": "PASS under documented dedicated-root/trusted-client preconditions",
+    "selected_existing_workflows": "PASS",
+    "subphase_11_3": "local PASS"
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 143,
+  "branch": "main",
+  "changed_files": [
+    "agent/cache_storage.py",
+    "agent/staging.py",
+    "docs/storage/44-cache-eviction-evidence.json",
+    "docs/storage/44-cache-eviction.md",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/cache_eviction.py",
+    "hybrid_storage/cache_fetch.py",
+    "hybrid_storage/inventory_reporter.py",
+    "hybrid_storage/worker_cache.py",
+    "hybrid_storage/workspaces.py",
+    "tests/README.md",
+    "tests/test_cache_eviction.py"
+  ],
+  "commit_created": false,
+  "config_check": {
+    "runtime": "legacy",
+    "settings": {
+      "scheduler_policy": "resource",
+      "storage_aware_staging": false,
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false
+    }
+  },
+  "contracts": {
+    "activation": "explicit CacheEvictor/cache_maintenance; no startup/timer/dispatch/admission eviction",
+    "activity": "cross-process SH readers/fetch/materialization; actual agent SH spans fetch->pin gap; nonblocking EX maintenance, inherited fetch-slot lock then metadata",
+    "bounds": {
+      "max_candidate_default": 1024,
+      "max_candidates": 4096,
+      "max_plans": 8,
+      "max_scan_entries": 100000
+    },
+    "controller_db": "unchanged LOCAL SQLite",
+    "crash": "retained bytes reverified after pre-unlink crash; absent bytes stay missing after unlink; no destructive replay or pin release",
+    "db_migration": false,
+    "default_apply": "dry_run=True; real apply requires locally issued bounded plan and explicit False",
+    "deletion": "revalidate issued plan; durable missing metadata commit before unlink; fsync parent; actual disk recheck; no unreviewed extra victims",
+    "limits": "existing CacheFetcher.quota_bytes as max_cache_bytes; same reserve_free_bytes; includes objects/parts/quarantine, excludes state",
+    "lru": "last_used_ns or0, then digest; changed/missing observations skipped",
+    "namespace": "dedicated protected local cache roots, descriptor-relative validated SHA paths, known readonly owned single-link inode fingerprint, exact mount/root identity; explicit protected cohosted-authoritative/workspace/checkpoint roots",
+    "new_fs_state": "additive private activity.lock on explicit cache initialization; never replace/remove while held",
+    "old_clients": "upgrade all cooperating cache clients before enabling GC; do not mix unguarded clients",
+    "pins": "ANY persistent pin blocks ALL eviction; terminal quiescence logic unchanged; reconciliation never clears pins",
+    "preview": "SQLite mode=ro/query_only; no touch/hash/publication/unlink/notify, cache file contents unchanged",
+    "registry": "existing signed FULL requested via local callback after locks release, or periodic CACHE_REMOVED/FULL; no immediate controller ack; stage verification mandatory",
+    "retained": [
+      "authoritative inputs",
+      "private workspaces",
+      "outputs/checkpoints",
+      "DB/state",
+      "parts/quarantine",
+      "unregistered/unknown files",
+      "pinned/active objects"
+    ],
+    "rollback": "omit maintenance calls; source-only reverse patch; missing replicas refetched through existing authorized staging, not undeleted",
+    "scheduling": "resource/locality/bandwidth code unchanged; active defaults legacy/OFF/resource",
+    "wire_version_changes": false,
+    "worker_db_schema": 1
+  },
+  "date": "2026-11-09",
+  "early_guard_tests": 105,
+  "errors": 0,
+  "failures": 0,
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "latest_distinct_tests": 396,
+  "latest_test_files": {
+    "test_bandwidth_policy.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 22
+    },
+    "test_cache_coverage.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 31
+    },
+    "test_cache_eviction.py": {
+      "log": "targeted-final.log",
+      "status": "PASS",
+      "tests": 23
+    },
+    "test_cache_fetch.py": {
+      "log": "targeted-final.log",
+      "status": "PASS",
+      "tests": 33
+    },
+    "test_cache_inventory.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 38
+    },
+    "test_ddp_staging.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 16
+    },
+    "test_hybrid_checkpoint_recovery.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 18
+    },
+    "test_private_workspaces.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 39
+    },
+    "test_queue_controls.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_locality.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 13
+    },
+    "test_scheduler_metrics.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_policy.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_staging_dispatch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 25
+    },
+    "test_staging_portal.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_staging_recovery.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 34
+    },
+    "test_storage_config.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_worker_cache.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 33
+    }
+  },
+  "logs": {
+    "baseline-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-3/baseline-tests.log",
+      "sha256": "025c9187055b7b1f6d91f129d8da57ea0a9661267e0b83c3fa75d214e08d192b",
+      "test_runs": [
+        33,
+        33,
+        39,
+        38
+      ]
+    },
+    "eviction-final.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-3/eviction-final.log",
+      "sha256": "fb67f0adf56a2a1f5cb46dbd4f7a98af890802387949163bd031e49859e240c5",
+      "test_runs": [
+        23
+      ]
+    },
+    "final-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-3/final-tests.log",
+      "sha256": "bf8ee9b77da88a57884b8149fb8d0044e5c24a558c39d018b51852d6f1ec0050",
+      "test_runs": [
+        22,
+        33,
+        33,
+        39,
+        38,
+        22,
+        25,
+        34,
+        17,
+        16,
+        17,
+        10,
+        13,
+        10,
+        17,
+        18,
+        31
+      ]
+    },
+    "guard-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-3/guard-tests.log",
+      "sha256": "69a4e0dfe7d4ec3e2e6334570c29a0f49de1bd2a952d1ce5f793d7ae19bdc211",
+      "test_runs": [
+        33,
+        33,
+        39
+      ]
+    },
+    "new-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-3/new-tests.log",
+      "sha256": "957c165497103af7781afb9ac7da0aac134d1189e83089e99eb83efd9aaf142c",
+      "test_runs": [
+        19
+      ]
+    },
+    "targeted-final.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-3/targeted-final.log",
+      "sha256": "9c703f150b3eb7aba45d4ca53200afbe6fa3297740b1244b385e37ac21ebb282",
+      "test_runs": [
+        23,
+        33
+      ]
+    }
+  },
+  "preservation": {
+    "active_config_sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+    "all_config_files_unchanged": true,
+    "modified_original_files": [
+      "agent/cache_storage.py",
+      "agent/staging.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/cache_fetch.py",
+      "hybrid_storage/inventory_reporter.py",
+      "hybrid_storage/worker_cache.py",
+      "hybrid_storage/workspaces.py",
+      "tests/README.md"
+    ],
+    "prefixes_preserved": [
+      "tests/README.md",
+      "hybrid_storage/README.md",
+      "docs/storage/implementation-progress.md"
+    ],
+    "snapshot_files": 283,
+    "source_hashes": {
+      "agent/cache_storage.py": {
+        "after": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c",
+        "before": "8413387d09f48f6faf752fdf60f4db553037fa341db946cb734197e51955d095"
+      },
+      "agent/staging.py": {
+        "after": "a2534e31fb8950d4d7397068c4427de4d9c83c0ded23c3353b910b5382e22c05",
+        "before": "70b79f9cef898dea2cec67b8fee9420fdbaab9984ef038d0e198cae9214887d4"
+      },
+      "docs/storage/44-cache-eviction.md": {
+        "after": "340b2a55722e0e9e008bef91810a1dee347fa85683d2a3c7d8e9343f2f79e8de",
+        "before": null
+      },
+      "docs/storage/implementation-progress.md": {
+        "after": "86083fb9a09c8d53e5ac9de9555f26bba25159526e3aa0906856f93937374853",
+        "before": "9ad130d23d01247d98778690ec0ba3245f46aab4b0f92a4157ecf78729d792b5"
+      },
+      "hybrid_storage/README.md": {
+        "after": "71a4e19b3cb61aa449256dfe82f55013732e4e30a0b4399d9f194c56c0535c1b",
+        "before": "61d9fb313204109ca0328132be38f1afc37554841751bafd3604675673137318"
+      },
+      "hybrid_storage/cache_eviction.py": {
+        "after": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd",
+        "before": null
+      },
+      "hybrid_storage/cache_fetch.py": {
+        "after": "0f5042ca64eb093573761d4b9b214ff65cf780bb215ee6f14d3b96fa55bb5dd0",
+        "before": "939c80db4e7ac1d45b368135161451fe44946965c77141423d9f36c8023029cf"
+      },
+      "hybrid_storage/inventory_reporter.py": {
+        "after": "8ecc51cd673691060840a18f73be829769a9d274e4cac9510497f70414827355",
+        "before": "6f8da9437d10ef2ba26bc6555d84582adf38f99696633f73d014a98f93bc0dd2"
+      },
+      "hybrid_storage/worker_cache.py": {
+        "after": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272",
+        "before": "0f6a5484d8f08f265c740e269b6dc57d02ad0fe560052dedd6c9e1b1dcde1bbf"
+      },
+      "hybrid_storage/workspaces.py": {
+        "after": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a",
+        "before": "c9638fea62e81a4f270d43b7b79302239b64ce038cc4574ec099a03250d92a81"
+      },
+      "tests/README.md": {
+        "after": "507d1b25da36420f25ea4972cabac3590f22c744dcc3dde6e6b0e52598345667",
+        "before": "2004e2e4ed40d6439d829ecf2971bed4ff8f83a3a20d6adc241302ee9b6f1463"
+      },
+      "tests/test_cache_eviction.py": {
+        "after": "284caa618fe04ea9ad3f92f321ff1448ab708ae70709ebaaa695421787c227c6",
+        "before": null
+      }
+    },
+    "status_before": "/tmp/hybrid-11-3/status-before.txt",
+    "unchanged_original_files": 274
+  },
+  "prior_boundary": "11.2 local PASS, physical/production acceptance pending",
+  "python": "Python 3.12.3",
+  "residual_risks": [
+    "requires dedicated roots, protected identities and correctly declared cohosted authoritative/workspace/checkpoint roots",
+    "mixed unguarded cache clients unsupported",
+    "stale pins/continuous active work can prevent any idle eviction",
+    "large bounded scans may delay new stagers; not auto-installed on heartbeat/startup",
+    "totally full disk unable to commit metadata fails closed without unlink",
+    "parts/quarantine/unknown files can prevent meeting quota",
+    "physical relief affected by sparse/reflink/open-file/external disk consumption",
+    "advisory registry lag until successful signed heartbeat; notification errors explicitly returned",
+    "offline warm-cache reuse reduced by explicit eviction; no NFS probe added",
+    "filesystem/hardware power-loss durability not physically tested",
+    "historical loaded-run HTTP409 unresolved",
+    "central controller/LOCAL SQLite/authoritative storage single point of failure"
+  ],
+  "rollback_applied": false,
+  "rollback_patch": "/tmp/hybrid-11-3/11.3.patch",
+  "skips": 0,
+  "subphase": "11.3",
+  "test_scope": {
+    "excluded": [
+      "live Pi/SSH/NFS/deployment",
+      "hardware power failure/durability or throughput",
+      "physical all-three-Pi validation",
+      "native network DDP benchmark",
+      "live user cache/data/DB/job/checkpoint mutation",
+      "Internet transfers",
+      "Phase11.4 combined fault/efficiency acceptance"
+    ],
+    "included": [
+      "deterministic dry-run/LRU/limits",
+      "pin and reader/stager exclusion",
+      "orphan producer slot retention",
+      "root replacement/unsafe links",
+      "metadata-before-unlink crash boundaries",
+      "pin-preserving nondeleting reconciliation",
+      "authoritative/checkpoint/unknown retention",
+      "signed registry convergence",
+      "authorized existing NFS restage",
+      "queue/coverage/staging/recovery/resource/locality/bandwidth regressions",
+      "genuine CPU saved-state checkpoint resume"
+    ],
+    "local": "real disposable files, SHA and child-process crashes; signed real Flask inventory/full/incremental; actual signed stage fetch->pin gap",
+    "simulated": [
+      "NFS mount facts",
+      "trainer/isolation",
+      "disk-full/space reports",
+      "unlink/notify failure",
+      "uncancellable helper"
+    ]
+  }
+}

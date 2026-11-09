@@ -99,3 +99,35 @@ plan while its real mount is active. Application storage flags remain legacy/off
 The administrator-only [fault fixture](../hybrid_storage/nfs_fault_probe.py)
 defaults to a nonmutating plan; live use requires the reviewed isolated driver
 and public TEST artifacts recorded in the evidence.
+
+## Phase 11 validation on approved workers
+
+[`validate_phase11.py`](validate_phase11.py) defaults to a nonmutating plan:
+
+```bash
+.controller-venv/bin/python -B tools/validate_phase11.py --nodes pi02 pi03
+```
+
+Its explicit administrator `--run` mode uploads verified source into NEW private
+fixture roots, activates only the existing RO input readiness, and tests real
+cache/workspace/inventory operations with public authorized hashes. It preserves
+production agents/config and launches no untrusted trainer. The user approved
+pi02/pi03 validation and deferred pi01. Read the [actual completion report](../docs/storage/48-phase11-live-acceptance.md)
+before using `--run`: it records required public fixture publication, private
+state, exact effects, all results and rollback. Do not reuse existing output
+directories or treat this test bootstrap as a production sandbox/DDP launcher.
+
+## Offline observability overhead
+
+[`benchmarks/observability_overhead.py`](benchmarks/observability_overhead.py)
+compares an empty call, disabled structured events and enabled JSONL emission to
+memory, with bounded iterations/repeats and exact emitted-record validation:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/observability_overhead.py --iterations 5000 --repeats 5
+```
+
+JSON on stdout includes nanoseconds per call, every sample, platform and limits.
+No controller imports, DB, NFS, Internet or worker operations. This does not
+measure disk/network handlers or estimate total training overhead. See
+[Phase 12.4 acceptance](../docs/storage/52-observability-acceptance.md).

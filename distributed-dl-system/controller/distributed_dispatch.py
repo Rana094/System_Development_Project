@@ -10,6 +10,7 @@ from job_store import (get_connection, get_job, get_job_environments, get_ranks,
                        get_reservations, mark_scheduled, mark_running,
                        mark_completed, requeue_after_failure, finish_cancellation)
 from scheduler import load_nodes, get_resources, resources_fit
+from scheduler_metrics import begin_selection
 from recovery_metrics import log_event, get_events
 import execution_leases as ownership
 
@@ -55,29 +56,56 @@ def rank_status(job, rank, status, started_at=None, error=None):
         connection.close()
 
 
-def select_group(job, excluded, resume=None, require_ownership=False):
+def select_group(job, excluded, resume=None, require_ownership=False, *, locality=None):
     """Only a full group of idle, prepared, compatible workers is eligible."""
+    if locality is not None:
+        from hybrid_storage.locality import JobLocality
+        if not isinstance(locality, JobLocality):raise TypeError('Expected explicit job-bound JobLocality')
+        locality.reset()
+    measurement=begin_selection('ddp')
     spec = json.loads(job['job_config'])
     prepared = {row['node_id']:row['record'] for row in get_job_environments(job['job_id'])}
     occupied = {row['node_id'] for row in get_reservations()}
     groups = {}
     for node in load_nodes():
+        if measurement is not None:measurement.examined+=1
         if node['id'] in occupied or node['id'] in excluded or node['id'] not in prepared:
+            if measurement is not None:
+                measurement.skip('reserved' if node['id'] in occupied else
+                                 'excluded' if node['id'] in excluded else 'unprepared',node['id'])
             continue
+        if measurement is not None:measurement.queries+=1
         snapshot = get_resources(node)
         if snapshot and resources_fit(snapshot,spec['resources_per_worker']):
-            if require_ownership and not ownership.supported(snapshot):continue
+            if require_ownership and not ownership.supported(snapshot):
+                if measurement is not None:measurement.skip('lease',node['id'])
+                continue
             key = prepared[node['id']]['compatibility_key']
             if resume and key != resume['compatibility_key']:
+                if measurement is not None:measurement.skip('compatibility',node['id'])
                 continue
+            if measurement is not None:
+                measurement.eligible+=1
+                measurement.candidate(node['id'],snapshot['cpu']['usage_percent'],snapshot['memory']['available_gb'])
             groups.setdefault(key,[]).append((snapshot['cpu']['usage_percent'],
                                              -snapshot['memory']['available_gb'],node['id'],node))
+        elif measurement is not None:
+            measurement.skip('unavailable' if not snapshot else
+                             'busy' if snapshot.get('node_state')!='IDLE' else 'resources',node['id'])
     count = spec['execution']['workers']
     choices = [sorted(nodes)[:count] for nodes in groups.values() if len(nodes) >= count]
+    if measurement is not None:
+        measurement.groups=len(groups);measurement.complete=len(choices)
     if not choices:
+        if locality is not None:locality.group(job['job_id'],groups,count,None)
+        if measurement is not None:measurement.finish([])
         return None
     chosen = min(choices,key=lambda nodes:sum(node[0] for node in nodes))
-    return [node[3] for node in chosen]
+    if locality is not None:chosen = locality.group(job['job_id'],groups,count,chosen)
+    result=[node[3] for node in chosen]
+    if measurement is not None:
+        measurement.finish(result,policy='resource' if locality is None else locality.snapshot().policy)
+    return result
 
 
 def dispatch(job, excluded):

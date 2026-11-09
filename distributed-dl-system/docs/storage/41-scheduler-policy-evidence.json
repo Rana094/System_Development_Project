@@ -1,0 +1,476 @@
+{
+  "acceptance": {
+    "Phase_10": "local implementation/validation PASS, no production/physical acceptance claim",
+    "all_three_physical_Pis": "NOT RUN; Phase 9 hardware gate and reviewed production bootstrap still pending",
+    "bounded_explainable_logging": "PASS",
+    "configured_coordinator_locality": "PASS local single/three-rank/checkpoint resume",
+    "hard_constraints_and_rapid_resource_restore": "PASS",
+    "old_resource_OFF_exact": "PASS selected frozen/config/queue regressions",
+    "universal_byte_improvement": "NOT GUARANTEED: modeled greedy counterexample retained"
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 81,
+  "branch": "main",
+  "changed_files": [
+    "config/README.md",
+    "config/storage-examples/README.md",
+    "controller/checkpoint_recovery.py",
+    "controller/distributed_dispatch.py",
+    "controller/scheduler.py",
+    "controller/scheduler_metrics.py",
+    "controller/staging_dispatch.py",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/config.py",
+    "tests/README.md",
+    "hybrid_storage/scheduling.py",
+    "tests/test_scheduler_policy.py",
+    "config/storage-examples/nfs-resource.json",
+    "config/storage-examples/nfs-locality.json",
+    "docs/storage/41-scheduler-policy.md",
+    "docs/storage/41-scheduler-policy-evidence.json"
+  ],
+  "contracts": {
+    "CLI": "--runtime staging validates trusted component flags without imports/startup/DB creation",
+    "bandwidth": "recognized config enum, execution unavailable",
+    "bounds": {
+      "default_history": 128,
+      "max_history": 4096,
+      "node_detail_limit": 256,
+      "record_byte_limit": 131072
+    },
+    "default": "unchanged legacy/cache OFF/staging OFF/resource",
+    "flag": "existing scheduler_policy=resource|locality consumed by explicit StagingDispatch/CheckpointDispatch",
+    "hard_constraints": "same filters, resource primary keys, fairness, quotas, reservations, leases, all-rank barrier, auth and recovery",
+    "log_fields": [
+      "selection_proposal",
+      "requested/effective policy",
+      "reason",
+      "filtered IDs/counts",
+      "candidate CPU/RAM",
+      "selected IDs",
+      "eligible/group counts",
+      "verified/unknown missing bytes",
+      "per-rank and aggregate bytes",
+      "inventory freshness/session/sequence",
+      "diagnostic availability and truncation"
+    ],
+    "logs": "SCHEDULER_CHOICE INFO on distributed_ml.scheduler, or explicit trusted callable; bounded in-memory history; no handler installed",
+    "not_logged": [
+      "filenames",
+      "missing hashes",
+      "NFS paths",
+      "IP addresses",
+      "credentials"
+    ],
+    "ordinary_startup": "hybrid execution still gated; no unreviewed bootstrap provisioned",
+    "plans": "actual authorized full-input per-rank plans; divergent plans get resource fallback",
+    "rapid_fallback": "runtime.set_scheduler_policy(resource), controller thread, future selections only, no DB/job/pin/cache/lease mutation",
+    "registry": "optional CoverageAPI must be same StorageRegistry instance; absence/staleness/error falls back",
+    "resource_default": "direct original selector calls, no inventory or automatic metrics/logging"
+  },
+  "date": "2026-11-09",
+  "development_history": {
+    "concurrent_existing_recovery_error": "HTTP409 during cold stage. Not proved pre-existing; cause unknown. Retained as loaded-run reliability limit.",
+    "corrected_15_tests": {
+      "log": "/tmp/hybrid-10-4/policy-second.log",
+      "sha256": "15fe2eadbff3bcee1e0c1335359ac1f1e6c7a88424e1d184b90df5e288baf135"
+    },
+    "full_serial_recovery": "18 PASS with no timeout/lease/staging-guard relaxation",
+    "new_fixture_errors": {
+      "causes": [
+        "wrong expected staging endpoint names",
+        "unmocked ddp.load_nodes alias selected configured addresses, routed by mocked transport to wrong local client"
+      ],
+      "errors": 1,
+      "failures": 1,
+      "fix": "reuse existing protocol constants and explicitly mock copied DDP inventory alias; no actual remote request/protocol change",
+      "log": "/tmp/hybrid-10-4/policy-initial.log",
+      "sha256": "7101c1c3e4e00f7ddd8901d7e0857ec7cb595540e2b928dfde8c884eebd5c1da"
+    },
+    "single_case_pre_edit_current": {
+      "before": {
+        "exit_code": 0,
+        "log": "/tmp/hybrid-10-4/recovery-probe-before.log",
+        "sha256": "80dbb55ab7cdf2a099b99f9f864ad46a22bb50d66243a9e0d65c43be695d1afe",
+        "tail": [
+          "test_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group (test_hybrid_checkpoint_recovery.RecoveryTests.test_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group) ... ok",
+          "",
+          "----------------------------------------------------------------------",
+          "Ran 1 test in 6.162s",
+          "",
+          "OK"
+        ],
+        "tests": 1
+      },
+      "current": {
+        "exit_code": 0,
+        "log": "/tmp/hybrid-10-4/recovery-probe-current.log",
+        "sha256": "f40fbf0992c7b87af1aec16d267e230130d8f2fa1e9694142e7e544da93174f0",
+        "tail": [
+          "test_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group (test_hybrid_checkpoint_recovery.RecoveryTests.test_ddp_all_three_ranks_stage_restore_then_confirm_as_one_group) ... ok",
+          "",
+          "----------------------------------------------------------------------",
+          "Ran 1 test in 6.050s",
+          "",
+          "OK"
+        ],
+        "tests": 1
+      }
+    },
+    "single_case_probe_script": {
+      "path": "/tmp/hybrid-10-4/probe-recovery.py",
+      "sha256": "63a29cc59795bf6b185d787ae1451e6ca1859cab896163560d1276b42fe851f9"
+    }
+  },
+  "environment": {
+    "packages": {
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2",
+      "torch": "2.14.1"
+    },
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+  },
+  "final_distinct_tests": 191,
+  "final_files": 13,
+  "fingerprints": {
+    "config/README.md": {
+      "after_sha256": "06e00b33c38aa1ade67671b58563e0066cb7c5f252e83b42d112f2a44387a367",
+      "before_sha256": "42cbfb2914f78105591527949cd7bab357967474e678a5d1e396ccee4f4a9601"
+    },
+    "config/storage-examples/README.md": {
+      "after_sha256": "5a0e58613957686f2c6001713ebab39a41e1023064cafcb578b2cb461fd51c80",
+      "before_sha256": "eb668492a805b11e923a3666b76c863ebee6eff1540fe1054d09db00bfe9b690"
+    },
+    "config/storage-examples/nfs-locality.json": {
+      "after_sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a",
+      "before_sha256": null
+    },
+    "config/storage-examples/nfs-resource.json": {
+      "after_sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2",
+      "before_sha256": null
+    },
+    "controller/checkpoint_recovery.py": {
+      "after_sha256": "9d2964f934178d00a8d835915d736cf438a56526e702f52765decc22df253574",
+      "before_sha256": "bc24731dacdc212c8e2816ad391d30be6f55f766ae5c666ac8ad0153b4f431a2"
+    },
+    "controller/distributed_dispatch.py": {
+      "after_sha256": "a1fdac0d8b63ec784c281d2d6a6d6433aba060ffc18b380a07b071d8ee825f2f",
+      "before_sha256": "c56236bef5a0c2e9c412fbaf820c95456828259c6a94df168efebfafbe58fdd6"
+    },
+    "controller/scheduler.py": {
+      "after_sha256": "4a3e16e3b23e36069f15d30e04f39bf596863ee560425d3df0cc5dae227b0e87",
+      "before_sha256": "60a1219027571840a3fb3a8e7b3e0e0d5e01ac57998ac3b58adaf850a48694b3"
+    },
+    "controller/scheduler_metrics.py": {
+      "after_sha256": "29630f864ac628ec8df95037256aa4ef86f98af8c55bb0926e78e74b0f7524f7",
+      "before_sha256": "ed5d9d4ee825f99cf15409a652f7853bed7fe5f304a79b9bfa7970928323d82c"
+    },
+    "controller/staging_dispatch.py": {
+      "after_sha256": "ccbb191503ed4edb7e3a9c33a78c208239e8717739023f5c35799ef6f8349ec1",
+      "before_sha256": "75e85bd91a7e8175c79690b8c1d44c62010cd34b1986d8f5bc656cfdfec571bb"
+    },
+    "docs/storage/41-scheduler-policy.md": {
+      "after_sha256": "becccf4e91b3c9848f0415a5d1d90acae238b19f562b899a158d9061fd6d87df",
+      "before_sha256": null
+    },
+    "docs/storage/implementation-progress.md": {
+      "after_sha256": "0e18de870d27590b0425202419af9fc95c864c90220a164a0a40995101554a8d",
+      "before_sha256": "364987e81efd8c305bc726634a804c51704d164853ce79b67b38ffc4fdfe8cd9"
+    },
+    "hybrid_storage/README.md": {
+      "after_sha256": "39e3ad1c000e0fcb8de58e8a5a1e5552bc62c892f65f77fe9e72b827e6eeef09",
+      "before_sha256": "4e69dee54d13124915d2263962c4d866b268ffec9eee88e656ef64a8c18ff3a5"
+    },
+    "hybrid_storage/config.py": {
+      "after_sha256": "88217aa0584feeb281ae4ee3ea99b5c0eb5203993342785170907af8cc22c2c3",
+      "before_sha256": "e293551514595c315cc318c863c2011e097d459c199cc3c9378df61bdcd64870"
+    },
+    "hybrid_storage/scheduling.py": {
+      "after_sha256": "7f9948173e4ecfe4caf609209cd6b706599fa1fc4292a61df3f90329c069b9c5",
+      "before_sha256": null
+    },
+    "tests/README.md": {
+      "after_sha256": "76500500514394e4af982f572244ab0e6e7bd8bd69c415f868f9e82ddc1671e4",
+      "before_sha256": "b01863c2a39dcaa5a5019b34d6b4d2711839111cc1e1d1a81975953e796636b4"
+    },
+    "tests/test_scheduler_policy.py": {
+      "after_sha256": "9492b2d9b7f4e9af71316eb0fbed41482b68bdaea44fc40e32bb36039cd0c675",
+      "before_sha256": null
+    }
+  },
+  "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "initial_status": [
+    " M distributed-dl-system/controller/distributed_dispatch.py",
+    " M distributed-dl-system/controller/scheduler.py",
+    " M distributed-dl-system/docs/storage/implementation-progress.md",
+    " M distributed-dl-system/hybrid_storage/README.md",
+    " M distributed-dl-system/hybrid_storage/cache_coverage.py",
+    " M distributed-dl-system/tests/README.md",
+    "?? distributed-dl-system/controller/scheduler_metrics.py",
+    "?? distributed-dl-system/docs/storage/38-resource-scheduler-metrics-evidence.json",
+    "?? distributed-dl-system/docs/storage/38-resource-scheduler-metrics.md",
+    "?? distributed-dl-system/docs/storage/39-locality-tie-breaker-evidence.json",
+    "?? distributed-dl-system/docs/storage/39-locality-tie-breaker.md",
+    "?? distributed-dl-system/docs/storage/40-locality-acceptance-evidence.json",
+    "?? distributed-dl-system/docs/storage/40-locality-acceptance.md",
+    "?? distributed-dl-system/hybrid_storage/locality.py",
+    "?? distributed-dl-system/tests/fixtures/resource-scheduler-v1.json",
+    "?? distributed-dl-system/tests/test_scheduler_locality.py",
+    "?? distributed-dl-system/tests/test_scheduler_locality_acceptance.py",
+    "?? distributed-dl-system/tests/test_scheduler_metrics.py"
+  ],
+  "latest_errors": 0,
+  "latest_failures": 0,
+  "latest_per_file": {
+    "test_cache_coverage.py": 31,
+    "test_ddp_staging.py": 16,
+    "test_distributed_dispatch.py": 7,
+    "test_hybrid_checkpoint_faults.py": 16,
+    "test_hybrid_checkpoint_recovery.py": 18,
+    "test_queue_controls.py": 10,
+    "test_resource_allocation.py": 6,
+    "test_scheduler_locality.py": 13,
+    "test_scheduler_locality_acceptance.py": 5,
+    "test_scheduler_metrics.py": 10,
+    "test_scheduler_policy.py": 17,
+    "test_staging_dispatch.py": 25,
+    "test_storage_config.py": 17
+  },
+  "latest_skips": 0,
+  "limits": [
+    "greedy locality may increase whole-workload bytes despite per-decision local optimum",
+    "advisory cache facts require stage-time hash/ACL/disk/lease checks",
+    "overhead not benchmarked, slow logging sink may stall placement",
+    "volatile bounded diagnostics are not a durable audit log",
+    "initial concurrent cold-stage HTTP409 not root-caused; isolated/serial passes",
+    "production protected runtime bootstrap and all-three-Pi readiness remain required",
+    "central controller/LOCAL SQLite/authoritative storage remains a single point of failure"
+  ],
+  "new_test_methods": 17,
+  "not_performed": [
+    "live enable or deployment",
+    "Pi/SSH/remote probes",
+    "live NFS/mount/network/power tests",
+    "live DB/job/cache/checkpoint mutation",
+    "service/systemd/export/fstab/firewall changes",
+    "runtime Internet download or package install",
+    "Git commit/stash/reset",
+    "measured throughput/latency benefit claim"
+  ],
+  "rollback": {
+    "commands": [
+      "git apply --reverse --check /tmp/hybrid-10-4/10.4.patch",
+      "git apply --reverse /tmp/hybrid-10-4/10.4.patch"
+    ],
+    "only_check_executed": true,
+    "patch": "/tmp/hybrid-10-4/10.4.patch",
+    "restores_prior_uncommitted_source": true,
+    "run_from": "/home/rana/Projects/System Project/System_Development_Project",
+    "schema_or_data_rollback_required": false
+  },
+  "security_changes": {
+    "SQLite_local": true,
+    "auth_boundaries": false,
+    "job_states_formats_transports": false,
+    "read_only_NFS_trusted_staging_checkpoint_boundaries_retained": true,
+    "schema_migrations": false,
+    "student_routes": false
+  },
+  "simulations": {
+    "actual_exact_MB_fixture": "rerun PASS in main log: 0/2,000,000/502,000,000 missing; 2,000,000/504,000,000 group totals",
+    "fair_queue": "existing 10.3 controlled arrivals/FIFO/quota/gang and queue regressions passed again",
+    "greedy_workload_regression": {
+      "after_resource_rollback_bytes": 2,
+      "locality_bytes": 100,
+      "modeled_bytes": true,
+      "resource_bytes": 2,
+      "start_order_unchanged": true
+    },
+    "seeded_matrix": {
+      "costs": "synthetic bytes; not throughput",
+      "policy_selections": 432,
+      "repetitions": 2,
+      "replay_equal": true,
+      "resource_profiles_preserved": true,
+      "resource_rollback_exact": true,
+      "scenarios": 72,
+      "seed": 104,
+      "unknown_falls_back": true
+    }
+  },
+  "snapshot": {
+    "active_configs_byte_unchanged": [
+      "config/storage.json",
+      "config/nodes.json",
+      "config/queue_policy.json",
+      "config/execution_leases.json",
+      "config/nfs-server.json",
+      "config/nfs-clients.json"
+    ],
+    "directory": "/tmp/hybrid-10-4/before",
+    "files": 316,
+    "manifest": "/tmp/hybrid-10-4/before.json",
+    "manifest_sha256": "c4536c6df00fd0c75b37d319be6c7181c95d4c2331fce8f3b3147cbc530c0a2b",
+    "modified_original_files": [
+      "config/README.md",
+      "config/storage-examples/README.md",
+      "controller/checkpoint_recovery.py",
+      "controller/distributed_dispatch.py",
+      "controller/scheduler.py",
+      "controller/scheduler_metrics.py",
+      "controller/staging_dispatch.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/config.py",
+      "tests/README.md"
+    ],
+    "preserved_prefixes": [
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "unchanged_original_files": 305
+  },
+  "starting_boundary": "10.3 accepted local boundary and explicit user continuation, not a new commit",
+  "status": "PASS local; STOP; live/physical acceptance not claimed",
+  "subphase": "10.4",
+  "tests": {
+    "baseline": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality.py test_scheduler_metrics.py test_queue_controls.py test_resource_allocation.py test_storage_config.py test_staging_dispatch.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-4/baseline-tests.log",
+      "passed_files": [
+        "test_scheduler_locality.py",
+        "test_scheduler_metrics.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py",
+        "test_storage_config.py",
+        "test_staging_dispatch.py"
+      ],
+      "sha256": "005a3b2eae660ddd7a5c85bab0d560ed4a98096d4f811c7fe4660c65a2946562",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 25 tests in 35.430s",
+        "",
+        "OK",
+        "PASS test_staging_dispatch.py",
+        "",
+        "6/6 test files passed in 41.4s."
+      ],
+      "test_counts": [
+        13,
+        10,
+        10,
+        6,
+        17,
+        25
+      ]
+    },
+    "concurrent_recovery_ddp": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_recovery.py test_hybrid_checkpoint_faults.py test_distributed_dispatch.py",
+      "exit_code": 1,
+      "failure": "three-rank cold staging returned HTTP409; cause not established; isolated old/current and full serial recovery passed",
+      "log": "/tmp/hybrid-10-4/recovery-ddp-tests.log",
+      "passed_files": [
+        "test_hybrid_checkpoint_faults.py",
+        "test_distributed_dispatch.py"
+      ],
+      "recovery_errors": 1,
+      "sha256": "ca1809f63c2adda4472bfd81ba4c33740a8540224747cd0953fd94269f2ecf2b",
+      "tests": [
+        18,
+        16,
+        7
+      ]
+    },
+    "main": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_policy.py test_scheduler_metrics.py test_scheduler_locality.py test_scheduler_locality_acceptance.py test_cache_coverage.py test_queue_controls.py test_resource_allocation.py test_storage_config.py test_staging_dispatch.py test_ddp_staging.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-4/final-tests.log",
+      "passed_files": [
+        "test_scheduler_policy.py",
+        "test_scheduler_metrics.py",
+        "test_scheduler_locality.py",
+        "test_scheduler_locality_acceptance.py",
+        "test_cache_coverage.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py",
+        "test_storage_config.py",
+        "test_staging_dispatch.py",
+        "test_ddp_staging.py"
+      ],
+      "sha256": "b329de12d360f2ec44274ce00e261e137f6b9f6444a0a967f03e0a04498d1393",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 16 tests in 52.379s",
+        "",
+        "OK",
+        "PASS test_ddp_staging.py",
+        "",
+        "10/10 test files passed in 160.0s."
+      ],
+      "test_counts": [
+        16,
+        10,
+        13,
+        5,
+        31,
+        10,
+        6,
+        17,
+        25,
+        16
+      ]
+    },
+    "policy_final": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_policy.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-4/policy-final.log",
+      "passed_files": [
+        "test_scheduler_policy.py"
+      ],
+      "sha256": "d0b83dd234c3550f2fa541f58bd6c9e7db4888cb4523441d96610d1af932b112",
+      "tail": [
+        "OK",
+        "POLICY_MATRIX {\"seed\": 104, \"scenarios\": 72, \"repetitions\": 2, \"policy_selections\": 432, \"resource_profiles_preserved\": true, \"unknown_falls_back\": true, \"resource_rollback_exact\": true, \"replay_equal\": true, \"costs\": \"synthetic bytes; not throughput\"}",
+        "POLICY_GREEDY_REGRESSION {\"modeled_bytes\": true, \"resource_bytes\": 2, \"locality_bytes\": 100, \"after_resource_rollback_bytes\": 2, \"start_order_unchanged\": true}",
+        "[SCHEDULER] candidate=pi01 cpu=5% available_ram=4GB",
+        "[SCHEDULER] candidate=pi01 cpu=5% available_ram=4GB",
+        "PASS test_scheduler_policy.py",
+        "",
+        "1/1 test files passed in 11.6s."
+      ],
+      "test_counts": [
+        17
+      ]
+    },
+    "serial_recovery_policy": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_hybrid_checkpoint_recovery.py test_scheduler_policy.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-4/recovery-policy-final.log",
+      "passed_files": [
+        "test_hybrid_checkpoint_recovery.py",
+        "test_scheduler_policy.py"
+      ],
+      "sha256": "a72bfd4435d74f6503449837bb28bc636e8cfd2ed35dc61dac93191e7dff642d",
+      "tail": [
+        "OK",
+        "POLICY_MATRIX {\"seed\": 104, \"scenarios\": 72, \"repetitions\": 2, \"policy_selections\": 432, \"resource_profiles_preserved\": true, \"unknown_falls_back\": true, \"resource_rollback_exact\": true, \"replay_equal\": true, \"costs\": \"synthetic bytes; not throughput\"}",
+        "POLICY_GREEDY_REGRESSION {\"modeled_bytes\": true, \"resource_bytes\": 2, \"locality_bytes\": 100, \"after_resource_rollback_bytes\": 2, \"start_order_unchanged\": true}",
+        "[SCHEDULER] candidate=pi01 cpu=5% available_ram=4GB",
+        "[SCHEDULER] candidate=pi01 cpu=5% available_ram=4GB",
+        "PASS test_scheduler_policy.py",
+        "",
+        "2/2 test files passed in 81.1s."
+      ],
+      "test_counts": [
+        18,
+        17
+      ]
+    }
+  }
+}

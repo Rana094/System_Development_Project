@@ -5,3 +5,5 @@
 .input-staging{border:1px solid var(--line);border-radius:10px;padding:0 14px 10px;margin:16px 0}
 .input-staging .facts{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:600px){.input-staging .facts{grid-template-columns:1fr}}
+.admin-storage{margin-bottom:26px}.admin-storage td small{display:block;color:var(--muted)}
+.badge.RECOVERING{background:#eaf0ff;color:#385899}

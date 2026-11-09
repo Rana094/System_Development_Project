@@ -1,0 +1,298 @@
+{
+  "acceptance": {
+    "all_three_physical_pis": "NOT RUN; pi01/pi02/pi03 deployment and Phase9 physical gate pending",
+    "concurrent_staging": "PASS bounded two outstanding RPCs for three ranks, all-stage barrier, guarded fetch-to-pin and running pins",
+    "evict_crash_reconciliation": "PASS real child exits before/after unlink plus signed reconciliation and authorized missing-only restage",
+    "full_disk": "PASS simulated ENOSPC/metadata full and real configured-quota refusal; no physical disk filled",
+    "old_no_samples": "PASS exact resource fallback; fresh cache reports cannot rejuvenate old rates",
+    "phase_11": "local implementation/selected acceptance COMPLETE; no production or physical acceptance claimed",
+    "pinned_authoritative_retention": "PASS under existing dedicated-root, protected-root and cooperating-client requirements",
+    "predicted_costs": "PASS transparent inputs/ranges/model assumptions; no total-completion or benchmark claim",
+    "resource_fairness": "PASS actual queue/SQLite with modeled placement and mocked launch",
+    "rollback": "PASS resource/locality independence, active group preserved and disposable source reverse patch",
+    "slower_faster_drop": "PASS controlled observations through actual signed inventories/registry",
+    "subphase_11_4": "local PASS"
+  },
+  "api_db_config_security_changes": false,
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 45,
+  "branch": "main",
+  "changed_files": [
+    "docs/storage/45-efficiency-acceptance-evidence.json",
+    "docs/storage/45-efficiency-acceptance.md",
+    "docs/storage/implementation-progress.md",
+    "tests/README.md",
+    "tests/test_storage_efficiency_acceptance.py"
+  ],
+  "commit_created": false,
+  "config_check": {
+    "runtime": "legacy",
+    "settings": {
+      "scheduler_policy": "resource",
+      "storage_aware_staging": false,
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false
+    }
+  },
+  "date": "2026-11-09",
+  "errors": 0,
+  "failures": 0,
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "inactive_bandwidth_sample_check": {
+    "automatic_startup": false,
+    "runtime": "trusted-staging-component",
+    "settings": {
+      "scheduler_policy": "bandwidth",
+      "storage_aware_staging": true,
+      "storage_backend": "nfs",
+      "worker_cache_enabled": true
+    }
+  },
+  "initial_test_fixture_failures": {
+    "causes": [
+      "new fixture created intermediate cache SHA directory with mode0755; corrected fixture to0700",
+      "new pin assertion omitted incoming pressure on exactly-full quota; supplied same prospective incoming bytes"
+    ],
+    "corrected_rerun": "10/10 PASS",
+    "errors": 3,
+    "failures": 1,
+    "pre_edit_baseline": "45/45 PASS",
+    "production_fix_required": false
+  },
+  "latest_distinct_tests": 428,
+  "latest_test_files": {
+    "test_bandwidth_policy.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 22
+    },
+    "test_cache_coverage.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 31
+    },
+    "test_cache_eviction.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 23
+    },
+    "test_cache_fetch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 33
+    },
+    "test_cache_inventory.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 38
+    },
+    "test_ddp_staging.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 16
+    },
+    "test_hybrid_checkpoint_recovery.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 18
+    },
+    "test_private_workspaces.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 39
+    },
+    "test_queue_controls.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_locality.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 13
+    },
+    "test_scheduler_locality_acceptance.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 5
+    },
+    "test_scheduler_metrics.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_policy.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_staging_dispatch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 25
+    },
+    "test_staging_portal.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_staging_recovery.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 34
+    },
+    "test_storage_config.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_storage_efficiency_acceptance.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_transfer_metrics.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_worker_cache.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 33
+    }
+  },
+  "logs": {
+    "baseline-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-4/baseline-tests.log",
+      "sha256": "22f298ae6c2199fb9f96e483190a27eb96da333f99186201101195f68fa5d631",
+      "test_runs": [
+        22,
+        23
+      ]
+    },
+    "final-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-4/final-tests.log",
+      "sha256": "56b1e8a6c99b3616bce872aab71cab77d1a51706b64e9f5cbb72b8878ad57292",
+      "test_runs": [
+        10,
+        17,
+        22,
+        23,
+        33,
+        33,
+        39,
+        38,
+        31,
+        10,
+        13,
+        5,
+        17,
+        10,
+        17,
+        25,
+        16,
+        34,
+        17,
+        18
+      ]
+    },
+    "new-tests-rerun.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-4/new-tests-rerun.log",
+      "sha256": "08609c9710be52167dce5b0a9c84e14a502db848a461c715b4428be170859ccc",
+      "test_runs": [
+        10
+      ]
+    },
+    "new-tests.log": {
+      "failed": true,
+      "path": "/tmp/hybrid-11-4/new-tests.log",
+      "sha256": "a5805503fa583a43974916b02ba3f2dbfc98afa694bc366e1ccf771254d6ede6",
+      "test_runs": [
+        10
+      ]
+    }
+  },
+  "preservation": {
+    "active_config_sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+    "modified_original_files": [
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "prefixes_preserved": [
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "runtime_and_config_unchanged": true,
+    "snapshot_files": 254,
+    "source_hashes": {
+      "docs/storage/45-efficiency-acceptance.md": {
+        "after": "9168bcd5de4e49926674e4f7ab18ea7f9bac515481e27a26233384a61f4d0dc2",
+        "before": null
+      },
+      "docs/storage/implementation-progress.md": {
+        "after": "14bdba9cda9e7e9d2a5895496de99ddc9d4f5bfbfa9b54dd160a7e20e6409549",
+        "before": "86083fb9a09c8d53e5ac9de9555f26bba25159526e3aa0906856f93937374853"
+      },
+      "tests/README.md": {
+        "after": "2c828ef4e1e06aa5fcc9b21f863dc07146f65bf70ceed4f94d6c002c90cae839",
+        "before": "507d1b25da36420f25ea4972cabac3590f22c744dcc3dde6e6b0e52598345667"
+      },
+      "tests/test_storage_efficiency_acceptance.py": {
+        "after": "1789287253304a2ea814263aa875423a5713266928be6aba1fab99ee105897bb",
+        "before": null
+      }
+    },
+    "status_before": "/tmp/hybrid-11-4/status-before.txt",
+    "unchanged_original_files": 252
+  },
+  "prior_boundary": "11.3 local PASS; Phase9 all-three-Pi acceptance and production bootstrap pending",
+  "python": "Python 3.12.3",
+  "residual_risks": [
+    "rolling statistics lag rapid changes; synthetic rate tests do not prove predictive hardware accuracy",
+    "size-dependent residual, extrapolation and shared NFS/cross-job contention remain uncertain",
+    "disk/quota/workspace admission remains authoritative at staging",
+    "explicit idle maintenance can be blocked by durable pins and orphaned helpers; never clear pins by assumption",
+    "all cooperating clients must be upgraded and cache/protected roots correctly configured",
+    "registry is advisory until next successful signed inventory; stage verification mandatory",
+    "real power-loss durability and all-three-Pi throughput/recovery untested",
+    "historical loaded-run cold-stage HTTP409 remains unresolved; selected tests passed here",
+    "central controller/LOCAL SQLite/authoritative storage remains a single point of failure"
+  ],
+  "rollback_applied_to_workspace": false,
+  "rollback_patch": "/tmp/hybrid-11-4/11.4.patch",
+  "runtime_changes": false,
+  "skips": 0,
+  "source_rollback_verified_on_disposable_copy": true,
+  "subphase": "11.4",
+  "test_scope": {
+    "not_run": [
+      "live Pi/SSH/NFS probes",
+      "network disconnect/unmount",
+      "hardware power loss",
+      "live cache cleanup/job/DB/checkpoint mutation",
+      "production bootstrap/deployment/service changes",
+      "wire throughput/total training benchmarks",
+      "all-three-physical-Pi DDP recovery"
+    ],
+    "real": [
+      "disposable local files/SHA objects and immutable job bindings",
+      "signed inventory HMAC requests and Flask handling",
+      "local SQLite registry, queue policy, owner turns, quotas and reservations",
+      "resource/locality/bandwidth selectors",
+      "child process os._exit crash boundaries and local restart",
+      "actual signed parallel stage/start orchestration with private workspaces",
+      "existing genuine CPU checkpoint saved-state resume"
+    ],
+    "simulated": [
+      "transfer rates and bandwidth drops",
+      "resource telemetry",
+      "NFS mount identity/local file source",
+      "ENOSPC/metadata disk errors",
+      "training process/isolation and launch"
+    ]
+  }
+}

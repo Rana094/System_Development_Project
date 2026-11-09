@@ -409,7 +409,9 @@ class WorkspaceManager:
 
     def prepare(self, plan: WorkspacePlan, *, authorize: Callable):
         try:
-            return self._prepare(plan, authorize=authorize)
+            self._authority(authorize,plan)
+            with self.cache.activity():
+                return self._prepare(plan, authorize=authorize)
         except BaseException:
             self.cache.metrics.add(workspace_failures=1)
             raise

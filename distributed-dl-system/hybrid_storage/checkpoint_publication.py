@@ -286,7 +286,14 @@ class LocalCheckpointPublisher:
                                     if key in info:details[key]=info[key]
                                 self.db.execute('INSERT INTO recovery_events(job_id,event_type,node_id,event_time,details_json) VALUES(?,?,?,?,?)',
                                     (job_id,'DDP_CHECKPOINT_COMMITTED' if kind=='ddp' else 'CHECKPOINT_SYNC',worker_id,time.time(),encoded(details).decode()))
-            return self.committed(actor,publication_id)
+            committed = self.committed(actor,publication_id)
+            from . import events
+            events.emit('storage.checkpoint.committed',job_id=job_id,
+                attempt_id=f'{job_id}:{job["retry_count"]}',worker_id=worker_id,
+                manifest_version=binding.sha256,manifest_schema_version=1,
+                dataset_version=binding.dataset_version,checkpoint_id=publication_id,
+                verified_bytes=expected_size,world_size=info.get('world_size',1))
+            return committed
         except _CommittedSave as duplicate:
             # Reject only this redundant transport intent. The canonical manifest,
             # head revision, event, latest path and original immutable bytes stay

@@ -27,6 +27,7 @@ from typing import Callable, Iterable
 from .artifacts import ArtifactMismatch, _rename_noreplace, _verify
 from .backends import _directory
 from .inputs import InputFile
+from . import events
 from .nfs_mount import MountNotReady, validate_source
 from .worker_cache import (CacheCorrupt, CacheError, CacheMiss, WorkerCache,
                            MAX_INTEGER, _child, _private_file, _protected)
@@ -66,10 +67,16 @@ class CacheFetcher:
 
     def __init__(self, cache: WorkerCache, *, source: str, quota_bytes: int,
                  reserve_free_bytes: int = 64 * 1024 * 1024, attempts: int = 3,
-                 io_timeout: float = 10, lock_timeout: float = 2, retry_delay: float = 0.1):
+                 io_timeout: float = 10, lock_timeout: float = 2, retry_delay: float = 0.1,
+                 transfer_metrics=None):
         if not isinstance(cache, WorkerCache):
             raise ValueError("Expected an explicit WorkerCache")
         self.cache, self.source = cache, validate_source(source)
+        if transfer_metrics is not None:
+            from .transfer_metrics import TransferMetrics
+            if not isinstance(transfer_metrics, TransferMetrics):
+                raise ValueError('Expected explicit worker-local TransferMetrics')
+        self.transfer_metrics = transfer_metrics
         for name, value in (("quota_bytes", quota_bytes), ("reserve_free_bytes", reserve_free_bytes)):
             if type(value) is not int or not 0 <= value <= MAX_INTEGER or (name == "quota_bytes" and not value):
                 raise ValueError(name + " must be a bounded byte count")
@@ -125,9 +132,13 @@ class CacheFetcher:
                 time.sleep(0.01)
         return root, objects, parts, quarantine, lock
 
-    def _usage(self, fd: int, budget: list[int], depth: int = 0) -> int:
+    def _usage(self, fd: int, budget: list[int], depth: int = 0, *, mount_id=None) -> int:
         """Conservative logical bytes, including crash parts/quarantined replicas."""
         total = 0
+        if mount_id is not None:
+            from .mount_identity import require_local_fd
+            if require_local_fd(fd)['id'] != mount_id:
+                raise PermissionError('Cache maintenance refuses nested mounts')
         if depth > 4:
             raise CacheError("Unexpectedly deep cache accounting tree")
         with os.scandir(fd) as entries:
@@ -138,7 +149,7 @@ class CacheFetcher:
                 info = os.stat(entry.name, dir_fd=fd, follow_symlinks=False)
                 if stat.S_ISDIR(info.st_mode):
                     with _child(fd, entry.name) as child:
-                        total += self._usage(child, budget, depth + 1)
+                        total += self._usage(child, budget, depth + 1, mount_id=mount_id)
                 elif (stat.S_ISREG(info.st_mode) and info.st_uid == os.geteuid()
                       and info.st_nlink == 1 and not info.st_mode & 0o022):
                     total += info.st_size
@@ -243,12 +254,28 @@ class CacheFetcher:
 
     def _copy(self, stack, sha, size, parts, lock):
         self.cache.metrics.add(copy_attempts=1)
+        started = None
+        if self.transfer_metrics is not None:
+            try:
+                started = time.perf_counter_ns()
+            except Exception:
+                pass  # Optional measurement must not change copy authority/outcome.
         try:
             with self.cache.metrics.span("copy_ns"):
-                return self._copy_impl(stack, sha, size, parts, lock)
+                owned = self._copy_impl(stack, sha, size, parts, lock)
         except BaseException as error:
             self.cache.metrics.add(copy_failures=1, copy_timeouts=int(isinstance(error, CacheFetchTimeout)))
             raise
+        if started is not None and owned.get('transferred_bytes') == size and size > 0:
+            try:
+                duration = time.perf_counter_ns() - started
+                transfer = owned.get('transfer_ns')
+                if type(transfer) is not int or not 0 < transfer <= duration:
+                    transfer = None  # Older helpers still supply inclusive 11.1 observations.
+                self.transfer_metrics.record(size, duration, transfer_ns=transfer)
+            except Exception:
+                pass  # Fail-soft telemetry; hash/lease/publication gates remain mandatory.
+        return owned
 
     def _copy_impl(self, stack, sha, size, parts, lock):
         name = sha + "." + secrets.token_hex(16) + ".part"
@@ -317,6 +344,12 @@ class CacheFetcher:
                     _verify(stream, sha, size)
                 os.fsync(stream.fileno())
             complete = True
+            # Old trusted helpers remain usable; absent/malformed telemetry only
+            # loses a sample, never relaxes validation or blocks valid staging.
+            transferred = result.get('transferred_bytes')
+            if type(transferred) is int and transferred == size:
+                owned['transferred_bytes'] = transferred
+                owned['transfer_ns'] = result.get('transfer_ns')
             return owned
         except subprocess.TimeoutExpired as error:
             raise CacheFetchTimeout("NFS copy deadline elapsed; retain/reconcile pending ownership") from error
@@ -377,7 +410,9 @@ class CacheFetcher:
         self._authorize(authorize, files)
         if not self._operation.acquire(timeout=self.lock_timeout):
             raise CacheFetchBusy("This fetcher is busy; retry later")
+        activity = ExitStack()
         try:
+            activity.enter_context(self.cache.activity())
             self.reconcile()
             if self.pending():
                 raise CacheFetchBusy("An expired helper still owns capacity")
@@ -407,11 +442,14 @@ class CacheFetcher:
                         self._admit(root, objects, parts, quarantine, size)
                         try:
                             owned = self._copy(stack, sha, size, parts, lock)
-                        except OSError as error:
-                            if isinstance(error, CacheFetchTimeout) or error.errno not in TRANSIENT or attempt == self.attempts:
-                                raise
-                            time.sleep(self.retry_delay)
-                            continue
+                        except Exception as error:
+                            events.copy_error(error, attempt)
+                            if (isinstance(error, OSError) and not isinstance(error, CacheFetchTimeout)
+                                    and error.errno in TRANSIENT and attempt < self.attempts):
+                                events.copy_error(error, attempt, retry=True)
+                                time.sleep(self.retry_delay)
+                                continue
+                            raise
                         try:
                             self._authorize(authorize, files)
                             # close() cannot race this local publication gate.
@@ -429,4 +467,5 @@ class CacheFetcher:
                         break
             return tuple(results)
         finally:
-            self._operation.release()
+            try:activity.close()
+            finally:self._operation.release()

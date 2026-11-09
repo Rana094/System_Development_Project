@@ -1,0 +1,1932 @@
+{
+  "acceptance": {
+    "all_local_repository_test_files": "PASS, 57 latest files",
+    "hardware_cache_inventory_isolation_faults": "PASS pi02 and pi03",
+    "phase_11": "COMPLETE / PASS under approved two-worker component-validation scope",
+    "physical_native_pi_DDP_training": "NOT RUN; separate Phase9 gate not claimed",
+    "production_student_hybrid_runtime": "NOT ENABLED; default legacy/OFF/resource retained",
+    "three_pi_physical": "NOT RUN by user exception"
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "authoritative_final_verification": {
+    "objects": [
+      {
+        "gid": 125,
+        "mode": "0o444",
+        "sha256": "0d93c614948f718cc6b2625aa03f68c587734a33d225aab97ef38c93162401dd",
+        "size_bytes": 1048576,
+        "uid": 125
+      },
+      {
+        "gid": 125,
+        "mode": "0o444",
+        "sha256": "bbbf6edcc8752b336fbd3bfba3b934de82e7d5a2b94b81a352c1f0c6fbe827c6",
+        "size_bytes": 2097152,
+        "uid": 125
+      },
+      {
+        "gid": 125,
+        "mode": "0o444",
+        "sha256": "b2b3c7885719e8c94acf94602f8701f7e4281628dd36db0effe28026a9ea9fde",
+        "size_bytes": 4194304,
+        "uid": 125
+      }
+    ],
+    "time_utc": "2026-11-09T18:21:09.815396+00:00"
+  },
+  "authorization": "User approved full Phase11 and all needed tests after explicitly choosing pi02/pi03 without pi01",
+  "branch": "main",
+  "changed_files": [
+    "docs/storage/48-phase11-live-acceptance-evidence.json",
+    "docs/storage/48-phase11-live-acceptance.md",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/phase11_probe.py",
+    "tests/README.md",
+    "tests/test_phase11_probe.py",
+    "tools/README.md",
+    "tools/validate_phase11.py"
+  ],
+  "commit_created": false,
+  "config_check": {
+    "runtime": "legacy",
+    "settings": {
+      "scheduler_policy": "resource",
+      "storage_aware_staging": false,
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false
+    }
+  },
+  "hardware_final_inspection": {
+    "pi02": {
+      "agent": "MainPID=946\nActiveState=active\n",
+      "identity": "pi02",
+      "mount": {
+        "mount_id": 509,
+        "ready": true,
+        "scope": "Metadata admission only; not server liveness, authorization or byte verification",
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "target": "/srv/mlnfs/inputs",
+        "version": "4.1"
+      },
+      "private_fixture_owner": 0,
+      "private_fixture_root_mode": "0o700",
+      "ro_write_errno": 30,
+      "state": "IDLE"
+    },
+    "pi03": {
+      "agent": "MainPID=902\nActiveState=active\n",
+      "identity": "pi03",
+      "mount": {
+        "mount_id": 508,
+        "ready": true,
+        "scope": "Metadata admission only; not server liveness, authorization or byte verification",
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "target": "/srv/mlnfs/inputs",
+        "version": "4.1"
+      },
+      "private_fixture_owner": 0,
+      "private_fixture_root_mode": "0o700",
+      "ro_write_errno": 30,
+      "state": "IDLE"
+    }
+  },
+  "hardware_results": {
+    "archive": {
+      "bytes": 172608,
+      "filename": "worker-source.tar.gz",
+      "sha256": "b211e7ccb9ea56685f5b47f0d0322d536c2bbd2b830fad4a1895b5505d6a2540"
+    },
+    "nodes": {
+      "pi02": {
+        "after_eviction_coverage": {
+          "computed_at_ns": 1794248117505794521,
+          "input_manifest_sha256": "0c6de62121a68f486fe613410f71d05c2f27be6fdbd2bf402a835254c455d004",
+          "inventory_age_ns": 32510868,
+          "inventory_eligible": true,
+          "inventory_sequence": 2,
+          "inventory_session_id": "9be3115d53e113c5cd1b68f2621cdd82",
+          "inventory_status": "current",
+          "locality_ratio": 0.7142857142857143,
+          "missing_bytes": 2097152,
+          "missing_hashes": [
+            "bbbf6edcc8752b336fbd3bfba3b934de82e7d5a2b94b81a352c1f0c6fbe827c6"
+          ],
+          "rank": null,
+          "required_bytes": 7340032,
+          "required_objects": 3,
+          "target_id": "ds_5167200d32934a9c868382ad429f1f9d",
+          "target_kind": "dataset",
+          "target_version": 1,
+          "verified_cached_bytes": 5242880,
+          "worker_id": "pi02",
+          "world_size": null
+        },
+        "agent_after": "MainPID=946\nActiveState=active\n",
+        "agent_before": "MainPID=946\nActiveState=active\n",
+        "authenticated_bandwidth_facts": {
+          "disk_available_bytes": 11457908736,
+          "transfer": {
+            "age_upper_seconds": 35.77067814900512,
+            "clock_skew_bound_seconds": 30,
+            "generated_at_ns": 1794248116598849915,
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 14856753.58760698,
+            "max_overhead_seconds": 0.149949046,
+            "max_payload_bytes": 4194304,
+            "median_bytes_per_second": 2137426.8065914894,
+            "median_overhead_seconds": 0.100307691,
+            "min_bytes_per_second": 1802066.544337358,
+            "min_overhead_seconds": 0.08688613,
+            "min_payload_bytes": 1048576,
+            "min_samples": 3,
+            "oldest_age_seconds": 5.249817853007698,
+            "sample_count": 5,
+            "schema_version": 1
+          }
+        },
+        "eviction_crash": {
+          "corrupt": 0,
+          "inventory_refresh": "full_inventory_requested",
+          "missing": 1,
+          "pins_after": 0,
+          "pins_before": 0,
+          "verified": 2
+        },
+        "initial_coverage": {
+          "computed_at_ns": 1794248117155953877,
+          "input_manifest_sha256": "0c6de62121a68f486fe613410f71d05c2f27be6fdbd2bf402a835254c455d004",
+          "inventory_age_ns": 548148981,
+          "inventory_eligible": true,
+          "inventory_sequence": 1,
+          "inventory_session_id": "9be3115d53e113c5cd1b68f2621cdd82",
+          "inventory_status": "current",
+          "locality_ratio": 1.0,
+          "missing_bytes": 0,
+          "missing_hashes": [],
+          "rank": null,
+          "required_bytes": 7340032,
+          "required_objects": 3,
+          "target_id": "ds_5167200d32934a9c868382ad429f1f9d",
+          "target_kind": "dataset",
+          "target_version": 1,
+          "verified_cached_bytes": 7340032,
+          "worker_id": "pi02",
+          "world_size": null
+        },
+        "nfs_ready_returncode": 0,
+        "offline_reconnect_verified": true,
+        "probe": {
+          "checks": {
+            "cold_warm_actual_nfs": true,
+            "corrupt_refetch": true,
+            "duplicate_parallel_fetch_once": true,
+            "pins_release_after_owned_probe_quiescence": true,
+            "private_workspace_pins_and_reader_exclusion": true,
+            "quota_full_no_partial": true
+          },
+          "cold_bytes": 7340032,
+          "cold_effective_mib_per_second": 1.6451808225234055,
+          "cold_elapsed_ns": 4254851445,
+          "cold_samples": {
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 2137426.8065914894,
+            "max_overhead_seconds": 0.144099313,
+            "max_payload_bytes": 4194304,
+            "median_bytes_per_second": 1972375.963992484,
+            "median_overhead_seconds": 0.100177635,
+            "min_bytes_per_second": 1802066.544337358,
+            "min_overhead_seconds": 0.08688613,
+            "min_payload_bytes": 1048576,
+            "oldest_age_seconds": 3.572406364008202,
+            "sample_count": 3,
+            "schema_version": 1
+          },
+          "isolation": {
+            "inputs_readonly": true,
+            "network_isolated": true,
+            "private_paths_hidden": true,
+            "tested": true,
+            "uid": 65534
+          },
+          "metrics": {
+            "cluster_concurrent_transfers": null,
+            "duration_ns": 4413414101,
+            "duration_scope": "copy_attempt_through_parent_verification",
+            "fixed_overhead_seconds": null,
+            "last_observation_age_seconds": 0.7960436160065001,
+            "last_observed_at": 1794248115.6990983,
+            "mad_bytes_per_second": 315700.30323450034,
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 6136086.449898453,
+            "max_samples": 64,
+            "median_bytes_per_second": 1883640.2333542174,
+            "median_mib_per_second": 1.7963793118993925,
+            "min_bytes_per_second": 1567939.930119717,
+            "newest_age_seconds": 0.7960436160065001,
+            "oldest_age_seconds": 5.146149043008336,
+            "payload_bytes": 9437184,
+            "payload_scope": "application_bytes_not_wire_traffic",
+            "per_cache_root_copy_limit": 1,
+            "recorded_sample_count": 5,
+            "retained_sample_count": 5,
+            "sample_count": 5,
+            "schema_version": 1,
+            "source": "verified_nfs_to_local_copy",
+            "status": "recent",
+            "worker_id": "pi02"
+          },
+          "mount": {
+            "mount_id": 509,
+            "ready": true,
+            "scope": "Metadata admission only; not server liveness, authorization or byte verification",
+            "source": "192.168.10.214:/srv/ml-shared/objects",
+            "target": "/srv/mlnfs/inputs",
+            "version": "4.1"
+          },
+          "warm_staged_bytes": 0,
+          "worker": "pi02"
+        },
+        "restage": {
+          "metrics": {
+            "cluster_concurrent_transfers": null,
+            "duration_ns": 4634530413,
+            "duration_scope": "copy_attempt_through_parent_verification",
+            "fixed_overhead_seconds": null,
+            "last_observation_age_seconds": 0.15037245499843266,
+            "last_observed_at": 1794248117.7803066,
+            "mad_bytes_per_second": 1589684.9138314538,
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 9484383.94721417,
+            "max_samples": 64,
+            "median_bytes_per_second": 3305509.844782369,
+            "median_mib_per_second": 3.1523798415969555,
+            "min_bytes_per_second": 1567939.930119717,
+            "newest_age_seconds": 0.15037245499843266,
+            "oldest_age_seconds": 6.581686182995327,
+            "payload_bytes": 11534336,
+            "payload_scope": "application_bytes_not_wire_traffic",
+            "per_cache_root_copy_limit": 1,
+            "recorded_sample_count": 6,
+            "retained_sample_count": 6,
+            "sample_count": 6,
+            "schema_version": 1,
+            "source": "verified_nfs_to_local_copy",
+            "status": "recent",
+            "worker_id": "pi02"
+          },
+          "staged_bytes": 2097152,
+          "warm_staged_bytes": 0
+        },
+        "upload": {
+          "archive_sha256": "b211e7ccb9ea56685f5b47f0d0322d536c2bbd2b830fad4a1895b5505d6a2540",
+          "members": 78,
+          "root": "/var/tmp/dl-phase11-9188f95e1b6cae4fc3c11394"
+        }
+      },
+      "pi03": {
+        "after_eviction_coverage": {
+          "computed_at_ns": 1794248118541803716,
+          "input_manifest_sha256": "0c6de62121a68f486fe613410f71d05c2f27be6fdbd2bf402a835254c455d004",
+          "inventory_age_ns": 36327450,
+          "inventory_eligible": true,
+          "inventory_sequence": 2,
+          "inventory_session_id": "1113ec907d0130aaba3a8660a21a34d2",
+          "inventory_status": "current",
+          "locality_ratio": 0.7142857142857143,
+          "missing_bytes": 2097152,
+          "missing_hashes": [
+            "bbbf6edcc8752b336fbd3bfba3b934de82e7d5a2b94b81a352c1f0c6fbe827c6"
+          ],
+          "rank": null,
+          "required_bytes": 7340032,
+          "required_objects": 3,
+          "target_id": "ds_5167200d32934a9c868382ad429f1f9d",
+          "target_kind": "dataset",
+          "target_version": 1,
+          "verified_cached_bytes": 5242880,
+          "worker_id": "pi03",
+          "world_size": null
+        },
+        "agent_after": "MainPID=902\nActiveState=active\n",
+        "agent_before": "MainPID=902\nActiveState=active\n",
+        "authenticated_bandwidth_facts": {
+          "disk_available_bytes": 9282101248,
+          "transfer": {
+            "age_upper_seconds": 35.60040101699411,
+            "clock_skew_bound_seconds": 30,
+            "generated_at_ns": 1794248116931929434,
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 19172695.175272632,
+            "max_overhead_seconds": 0.146948024,
+            "max_payload_bytes": 4194304,
+            "median_bytes_per_second": 2028678.6368326852,
+            "median_overhead_seconds": 0.124134109,
+            "min_bytes_per_second": 1502055.046274439,
+            "min_overhead_seconds": 0.114612457,
+            "min_payload_bytes": 1048576,
+            "min_samples": 3,
+            "oldest_age_seconds": 5.402139024998178,
+            "sample_count": 5,
+            "schema_version": 1
+          }
+        },
+        "eviction_crash": {
+          "corrupt": 0,
+          "inventory_refresh": "full_inventory_requested",
+          "missing": 1,
+          "pins_after": 0,
+          "pins_before": 0,
+          "verified": 2
+        },
+        "initial_coverage": {
+          "computed_at_ns": 1794248117159839609,
+          "input_manifest_sha256": "0c6de62121a68f486fe613410f71d05c2f27be6fdbd2bf402a835254c455d004",
+          "inventory_age_ns": 37778841,
+          "inventory_eligible": true,
+          "inventory_sequence": 1,
+          "inventory_session_id": "1113ec907d0130aaba3a8660a21a34d2",
+          "inventory_status": "current",
+          "locality_ratio": 1.0,
+          "missing_bytes": 0,
+          "missing_hashes": [],
+          "rank": null,
+          "required_bytes": 7340032,
+          "required_objects": 3,
+          "target_id": "ds_5167200d32934a9c868382ad429f1f9d",
+          "target_kind": "dataset",
+          "target_version": 1,
+          "verified_cached_bytes": 7340032,
+          "worker_id": "pi03",
+          "world_size": null
+        },
+        "nfs_ready_returncode": 0,
+        "offline_reconnect_verified": true,
+        "probe": {
+          "checks": {
+            "cold_warm_actual_nfs": true,
+            "corrupt_refetch": true,
+            "duplicate_parallel_fetch_once": true,
+            "pins_release_after_owned_probe_quiescence": true,
+            "private_workspace_pins_and_reader_exclusion": true,
+            "quota_full_no_partial": true
+          },
+          "cold_bytes": 7340032,
+          "cold_effective_mib_per_second": 1.5643479041193507,
+          "cold_elapsed_ns": 4474707948,
+          "cold_samples": {
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 2028678.6368326852,
+            "max_overhead_seconds": 0.140434532,
+            "max_payload_bytes": 4194304,
+            "median_bytes_per_second": 1893994.9832991757,
+            "median_overhead_seconds": 0.124134109,
+            "min_bytes_per_second": 1502055.046274439,
+            "min_overhead_seconds": 0.114612457,
+            "min_payload_bytes": 1048576,
+            "oldest_age_seconds": 3.632087275997037,
+            "sample_count": 3,
+            "schema_version": 1
+          },
+          "isolation": {
+            "inputs_readonly": true,
+            "network_isolated": true,
+            "private_paths_hidden": true,
+            "tested": true,
+            "uid": 65534
+          },
+          "metrics": {
+            "cluster_concurrent_transfers": null,
+            "duration_ns": 4714771456,
+            "duration_scope": "copy_attempt_through_parent_verification",
+            "fixed_overhead_seconds": null,
+            "last_observation_age_seconds": 0.6898088050074875,
+            "last_observed_at": 1794248115.7568004,
+            "mad_bytes_per_second": 525509.5589212351,
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 6128993.124422782,
+            "max_samples": 64,
+            "median_bytes_per_second": 1800795.1664665306,
+            "median_mib_per_second": 1.7173720993676478,
+            "min_bytes_per_second": 1275285.6075452955,
+            "newest_age_seconds": 0.6898088050074875,
+            "oldest_age_seconds": 4.916859774995828,
+            "payload_bytes": 9437184,
+            "payload_scope": "application_bytes_not_wire_traffic",
+            "per_cache_root_copy_limit": 1,
+            "recorded_sample_count": 5,
+            "retained_sample_count": 5,
+            "sample_count": 5,
+            "schema_version": 1,
+            "source": "verified_nfs_to_local_copy",
+            "status": "recent",
+            "worker_id": "pi03"
+          },
+          "mount": {
+            "mount_id": 508,
+            "ready": true,
+            "scope": "Metadata admission only; not server liveness, authorization or byte verification",
+            "source": "192.168.10.214:/srv/ml-shared/objects",
+            "target": "/srv/mlnfs/inputs",
+            "version": "4.1"
+          },
+          "warm_staged_bytes": 0,
+          "worker": "pi03"
+        },
+        "restage": {
+          "metrics": {
+            "cluster_concurrent_transfers": null,
+            "duration_ns": 4937003062,
+            "duration_scope": "copy_attempt_through_parent_verification",
+            "fixed_overhead_seconds": null,
+            "last_observation_age_seconds": 0.0809771490021376,
+            "last_observed_at": 1794248118.8237503,
+            "mad_bytes_per_second": 1773274.5498300167,
+            "max_age_seconds": 900,
+            "max_bytes_per_second": 9436785.512858149,
+            "max_samples": 64,
+            "median_bytes_per_second": 3303940.1862995927,
+            "median_mib_per_second": 3.1508828986164024,
+            "min_bytes_per_second": 1275285.6075452955,
+            "newest_age_seconds": 0.0809771490021376,
+            "oldest_age_seconds": 7.374977963001584,
+            "payload_bytes": 11534336,
+            "payload_scope": "application_bytes_not_wire_traffic",
+            "per_cache_root_copy_limit": 1,
+            "recorded_sample_count": 6,
+            "retained_sample_count": 6,
+            "sample_count": 6,
+            "schema_version": 1,
+            "source": "verified_nfs_to_local_copy",
+            "status": "recent",
+            "worker_id": "pi03"
+          },
+          "staged_bytes": 2097152,
+          "warm_staged_bytes": 0
+        },
+        "upload": {
+          "archive_sha256": "b211e7ccb9ea56685f5b47f0d0322d536c2bbd2b830fad4a1895b5505d6a2540",
+          "members": 78,
+          "root": "/var/tmp/dl-phase11-9188f95e1b6cae4fc3c11394"
+        }
+      }
+    },
+    "pi01": "deferred",
+    "production_mutation": false,
+    "remote_root": "/var/tmp/dl-phase11-9188f95e1b6cae4fc3c11394",
+    "selected_workers": [
+      "pi02",
+      "pi03"
+    ],
+    "source": "192.168.10.214:/srv/ml-shared/objects",
+    "status": "PASS"
+  },
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "initial_setup_failure": {
+    "before_publication": true,
+    "cause": "UID125 cannot traverse private checkout when imports occur after dropping privileges",
+    "fix": "import trusted registrar first, then drop to UID/GID125",
+    "log": "publication.log",
+    "retry_log": "publication-retry.log"
+  },
+  "isolation_scope": "bounded trusted fixture, distinct UID65534, new namespaces, no_new_privs, caps dropped, clear env, detached stdin, readonly private copies; not a general production sandbox or DDP containment provider",
+  "live_effects": {
+    "active_config_changed": false,
+    "existing_ro_readiness_started": true,
+    "exports_fstab_firewall_SSH_unit_files_changed": false,
+    "fixture_state_retained": true,
+    "internet_runtime_transfer": false,
+    "new_local_controller_fixture_DB": "/tmp/hybrid-phase11-complete/hardware-run/controller-fixture/registry.db",
+    "new_public_bytes": 7340032,
+    "new_public_immutable_objects": 3,
+    "new_root_private_worker_trees": "/var/tmp/dl-phase11-9188f95e1b6cae4fc3c11394",
+    "owned_validation_sessions_closed": true,
+    "packages_installed": false,
+    "production_agent_PID_unchanged": true,
+    "production_agent_replaced": false,
+    "ro_mounts_left_active": true,
+    "source_archive_uploaded": true,
+    "user_job_DB_checkpoint_operations": false
+  },
+  "live_rollback": "no agent/config restore; retain private fixtures and immutable CAS; normal RO mount stop only after separately checking no readers, never force/lazy unmount or shared-server stop",
+  "local_time": "2026-11-10T00:31:10.280299+06:00",
+  "phase": "11 full completion",
+  "pi01": "explicitly deferred; not contacted",
+  "preflight": [
+    {
+      "facts": {
+        "hostname": "pi02",
+        "ip": {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:63:85\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.150\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":6900,\"preferred_life_time\":6900},{\"family\":\"inet6\",\"local\":\"fe80::2bcd:9e10:5d17:c7d4\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:63:87\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.91.135.18\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::b34a:8713\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::da35:a4d1:cdd8:f3c5\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n"
+        },
+        "nfs_units": {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Where=/srv/mlnfs/inputs\nWhat=192.168.10.214:/srv/ml-shared/objects\nResult=success\nActiveState=inactive\n\nResult=success\nActiveState=inactive\n"
+        },
+        "sbin_tools": {
+          "ip": true,
+          "iptables": true,
+          "nft": true
+        },
+        "sudo": {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "uid": 1000
+      },
+      "node": "pi02",
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "facts": {
+        "hostname": "pi03",
+        "ip": {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:83\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.101\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":7047,\"preferred_life_time\":7047},{\"family\":\"inet6\",\"local\":\"fe80::373f:1d3d:1391:6828\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:84\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.64.202.71\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::a04a:ca48\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::80b4:f699:b14d:da7c\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n"
+        },
+        "nfs_units": {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Where=/srv/mlnfs/inputs\nWhat=192.168.10.214:/srv/ml-shared/objects\nResult=success\nActiveState=inactive\n\nResult=success\nActiveState=inactive\n"
+        },
+        "sbin_tools": {
+          "ip": true,
+          "iptables": true,
+          "nft": true
+        },
+        "sudo": {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "uid": 1002
+      },
+      "node": "pi03",
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "preservation": {
+    "all_documentation_prefixes_preserved": true,
+    "all_original_runtime_config_files_unchanged": true,
+    "modified_original_files": [
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "tests/README.md",
+      "tools/README.md"
+    ],
+    "snapshot_files": 277,
+    "source_hashes": {
+      "docs/storage/48-phase11-live-acceptance.md": {
+        "after": "ffdf8672c2513ca7be1f52e3e94b1bac787dbaccb351a68af069442d4f69d3fc",
+        "before": null
+      },
+      "docs/storage/implementation-progress.md": {
+        "after": "28c8a5581e35cdbb6c139570479b15f1abc584b067a8bfe641cbbbe5c180fe87",
+        "before": "ee629f6b929aedff31c055f090b498214f02746d36c9cefefe68cad7cade20f8"
+      },
+      "hybrid_storage/README.md": {
+        "after": "c1dfbf33691d025b058d026122a41e7931eff0914a6c6e64f293f86d48e2587c",
+        "before": "2575a39f63045bc217c7651bfc09d4fc2d543a70c0e6d202623122ddf63d3be8"
+      },
+      "hybrid_storage/phase11_probe.py": {
+        "after": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa",
+        "before": null
+      },
+      "tests/README.md": {
+        "after": "15be704a9be00b706e95972791729afff49a1b987e3669fb6273bf31ac174e69",
+        "before": "72c7b03d18842bac3aa89ea034241b0cad3fe6e5fa5d068975b943d944fd39bb"
+      },
+      "tests/test_phase11_probe.py": {
+        "after": "48e651eddcc3f43eced348517f87fbd2c7c7dbe146f732a480ff0026e78c68f7",
+        "before": null
+      },
+      "tools/README.md": {
+        "after": "ebb58476055e339e88929bd87734f903eea7ff704dde1ba3b76992dbfe31379a",
+        "before": "06012a45e688558d95727a75dc8136c2f88c926d635fc815d7a4d7314dfa64c5"
+      },
+      "tools/validate_phase11.py": {
+        "after": "0f8646036206f00e3eaca2e7f939ae57029ab90bdbbf34eef94ba120ab35f3bc",
+        "before": null
+      }
+    },
+    "status_before": "/tmp/hybrid-phase11-complete/status-before.txt",
+    "unchanged_original_files": 273
+  },
+  "programs": {
+    "executed-validate_phase11.py": {
+      "sha256": "02a0faf29750d15ebcc383ca00ab9fc6f5151740db60814834a791cc517f283e",
+      "source": "\"\"\"Plan, or explicitly run approved two-Pi Phase 11 public-fixture acceptance.\n\nDefault prints a plan. --run uploads source into NEW private /var/tmp trees,\nstarts the existing RO input readiness unit, and runs only the trusted probe.\nNo production agent replacement, active config change or untrusted trainer.\n\"\"\"\nimport argparse\nimport base64\nfrom concurrent.futures import ThreadPoolExecutor\nimport hashlib\nimport json\nfrom pathlib import Path\nimport secrets\nimport selectors\nimport shlex\nimport sqlite3\nimport subprocess\nimport sys\n\nROOT=Path(__file__).resolve().parents[1]\nsys.path.insert(0,str(ROOT))\n\nSSH=['ssh','-T','-o','BatchMode=yes','-o','ConnectTimeout=5','-o','StrictHostKeyChecking=yes',\n     '-o','UpdateHostKeys=no','-o','ControlMaster=no','-o','ControlPath=none','-o','PermitLocalCommand=no']\nUPLOAD=r'''import hashlib,io,json,os,sys,tarfile\nfrom pathlib import Path,PurePosixPath\nmeta=json.loads(sys.stdin.buffer.readline(1024*1024))\nroot=Path(meta['root'])\nassert root.parent==Path('/var/tmp') and root.name.startswith('dl-phase11-') and len(root.name)<100\nraw=sys.stdin.buffer.read(128*1024*1024+1)\nassert len(raw)<=128*1024*1024 and hashlib.sha256(raw).hexdigest()==meta['archive_sha256']\nwith tarfile.open(fileobj=io.BytesIO(raw)) as archive:\n members=archive.getmembers();assert len(members)<=2048\n assert len({m.name for m in members})==len(members) and {m.name for m in members}==set(meta['files'])\n root.mkdir(mode=0o700);source=root/'source';source.mkdir(mode=0o700)\n for member in members:\n  p=PurePosixPath(member.name)\n  assert not p.is_absolute() and '..' not in p.parts and member.isfile() and 0<=member.size<=8*1024*1024\n  data=archive.extractfile(member).read(8*1024*1024+1)\n  assert dict(bytes=len(data),sha256=hashlib.sha256(data).hexdigest())==meta['files'][member.name]\n  target=source/member.name;target.parent.mkdir(parents=True,mode=0o700,exist_ok=True)\n  with target.open('xb') as stream:stream.write(data)\nprint(json.dumps({'root':str(root),'members':len(members),'archive_sha256':meta['archive_sha256']}))\n'''\n\n\nclass Session:\n    def __init__(self,node,root,credential,manifest,source,out):\n        program=\"import sys;sys.path.insert(0,\"+repr(root+'/source')+\");from hybrid_storage.phase11_probe import main;main()\"\n        self.log=(out/(node+'-probe.stderr.log')).open('w')\n        self.process=subprocess.Popen([*SSH,node,shlex.join(['sudo','-n','/usr/bin/python3','-B','-c',program])],\n            stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.log,text=True,bufsize=1)\n        self.send(dict(state=root+'/state',worker=node,mount='/srv/mlnfs/inputs',source=source,\n                       manifest=manifest,key_id=credential.key_id,secret_hex=credential.secret.hex()))\n\n    def send(self,value):\n        self.process.stdin.write(json.dumps(value)+'\\n');self.process.stdin.flush()\n\n    def read(self,timeout=120):\n        with selectors.DefaultSelector() as selector:\n            selector.register(self.process.stdout,selectors.EVENT_READ)\n            if not selector.select(timeout):raise TimeoutError('Owned probe response deadline')\n        raw=self.process.stdout.readline(1024*1024+1)\n        if not raw:raise RuntimeError('Owned probe stopped; inspect private stderr log')\n        if len(raw)>1024*1024:raise ValueError('Probe response exceeded bound')\n        return json.loads(raw)\n\n    def call(self,value):\n        self.send(value);return self.read()\n\n    def close(self):\n        if self.process.poll() is None:\n            try:self.send(dict(action='close'));self.process.stdin.close();self.process.wait(timeout=10)\n            except (OSError,subprocess.TimeoutExpired):\n                if self.process.poll() is None:self.process.terminate()\n                self.process.wait(timeout=10)\n        self.log.close()\n\n\ndef run(nodes,publication,output):\n    from hybrid_storage import registry_schema,cache_registry_schema\n    from hybrid_storage.artifacts import ArtifactRegistrar\n    from hybrid_storage.registry import StorageRegistry\n    from hybrid_storage.cache_inventory import CacheInventory\n    from hybrid_storage.cache_coverage import CoverageAPI\n    from hybrid_storage.dataset_manifests import DatasetEntry\n    from hybrid_storage.inventory_protocol import Credential\n    from hybrid_storage.bandwidth import TransferObservations\n    from hybrid_storage.phase11_probe import fixture_files\n    from hybrid_storage.deployment_review import build\n    from hybrid_storage.nfs_mount import validate_source\n    from hybrid_storage.inputs import object_key\n\n    output=Path(output)\n    if not output.is_absolute():raise ValueError('New absolute local output required')\n    document=json.loads(Path(publication).read_text())\n    source=validate_source(document['source'])\n    manifest={'files':[{k:row[k] for k in ('path','sha256','size_bytes')} for row in document['files']]}\n    files=fixture_files(manifest)\n    output.mkdir(mode=0o700)\n    bundle=build(nodes,output/'source-review')\n    archive=(output/'source-review/worker-source.tar.gz').read_bytes()\n    run_id='dl-phase11-'+secrets.token_hex(12);remote='/var/tmp/'+run_id\n    results={'selected_workers':nodes,'pi01':'deferred','remote_root':remote,'source':source,\n             'archive':bundle['archives']['worker'],'nodes':{},'production_mutation':False}\n    (output/'plan.json').write_text(json.dumps(results,indent=2)+'\\n')\n\n    def prepare(node):\n        before=subprocess.run([*SSH,node,'systemctl show dl-node-agent.service --no-pager -p MainPID -p ActiveState'],\n                              capture_output=True,text=True,timeout=10)\n        if before.returncode:raise RuntimeError('Agent preflight failed')\n        meta=dict(root=remote,archive_sha256=hashlib.sha256(archive).hexdigest(),files=bundle['files']['worker'])\n        p=subprocess.run([*SSH,node,shlex.join(['sudo','-n','/usr/bin/python3','-B','-c',UPLOAD])],\n            input=json.dumps(meta).encode()+b'\\n'+archive,capture_output=True,timeout=30)\n        if p.returncode:raise RuntimeError('Source-only private upload failed: '+p.stderr.decode()[:2048])\n        ready=subprocess.run([*SSH,node,'sudo -n systemctl start ml-nfs-ready.service'],\n                              capture_output=True,text=True,timeout=25)\n        if ready.returncode:raise RuntimeError('Existing RO NFS admission failed: '+ready.stderr[:1024])\n        return dict(agent_before=before.stdout,upload=json.loads(p.stdout),nfs_ready_returncode=ready.returncode)\n\n    with ThreadPoolExecutor(max_workers=len(nodes)) as pool:\n        prepared=list(pool.map(prepare,nodes))\n    for node,details in zip(nodes,prepared):results['nodes'][node]=details\n\n    # Disposable LOCAL controller registry; no job_store import or live DB.\n    central=output/'controller-fixture';central.mkdir(mode=0o700)\n    database=central/'registry.db'\n    def connect():\n        db=sqlite3.connect(database,timeout=10);db.execute('PRAGMA foreign_keys=ON');db.execute('PRAGMA synchronous=FULL');return db\n    db=connect();db.execute('CREATE TABLE jobs(job_id TEXT PRIMARY KEY)');db.commit()\n    registry_schema.migrate(db);cache_registry_schema.migrate(db)\n    for name in ('objects','scratch'):(central/name).mkdir(mode=0o700)\n    registry=StorageRegistry(db,ArtifactRegistrar(central/'objects',staging_root=central/'scratch'))\n    for f in files:\n        path=Path('/srv/ml-shared/objects')/object_key(f.sha256)\n        with path.open('rb') as stream:registry.register_artifact('phase11',stream,expected_size=f.size_bytes)\n    dataset=registry.create_dataset('phase11',[DatasetEntry(f.path,'file',f.sha256,f.size_bytes) for f in files])\n    credentials={node:Credential(node,secrets.token_hex(16),secrets.token_bytes(32)) for node in nodes}\n    owner=CacheInventory(connect,list(credentials.values()),configured_workers=nodes,state_root=central,\n                         transfer_observations=TransferObservations())\n    owner.start();api=CoverageAPI(registry,owner);sessions={}\n    def poll(node):\n        raw,headers=owner.challenge(node)\n        reply=sessions[node].call(dict(action='inventory',request=base64.b64encode(raw).decode(),\n                                      mac=headers['X-DL-Inventory-MAC'],key_id=headers['X-DL-Worker-Key']))\n        body=base64.b64decode(reply['body']);kind=owner.accept(node,raw,body,reply['mac'])\n        return kind\n    def coverage(node):\n        return api.for_dataset('phase11',node,dataset.dataset_id,dataset.version).document()\n    try:\n        for node in nodes:\n            owner.enroll(node);sessions[node]=Session(node,remote,credentials[node],manifest,source,output)\n        for node in nodes:\n            ready=sessions[node].read();assert ready['ready']['isolation']['tested']\n            results['nodes'][node]['probe']=ready['ready']\n        for node in nodes:poll(node)\n        for node in nodes:\n            row=coverage(node);assert row['missing_bytes']==0 and row['inventory_eligible']\n            results['nodes'][node]['initial_coverage']=row\n            context=owner._contexts[node]\n            facts=owner.bandwidth_facts(node,context['session_id'],context['sequence'])\n            assert facts['transfer']['sample_count']>=3\n            results['nodes'][node]['authenticated_bandwidth_facts']=facts\n        for node in nodes:\n            results['nodes'][node]['eviction_crash']=sessions[node].call(dict(action='evict-crash'))\n            poll(node);row=coverage(node);assert row['missing_bytes']>0\n            results['nodes'][node]['after_eviction_coverage']=row\n            restaged=sessions[node].call(dict(action='restage'));assert restaged['staged_bytes']==row['missing_bytes']\n            results['nodes'][node]['restage']=restaged;poll(node);assert coverage(node)['missing_bytes']==0\n            owner.offline(node);assert not coverage(node)['inventory_eligible']\n            poll(node);assert coverage(node)['missing_bytes']==0\n            results['nodes'][node]['offline_reconnect_verified']=True\n        for node in nodes:\n            after=subprocess.run([*SSH,node,'systemctl show dl-node-agent.service --no-pager -p MainPID -p ActiveState'],\n                                 capture_output=True,text=True,timeout=10)\n            assert after.returncode==0 and after.stdout==results['nodes'][node]['agent_before']\n            results['nodes'][node]['agent_after']=after.stdout\n        results['status']='PASS'\n    finally:\n        for session in sessions.values():session.close()\n        owner.close();db.close()\n        (output/'results.json').write_text(json.dumps(results,indent=2,sort_keys=True)+'\\n')\n    print(json.dumps({'status':results['status'],'nodes':nodes,'evidence':str(output/'results.json')}))\n\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--nodes',nargs='+',choices=('pi02','pi03'),required=True)\n    parser.add_argument('--publication',type=Path)\n    parser.add_argument('--output',type=Path)\n    parser.add_argument('--run',action='store_true')\n    args=parser.parse_args()\n    if len(args.nodes)!=len(set(args.nodes)):parser.error('Duplicate workers')\n    if not args.run:\n        print(json.dumps(dict(mode='plan_only',nodes=args.nodes,pi01='deferred',\n            writes='new local and remote private fixture trees only',\n            activation='existing RO NFS readiness unit only',production_agent_replacement=False)))\n    else:\n        if args.publication is None or args.output is None:parser.error('--run requires publication and new output')\n        run(args.nodes,args.publication,args.output)\n\n\nif __name__=='__main__':main()\n"
+    },
+    "final-inspection-program.py": {
+      "sha256": "4712523728a0c02432e1d01426cabfeb57fbed3a0c0c03d8b54e2921d4d6e0a7",
+      "source": "import errno,json,os,secrets,subprocess,sys,urllib.request\nfrom pathlib import Path\nsys.path.insert(0,sys.argv[1]+'/source')\nfrom hybrid_storage.nfs_mount import require_input_mount\nmount=require_input_mount('192.168.10.214:/srv/ml-shared/objects')\nprobe=Path('/srv/mlnfs/inputs')/('phase11-ro-write-negative-'+secrets.token_hex(8))\ntry:\n fd=os.open(probe,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)\nexcept OSError as e:\n assert e.errno==errno.EROFS\n write_errno=e.errno\nelse:\n os.close(fd);raise AssertionError('Unexpected writable input view; retain new probe file for investigation')\np=subprocess.run(['systemctl','show','dl-node-agent.service','--no-pager','-p','MainPID','-p','ActiveState'],capture_output=True,text=True,timeout=5)\nopener=urllib.request.build_opener(urllib.request.ProxyHandler({}))\nwith opener.open('http://127.0.0.1:5000/resources',timeout=5) as response:resources=json.load(response)\nprint(json.dumps({'mount':mount,'ro_write_errno':write_errno,'agent':p.stdout,'identity':resources.get('node'),'state':resources.get('node_state'),'private_fixture_root_mode':oct(Path(sys.argv[1]).stat().st_mode&0o777),'private_fixture_owner':Path(sys.argv[1]).stat().st_uid}))\n"
+    },
+    "publish-test-inputs.py": {
+      "sha256": "e2363e403cfa3b2c4165f05fba0fbaabf700d2c0f2b374efc0fe4d8de5515fb0",
+      "source": "import hashlib,io,json,os,pwd,sys\nfrom pathlib import Path\nROOT=Path('/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system')\naccount=pwd.getpwnam('ml-publisher')\nassert account.pw_uid==125 and account.pw_gid==125\nsys.path.insert(0,str(ROOT))\nfrom hybrid_storage.artifacts import ArtifactRegistrar\nif os.geteuid()==0:\n os.setgroups([]);os.setgid(account.pw_gid);os.setuid(account.pw_uid)\nassert os.geteuid()==account.pw_uid\nstore=ArtifactRegistrar(Path('/srv/ml-shared/objects'),staging_root=Path('/srv/ml-shared/.publish'))\nfiles=[]\nfor number,size in enumerate((1024*1024,2*1024*1024,4*1024*1024),1):\n block=hashlib.sha256(('public-phase11-fixture-v1-'+str(number)).encode()).digest()\n raw=block*(size//len(block))\n digest=hashlib.sha256(raw).hexdigest()\n item=store.register(io.BytesIO(raw),expected_size=size,expected_sha256=digest)\n files.append(dict(path='public-part-'+str(number)+'.bin',sha256=item.sha256,size_bytes=item.size_bytes,key=item.key,created=item.created))\nprint(json.dumps(dict(scope='public deterministic synthetic fixtures only',source='192.168.10.214:/srv/ml-shared/objects',files=files)),flush=True)\n"
+    },
+    "remote-preflight.py": {
+      "sha256": "156c438bdb5d4b1d3af06528b4e7e44375feb38a9e3e4ecb221b34bad0433069",
+      "source": "import json,os,subprocess,shutil,platform\nfrom pathlib import Path\nout={'hostname':platform.node(),'uid':os.getuid(),'sbin_tools':{name:Path('/usr/sbin',name).exists() for name in ('nft','iptables','ip')}}\nfor name,args in {'sudo':['sudo','-n','true'],'nfs_units':['systemctl','show','srv-mlnfs-inputs.mount','ml-nfs-ready.service','--no-pager','-p','ActiveState','-p','Result','-p','What','-p','Where'],'ip':['ip','-j','address','show']}.items():\n p=subprocess.run(args,capture_output=True,text=True,timeout=8);out[name]={'returncode':p.returncode,'stdout':p.stdout,'stderr':p.stderr}\nprint(json.dumps(out))\n"
+    }
+  },
+  "protocols": {
+    "database_migration": "only new local disposable controller fixture, no live DB",
+    "existing_inventory_HMAC_reused": true,
+    "metadata_transport": "SSH test driver only; no new student HTTP endpoint",
+    "new_download_transport": false,
+    "new_production_API": false,
+    "worker_keys": "ephemeral process memory/stdin only; absent from logs/source bundles"
+  },
+  "public_fixture_publication": {
+    "files": [
+      {
+        "created": true,
+        "key": "sha256/0d/0d93c614948f718cc6b2625aa03f68c587734a33d225aab97ef38c93162401dd",
+        "path": "public-part-1.bin",
+        "sha256": "0d93c614948f718cc6b2625aa03f68c587734a33d225aab97ef38c93162401dd",
+        "size_bytes": 1048576
+      },
+      {
+        "created": true,
+        "key": "sha256/bb/bbbf6edcc8752b336fbd3bfba3b934de82e7d5a2b94b81a352c1f0c6fbe827c6",
+        "path": "public-part-2.bin",
+        "sha256": "bbbf6edcc8752b336fbd3bfba3b934de82e7d5a2b94b81a352c1f0c6fbe827c6",
+        "size_bytes": 2097152
+      },
+      {
+        "created": true,
+        "key": "sha256/b2/b2b3c7885719e8c94acf94602f8701f7e4281628dd36db0effe28026a9ea9fde",
+        "path": "public-part-3.bin",
+        "sha256": "b2b3c7885719e8c94acf94602f8701f7e4281628dd36db0effe28026a9ea9fde",
+        "size_bytes": 4194304
+      }
+    ],
+    "scope": "public deterministic synthetic fixtures only",
+    "source": "192.168.10.214:/srv/ml-shared/objects"
+  },
+  "real_cost_examples": [
+    {
+      "age_upper_seconds": 35.77067814900512,
+      "authenticated_samples": 5,
+      "median_bytes_per_second": 2137426.8065914894,
+      "median_residual_seconds": 0.100307691,
+      "missing_unique_bytes": 2097152,
+      "missing_unique_objects": 1,
+      "observed_scenario_lower_seconds": 0.22804429,
+      "observed_scenario_upper_seconds": 1.313697414,
+      "predicted_copy_seconds": 1.0814650309999998,
+      "scope": "one missing object into verified cache only; no workspace/queue/training; two samples do not prove general prediction accuracy",
+      "subsequent_measured_copy_attempt_seconds": 0.221116312,
+      "worker_id": "pi02"
+    },
+    {
+      "age_upper_seconds": 35.60040101699411,
+      "authenticated_samples": 5,
+      "median_bytes_per_second": 2028678.6368326852,
+      "median_residual_seconds": 0.124134109,
+      "missing_unique_bytes": 2097152,
+      "missing_unique_objects": 1,
+      "observed_scenario_lower_seconds": 0.223994679,
+      "observed_scenario_upper_seconds": 1.543136536,
+      "predicted_copy_seconds": 1.1578868,
+      "scope": "one missing object into verified cache only; no workspace/queue/training; two samples do not prove general prediction accuracy",
+      "subsequent_measured_copy_attempt_seconds": 0.222231606,
+      "worker_id": "pi03"
+    }
+  ],
+  "residual_risks": [
+    "cache/registry facts advisory; stage-time authorization, size/hash, lease and disk gates remain mandatory",
+    "rolling rates lag change; measured overhead depends on size and cross-job/NFS contention remains uncertain",
+    "hardware observations count application bytes/fsync/hash/cache effects, not cold-wire throughput or total training prediction",
+    "disk-full/link-loss failure scenarios injected in disposable/local tests; no production disk/link/power disruption",
+    "sandbox probe is not installed as production isolate/terminate/quiescent; no hostile student or physical Pi DDP job executed",
+    "pi01 and physical three-rank/Phase9 acceptance deferred/not claimed",
+    "historical loaded-run cold-stage HTTP409 not root-caused; full serial/native and new physical component tests passed",
+    "central controller/LOCAL SQLite/authoritative storage remains a single point of failure"
+  ],
+  "rollback_applied": false,
+  "rollback_patch": "/tmp/hybrid-phase11-complete/completion.patch",
+  "selected_workers": [
+    "pi02",
+    "pi03"
+  ],
+  "source_reverse_check_and_disposable_apply_verified": true,
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "initial_full_files": 56,
+    "initial_schema_skips": 10,
+    "initial_unittest_cases": 942,
+    "latest_distinct_unittest_cases": 946,
+    "latest_files": {
+      "test_artifact_registration.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 24
+      },
+      "test_bandwidth_policy.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 22
+      },
+      "test_cache_coverage.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 31
+      },
+      "test_cache_eviction.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 23
+      },
+      "test_cache_fetch.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 33
+      },
+      "test_cache_inventory.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 38
+      },
+      "test_cache_registry_acceptance.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 16
+      },
+      "test_cache_registry_schema.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 22
+      },
+      "test_checkpoint_publication.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 25
+      },
+      "test_checkpoint_recovery.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": null
+      },
+      "test_cluster_setup.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 8
+      },
+      "test_custom_checkpoint.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 4
+      },
+      "test_dataset_manifests.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 26
+      },
+      "test_dataset_validation.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 13
+      },
+      "test_ddp_acceptance.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 6
+      },
+      "test_ddp_checkpoint_publication.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 15
+      },
+      "test_ddp_staging.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 16
+      },
+      "test_deployment_review.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 6
+      },
+      "test_distributed_dispatch.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 7
+      },
+      "test_execution_ownership.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 12
+      },
+      "test_group_checkpoint.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 8
+      },
+      "test_group_recovery.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 7
+      },
+      "test_hybrid_checkpoint_ddp_resume.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 1
+      },
+      "test_hybrid_checkpoint_faults.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 16
+      },
+      "test_hybrid_checkpoint_recovery.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 18
+      },
+      "test_job_environments.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 6
+      },
+      "test_job_storage.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 9
+      },
+      "test_job_submission.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 6
+      },
+      "test_job_timing.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 4
+      },
+      "test_legacy_registration.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 25
+      },
+      "test_nfs_client_setup.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 28
+      },
+      "test_nfs_fault_probe.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 5
+      },
+      "test_nfs_server_setup.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 22
+      },
+      "test_phase11_probe.py": {
+        "log": "probe-last-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 4
+      },
+      "test_private_workspaces.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 39
+      },
+      "test_queue_controls.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 10
+      },
+      "test_resource_allocation.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 6
+      },
+      "test_scheduler_locality.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 13
+      },
+      "test_scheduler_locality_acceptance.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 5
+      },
+      "test_scheduler_metrics.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 10
+      },
+      "test_scheduler_policy.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 17
+      },
+      "test_staging_dispatch.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 25
+      },
+      "test_staging_lifecycle.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 20
+      },
+      "test_staging_portal.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 17
+      },
+      "test_staging_recovery.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 34
+      },
+      "test_storage_backends.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 24
+      },
+      "test_storage_config.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 17
+      },
+      "test_storage_efficiency_acceptance.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 10
+      },
+      "test_storage_health.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 26
+      },
+      "test_storage_inputs.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 18
+      },
+      "test_storage_manifest_drafts.py": {
+        "log": "schema-system-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 15
+      },
+      "test_storage_readers.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 8
+      },
+      "test_storage_registry.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 38
+      },
+      "test_storage_selection.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 21
+      },
+      "test_student_portal.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 17
+      },
+      "test_transfer_metrics.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 17
+      },
+      "test_worker_cache.py": {
+        "log": "all-local-tests.log",
+        "skips": 0,
+        "status": "PASS",
+        "unittest_cases": 33
+      }
+    },
+    "logs": {
+      "all-local-tests.log": {
+        "path": "/tmp/hybrid-phase11-complete/all-local-tests.log",
+        "sha256": "2cde2a064da1688eecc8740e82cf976b4d72147c9cd2faf13706935ad5a6898a"
+      },
+      "hardware-driver.log": {
+        "path": "/tmp/hybrid-phase11-complete/hardware-driver.log",
+        "sha256": "8158741baecf9ec8f41df93c1470d8e18efca85fa349c70ca166457e5477e92f"
+      },
+      "probe-final-unit-tests.log": {
+        "path": "/tmp/hybrid-phase11-complete/probe-final-unit-tests.log",
+        "sha256": "02b0952b9012fe982c696608958c26590fccc7c75517fe1ce83c56fcda35ad98"
+      },
+      "probe-last-tests.log": {
+        "path": "/tmp/hybrid-phase11-complete/probe-last-tests.log",
+        "sha256": "2bbee5a1c07a520838c1a8c646441a8beca6ae673c58551e14371db555c2194f"
+      },
+      "probe-unit-tests.log": {
+        "path": "/tmp/hybrid-phase11-complete/probe-unit-tests.log",
+        "sha256": "15abd2b05f1227d845797e2ccdfe7443a11a2618eac5ca4f3e9d1f89aa59a23a"
+      },
+      "publication-retry.log": {
+        "path": "/tmp/hybrid-phase11-complete/publication-retry.log",
+        "sha256": "b10d30ef4bcda09bf8de01c3ad8c50eff5e43e867561eeab992055998443861f"
+      },
+      "publication.log": {
+        "path": "/tmp/hybrid-phase11-complete/publication.log",
+        "sha256": "a7d89337a57947d260d7eb9bef54d32ac44ed7e882463e0f7a02ad34e79e68d3"
+      },
+      "schema-system-tests.log": {
+        "path": "/tmp/hybrid-phase11-complete/schema-system-tests.log",
+        "sha256": "a3f1860c05adc2e459037b34c53f6d9c693c445d40759806e2baa3b5f4d0f7ab"
+      }
+    },
+    "remaining_skips": 0,
+    "skip_resolution": "system Python/jsonschema4.10.3 reran full15-case draft-schema file, zero skips",
+    "standalone_checkpoint_regression_scripts": 1,
+    "versions": {
+      "controller_python": "3.12.3",
+      "existing_agent_health_python": "3.11.16",
+      "flask": "3.1.3",
+      "schema_system_jsonschema": "4.10.3",
+      "torch": "2.14.1",
+      "worker_probe_python": "3.11.2"
+    }
+  },
+  "time_utc": "2026-11-09T18:31:10.280299+00:00",
+  "worker_source_review": {
+    "activation": "No SSH, extraction, install, migration, mount, service or config action",
+    "all_three_pi_acceptance_proven": false,
+    "all_three_workers_selected": false,
+    "apply_ready": false,
+    "archives": {
+      "controller": {
+        "bytes": 259872,
+        "filename": "controller-source.tar.gz",
+        "sha256": "c18a22cbe95f6e2f889a85801cb060ec0064f0c455ee2618331eeb8a974ed6bb"
+      },
+      "worker": {
+        "bytes": 172608,
+        "filename": "worker-source.tar.gz",
+        "sha256": "b211e7ccb9ea56685f5b47f0d0322d536c2bbd2b830fad4a1895b5505d6a2540"
+      }
+    },
+    "blockers": [
+      "Reviewed OS AND network containment, termination/quiescence and trusted bootstrap required",
+      "Protected local roots and separately provisioned credentials required",
+      "Fresh worker/controller identity, disk, RO NFS mount and dependency compatibility required",
+      "Exact deployment/system/service changes and rollback require explicit approval"
+    ],
+    "deferred_workers": [
+      "pi01"
+    ],
+    "dependencies": "Requirements only; no wheels/weights supplied and no Internet runtime download allowed",
+    "files": {
+      "controller": {
+        "agent/agent.py": {
+          "bytes": 50886,
+          "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+        },
+        "agent/cache_storage.py": {
+          "bytes": 3481,
+          "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c"
+        },
+        "agent/checkpoint_protocol.py": {
+          "bytes": 7554,
+          "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9"
+        },
+        "agent/checkpoint_restore_service.py": {
+          "bytes": 7897,
+          "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2"
+        },
+        "agent/checkpoint_service.py": {
+          "bytes": 8020,
+          "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f"
+        },
+        "agent/custom_runner.py": {
+          "bytes": 8713,
+          "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130"
+        },
+        "agent/dl_checkpoint.py": {
+          "bytes": 23991,
+          "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c"
+        },
+        "agent/environment_worker.py": {
+          "bytes": 20474,
+          "sha256": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875"
+        },
+        "agent/execution_lease.py": {
+          "bytes": 6828,
+          "sha256": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83"
+        },
+        "agent/lease_runner.py": {
+          "bytes": 2390,
+          "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5"
+        },
+        "agent/staging.py": {
+          "bytes": 20912,
+          "sha256": "a2534e31fb8950d4d7397068c4427de4d9c83c0ded23c3353b910b5382e22c05"
+        },
+        "config/runtime-requirements.txt": {
+          "bytes": 148,
+          "sha256": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c"
+        },
+        "config/storage-examples/legacy.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        },
+        "config/storage-examples/nfs-bandwidth.json": {
+          "bytes": 131,
+          "sha256": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7"
+        },
+        "config/storage-examples/nfs-locality.json": {
+          "bytes": 130,
+          "sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a"
+        },
+        "config/storage-examples/nfs-resource.json": {
+          "bytes": 130,
+          "sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2"
+        },
+        "controller/cache_inventory.py": {
+          "bytes": 3444,
+          "sha256": "e1641f5ce95213e0db1fa3d5d52a0435e867949944008f777b75e15afceaa945"
+        },
+        "controller/checkpoint_recovery.py": {
+          "bytes": 16627,
+          "sha256": "9d2964f934178d00a8d835915d736cf438a56526e702f52765decc22df253574"
+        },
+        "controller/checkpoint_store.py": {
+          "bytes": 1053,
+          "sha256": "e9df700d4da0f150a8055cd05b1cf611a2d3aedc8a9157de16b3571e5addf7da"
+        },
+        "controller/controller.py": {
+          "bytes": 4671,
+          "sha256": "ca132e660fb9bacbd3fe00290a82ec44de90d789efd771abf84fa92d816d2f44"
+        },
+        "controller/custom_checkpoints.py": {
+          "bytes": 4254,
+          "sha256": "4266dfd77fbab12c0905e340d9f35e1b6bc965821cb5da1f7c1bcccc0fd66299"
+        },
+        "controller/dispatcher.py": {
+          "bytes": 37726,
+          "sha256": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d"
+        },
+        "controller/distributed_dispatch.py": {
+          "bytes": 19482,
+          "sha256": "a1fdac0d8b63ec784c281d2d6a6d6433aba060ffc18b380a07b071d8ee825f2f"
+        },
+        "controller/execution_leases.py": {
+          "bytes": 12101,
+          "sha256": "fa82ee030cc0c1b0e49e8dc9806caad80c37e69417581ff9561867afdd0d6507"
+        },
+        "controller/group_checkpoints.py": {
+          "bytes": 7724,
+          "sha256": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2"
+        },
+        "controller/input_storage.py": {
+          "bytes": 2820,
+          "sha256": "42ec1ef34eabd99f1bb9922304cd580c48d3be5bb630470a79ecc90994e213d9"
+        },
+        "controller/job_artifacts.py": {
+          "bytes": 2729,
+          "sha256": "f8872c380d95783697edede27c8153aae62154c2d530012e7b7fc7ec7bbaaa99"
+        },
+        "controller/job_spec.py": {
+          "bytes": 9886,
+          "sha256": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a"
+        },
+        "controller/job_status.py": {
+          "bytes": 6469,
+          "sha256": "12d84f2cb1f082fb1de67ee9329115be4352b4f844db0e970b4fd44a0801b20b"
+        },
+        "controller/job_storage.py": {
+          "bytes": 17470,
+          "sha256": "01d935c9240ec11873e7c592d019596da5ed86b93497ce29aca4218019b1f79b"
+        },
+        "controller/job_store.py": {
+          "bytes": 39340,
+          "sha256": "a1d55ddb81f94649e4c78fea2849b89968aede677bdaa696e0d795d6f15d3f88"
+        },
+        "controller/job_timing.py": {
+          "bytes": 5296,
+          "sha256": "dee072e79474e08bbdc97c8fb60584bf9c6ce7707536ce13ee3c194b67b201bf"
+        },
+        "controller/migrate_pytorch_jobs.py": {
+          "bytes": 2608,
+          "sha256": "9c52a62a6cd1db3d92a893a8893f050348002ff5291d5f7d0a3c1e41fe2444b6"
+        },
+        "controller/portal_static/index.html": {
+          "bytes": 5670,
+          "sha256": "e944aaf3a9942784e1616f56a388778334bf5ba304ba38de749773c0c09406c4"
+        },
+        "controller/portal_static/portal.css": {
+          "bytes": 6759,
+          "sha256": "8a9ec881f6d8827c9b3fd9ad9d681ab534dd2f6c7feb8851f151f70a9548c287"
+        },
+        "controller/portal_static/portal.js": {
+          "bytes": 16628,
+          "sha256": "15a437f7e0a2867fe9f7bc61e26bd443c781f5a2e229033aa9e5590ede19d23f"
+        },
+        "controller/prepare_job.py": {
+          "bytes": 10177,
+          "sha256": "ab8bef60c8eb184040dda0d2c7a58a76485e9bbab6ae8c0349a16c4379a91976"
+        },
+        "controller/queue_ctl.py": {
+          "bytes": 2046,
+          "sha256": "c9dead51875b1af7122351c35d1244aa93cc8a6e16e0212f50f4eabdbc63ad26"
+        },
+        "controller/queue_job.py": {
+          "bytes": 880,
+          "sha256": "18d5409d76c074d4bc586ecc6dda2e3049965b7a0dacc1427ef7e4e05a9fccc3"
+        },
+        "controller/queue_policy.py": {
+          "bytes": 3289,
+          "sha256": "4a47c261a65b087904d7505a54255593449f8422949d0c34d39cef89cd11260b"
+        },
+        "controller/recovery_metrics.py": {
+          "bytes": 4006,
+          "sha256": "dedbe915127817acca96fc0722108eb329f733d80900fcb1089aff8432973809"
+        },
+        "controller/recovery_report.py": {
+          "bytes": 6238,
+          "sha256": "edaa3be7b94237a12d5b80ddde611afd666ffa5dd450d2433f149e63f1d9e38c"
+        },
+        "controller/scheduler.py": {
+          "bytes": 4928,
+          "sha256": "4a3e16e3b23e36069f15d30e04f39bf596863ee560425d3df0cc5dae227b0e87"
+        },
+        "controller/scheduler_metrics.py": {
+          "bytes": 5652,
+          "sha256": "29630f864ac628ec8df95037256aa4ef86f98af8c55bb0926e78e74b0f7524f7"
+        },
+        "controller/stage_job.py": {
+          "bytes": 2206,
+          "sha256": "79e49d26131e6a453b2414a7a4cf2a3ad51e6041e307a74c433ddadea3debf86"
+        },
+        "controller/staging_dispatch.py": {
+          "bytes": 17051,
+          "sha256": "f5cecf15a9cab6d29f1827b1581dc3d3a04bf093045e5af301b75cef072c4e91"
+        },
+        "controller/staging_recovery.py": {
+          "bytes": 15817,
+          "sha256": "a8b2d1fea6e63a900f3a92b97e93bb2da898b1f59ff0dddb2e8287a8d1b45f34"
+        },
+        "controller/staging_view.py": {
+          "bytes": 5501,
+          "sha256": "6e851fb5eedf3be5275bd0dbd93c0d399e4f39938ab0c6a7a51794988f22cc85"
+        },
+        "controller/storage_selection.py": {
+          "bytes": 2490,
+          "sha256": "857fa007b6a3808a061d3798736b9ee5f9904a53796898d6d8160f4db881d75d"
+        },
+        "controller/student_portal.py": {
+          "bytes": 30573,
+          "sha256": "269119d1d26b3f6db8616081a688008b84c25beda6670b785008c1ccedadf6c0"
+        },
+        "controller/submit_job.py": {
+          "bytes": 12517,
+          "sha256": "540b36a9fec28c608e79c5d2148e1b9c17039dee5fbd032fe064ac82c4368247"
+        },
+        "hybrid_storage/__init__.py": {
+          "bytes": 243,
+          "sha256": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57"
+        },
+        "hybrid_storage/artifacts.py": {
+          "bytes": 9794,
+          "sha256": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b"
+        },
+        "hybrid_storage/backends.py": {
+          "bytes": 8929,
+          "sha256": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0"
+        },
+        "hybrid_storage/bandwidth.py": {
+          "bytes": 11617,
+          "sha256": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194"
+        },
+        "hybrid_storage/cache_copy_worker.py": {
+          "bytes": 3677,
+          "sha256": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1"
+        },
+        "hybrid_storage/cache_coverage.py": {
+          "bytes": 11700,
+          "sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4"
+        },
+        "hybrid_storage/cache_eviction.py": {
+          "bytes": 14889,
+          "sha256": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd"
+        },
+        "hybrid_storage/cache_fetch.py": {
+          "bytes": 23298,
+          "sha256": "0f5042ca64eb093573761d4b9b214ff65cf780bb215ee6f14d3b96fa55bb5dd0"
+        },
+        "hybrid_storage/cache_inventory.py": {
+          "bytes": 17771,
+          "sha256": "31a8843b7cba6df501d54cf828638cb77382e379e10c751dfcb3ba5ae4b46aa2"
+        },
+        "hybrid_storage/cache_registry_schema.py": {
+          "bytes": 14701,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        "hybrid_storage/checkpoint_files.py": {
+          "bytes": 3110,
+          "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850"
+        },
+        "hybrid_storage/checkpoint_publication.py": {
+          "bytes": 19463,
+          "sha256": "1b76141edc2fae8a765585ba4597691cefc3eb9aa9a1bb7eedd56e1eed7fc83b"
+        },
+        "hybrid_storage/checkpoint_restore.py": {
+          "bytes": 3895,
+          "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab"
+        },
+        "hybrid_storage/checkpoint_schema.py": {
+          "bytes": 6824,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        "hybrid_storage/checkpoint_transfer.py": {
+          "bytes": 6923,
+          "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6"
+        },
+        "hybrid_storage/cleanup_schema.py": {
+          "bytes": 3195,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        "hybrid_storage/config.py": {
+          "bytes": 7958,
+          "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+        },
+        "hybrid_storage/dataset_manifests.py": {
+          "bytes": 10840,
+          "sha256": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d"
+        },
+        "hybrid_storage/dataset_validation.py": {
+          "bytes": 5780,
+          "sha256": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c"
+        },
+        "hybrid_storage/deployment_review.py": {
+          "bytes": 8377,
+          "sha256": "4472ea15c4a61a87e46687ce33e02b085ba4a1d56dfb963b641001b2db101b27"
+        },
+        "hybrid_storage/health.py": {
+          "bytes": 10444,
+          "sha256": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6"
+        },
+        "hybrid_storage/health_worker.py": {
+          "bytes": 623,
+          "sha256": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01"
+        },
+        "hybrid_storage/input_manifests.py": {
+          "bytes": 5659,
+          "sha256": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a"
+        },
+        "hybrid_storage/inputs.py": {
+          "bytes": 9586,
+          "sha256": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc"
+        },
+        "hybrid_storage/inventory_protocol.py": {
+          "bytes": 7680,
+          "sha256": "08b31ef61b87b8856b8953b36c95f2e68676ad05e54a425021db83c0f1a61602"
+        },
+        "hybrid_storage/inventory_reporter.py": {
+          "bytes": 10006,
+          "sha256": "8ecc51cd673691060840a18f73be829769a9d274e4cac9510497f70414827355"
+        },
+        "hybrid_storage/legacy_registration.py": {
+          "bytes": 5918,
+          "sha256": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640"
+        },
+        "hybrid_storage/locality.py": {
+          "bytes": 7780,
+          "sha256": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0"
+        },
+        "hybrid_storage/metrics.py": {
+          "bytes": 2956,
+          "sha256": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149"
+        },
+        "hybrid_storage/mount_identity.py": {
+          "bytes": 1282,
+          "sha256": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f"
+        },
+        "hybrid_storage/nfs_client.py": {
+          "bytes": 17953,
+          "sha256": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a"
+        },
+        "hybrid_storage/nfs_fault_probe.py": {
+          "bytes": 14734,
+          "sha256": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d"
+        },
+        "hybrid_storage/nfs_mount.py": {
+          "bytes": 5175,
+          "sha256": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8"
+        },
+        "hybrid_storage/nfs_server.py": {
+          "bytes": 24217,
+          "sha256": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea"
+        },
+        "hybrid_storage/phase11_probe.py": {
+          "bytes": 12507,
+          "sha256": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa"
+        },
+        "hybrid_storage/registry.py": {
+          "bytes": 24029,
+          "sha256": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529"
+        },
+        "hybrid_storage/registry_schema.py": {
+          "bytes": 10143,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        "hybrid_storage/restore_schema.py": {
+          "bytes": 4389,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        },
+        "hybrid_storage/scheduling.py": {
+          "bytes": 8809,
+          "sha256": "35d8bef1a0f4b4a998f70e6a5cf80cd987c6fe074bb85c22a150dfaf2dd3110c"
+        },
+        "hybrid_storage/staging_journal.py": {
+          "bytes": 5600,
+          "sha256": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd"
+        },
+        "hybrid_storage/staging_lifecycle.py": {
+          "bytes": 16473,
+          "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb"
+        },
+        "hybrid_storage/staging_metrics.py": {
+          "bytes": 1390,
+          "sha256": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f"
+        },
+        "hybrid_storage/staging_protocol.py": {
+          "bytes": 4867,
+          "sha256": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb"
+        },
+        "hybrid_storage/staging_schema.py": {
+          "bytes": 9370,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        "hybrid_storage/transfer_metrics.py": {
+          "bytes": 7006,
+          "sha256": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2"
+        },
+        "hybrid_storage/worker_cache.py": {
+          "bytes": 19316,
+          "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272"
+        },
+        "hybrid_storage/workspaces.py": {
+          "bytes": 29971,
+          "sha256": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+        },
+        "training/benchmark_job.py": {
+          "bytes": 6960,
+          "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76"
+        },
+        "training/demo_job.py": {
+          "bytes": 2723,
+          "sha256": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49"
+        },
+        "training/evaluate_checkpoint.py": {
+          "bytes": 3213,
+          "sha256": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41"
+        },
+        "training/pytorch_job.py": {
+          "bytes": 13508,
+          "sha256": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0"
+        },
+        "training/reference/equation.py": {
+          "bytes": 1610,
+          "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+        },
+        "training/reference/logistic.py": {
+          "bytes": 1438,
+          "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+        },
+        "training/reference/logistic_train.py": {
+          "bytes": 2001,
+          "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+        },
+        "training/reference/numpy_mlp.py": {
+          "bytes": 1681,
+          "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+        },
+        "training/reference/numpy_mlp_train.py": {
+          "bytes": 2078,
+          "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+        },
+        "training/reference/resnet18.py": {
+          "bytes": 4171,
+          "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+        },
+        "training/reference/resnet18_inference.py": {
+          "bytes": 1768,
+          "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+        },
+        "training/reference/resnet18_train.py": {
+          "bytes": 2604,
+          "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+        },
+        "training/reference/tiny_cnn.py": {
+          "bytes": 3650,
+          "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+        },
+        "training/reference/tiny_cnn_inference.py": {
+          "bytes": 3591,
+          "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
+        },
+        "training/reference/tiny_cnn_train.py": {
+          "bytes": 6559,
+          "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+        }
+      },
+      "worker": {
+        "agent/agent.py": {
+          "bytes": 50886,
+          "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+        },
+        "agent/cache_storage.py": {
+          "bytes": 3481,
+          "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c"
+        },
+        "agent/checkpoint_protocol.py": {
+          "bytes": 7554,
+          "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9"
+        },
+        "agent/checkpoint_restore_service.py": {
+          "bytes": 7897,
+          "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2"
+        },
+        "agent/checkpoint_service.py": {
+          "bytes": 8020,
+          "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f"
+        },
+        "agent/custom_runner.py": {
+          "bytes": 8713,
+          "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130"
+        },
+        "agent/dl_checkpoint.py": {
+          "bytes": 23991,
+          "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c"
+        },
+        "agent/environment_worker.py": {
+          "bytes": 20474,
+          "sha256": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875"
+        },
+        "agent/execution_lease.py": {
+          "bytes": 6828,
+          "sha256": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83"
+        },
+        "agent/lease_runner.py": {
+          "bytes": 2390,
+          "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5"
+        },
+        "agent/staging.py": {
+          "bytes": 20912,
+          "sha256": "a2534e31fb8950d4d7397068c4427de4d9c83c0ded23c3353b910b5382e22c05"
+        },
+        "config/runtime-requirements.txt": {
+          "bytes": 148,
+          "sha256": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c"
+        },
+        "config/storage-examples/legacy.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        },
+        "config/storage-examples/nfs-bandwidth.json": {
+          "bytes": 131,
+          "sha256": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7"
+        },
+        "config/storage-examples/nfs-locality.json": {
+          "bytes": 130,
+          "sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a"
+        },
+        "config/storage-examples/nfs-resource.json": {
+          "bytes": 130,
+          "sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2"
+        },
+        "hybrid_storage/__init__.py": {
+          "bytes": 243,
+          "sha256": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57"
+        },
+        "hybrid_storage/artifacts.py": {
+          "bytes": 9794,
+          "sha256": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b"
+        },
+        "hybrid_storage/backends.py": {
+          "bytes": 8929,
+          "sha256": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0"
+        },
+        "hybrid_storage/bandwidth.py": {
+          "bytes": 11617,
+          "sha256": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194"
+        },
+        "hybrid_storage/cache_copy_worker.py": {
+          "bytes": 3677,
+          "sha256": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1"
+        },
+        "hybrid_storage/cache_coverage.py": {
+          "bytes": 11700,
+          "sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4"
+        },
+        "hybrid_storage/cache_eviction.py": {
+          "bytes": 14889,
+          "sha256": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd"
+        },
+        "hybrid_storage/cache_fetch.py": {
+          "bytes": 23298,
+          "sha256": "0f5042ca64eb093573761d4b9b214ff65cf780bb215ee6f14d3b96fa55bb5dd0"
+        },
+        "hybrid_storage/cache_inventory.py": {
+          "bytes": 17771,
+          "sha256": "31a8843b7cba6df501d54cf828638cb77382e379e10c751dfcb3ba5ae4b46aa2"
+        },
+        "hybrid_storage/cache_registry_schema.py": {
+          "bytes": 14701,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        "hybrid_storage/checkpoint_files.py": {
+          "bytes": 3110,
+          "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850"
+        },
+        "hybrid_storage/checkpoint_publication.py": {
+          "bytes": 19463,
+          "sha256": "1b76141edc2fae8a765585ba4597691cefc3eb9aa9a1bb7eedd56e1eed7fc83b"
+        },
+        "hybrid_storage/checkpoint_restore.py": {
+          "bytes": 3895,
+          "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab"
+        },
+        "hybrid_storage/checkpoint_schema.py": {
+          "bytes": 6824,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        "hybrid_storage/checkpoint_transfer.py": {
+          "bytes": 6923,
+          "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6"
+        },
+        "hybrid_storage/cleanup_schema.py": {
+          "bytes": 3195,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        "hybrid_storage/config.py": {
+          "bytes": 7958,
+          "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+        },
+        "hybrid_storage/dataset_manifests.py": {
+          "bytes": 10840,
+          "sha256": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d"
+        },
+        "hybrid_storage/dataset_validation.py": {
+          "bytes": 5780,
+          "sha256": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c"
+        },
+        "hybrid_storage/deployment_review.py": {
+          "bytes": 8377,
+          "sha256": "4472ea15c4a61a87e46687ce33e02b085ba4a1d56dfb963b641001b2db101b27"
+        },
+        "hybrid_storage/health.py": {
+          "bytes": 10444,
+          "sha256": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6"
+        },
+        "hybrid_storage/health_worker.py": {
+          "bytes": 623,
+          "sha256": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01"
+        },
+        "hybrid_storage/input_manifests.py": {
+          "bytes": 5659,
+          "sha256": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a"
+        },
+        "hybrid_storage/inputs.py": {
+          "bytes": 9586,
+          "sha256": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc"
+        },
+        "hybrid_storage/inventory_protocol.py": {
+          "bytes": 7680,
+          "sha256": "08b31ef61b87b8856b8953b36c95f2e68676ad05e54a425021db83c0f1a61602"
+        },
+        "hybrid_storage/inventory_reporter.py": {
+          "bytes": 10006,
+          "sha256": "8ecc51cd673691060840a18f73be829769a9d274e4cac9510497f70414827355"
+        },
+        "hybrid_storage/legacy_registration.py": {
+          "bytes": 5918,
+          "sha256": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640"
+        },
+        "hybrid_storage/locality.py": {
+          "bytes": 7780,
+          "sha256": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0"
+        },
+        "hybrid_storage/metrics.py": {
+          "bytes": 2956,
+          "sha256": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149"
+        },
+        "hybrid_storage/mount_identity.py": {
+          "bytes": 1282,
+          "sha256": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f"
+        },
+        "hybrid_storage/nfs_client.py": {
+          "bytes": 17953,
+          "sha256": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a"
+        },
+        "hybrid_storage/nfs_fault_probe.py": {
+          "bytes": 14734,
+          "sha256": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d"
+        },
+        "hybrid_storage/nfs_mount.py": {
+          "bytes": 5175,
+          "sha256": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8"
+        },
+        "hybrid_storage/nfs_server.py": {
+          "bytes": 24217,
+          "sha256": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea"
+        },
+        "hybrid_storage/phase11_probe.py": {
+          "bytes": 12507,
+          "sha256": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa"
+        },
+        "hybrid_storage/registry.py": {
+          "bytes": 24029,
+          "sha256": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529"
+        },
+        "hybrid_storage/registry_schema.py": {
+          "bytes": 10143,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        "hybrid_storage/restore_schema.py": {
+          "bytes": 4389,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        },
+        "hybrid_storage/scheduling.py": {
+          "bytes": 8809,
+          "sha256": "35d8bef1a0f4b4a998f70e6a5cf80cd987c6fe074bb85c22a150dfaf2dd3110c"
+        },
+        "hybrid_storage/staging_journal.py": {
+          "bytes": 5600,
+          "sha256": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd"
+        },
+        "hybrid_storage/staging_lifecycle.py": {
+          "bytes": 16473,
+          "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb"
+        },
+        "hybrid_storage/staging_metrics.py": {
+          "bytes": 1390,
+          "sha256": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f"
+        },
+        "hybrid_storage/staging_protocol.py": {
+          "bytes": 4867,
+          "sha256": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb"
+        },
+        "hybrid_storage/staging_schema.py": {
+          "bytes": 9370,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        "hybrid_storage/transfer_metrics.py": {
+          "bytes": 7006,
+          "sha256": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2"
+        },
+        "hybrid_storage/worker_cache.py": {
+          "bytes": 19316,
+          "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272"
+        },
+        "hybrid_storage/workspaces.py": {
+          "bytes": 29971,
+          "sha256": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+        },
+        "training/benchmark_job.py": {
+          "bytes": 6960,
+          "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76"
+        },
+        "training/demo_job.py": {
+          "bytes": 2723,
+          "sha256": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49"
+        },
+        "training/evaluate_checkpoint.py": {
+          "bytes": 3213,
+          "sha256": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41"
+        },
+        "training/pytorch_job.py": {
+          "bytes": 13508,
+          "sha256": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0"
+        },
+        "training/reference/equation.py": {
+          "bytes": 1610,
+          "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+        },
+        "training/reference/logistic.py": {
+          "bytes": 1438,
+          "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+        },
+        "training/reference/logistic_train.py": {
+          "bytes": 2001,
+          "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+        },
+        "training/reference/numpy_mlp.py": {
+          "bytes": 1681,
+          "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+        },
+        "training/reference/numpy_mlp_train.py": {
+          "bytes": 2078,
+          "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+        },
+        "training/reference/resnet18.py": {
+          "bytes": 4171,
+          "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+        },
+        "training/reference/resnet18_inference.py": {
+          "bytes": 1768,
+          "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+        },
+        "training/reference/resnet18_train.py": {
+          "bytes": 2604,
+          "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+        },
+        "training/reference/tiny_cnn.py": {
+          "bytes": 3650,
+          "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+        },
+        "training/reference/tiny_cnn_inference.py": {
+          "bytes": 3591,
+          "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
+        },
+        "training/reference/tiny_cnn_train.py": {
+          "bytes": 6559,
+          "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+        }
+      }
+    },
+    "schema_version": 1,
+    "scope": "offline_source_review_only",
+    "selected_workers": [
+      {
+        "id": "pi02",
+        "ip": "100.91.135.18",
+        "port": 5000
+      },
+      {
+        "id": "pi03",
+        "ip": "100.64.202.71",
+        "port": 5000
+      }
+    ]
+  }
+}

@@ -30,6 +30,8 @@ def nfs_cache_fetcher(cache: WorkerCache, *, source: str, quota_bytes: int, **li
 
     Only a trusted authorized staging service may call initialize/ensure; retain
     this handle and reconcile pending helpers until reaped, including after close.
+    Optional transfer_metrics=TransferMetrics(configured_worker_id) records real
+    verified-copy rates locally; no probes, telemetry RPC or scheduler activation.
     """
     from hybrid_storage.cache_fetch import CacheFetcher
     return CacheFetcher(cache, source=source, quota_bytes=quota_bytes, **limits)
@@ -43,6 +45,19 @@ def private_workspaces(cache: WorkerCache, workspace_root: Path, *, max_input_by
     """
     from hybrid_storage.workspaces import WorkspaceManager
     return WorkspaceManager(cache, workspace_root, max_input_bytes=max_input_bytes, **limits)
+
+
+def cache_maintenance(fetcher, **limits):
+    """Inactive explicit dry-run-first idle LRU maintenance, never auto-installed.
+
+    Reuses fetcher's quota_bytes (max cache bytes) and free-space reserve. Supply
+    protected workspace/checkpoint/co-located authoritative roots and optional
+    reporter.request_full.
+    No files are deleted until a locally issued plan is explicitly applied with
+    dry_run=False. It never releases pins or replays deletion after a crash.
+    """
+    from hybrid_storage.cache_eviction import CacheEvictor
+    return CacheEvictor(fetcher, **limits)
 
 
 def install_inventory_reporter(app, reporter):

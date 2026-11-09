@@ -1,0 +1,310 @@
+{
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 74,
+  "branch": "main",
+  "changed_files": [
+    "controller/distributed_dispatch.py",
+    "controller/scheduler.py",
+    "controller/scheduler_metrics.py",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/cache_coverage.py",
+    "tests/README.md",
+    "hybrid_storage/locality.py",
+    "tests/test_scheduler_locality.py",
+    "docs/storage/39-locality-tie-breaker.md",
+    "docs/storage/39-locality-tie-breaker-evidence.json"
+  ],
+  "contracts": {
+    "batch": "CoverageAPI.for_job_workers(actor, worker_ids_tuple, job_id, rank=None), 1..4096 unique IDs, single locked read snapshot",
+    "ddp": "same ordered resource profile as original winning complete compatibility group, boundary ties by missing bytes then ID, groups by summed per-rank missing bytes then existing encounter order",
+    "ddp_requirements": "full source/requirements/dataset per rank as current actual staging plans; no shard declaration",
+    "existing_apis": "optional keyword-only locality=None added; previous positional calls valid",
+    "fallback": "any compared candidate unavailable/stale or batch/ACL/binding/world/byte failure => exact resource baseline",
+    "freshness": "per-worker eligibility/status/age/session/sequence/computed time; unknown missing bytes None, unknown aggregate None",
+    "metrics": "effective locality/resource; default resource document fields and values unchanged",
+    "normal_dispatchers": "unchanged resource callers; configuration/automatic activation deferred to 10.4",
+    "preference": "JobLocality(CoverageAPI, authenticated_actor, exact_job_id, immutable_binding_sha256)",
+    "single": "exact winning CPU/RAM equivalence only, then verified missing bytes, existing stable inventory tie"
+  },
+  "date": "2026-11-09",
+  "development_errors": [
+    {
+      "cause": "new fixture key-ID header typo X-DL-Inventory-Key",
+      "errors": 3,
+      "log": "/tmp/hybrid-10-2/locality-initial.log",
+      "resolution": "use existing X-DL-Worker-Key protocol header; no runtime protocol change",
+      "sha256": "e0205ec5cd34ff7646fac1f1823f726eae6b57e2cf1ebf756d9c5ab2bea833d9"
+    }
+  ],
+  "environment": {
+    "packages": {
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2",
+      "torch": "2.14.1"
+    },
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+  },
+  "final_distinct_tests": 148,
+  "final_errors": 0,
+  "final_failures": 0,
+  "final_skips": 0,
+  "final_test_files": 9,
+  "fingerprints": {
+    "controller/distributed_dispatch.py": {
+      "after_sha256": "c56236bef5a0c2e9c412fbaf820c95456828259c6a94df168efebfafbe58fdd6",
+      "before_sha256": "e7ed4a0a807a49a66fee8b2ddf6dfcfe35b8575d531d494c6d0136698f802239"
+    },
+    "controller/scheduler.py": {
+      "after_sha256": "60a1219027571840a3fb3a8e7b3e0e0d5e01ac57998ac3b58adaf850a48694b3",
+      "before_sha256": "1b0729b1ffaa04b4a6a2bc301e9eabe70a32e874dcb954d3a850a6fb79ff54d6"
+    },
+    "controller/scheduler_metrics.py": {
+      "after_sha256": "ed5d9d4ee825f99cf15409a652f7853bed7fe5f304a79b9bfa7970928323d82c",
+      "before_sha256": "17b5995ac2b877bc903f196f36a3ff27d10bc1bf9c23aef515f9779329a12c60"
+    },
+    "docs/storage/39-locality-tie-breaker.md": {
+      "after_sha256": "0e284a2892cd77b28706981649f83ed37c4bfd05c178fba1dbb01a7fd61f5960",
+      "before_sha256": null
+    },
+    "docs/storage/implementation-progress.md": {
+      "after_sha256": "5f5727bfff380f4332cb226d4a4555a24a06b6501f8435f43619b3a5dc360ec2",
+      "before_sha256": "0f0f33a2d01549ee1a8da12e172c3fbbcba7d6bac8c4776b4a428fbc0fb20843"
+    },
+    "hybrid_storage/README.md": {
+      "after_sha256": "4e69dee54d13124915d2263962c4d866b268ffec9eee88e656ef64a8c18ff3a5",
+      "before_sha256": "a8b2bc514443e877bbf3e0b1cd71eaa969e0e5a0bb7f5cead5029d49d6456b7a"
+    },
+    "hybrid_storage/cache_coverage.py": {
+      "after_sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4",
+      "before_sha256": "e563ec4993e536f3614cd562007d79d5d880bb54163af479e227e1afd9d2993a"
+    },
+    "hybrid_storage/locality.py": {
+      "after_sha256": "ebb297891df4bd8380d8615cee3730f537b75b6dfacbfe9d4eb7ab5e8b6dcf95",
+      "before_sha256": null
+    },
+    "tests/README.md": {
+      "after_sha256": "d014de403e13fc7017d909ff478340556b1a047797f02ea362ea1a728690729c",
+      "before_sha256": "c909b82e7750d85592abf9926516f8716b53e43d68e3550affc8aa242650b3fe"
+    },
+    "tests/test_scheduler_locality.py": {
+      "after_sha256": "59f761e2356312dbb1ef07c06eed594ba678a75de03a80cb1c59a8db0a78f7cc",
+      "before_sha256": null
+    }
+  },
+  "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "initial_prior_work": "nine uncommitted 10.1 files retained",
+  "initial_status": [
+    " M distributed-dl-system/controller/distributed_dispatch.py",
+    " M distributed-dl-system/controller/scheduler.py",
+    " M distributed-dl-system/docs/storage/implementation-progress.md",
+    " M distributed-dl-system/tests/README.md",
+    "?? distributed-dl-system/controller/scheduler_metrics.py",
+    "?? distributed-dl-system/docs/storage/38-resource-scheduler-metrics-evidence.json",
+    "?? distributed-dl-system/docs/storage/38-resource-scheduler-metrics.md",
+    "?? distributed-dl-system/tests/fixtures/resource-scheduler-v1.json",
+    "?? distributed-dl-system/tests/test_scheduler_metrics.py"
+  ],
+  "new_tests": 13,
+  "not_performed": [
+    "SSH/Pi/remote probes",
+    "live NFS/mount/outage tests",
+    "deployment/service/systemd/export/firewall changes",
+    "live DB/job/checkpoint/cache writes",
+    "new worker transport or Internet download",
+    "Git reset/stash/commit",
+    "throughput/overhead benchmark",
+    "workload simulation or live policy activation"
+  ],
+  "remaining": [
+    "10.3 exact MB and starvation/capacity matrix",
+    "10.4 reviewed config activation, choice logs and simulations",
+    "mandatory all-three-Pi physical acceptance; previous Phase 9 hardware gate remains pending"
+  ],
+  "risks": [
+    "inventory advisory; stage-time hash/ACL/disk/lease checks still required",
+    "exact ties and conservative whole-pass fallback may miss locality opportunities",
+    "batch repeats manifest validation per candidate; overhead unbenchmarked",
+    "diagnostics are volatile, not an audit log",
+    "current full-input-only rank contract must change before any partitioned trainer",
+    "controller/LOCAL SQLite/authoritative storage remains single point of failure"
+  ],
+  "rollback": {
+    "commands": [
+      "git apply --reverse --check /tmp/hybrid-10-2/10.2.patch",
+      "git apply --reverse /tmp/hybrid-10-2/10.2.patch"
+    ],
+    "only_check_executed": true,
+    "patch": "/tmp/hybrid-10-2/10.2.patch",
+    "preserves_prior_10_1_source": true,
+    "run_from": "/home/rana/Projects/System Project/System_Development_Project",
+    "schema_or_data_rollback_required": false
+  },
+  "security": {
+    "authorization_quota_fairness_reservation_lease_staging_gates_unchanged": true,
+    "new_configuration": false,
+    "new_schema_or_migration": false,
+    "new_student_route": false,
+    "nfs_or_trainer_access_changed": false,
+    "no_files_paths_hash_lists_or_credentials_in_choice_snapshot": true,
+    "sqlite_local": true,
+    "trusted_checkpoint_publication_changed": false
+  },
+  "snapshot": {
+    "directory": "/tmp/hybrid-10-2/before",
+    "files": 309,
+    "manifest": "/tmp/hybrid-10-2/before.json",
+    "manifest_sha256": "f96974f61f3f48545a40c3d8eb4029f3c4ea795cd31b52bde851ef73ab54dff9",
+    "modified_original_files": [
+      "controller/distributed_dispatch.py",
+      "controller/scheduler.py",
+      "controller/scheduler_metrics.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/cache_coverage.py",
+      "tests/README.md"
+    ],
+    "preserved_prefixes": [
+      "tests/README.md",
+      "docs/storage/implementation-progress.md"
+    ],
+    "unchanged_original_files": 302
+  },
+  "status": "PASS local; STOP before 10.3",
+  "subphase": "10.2",
+  "tests": {
+    "baseline": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_metrics.py test_cache_coverage.py test_resource_allocation.py test_queue_controls.py test_storage_config.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-2/baseline-tests.log",
+      "passed_files": [
+        "test_scheduler_metrics.py",
+        "test_cache_coverage.py",
+        "test_resource_allocation.py",
+        "test_queue_controls.py",
+        "test_storage_config.py"
+      ],
+      "sha256": "f1c94e90eb04620ec332ad769d81edc794b8ad4c4ce6cdd4a6c83237c8c54c26",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 17 tests in 1.069s",
+        "",
+        "OK",
+        "PASS test_storage_config.py",
+        "",
+        "5/5 test files passed in 15.5s."
+      ],
+      "test_counts": [
+        10,
+        31,
+        6,
+        10,
+        17
+      ]
+    },
+    "ddp": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_distributed_dispatch.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-2/ddp-tests.log",
+      "passed_files": [
+        "test_distributed_dispatch.py"
+      ],
+      "sha256": "ba73d7fbe4ac6262059b10027f961f84b7298ad578690d438ce2a7d91a409ba7",
+      "tail": [
+        "[DDP_STOP_PENDING] group rank=1: offline",
+        "[DDP_RESTART] group: QUEUED; all ranks stopped",
+        "[DDP_CONTACT_PENDING] group rank=1: lost reply",
+        "[DDP_RUNNING] group: 2 ranks",
+        "[DDP_COMPLETED] group: all 2 ranks finished",
+        "PASS test_distributed_dispatch.py",
+        "",
+        "1/1 test files passed in 6.7s."
+      ],
+      "test_counts": [
+        7
+      ]
+    },
+    "final": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality.py test_scheduler_metrics.py test_cache_coverage.py test_resource_allocation.py test_queue_controls.py test_storage_config.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-2/final-tests.log",
+      "passed_files": [
+        "test_scheduler_locality.py",
+        "test_scheduler_metrics.py",
+        "test_cache_coverage.py",
+        "test_resource_allocation.py",
+        "test_queue_controls.py",
+        "test_storage_config.py"
+      ],
+      "sha256": "e47273cb80f77cb3438f89c16a37f99eb9e029af6014286ead81e3bca4af290d",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 17 tests in 1.107s",
+        "",
+        "OK",
+        "PASS test_storage_config.py",
+        "",
+        "6/6 test files passed in 17.3s."
+      ],
+      "test_counts": [
+        13,
+        10,
+        31,
+        6,
+        10,
+        17
+      ]
+    },
+    "inventory_staging": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_inventory.py test_ddp_staging.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-2/inventory-staging-tests.log",
+      "passed_files": [
+        "test_cache_inventory.py",
+        "test_ddp_staging.py"
+      ],
+      "sha256": "68d6902594aaadf71d0fe25045dc0ffe60ee1e607510c6783765b09a5e05a8d1",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 16 tests in 46.388s",
+        "",
+        "OK",
+        "PASS test_ddp_staging.py",
+        "",
+        "2/2 test files passed in 56.8s."
+      ],
+      "test_counts": [
+        38,
+        16
+      ]
+    },
+    "locality_final": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-2/locality-final.log",
+      "passed_files": [
+        "test_scheduler_locality.py"
+      ],
+      "sha256": "870d18db38c9ef99af3c02a29cb450025d93d890f39ef6d451356a618ae60ddb",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 13 tests in 6.120s",
+        "",
+        "OK",
+        "PASS test_scheduler_locality.py",
+        "",
+        "1/1 test files passed in 6.6s."
+      ],
+      "test_counts": [
+        13
+      ]
+    }
+  },
+  "unchanged_resource_golden_scenarios": 25
+}

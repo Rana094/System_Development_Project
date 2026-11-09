@@ -1,0 +1,276 @@
+{
+  "acceptance": {
+    "phase_11": "INCOMPLETE; STOP before 11.2",
+    "physical_all_three_pis": "NOT RUN; still required before physical acceptance",
+    "resource_locality": "PASS selected exact-OFF/configured/fallback/queue regressions",
+    "subphase_11_1": "local PASS"
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 66,
+  "branch": "main",
+  "changed_files": [
+    "agent/cache_storage.py",
+    "docs/storage/42-transfer-observations-evidence.json",
+    "docs/storage/42-transfer-observations.md",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/cache_copy_worker.py",
+    "hybrid_storage/cache_fetch.py",
+    "hybrid_storage/transfer_metrics.py",
+    "tests/README.md",
+    "tests/test_staging_portal.py",
+    "tests/test_transfer_metrics.py"
+  ],
+  "contracts": {
+    "bounds": {
+      "default_max_age_seconds": 900,
+      "default_samples": 64,
+      "max_age_seconds": 86400,
+      "max_samples": 4096
+    },
+    "collector": "worker-local, trusted explicit constructor; existing worker ID validator",
+    "concurrency": "existing one-copy-per-cache-root flock; cluster concurrency unknown",
+    "controller_transport": "not added; future 11.2 must authenticate/age advisory worker observations",
+    "db_schema_changes": false,
+    "default": "transfer_metrics=None; legacy/OFF/resource unchanged",
+    "eviction": false,
+    "exclusions": [
+      "cache hits",
+      "zero-byte objects",
+      "failed attempts/retry delays",
+      "admission/slot wait",
+      "publication/workspace/training"
+    ],
+    "freshness": "monotonic TTL; wall time label only; stale/no samples rate null",
+    "helper_change": "additive optional transferred_bytes on ready result; old/malformed telemetry loses sample only",
+    "http_protocol_changes": false,
+    "measurement": "actual helper payload count after source/size/hash/mount/readback/fsync, independently parent-verified; elapsed copy attempt including helper/setup/verification/fsync",
+    "overhead_model": null,
+    "persistence": false,
+    "policy_activation": false,
+    "probes": false,
+    "rollback": "omit collector or set idle trusted fetcher.transfer_metrics=None; resource policy rollback unchanged",
+    "statistics": "unweighted per-copy median effective MiB/s, MAD/min/max, counts, bytes/time and age; not a predictive confidence interval"
+  },
+  "date": "2026-11-09",
+  "development_history": {
+    "initial_baseline_runner_rejection": "Nonexistent test_storage_efficiency.py rejected before test execution; corrected selection passed 66",
+    "initial_broad_run": "11/12 files PASS; portal readiness test observed (0,3,0), expected (1,3,1)",
+    "pre_edit_probe": "Same failure reproduced on saved pre-11.1 agent/cache_storage.py, cache_fetch.py, cache_copy_worker.py and original portal test in isolated copy",
+    "prior_10_4_http409": "Unresolved historical loaded-run limitation, not diagnosed or repaired here",
+    "test_correction": "Observe each committed record_ready result, assert 1/2/3 READY+measured, no serial RPC-start assumption; no runtime guard or ordering changes"
+  },
+  "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "last_prior_boundary": "10.4 local PASS; physical acceptance still pending",
+  "latest_distinct_tests": 247,
+  "latest_errors": 0,
+  "latest_failures": 0,
+  "latest_skips": 0,
+  "latest_test_files": {
+    "test_cache_fetch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 33
+    },
+    "test_ddp_staging.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 16
+    },
+    "test_private_workspaces.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 39
+    },
+    "test_queue_controls.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_locality.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 13
+    },
+    "test_scheduler_metrics.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_policy.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_staging_dispatch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 25
+    },
+    "test_staging_portal.py": {
+      "log": "portal-final.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_storage_config.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_transfer_metrics.py": {
+      "log": "transfer-final.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_worker_cache.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 33
+    }
+  },
+  "logs": {
+    "baseline-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-1/baseline-tests.log",
+      "sha256": "415865dba9e2dce21e8d6c0c886953a6af3342528a528ff413ab9e7b74cf86b3",
+      "test_runs": [
+        33,
+        33
+      ]
+    },
+    "final-tests.log": {
+      "failed": true,
+      "path": "/tmp/hybrid-11-1/final-tests.log",
+      "sha256": "16c77e17df0c86d6b47c903a52227d5979ac17873165436c2f158f672d94f29f",
+      "test_runs": [
+        17,
+        33,
+        33,
+        39,
+        25,
+        17,
+        16,
+        10,
+        13,
+        17,
+        17,
+        10
+      ]
+    },
+    "new-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-1/new-tests.log",
+      "sha256": "87868fd72d8e51a2a2ca6e4822e9cae5a9b000dffee6f2e94d1dfb3b1dc82185",
+      "test_runs": [
+        14
+      ]
+    },
+    "portal-final.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-1/portal-final.log",
+      "sha256": "ced585f945a4b15d2bbdaa2b63c2b48bb88c28cdc0744096d574f22306a66f3e",
+      "test_runs": [
+        17
+      ]
+    },
+    "pre-edit-portal-race.log": {
+      "failed": true,
+      "path": "/tmp/hybrid-11-1/pre-edit-portal-race.log",
+      "sha256": "836dfeaee8618f855e6f500bbb1fe3bb5c1aa718a4dbc7924fa3d4c68d243b28",
+      "test_runs": [
+        1
+      ]
+    },
+    "transfer-final.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-1/transfer-final.log",
+      "sha256": "5b7fd7a95d2113d80765f4e9473b0962e43fbcecc78488e3517511003db34a44",
+      "test_runs": [
+        17
+      ]
+    }
+  },
+  "not_run": [
+    "SSH or live Pi/NFS",
+    "deployment/service/systemd/firewall/export/mount mutation",
+    "live DB/job/cache/checkpoint data mutation",
+    "hardware or native PyTorch DDP benchmarks",
+    "bandwidth prediction and controller rate transport",
+    "eviction and Phase 11 combined acceptance"
+  ],
+  "preservation": {
+    "active_config_sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+    "modified_original_files": [
+      "agent/cache_storage.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/cache_copy_worker.py",
+      "hybrid_storage/cache_fetch.py",
+      "tests/README.md",
+      "tests/test_staging_portal.py"
+    ],
+    "prefixes_preserved": [
+      "tests/README.md",
+      "docs/storage/implementation-progress.md"
+    ],
+    "snapshot_files": 274,
+    "source_hashes": {
+      "agent/cache_storage.py": {
+        "after": "8413387d09f48f6faf752fdf60f4db553037fa341db946cb734197e51955d095",
+        "before": "8018b2482e70f115463926d003fa41b65e9dab5015a6c7389700162087f13bb0"
+      },
+      "docs/storage/42-transfer-observations.md": {
+        "after": "b67705475c573833b516bfa62dbfd253853d5e78c154dcd3ca01f851036ecf5e",
+        "before": null
+      },
+      "docs/storage/implementation-progress.md": {
+        "after": "2ae0cecad63deba0f48183dfd8b8a0c98cd7ff44c32d4417848b2bc0c61eff3b",
+        "before": "0e18de870d27590b0425202419af9fc95c864c90220a164a0a40995101554a8d"
+      },
+      "hybrid_storage/README.md": {
+        "after": "525526da05217841b1e16e95a3c84f9daeb89ad744ec1e156d1af8329b9c596f",
+        "before": "39e3ad1c000e0fcb8de58e8a5a1e5552bc62c892f65f77fe9e72b827e6eeef09"
+      },
+      "hybrid_storage/cache_copy_worker.py": {
+        "after": "c35a2bce39a769f02388b61292f3951af616a2aab06f5f8f32598481021066dc",
+        "before": "d1877711ee6518fc19a16e3f12066a34a0d7ed1dc3a670e5171990b2c1977d98"
+      },
+      "hybrid_storage/cache_fetch.py": {
+        "after": "41651f2f76ea5baea55936fc8b5e38604ce6c82f54941cd1b4a429a9cc5698e7",
+        "before": "b81ee8cc50e80c483fe0bad7019b3b6c3a2199319bb74afb760bb13c50166c1e"
+      },
+      "hybrid_storage/transfer_metrics.py": {
+        "after": "20fce4d3978f5dbacdd5fdb9ab42fbb4a9535636702ea61719dab0583cb6dd07",
+        "before": null
+      },
+      "tests/README.md": {
+        "after": "de09d0f5cf6d552b0c851c156731b6b69601ae29bfdedc57cec06e4270e7da2c",
+        "before": "76500500514394e4af982f572244ab0e6e7bd8bd69c415f868f9e82ddc1671e4"
+      },
+      "tests/test_staging_portal.py": {
+        "after": "e7b5da593e8a2f6293ac3392e160f9497143ecb7d7e1cd57644f2faae40e964f",
+        "before": "2208d104021683defe22da6101b0bcc17595bff0937f6a8e275728772473a4e5"
+      },
+      "tests/test_transfer_metrics.py": {
+        "after": "564b39e4bb004c0a910d25e889e1c83cde879f966f42f41e63f5dbabf7401dbd",
+        "before": null
+      }
+    },
+    "status_before": "/tmp/hybrid-11-1/status-before.txt",
+    "unchanged_original_files": 267
+  },
+  "probe_script_sha256": "6b74e054ffb06979dd6806178c7e36dfa4082e0d36e4232865b4b54a71089e83",
+  "python": "3.12.3",
+  "residual_risks": [
+    "success-only observations omit outage/retry cost",
+    "size/page-cache/helper/hash/fsync overhead affects rate",
+    "cluster contention and fixed overhead unknown",
+    "in-memory samples reset on worker restart",
+    "central controller/LOCAL SQLite/authoritative store single point of failure",
+    "reviewed bootstrap/isolation and Phase 9/all-three-Pi validation pending",
+    "prior loaded-run HTTP409 not resolved"
+  ],
+  "rollback_patch": "/tmp/hybrid-11-1/11.1.patch",
+  "subphase": "11.1"
+}

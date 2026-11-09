@@ -461,3 +461,262 @@ Expected: six PASS with reviewed localhost socket access. See the
 Local PASS does not satisfy physical three-Pi acceptance. Read-only readiness
 found pi01 unreachable and the reachable agents missing the hybrid modules;
 no deployment, live rank kill, service or mount change was performed.
+
+## Phase 10.1 resource scheduler observations
+
+`test_scheduler_metrics.py` checks 25 frozen pre-edit resource decisions for both
+single workers and compatible DDP groups, default-OFF/disabled/enabled observation,
+probe order, exact ties, bounded metrics, failures and uncertain reservations.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_metrics.py test_resource_allocation.py test_queue_controls.py test_storage_config.py
+```
+
+Expected: 43 PASS, no physical worker or NFS access. The observer is OFF by default;
+this subphase does not enable locality. See the [10.1 report](../docs/storage/38-resource-scheduler-metrics.md)
+for the separate existing native localhost DDP and mocked staging regressions.
+
+## Phase 10.2 verified locality tie breaker
+
+`test_scheduler_locality.py` checks optional placement tie breaking with mocked
+resources plus real authenticated inventories, immutable input registration and
+disposable SQLite/caches. It verifies resource priority, conservative stale/error
+fallback, group resource profiles, per-rank full-input bytes and freshness metadata.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality.py test_scheduler_metrics.py test_resource_allocation.py test_queue_controls.py test_storage_config.py
+```
+
+Expected: 56 PASS across five files, without Pi/NFS access. Policy activation is
+still gated; this adds explicit `locality=` to the existing selectors only.
+See the [10.2 report](../docs/storage/39-locality-tie-breaker.md) for the complete
+148-test coverage/inventory/staging/native-DDP regression commands and rollback.
+
+## Phase 10.3 exact locality and fair-queue acceptance
+
+`test_scheduler_locality_acceptance.py` adds five tests. The exact decimal-MB
+fixture publishes real 500 MB/2 MB artifacts and three signed, separately verified
+local cache inventories. It writes about 1.504 GB plus metadata, needs at least
+1.638 GB free temporary disk, and skips rather than scaling down if unavailable.
+The other four tests simulate fair turns, continued warm arrivals, infeasible
+heads, uncertain/cancelling quotas and atomic DDP reservations in disposable SQLite.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality_acceptance.py
+```
+
+Expected: five PASS, zero skips when sufficient space exists, exact missing bytes
+0/2,000,000/502,000,000 and DDP totals 2,000,000/504,000,000. No listener, Pi,
+mount or trainer is used by this new file. Runtime policy activation remains off.
+See the [10.3 report](../docs/storage/40-locality-acceptance.md) for exact scope,
+115-test regression commands, evidence and rollback.
+
+## Phase 10.4 configured policy and choice logs
+
+`test_scheduler_policy.py` adds seventeen checks for resource/locality settings,
+choice contents/bounds, stale/error fallback, immediate resource rollback, real
+signed single/three-rank staging with fake mounts/launch, and checkpoint resume.
+A seeded 72-scenario matrix repeats 432 selector calls. A greedy two-job
+counterexample demonstrates that lower bytes for each immediate placement do
+not guarantee lower whole-workload bytes; rollback restores resource behavior.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_policy.py test_queue_controls.py test_storage_config.py
+```
+
+Expected: 44 PASS, no physical worker access. This file uses only small local
+inputs. The separate 10.3 exact-MB suite retains its temporary-disk requirement.
+The [10.4 report](../docs/storage/41-scheduler-policy.md) records all 191 distinct
+latest passing regression tests, a concurrent-run staging rejection and its
+isolated/serial checks, precise config/logging examples and source rollback.
+
+## Phase 11.1 optional transfer observations
+
+`test_transfer_metrics.py` adds seventeen checks for median/MAD units, rolling
+count/age, unknown/stale observations, threading, actual verified-copy measurement,
+warm-hit exclusion, failure/timeout/hash rejection and fail-soft telemetry. Mount
+facts are mocked; copied payloads are real local files. No Pi/network probe or
+speed benchmark is run.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_transfer_metrics.py test_cache_fetch.py test_worker_cache.py
+```
+
+Expected: 83 PASS, zero skips, no live data access. Resource/locality remain
+unchanged and bandwidth runtime is still unavailable. See the
+[11.1 report](../docs/storage/42-transfer-observations.md) and its evidence for
+the broader selected staging/queue/policy regressions and scoped rollback.
+
+## Phase 11.2 optional measured-copy policy
+
+`test_bandwidth_policy.py` checks decomposed copy/overhead arithmetic, authenticated
+inventory v1/v2, stale/replayed/forged/missing observations, disk uncertainty,
+resource-equivalent bandwidth choices, 2/3-rank bounded staging models, signed
+single/three-rank local dispatch barriers, log bounds and resource rollback.
+Calibration rates in policy fixtures are synthetic, not Pi benchmarks.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_bandwidth_policy.py
+```
+
+Expected: 22 PASS, no hosts contacted. Ordinary startup remains gated; inactive
+`nfs-bandwidth.json` validates only with `--runtime staging`. Resource/locality
+remain independent of optional rate collection. The [11.2 report](../docs/storage/43-bandwidth-policy.md)
+records the selected broader regressions, model limitations and scoped rollback.
+
+## Phase 11.3 dry-run-first cache eviction
+
+`test_cache_eviction.py` checks readonly previews, deterministic bounded LRU,
+quota/reserve, pin counts and activity exclusion, actual fetch-to-pin protection,
+retained orphan producers, unsafe entries/root replacement, real process crashes,
+full-disk/unlink/notification errors, nondeleting reconciliation, untouched
+source/checkpoint/unknown files, signed registry FULL/CACHE_REMOVED and authorized
+refetch. All eviction/crash tests use disposable local caches, not worker hosts.
+
+```bash
+env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_eviction.py
+```
+
+Expected: 23 PASS, no hosts contacted or live data changed. Maintenance is explicit
+and disabled by omission; it never bypasses activity/pins or automatically frees
+space for a job. See the [11.3 report](../docs/storage/44-cache-eviction.md) for the
+selected broader regression commands, ownership/rollout limits and rollback.
+
+## Phase 11.4 combined efficiency acceptance
+
+`test_storage_efficiency_acceptance.py` adds ten combined tests for signed
+changing/old/missing rate observations with actual job coverage, bandwidth queue
+fairness, bounded three-rank staging and pin exclusion, capacity refusal, process
+crash → signed registry reconciliation → authorized missing-only restage, and
+resource/locality rollback. Synthetic rates and disk errors are fixtures; these
+are not physical Pi throughput or power-loss tests.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_efficiency_acceptance.py
+```
+
+Expected: **10 PASS**, no live host/data/service changes. The broader 20-file run
+passed **428 distinct tests**, including exact-MB locality and CPU saved-state
+resume. It requires about 1.638 GB temporary free space for the separate exact-MB
+suite. See the [11.4 report](../docs/storage/45-efficiency-acceptance.md) and its
+evidence for commands, initial corrected fixture mistakes, limitations and scoped
+rollback. Runtime code/config are unchanged in 11.4; legacy/OFF/resource remains
+active. Physical validation on pi01, pi02 and pi03 remains pending.
+
+## Two-worker offline deployment preparation
+
+The user now explicitly defers pi01 and continues with pi02/pi03.
+`test_deployment_review.py` adds six offline source-bundle checks: role contents,
+node selection, deterministic real member/archive hashes, existing output/source
+link safety, excluded runtime/key stores, changed-source abort and no controller/
+SQLite import or socket requirement.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_deployment_review.py test_cluster_setup.py test_storage_config.py test_bandwidth_policy.py test_cache_eviction.py
+```
+
+Expected: **76 PASS / five files**, no hosts contacted by these tests. The separate
+read-only two-host readiness and source artifacts are recorded in the
+[preparation report](../docs/storage/47-two-worker-deployment-preparation.md).
+An offline review bundle is not an installed or isolated hybrid runtime.
+
+## Phase 11 completed regression and two-Pi acceptance
+
+The explicit full-phase approval was exercised on pi02/pi03, with pi01 deferred.
+All 56 pre-existing test scripts passed. Ten schema cases skipped by the venv
+were rerun with the installed system Python/jsonschema, all 15 cases in that file
+passing. The new `test_phase11_probe.py` adds four local rehearsal/security/default
+plan tests. Latest aggregate: **946 unittest cases plus one standalone checkpoint
+script PASS, 57 files, zero remaining failures/errors/skips**; reruns not doubled.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated
+PYTHONDONTWRITEBYTECODE=1 python3 tools/run_tests.py --isolated test_storage_manifest_drafts.py
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_phase11_probe.py
+```
+
+The full suite needs localhost sockets for native CPU/Gloo tests and sufficient
+temporary space for exact-MB acceptance. The first command alone can still skip
+schema cases if jsonschema is absent in that venv; the second uses the existing
+documented system interpreter, without installing any dependency.
+
+Separate explicitly approved hardware checks passed for real NFS copies, signed
+controller registry, warm zero bytes, corruption/concurrency/pins/quota, isolated
+UID65534 negative tests, eviction crash/refetch and unchanged production agents.
+No physical three-rank or production student-job deployment is claimed. Exact
+commands, synthetic-vs-physical scope, logs and rollback are in the
+[48 completion report](../docs/storage/48-phase11-live-acceptance.md).
+## Structured event tests — Phase 12.1
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_events.py
+```
+
+Tests the actual JSON log contract, strict field/numeric validation, error
+redaction, disabled/failed logging, thread-local attribution, bounded monotonic
+recovery clocks, real signed cold/warm/private-workspace staging, failed/fenced
+preparation, three-rank mock transports, immutable commit idempotency, scheduler
+resource/locality facts and SDK-gated recovery/restart. Disposable copied DBs and
+local cache files only; fake NFS/trainer/isolation, no hardware acceptance.
+See [12.1 results and scope](../docs/storage/49-structured-events.md).
+
+## Admin storage view — Phase 12.2
+
+`test_admin_storage.py` adds sixteen isolated checks for operator-only roles,
+401/403 and immediate revoke, read-only legacy polls, owner-safe aggregates,
+signed v3/old inventory, offline/stale/replay handling, unique/zero-byte dataset
+coverage, bounded snapshots/windows and genuine existing staging history. It
+executes `test_admin_storage_ui.cjs` against the actual portal JavaScript.
+Node is a development-only requirement for that harness; no npm packages or
+network access are needed. Set `DL_NODE_BINARY` to an installed Node executable
+when `node` is not on PATH. The app's already-installed runtime used here:
+
+```bash
+DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_admin_storage.py
+/usr/lib/chatgpt/resources/cua_node/bin/node tests/test_staging_portal_ui.cjs
+```
+
+On other machines use your actual Node path. Final distinct selected regression:
+155 tests across seven files PASS, no failures/errors/skips. Also visually checked
+an in-app-browser synthetic panel preview; it is not live Pi acceptance. Exact
+commands/results and source rollback are in the [12.2 report](../docs/storage/50-admin-storage-observability.md).
+
+## Student recovery progress — Phase 12.3
+
+```bash
+DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_recovery_portal.py
+```
+
+Use your installed Node path if different, or `node` on PATH. Fifteen tests use
+actual owner-authorized Flask routes, disposable SQLite and existing signed
+staging/checkpoint/recovery fixtures. Checks cover real milestone transitions,
+three-rank SDK barrier, cold/full restart, controller restart, expired ownership,
+stale attempt/snapshot exclusion, readonly polling, legacy compatibility and
+cross-student/admin denial. Runs the actual new recovery JS harness and both
+existing staging/admin JS harnesses, including logout-response races/escaping.
+No npm, Internet, listener, NFS mount or Pi needed; training/isolation are mocked.
+
+Latest selected regression: **127 distinct tests PASS across seven files**,
+zero failures/errors/skips, with reruns not doubled. Synthetic desktop panel
+preview also visually checked. Commands, evidence, limits and scoped rollback:
+[12.3 report](../docs/storage/51-student-recovery-progress.md).
+
+## Observability acceptance — Phase 12.4
+
+`test_observability_acceptance.py` exercises real isolated Flask/SQLite/signed
+inventory fixtures: owner/admin/anonymous permissions, 150 read-only polls,
+100 authenticated unchanged heartbeats, bounded history/snapshot/rotation,
+query interruption, corrupt/stale/replayed observations, exact JSONL units and
+deduplication. It executes the actual portal JS in UTC, Asia/Dhaka and New York
+(including repeated DST hour), plus all three existing storage UI harnesses.
+No live workers, network listener, system service, mount or production DB needed.
+
+```bash
+DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_observability_acceptance.py
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/observability_overhead.py
+```
+
+The Node path is this machine's existing runtime; use your installed Node path
+elsewhere. The second command emits a synthetic local microbenchmark as JSON on
+stdout, never imports the controller and enables logging only in that process.
+See [12.4 results, scope and rollback](../docs/storage/52-observability-acceptance.md).

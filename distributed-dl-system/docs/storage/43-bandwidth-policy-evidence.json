@@ -1,0 +1,402 @@
+{
+  "acceptance": {
+    "authenticated_freshness_and_fallback": "PASS",
+    "mocked_single_and_2_3_rank": "PASS; real local signed staging, fake mount/trainer/isolation and synthetic calibration",
+    "phase_11": "INCOMPLETE; STOP before11.3",
+    "physical_all_three_pis": "NOT RUN, required before physical acceptance",
+    "resource_locality_preservation": "PASS selected regressions including frozen OFF behavior and policy rollback",
+    "subphase_11_2": "local PASS",
+    "transparent_measured_inputs": "PASS"
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 102,
+  "branch": "main",
+  "changed_files": [
+    "config/README.md",
+    "config/storage-examples/README.md",
+    "config/storage-examples/nfs-bandwidth.json",
+    "controller/staging_dispatch.py",
+    "docs/storage/43-bandwidth-policy-evidence.json",
+    "docs/storage/43-bandwidth-policy.md",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/bandwidth.py",
+    "hybrid_storage/cache_copy_worker.py",
+    "hybrid_storage/cache_fetch.py",
+    "hybrid_storage/cache_inventory.py",
+    "hybrid_storage/config.py",
+    "hybrid_storage/inventory_protocol.py",
+    "hybrid_storage/inventory_reporter.py",
+    "hybrid_storage/locality.py",
+    "hybrid_storage/scheduling.py",
+    "hybrid_storage/transfer_metrics.py",
+    "tests/README.md",
+    "tests/test_bandwidth_policy.py",
+    "tests/test_scheduler_policy.py"
+  ],
+  "config_checks": {
+    "active": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-m",
+        "hybrid_storage.config"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"runtime\": \"legacy\", \"settings\": {\"scheduler_policy\": \"resource\", \"storage_aware_staging\": false, \"storage_backend\": \"legacy\", \"worker_cache_enabled\": false}}"
+    },
+    "component": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-m",
+        "hybrid_storage.config",
+        "--runtime",
+        "staging",
+        "--config",
+        "config/storage-examples/nfs-bandwidth.json"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"automatic_startup\": false, \"runtime\": \"trusted-staging-component\", \"settings\": {\"scheduler_policy\": \"bandwidth\", \"storage_aware_staging\": true, \"storage_backend\": \"nfs\", \"worker_cache_enabled\": true}}"
+    },
+    "ordinary_startup_guard": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-m",
+        "hybrid_storage.config",
+        "--config",
+        "config/storage-examples/nfs-bandwidth.json"
+      ],
+      "exit_code": 2,
+      "stderr": "usage: config.py [-h] [--config CONFIG] [--runtime {controller,staging}]\nconfig.py: error: Cache/locality/bandwidth execution is not implemented/enabled",
+      "stdout": ""
+    }
+  },
+  "contracts": {
+    "active_probes": false,
+    "authentication": "same enrolled worker credential, challenge nonce/controller epoch/session/cache boot+epoch/sequence and DB commit required before telemetry ingestion",
+    "bounds": {
+      "choice_bytes": 131072,
+      "default_choices": 128,
+      "default_worker_samples": 64,
+      "max_worker_samples": 4096,
+      "prediction_log_workers": 32,
+      "stage_parallelism": "actual configured1..32"
+    },
+    "capacity": "matching live inventory session+sequence disk available vs missing cache + private workspace logical bytes; quota/reserves/metadata/workspace limits unverified; stage admission authoritative",
+    "component_policy": "resource|locality|bandwidth; explicit trusted construction only",
+    "data_transport": "NFS inputs unchanged; no new artifact endpoint",
+    "db_schema_changes": false,
+    "default": "legacy/cache OFF/staging OFF/resource unchanged",
+    "eviction": false,
+    "fallback": "unknown/stale/missing/error/insufficient-disk comparison restores exact resource baseline",
+    "formula": "unique_missing_bytes/median_copy_Bps + unique_missing_objects*median_residual_seconds",
+    "freshness": "minimum 3 decomposed successful copies, default max900s including conservative source/transit/receiver age and existing30s skew; duplicate reply cannot refresh",
+    "group_model": "same baseline resource profile/full compatible input ranks; bounded greedy rank-order waves with explicit parallelism slowdown assumption, cluster contention unknown",
+    "logs": "protected existing SCHEDULER_CHOICE/history; no raw paths/hash lists/credentials/student route; fail soft",
+    "metadata_transport": "existing request-bound HMAC inventory endpoint; default v1 unchanged, opt-in v2 transfer summary; old controller rejects v2",
+    "overhead": "measured total-attempt minus helper interval; per-object constant is an assumption and parent hash is size-dependent",
+    "predictive_persistence": false,
+    "preserved": [
+      "resource primary order and hard filters",
+      "fair queue/quotas",
+      "reservations/cancellation",
+      "auth/lease fencing",
+      "full-rank READY barrier",
+      "checkpoint formats and committed restore",
+      "resource/locality no throughput dependency"
+    ],
+    "rate_scope": "helper NFS-open/read/hash/local-write/readback/fsync interval; not NIC wire rate",
+    "uncertainty": "observed min/max scenarios, age/count, size range and average extrapolation; not confidence bounds or total completion prediction",
+    "warm": "no missing objects =>0 missing-copy seconds, not0 total staging; missing empty objects still need samples"
+  },
+  "date": "2026-11-09",
+  "errors": 0,
+  "failures": 0,
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "latest_distinct_tests": 290,
+  "latest_test_files": {
+    "test_bandwidth_policy.py": {
+      "log": "targeted-final.log",
+      "status": "PASS",
+      "tests": 22
+    },
+    "test_cache_coverage.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 31
+    },
+    "test_cache_fetch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 33
+    },
+    "test_cache_inventory.py": {
+      "log": "targeted-final.log",
+      "status": "PASS",
+      "tests": 38
+    },
+    "test_ddp_staging.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 16
+    },
+    "test_hybrid_checkpoint_recovery.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 18
+    },
+    "test_queue_controls.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_resource_allocation.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 6
+    },
+    "test_scheduler_locality.py": {
+      "log": "targeted-final.log",
+      "status": "PASS",
+      "tests": 13
+    },
+    "test_scheduler_metrics.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 10
+    },
+    "test_scheduler_policy.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_staging_dispatch.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 25
+    },
+    "test_staging_portal.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_storage_config.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    },
+    "test_transfer_metrics.py": {
+      "log": "final-tests.log",
+      "status": "PASS",
+      "tests": 17
+    }
+  },
+  "logs": {
+    "baseline-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-2/baseline-tests.log",
+      "sha256": "29fd58e4593fa58764d2595beb712c4210be60f91ccdd4dacff2c443eba3f771",
+      "test_runs": [
+        17,
+        38,
+        13,
+        17,
+        17
+      ]
+    },
+    "final-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-2/final-tests.log",
+      "sha256": "ac8cf13108d6995ded06c1bd1cfb2c63caeb9fdb47cdf93896f647e7acb4f3b0",
+      "test_runs": [
+        21,
+        17,
+        33,
+        38,
+        31,
+        10,
+        13,
+        17,
+        17,
+        10,
+        6,
+        25,
+        17,
+        16,
+        18
+      ]
+    },
+    "focused-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-2/focused-tests.log",
+      "sha256": "b442046bd028d7def759df26fdebb6788659567541f74844ef369346d1985f9a",
+      "test_runs": [
+        21,
+        17,
+        17
+      ]
+    },
+    "new-tests.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-2/new-tests.log",
+      "sha256": "3dfa18eab9a13adb52a44a9d2a4db64d438b76772a6a0799aac8c5f182e0072c",
+      "test_runs": [
+        18
+      ]
+    },
+    "targeted-final.log": {
+      "failed": false,
+      "path": "/tmp/hybrid-11-2/targeted-final.log",
+      "sha256": "3020850e68073c5b0b942ddade7b821fe8a86405510f5df6343d5a81505d4821",
+      "test_runs": [
+        22,
+        38,
+        13
+      ]
+    }
+  },
+  "not_run": [
+    "live SSH/Pi/NFS/hardware throughput",
+    "deployment/service/systemd/firewall/export/mount changes",
+    "live DB/job/cache/checkpoint mutation",
+    "native network PyTorch DDP or physical3-Pi validation",
+    "training time prediction",
+    "measured shared server concurrency calibration",
+    "eviction and combined Phase11.4 fault acceptance"
+  ],
+  "preservation": {
+    "active_storage_sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+    "modified_original_files": [
+      "config/README.md",
+      "config/storage-examples/README.md",
+      "controller/staging_dispatch.py",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "hybrid_storage/cache_copy_worker.py",
+      "hybrid_storage/cache_fetch.py",
+      "hybrid_storage/cache_inventory.py",
+      "hybrid_storage/config.py",
+      "hybrid_storage/inventory_protocol.py",
+      "hybrid_storage/inventory_reporter.py",
+      "hybrid_storage/locality.py",
+      "hybrid_storage/scheduling.py",
+      "hybrid_storage/transfer_metrics.py",
+      "tests/README.md",
+      "tests/test_scheduler_policy.py"
+    ],
+    "prefixes_preserved": [
+      "tests/README.md",
+      "docs/storage/implementation-progress.md"
+    ],
+    "snapshot_files": 278,
+    "source_hashes": {
+      "config/README.md": {
+        "after": "ce40cbd45792537dac841d31b08b19124db2295da4c942b8b9ecef6e7003cbd4",
+        "before": "06e00b33c38aa1ade67671b58563e0066cb7c5f252e83b42d112f2a44387a367"
+      },
+      "config/storage-examples/README.md": {
+        "after": "ab4172ff889460f89ed1a1285f27f6cc778c463a59251bb6a73de0b2f6fe9ed5",
+        "before": "5a0e58613957686f2c6001713ebab39a41e1023064cafcb578b2cb461fd51c80"
+      },
+      "config/storage-examples/nfs-bandwidth.json": {
+        "after": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7",
+        "before": null
+      },
+      "controller/staging_dispatch.py": {
+        "after": "f5cecf15a9cab6d29f1827b1581dc3d3a04bf093045e5af301b75cef072c4e91",
+        "before": "ccbb191503ed4edb7e3a9c33a78c208239e8717739023f5c35799ef6f8349ec1"
+      },
+      "docs/storage/43-bandwidth-policy.md": {
+        "after": "aa64807ec140bbbda7ede0c2683261f54d2ebc35bdd1d056606ed33965a1557d",
+        "before": null
+      },
+      "docs/storage/implementation-progress.md": {
+        "after": "9ad130d23d01247d98778690ec0ba3245f46aab4b0f92a4157ecf78729d792b5",
+        "before": "2ae0cecad63deba0f48183dfd8b8a0c98cd7ff44c32d4417848b2bc0c61eff3b"
+      },
+      "hybrid_storage/README.md": {
+        "after": "61d9fb313204109ca0328132be38f1afc37554841751bafd3604675673137318",
+        "before": "525526da05217841b1e16e95a3c84f9daeb89ad744ec1e156d1af8329b9c596f"
+      },
+      "hybrid_storage/bandwidth.py": {
+        "after": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194",
+        "before": null
+      },
+      "hybrid_storage/cache_copy_worker.py": {
+        "after": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1",
+        "before": "c35a2bce39a769f02388b61292f3951af616a2aab06f5f8f32598481021066dc"
+      },
+      "hybrid_storage/cache_fetch.py": {
+        "after": "939c80db4e7ac1d45b368135161451fe44946965c77141423d9f36c8023029cf",
+        "before": "41651f2f76ea5baea55936fc8b5e38604ce6c82f54941cd1b4a429a9cc5698e7"
+      },
+      "hybrid_storage/cache_inventory.py": {
+        "after": "31a8843b7cba6df501d54cf828638cb77382e379e10c751dfcb3ba5ae4b46aa2",
+        "before": "14c0e4126baabd8aa0a740923e8ca65d307e25f390367d0f3267076922e6699f"
+      },
+      "hybrid_storage/config.py": {
+        "after": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e",
+        "before": "88217aa0584feeb281ae4ee3ea99b5c0eb5203993342785170907af8cc22c2c3"
+      },
+      "hybrid_storage/inventory_protocol.py": {
+        "after": "08b31ef61b87b8856b8953b36c95f2e68676ad05e54a425021db83c0f1a61602",
+        "before": "72b5e96964742f275942e6d4ab61ffcad0bf2724819dd3c3bde72a0f479fdc84"
+      },
+      "hybrid_storage/inventory_reporter.py": {
+        "after": "6f8da9437d10ef2ba26bc6555d84582adf38f99696633f73d014a98f93bc0dd2",
+        "before": "097a394dc8777fcc026c7a94fe91ef088cad9ed0dd0767e50018022d94e9c2fb"
+      },
+      "hybrid_storage/locality.py": {
+        "after": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0",
+        "before": "ebb297891df4bd8380d8615cee3730f537b75b6dfacbfe9d4eb7ab5e8b6dcf95"
+      },
+      "hybrid_storage/scheduling.py": {
+        "after": "35d8bef1a0f4b4a998f70e6a5cf80cd987c6fe074bb85c22a150dfaf2dd3110c",
+        "before": "7f9948173e4ecfe4caf609209cd6b706599fa1fc4292a61df3f90329c069b9c5"
+      },
+      "hybrid_storage/transfer_metrics.py": {
+        "after": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2",
+        "before": "20fce4d3978f5dbacdd5fdb9ab42fbb4a9535636702ea61719dab0583cb6dd07"
+      },
+      "tests/README.md": {
+        "after": "2004e2e4ed40d6439d829ecf2971bed4ff8f83a3a20d6adc241302ee9b6f1463",
+        "before": "de09d0f5cf6d552b0c851c156731b6b69601ae29bfdedc57cec06e4270e7da2c"
+      },
+      "tests/test_bandwidth_policy.py": {
+        "after": "621b7d38c39f0c09ecf74c9d0d7403826ae477c18e4324823e13aceeb8962895",
+        "before": null
+      },
+      "tests/test_scheduler_policy.py": {
+        "after": "08f488a6a0f6a1cc267a8ee71347e194f34f78a2dd41ff03000e03c90ceeb586",
+        "before": "9492b2d9b7f4e9af71316eb0fbed41482b68bdaea44fc40e32bb36039cd0c675"
+      }
+    },
+    "status_before": "/tmp/hybrid-11-2/status-before.txt",
+    "unchanged_original_files": 262
+  },
+  "prior_boundary": "11.1 local PASS; hardware/production acceptance still pending",
+  "python": "Python 3.12.3",
+  "residual_risks": [
+    "measured residual not proven fixed across sizes",
+    "success-only rates omit failures/retries",
+    "page-cache/device/source heterogeneity",
+    "unknown cross-job NFS contention, quotas and workspace limits",
+    "conservative clock-skew freshness assumptions",
+    "bounded heuristic not queue-global optimum",
+    "telemetry volatile after restart",
+    "log/DB latency not production-benchmarked",
+    "historical10.4 loaded-run HTTP409 unresolved",
+    "reviewed isolation/bootstrap and physical Phase9 acceptance pending",
+    "central controller/LOCAL SQLite/authoritative storage single point of failure"
+  ],
+  "rollback": {
+    "applied": false,
+    "collector": "optional; next reviewed worker bootstrap may omit transfer_metrics to emit v1",
+    "compatibility": "disable opt-in v2 reporters before deploying older controller code",
+    "patch": "/tmp/hybrid-11-2/11.2.patch",
+    "policy": "runtime.set_scheduler_policy('resource')"
+  },
+  "skips": 0,
+  "subphase": "11.2"
+}

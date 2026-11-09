@@ -10,6 +10,7 @@
 <div class="page-title"><div><span class="eyebrow">COMPUTE / OVERVIEW</span><h1>Your training workspace</h1><p id="refresh-state">Connecting to the controller…</p></div><button id="new-job">＋ Submit training</button></div>
 <div id="dispatcher-warning" class="warning" hidden>The dispatcher is stopped. Submissions can be prepared, but scheduling and recovery need the operator to start it.</div>
 <div id="nodes" class="nodes"></div>
+<section id="admin-storage" class="panel admin-storage" aria-label="Cluster storage administration" hidden></section>
 <div class="columns"><section class="panel job-panel"><div class="section-title"><h2>Your jobs</h2><label class="compact">Show<select id="filter"><option value="all">All jobs</option><option value="active">In progress</option><option value="finished">Finished</option></select></label></div><p id="quota" class="muted small"></p><div id="jobs" class="jobs"></div><p class="muted small">Queue position is the current scheduling order. Resource availability and student limits can change which job starts next.</p></section>
 <section id="detail" class="panel detail"><div class="empty"><span class="empty-icon">◎</span><h2>Follow a job from here</h2><p>Select a job to see its workers, checkpoints, recovery history and training logs.</p></div></section></div>
 </section>

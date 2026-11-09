@@ -1,0 +1,307 @@
+{
+  "api_db_config_security": {
+    "config_changes": [],
+    "existing_signatures_unchanged": true,
+    "legacy_resource_policy_preserved": true,
+    "locality_implemented": false,
+    "metrics_default": "OFF, ContextVar None",
+    "new_operator_API": [
+      "SchedulerMetrics",
+      "observe_scheduling",
+      "snapshot().document()"
+    ],
+    "read_only_nfs_trusted_staging_and_checkpoint_boundaries_unchanged": true,
+    "registry_queries": false,
+    "route_changes": [],
+    "schema_changes": [],
+    "sqlite_remains_local": true
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_snapshot": {
+    "before_directory": "/tmp/hybrid-10-1/before",
+    "files": 304,
+    "manifest": "/tmp/hybrid-10-1/before.json",
+    "manifest_sha256": "643418a94a962504504ce5063c0b154dc89ef1cda096891c49a602bf6c08f4c7",
+    "modified_original_files": [
+      "controller/distributed_dispatch.py",
+      "controller/scheduler.py",
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "prefix_preserved": [
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "unchanged_original_files": 300
+  },
+  "branch": "main",
+  "changed_files": [
+    "controller/distributed_dispatch.py",
+    "controller/scheduler.py",
+    "docs/storage/implementation-progress.md",
+    "tests/README.md",
+    "controller/scheduler_metrics.py",
+    "tests/test_scheduler_metrics.py",
+    "tests/fixtures/resource-scheduler-v1.json",
+    "docs/storage/38-resource-scheduler-metrics.md",
+    "docs/storage/38-resource-scheduler-metrics-evidence.json"
+  ],
+  "date": "2026-11-09",
+  "development_errors": [
+    {
+      "cause": "initial temporary generator omitted agent dependency execution_lease",
+      "kind": "new harness import failure",
+      "resolution": "copy pre-edit agent sources into temporary golden tree"
+    },
+    {
+      "cause": "fixture absent after generator import failure",
+      "kind": "initial new suite error",
+      "log": "/tmp/hybrid-10-1/metrics-tests.log",
+      "resolution": "corrected generator captured 25 old-code outputs; final new suite passes",
+      "sha256": "7b623a0ddb1fe2b49d839c995a42c894b674d7cdbad5e68e752ef4697cfd5d05"
+    }
+  ],
+  "distinct_final_tests": 66,
+  "environment": {
+    "packages": {
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2",
+      "torch": "2.14.1"
+    },
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+  },
+  "final_errors": 0,
+  "final_failures": 0,
+  "final_files": 6,
+  "final_skips": 0,
+  "fingerprints": {
+    "controller/distributed_dispatch.py": {
+      "after_sha256": "e7ed4a0a807a49a66fee8b2ddf6dfcfe35b8575d531d494c6d0136698f802239",
+      "before_sha256": "260d4efe0ca3fbf269b84f51e2db041093d928e67fe2d7e73f5875b166c5c26a"
+    },
+    "controller/scheduler.py": {
+      "after_sha256": "1b0729b1ffaa04b4a6a2bc301e9eabe70a32e874dcb954d3a850a6fb79ff54d6",
+      "before_sha256": "577f915ed80b44dec1f798c6d7166a5100a276cab4ba12f07f9033c38cc8c58b"
+    },
+    "controller/scheduler_metrics.py": {
+      "after_sha256": "17b5995ac2b877bc903f196f36a3ff27d10bc1bf9c23aef515f9779329a12c60",
+      "before_sha256": null
+    },
+    "docs/storage/38-resource-scheduler-metrics.md": {
+      "after_sha256": "a704f7cc0cd557481679fdb8dd39866bbd8684ed42d5f05f87bf69ca83ee23c6",
+      "before_sha256": null
+    },
+    "docs/storage/implementation-progress.md": {
+      "after_sha256": "0f0f33a2d01549ee1a8da12e172c3fbbcba7d6bac8c4776b4a428fbc0fb20843",
+      "before_sha256": "e61967da0f704e00d9efcfccf33c725f9c8f1e069c117e9a701d0625c802f292"
+    },
+    "tests/README.md": {
+      "after_sha256": "c909b82e7750d85592abf9926516f8716b53e43d68e3550affc8aa242650b3fe",
+      "before_sha256": "4a1c4903b428d97d1a5506afb5bbb5436622d1d0dda0d354e4cf4942adca15c6"
+    },
+    "tests/fixtures/resource-scheduler-v1.json": {
+      "after_sha256": "3a21d84f5b9670fdfe521e947c5496d6d95ede263caa4ec0d61868d94507de9a",
+      "before_sha256": null
+    },
+    "tests/test_scheduler_metrics.py": {
+      "after_sha256": "de9d37aa6476f366ac7035ed989bdea3984a2c57aefe398099c6319dfae4091c",
+      "before_sha256": null
+    }
+  },
+  "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+  "golden": {
+    "checks": [
+      "full return objects",
+      "returned object identities",
+      "stdout",
+      "resource probe order",
+      "zero clock reads when OFF"
+    ],
+    "generator": "/tmp/hybrid-10-1/freeze_golden.py",
+    "generator_sha256": "de1bf4661eb8d7bd9fd5b134fa004a48569b754425ecb5632f13235a8d9ade09",
+    "modes": [
+      "default OFF",
+      "explicitly disabled",
+      "enabled"
+    ],
+    "provenance": {
+      "source_head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+      "source_sha256": {
+        "controller/distributed_dispatch.py": "260d4efe0ca3fbf269b84f51e2db041093d928e67fe2d7e73f5875b166c5c26a",
+        "controller/scheduler.py": "577f915ed80b44dec1f798c6d7166a5100a276cab4ba12f07f9033c38cc8c58b"
+      }
+    },
+    "scenarios": 25
+  },
+  "initial_status": "clean",
+  "new_test_methods": 10,
+  "not_performed": [
+    "Pi SSH/HTTP",
+    "live NFS/mount/outage tests",
+    "deployment or service changes",
+    "live job or DB writes",
+    "package installation",
+    "throughput/overhead benchmarks",
+    "locality workload simulations",
+    "Git commit/stash/reset"
+  ],
+  "remaining_gates": [
+    "10.2 locality integration",
+    "10.3 deterministic locality tests",
+    "10.4 activation and simulations",
+    "physical all-three-Pi validation; previous Phase 9 gate remains pending"
+  ],
+  "risks": [
+    "unbenchmarked opt-in observation overhead",
+    "bounded volatile diagnostics are not an audit log",
+    "original resource snapshot staleness and single-worker post-selection lease capability gate preserved",
+    "local tests do not establish hardware or NFS readiness",
+    "controller/LOCAL SQLite/authoritative storage remains single point of failure"
+  ],
+  "rollback": {
+    "commands": [
+      "git apply --reverse --check /tmp/hybrid-10-1/10.1.patch",
+      "git apply --reverse /tmp/hybrid-10-1/10.1.patch"
+    ],
+    "only_check_executed": true,
+    "patch": "/tmp/hybrid-10-1/10.1.patch",
+    "root": "Git root, parent of application",
+    "schema_or_data_rollback_required": false
+  },
+  "scheduling_rules": {
+    "ddp": [
+      "reserved",
+      "excluded",
+      "prepared",
+      "reachable resource fit",
+      "requested lease capability",
+      "resume compatibility",
+      "complete compatibility buckets only",
+      "CPU asc / RAM desc / node ID asc within bucket",
+      "minimum total CPU across buckets / first encountered bucket on ties"
+    ],
+    "ddp_active_quota_slots": 1,
+    "ddp_reservation_count": "one per selected worker",
+    "missing_policy_active_fallback": 1,
+    "shipped_quotas": {
+      "active_per_owner": 3,
+      "aging_seconds": 300,
+      "pending_per_owner": 20
+    },
+    "single": [
+      "allowed",
+      "reserved",
+      "excluded",
+      "reachable resources",
+      "IDLE",
+      "resource fit",
+      "stable CPU asc / RAM desc / inventory tie"
+    ]
+  },
+  "starting_head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "status": "PASS local; STOP before 10.2",
+  "subphase": "10.1",
+  "tests": {
+    "baseline": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_resource_allocation.py test_queue_controls.py test_storage_config.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-1/baseline-tests.log",
+      "passed_files": [
+        "test_resource_allocation.py",
+        "test_queue_controls.py",
+        "test_storage_config.py"
+      ],
+      "sha256": "3cfaa3f2f6d78604fe3271afe700777dce673b9f2da525f07ae1a550d6be74c4",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 17 tests in 1.052s",
+        "",
+        "OK",
+        "PASS test_storage_config.py",
+        "",
+        "3/3 test files passed in 2.9s."
+      ],
+      "test_counts": [
+        6,
+        10,
+        17
+      ]
+    },
+    "ddp": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_distributed_dispatch.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-1/ddp-tests.log",
+      "passed_files": [
+        "test_distributed_dispatch.py"
+      ],
+      "sha256": "fd01f5316b38b4df6d32ddbb32946dfc9bac462fff653bde3c80e9760e9e9ae1",
+      "tail": [
+        "[DDP_STOP_PENDING] group rank=1: offline",
+        "[DDP_RESTART] group: QUEUED; all ranks stopped",
+        "[DDP_CONTACT_PENDING] group rank=1: lost reply",
+        "[DDP_RUNNING] group: 2 ranks",
+        "[DDP_COMPLETED] group: all 2 ranks finished",
+        "PASS test_distributed_dispatch.py",
+        "",
+        "1/1 test files passed in 7.1s."
+      ],
+      "test_counts": [
+        7
+      ]
+    },
+    "final": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_metrics.py test_resource_allocation.py test_queue_controls.py test_storage_config.py test_ddp_staging.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-1/final-tests.log",
+      "passed_files": [
+        "test_scheduler_metrics.py",
+        "test_resource_allocation.py",
+        "test_queue_controls.py",
+        "test_storage_config.py",
+        "test_ddp_staging.py"
+      ],
+      "sha256": "80bab5f30be982650e09ec2050adaaa2354d957ee598eaab0e6d0425fb7ad37c",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 16 tests in 45.662s",
+        "",
+        "OK",
+        "PASS test_ddp_staging.py",
+        "",
+        "5/5 test files passed in 48.9s."
+      ],
+      "test_counts": [
+        10,
+        6,
+        10,
+        17,
+        16
+      ]
+    },
+    "metrics_final": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_metrics.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-1/metrics-final.log",
+      "passed_files": [
+        "test_scheduler_metrics.py"
+      ],
+      "sha256": "c67f6db5902cc7fa6c81be0a0eaf2dbb4c86333b9911efe96a7b5ea98b0b82bd",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 10 tests in 0.123s",
+        "",
+        "OK",
+        "PASS test_scheduler_metrics.py",
+        "",
+        "1/1 test files passed in 0.4s."
+      ],
+      "test_counts": [
+        10
+      ]
+    }
+  }
+}

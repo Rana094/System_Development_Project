@@ -880,3 +880,66 @@ integration, not just a checkbox.
 Show evidence in this order: submitted code → assigned workers → live learning →
 central checkpoint → failed/replacement attempt → confirmed nonzero restore →
 final state comparison. This directly supports the scheduling and recovery claims.
+
+## Operator storage view — Phase 12.2
+
+The same portal can show a **Cluster storage** section to explicitly granted
+admins. Ordinary logins, including one named `admin`, receive no admin rights.
+There is no browser grant button. From the application root, the local operator
+can grant or revoke an **existing** login (replace `operator_login`):
+
+```bash
+.controller-venv/bin/python controller/student_portal.py --grant-admin operator_login
+.controller-venv/bin/python controller/student_portal.py --revoke-admin operator_login
+```
+
+Use one command for the intended action. Granting does not enable hybrid storage
+or change job ownership. Reload/sign in after granting. The server checks grants
+on every admin API request, so revocation applies to existing sessions too.
+The allowlist remains private and local beside the existing portal login files.
+
+The panel shows configured workers, last reported local cache/disk capacity,
+aggregate current dataset coverage, inventory freshness, NFS mount identity and
+recent acknowledged staging transfers. Unavailable or stale data shows Unknown.
+Cache quota is Unknown until reported; disk capacity is labeled separately.
+A verified read-only mount does not prove the server can currently serve I/O.
+Other students' names/jobs/files/paths are not shown, and admin storage access
+still cannot open another student's job details or controls.
+
+Signed worker mount observations require a separately reviewed trusted bootstrap;
+no live telemetry/deployment or production admin grant was applied in this
+subphase. See the [12.2 report](storage/50-admin-storage-observability.md) for
+bounded windows, schema compatibility, exact tests, manual checks and rollback.
+
+## Student recovery progress — Phase 12.3
+
+Select your own retried hybrid job in the existing workspace. The job card and
+detail now show **Recovery progress** beside the existing input-staging metrics.
+The view separates inputs ready, checkpoint copies prepared, processes launched
+and training state restored. A copied checkpoint does not mean training resumed;
+distributed recovery waits for every required SDK acknowledgment. Partial SDK
+observations are accepted as a group, so confirmed restoration can remain 0/3
+until the complete group is proven.
+
+The panel shows the selected committed checkpoint's step and producing attempt,
+without shared paths, hashes or credentials. A full restart—including checkpoint
+mode before any checkpoint was saved—marks checkpoint restoration **Not required**.
+Unrecorded counts stay unknown. Queued, held, stopping and terminal states have
+separate labels. These are display labels, not new scheduler states or a live
+worker probe; no transfer percentage is guessed.
+
+Choose **Recovery progress** in the existing log selector for the same safe
+job-specific summary. Existing cancel/hold/release controls retain their rules.
+Only your own jobs are visible; the admin storage role does not bypass ownership.
+Legacy jobs retain their existing recovery history and payloads. No production
+service/flag or worker deployment was changed. See the
+[12.3 report](storage/51-student-recovery-progress.md) for exact fields, tests and rollback.
+
+## Timestamp display — Phase 12.4
+
+Recorded times use your browser's local timezone and show its abbreviation or
+UTC offset, including repeated daylight-saving hours. Unix timestamp zero is a
+valid date; absent, nonnumeric and out-of-range timestamps show a dash. This does
+not change stored UTC timestamps or monotonic staging/recovery duration units.
+Owner/admin isolation and account-switch response fencing have offline acceptance
+coverage in [Phase 12.4](storage/52-observability-acceptance.md).

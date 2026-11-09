@@ -6,6 +6,7 @@ credential provisioning, mounts, dependency installation or artifact HTTP API.
 
 import threading
 
+from hybrid_storage import events
 from hybrid_storage.cache_fetch import CacheFetcher
 from hybrid_storage.workspaces import WorkspaceManager
 from hybrid_storage.inventory_protocol import Credential, fields, hex_id, encode
@@ -108,16 +109,20 @@ class StagingService:
                     self.ownership.accept(self.root,lease,plan.identity.job_id,plan.identity.attempt_token,self.credential.worker)
                     record['lease']=lease;self.journal.write(state,record)
             authorize=lambda _:self.authority(plan,lease,stage_id)
-            with self.fetcher.cache.metrics.observe() as observation:
-                results=self.fetcher.ensure(plan.inputs(),authorize=authorize)
-                self.workspaces.prepare(plan,authorize=authorize)
-            from hybrid_storage.staging_metrics import measured
-            metrics=measured(observation.snapshot(),results)
-            self.authority(plan,lease,stage_id)
-            with self.journal.session() as state:
-                record=self.journal.read(state,stage_id)
-                if record['phase'] not in ('STAGING','READY'):raise PermissionError('Attempt cancelled')
-                record['phase']='READY';self.journal.write(state,record)
+            with events.observe_staging(plan,self.credential.worker,stage_id) as event:
+                # Protect the fetch -> persistent workspace-pin gap as one activity.
+                with self.fetcher.cache.activity(), self.fetcher.cache.metrics.observe() as observation:
+                    event.counters=observation
+                    results=self.fetcher.ensure(plan.inputs(),authorize=authorize)
+                    self.workspaces.prepare(plan,authorize=authorize)
+                from hybrid_storage.staging_metrics import measured
+                metrics=measured(observation.snapshot(),results)
+                self.authority(plan,lease,stage_id)
+                with self.journal.session() as state:
+                    record=self.journal.read(state,stage_id)
+                    if record['phase'] not in ('STAGING','READY'):raise PermissionError('Attempt cancelled')
+                    record['phase']='READY';self.journal.write(state,record)
+                event.ready(metrics,results)
             expected=receipt_document(stage_id,plan,lease)
             self._ready[stage_id]=(plan,lease,expected)  # Diagnostic compatibility, not authority.
             return dict(receipt=expected,receipt_sha256=receipt_hash(expected),

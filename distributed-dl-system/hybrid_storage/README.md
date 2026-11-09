@@ -11,6 +11,72 @@ their current implementations.
 See the [architecture](../docs/storage/01-hybrid-architecture.md) and
 [implementation progress](../docs/storage/implementation-progress.md).
 
+## Optional transfer observations — Phase 11.1
+
+[`transfer_metrics.py`](transfer_metrics.py) provides explicitly constructed
+`TransferMetrics(configured_worker_id)`, passed through `nfs_cache_fetcher` as
+`transfer_metrics=`. It measures actual successful NFS-to-verified-local payload
+copies, with bounded rolling median MiB/s, variability, sample count and age.
+Warm hits and failed/empty copies are not successful rate samples. No probes,
+persistence, HTTP telemetry or scheduling activation are added; omission preserves
+the existing path. Cross-worker contention remains unknown, and rates include
+verification/fsync/helper overhead rather than measuring wire speed. See the
+[11.1 report](../docs/storage/42-transfer-observations.md) for scope and rollback.
+
+## Locality tie breaking — Phase 10.2
+
+[`locality.py`](locality.py) supplies trusted controller `JobLocality` preferences
+to the existing single-worker/DDP selectors via optional `locality=`. It reuses
+`CoverageAPI.for_job_workers` for a locked read snapshot of authorized immutable
+inputs and current authenticated inventories. CPU/RAM feasibility and ordering,
+compatible complete groups, quotas, reservations and lease/staging gates remain
+authoritative. Unknown or stale inventory restores resource-only choice.
+
+The immutable preference snapshot exposes verified missing bytes, inventory age,
+session/sequence and fallback reason without filenames or credentials. Every
+current DDP rank requires full inputs; this code invents no sample/shard cache.
+Configuration/dispatcher activation remains gated until 10.4. See the
+[10.2 report](../docs/storage/39-locality-tie-breaker.md) for API contracts, tests,
+limits and source rollback. Legacy and resource defaults remain unchanged.
+
+## Configured scheduler policy — Phase 10.4
+
+[`scheduling.py`](scheduling.py) now wires validated resource/locality settings
+through the existing trusted `StagingDispatch` and `CheckpointDispatch` selectors.
+It uses the actual authorized workspace plans and optional same-registry
+`CoverageAPI`. Locality emits bounded, structured operator choice records including
+filtered workers, missing bytes, freshness, requested/effective policy and reason.
+Default resource calls retain the original selector path without inventory reads
+or automatic tracing. An explicit logger can also trace resource selections.
+
+`runtime.set_scheduler_policy('resource')` restores the original policy for future
+placements without modifying running jobs, bindings, cache, leases or SQLite.
+Config examples and read-only validation are documented
+[here](../config/storage-examples/README.md#trusted-coordinator-policy-settings--phase-104).
+Ordinary unconfigured dispatcher/portal startup still cannot bootstrap hybrid
+execution; no live config, deployment or service was changed. Bandwidth is now
+an optional trusted component policy described below. Locality is a greedy tie breaker and can increase aggregate bytes for
+some job sequences; resource stays the active default. See the
+[10.4 report](../docs/storage/41-scheduler-policy.md) for simulations, actual test
+history, operational logging, limits and rollback.
+
+## Optional bandwidth policy — Phase 11.2
+
+[`bandwidth.py`](bandwidth.py) uses decomposed verified-copy observations from
+`TransferMetrics.prediction_snapshot()` and authenticated inventory report v2.
+The reporter and controller receiver are separately opt-in; default report v1 and
+resource/locality paths remain independent. Stale, absent or incomplete facts
+restore resource ordering. No new endpoint, DB table, mount or speed test.
+
+Existing CPU/RAM profiles remain primary for single workers and complete DDP
+groups. The estimated missing-copy time adds measured residual per-object overhead
+to missing bytes divided by measured copy rate. Logs expose uncertainty, age/count,
+disk limits and bounded-parallel group contention assumptions; training completion
+is not modeled. Trusted bootstrap instructions and unchanged immediate resource
+rollback are in the [config examples](../config/storage-examples/README.md) and
+[11.2 report](../docs/storage/43-bandwidth-policy.md). Collection and bandwidth
+selection are optional and not prerequisites for production stability.
+
 ## Input-file API
 
 `StorageBackend` is a typed, runtime-checkable `typing.Protocol`, exported from
@@ -479,3 +545,78 @@ checks and one genuine three-rank test, with exact saved-state loading and the
 stated final floating tolerance. See [8.4 report](../docs/storage/33-checkpoint-fault-acceptance.md)
 and its evidence. Production enablement and physical all-three-Pi validation
 remain pending; central controller/storage remains a SPOF.
+
+## Explicit idle cache maintenance — Phase 11.3
+
+[`cache_eviction.py`](cache_eviction.py) provides dry-run-first `CacheEvictor`,
+constructed through `agent.cache_storage.cache_maintenance`. It reuses existing
+fetcher quota/free-space reserve, plans deterministic LRU victims and requires an
+explicit `apply(plan, dry_run=False)` on a locally issued, revalidated plan.
+Nothing automatically evicts on startup, dispatch, failure or a timer.
+
+Shared cache activity guards cover readers, fetch/materialization and the actual
+agent's fetch-to-pin gap. Any persistent pin blocks all eviction. Only unchanged,
+registered local replicas qualify; NFS, parts/quarantine, unknown files, private
+workspaces, outputs/checkpoints and DB files are not deleted. Existing schema v1
+retains durable missing observations before unlink; crash reconciliation verifies
+actual files and never replays deletion or clears pins. The existing signed
+inventory path reports removals or a requested full reconciliation.
+
+All users of a shared cache must run guarded code before enabling maintenance.
+See the [11.3 report](../docs/storage/44-cache-eviction.md) for exact ownership,
+limits, manual preview, actual tests, residual risks and source/data rollback.
+No live cleanup or deployment was performed.
+
+## Offline hybrid deployment review
+
+`deployment_review.py` builds source-only controller/worker review archives with
+per-file and archive SHA-256 manifests, including `hybrid_storage` omitted by the
+legacy installer bundle. It never uploads/extracts/installs or activates services:
+
+```bash
+.controller-venv/bin/python -B -m hybrid_storage.deployment_review --nodes pi02 pi03
+# Optional new local output directory; existing paths are rejected.
+.controller-venv/bin/python -B -m hybrid_storage.deployment_review --nodes pi02 pi03 --output /tmp/hybrid-review-new
+```
+
+The user currently defers pi01 and authorizes pi02/pi03 continuation. The manifest
+records that scope and always reports `apply_ready=false`. It excludes runtime
+data, active operator configs and credential stores; dependencies/isolation and
+trusted bootstraps remain separate review gates. See the [preparation report](../docs/storage/47-two-worker-deployment-preparation.md).
+
+## Approved Phase 11 hardware acceptance
+
+`phase11_probe.py` is a trusted test bootstrap, driven by
+[`tools/validate_phase11.py`](../tools/validate_phase11.py). Default invocation
+prints a plan; explicit `--run` creates new private fixture state only and uses
+the existing authenticated inventory protocol. It never replaces the production
+agent or enables student execution. Approved pi02/pi03 tests passed with real
+RO NFS, zero-byte warm stages, corruption/concurrency/quota/pin/crash/reconciliation
+checks and a distinct-UID/no-network negative isolation probe. pi01 is deferred.
+All repository tests also passed; see the [completion report](../docs/storage/48-phase11-live-acceptance.md)
+for scope, actual timings, source/OS requirements, commands and rollback.
+## Structured operator events — Phase 12.1
+
+[`events.py`](events.py) defines version-one, allowlisted JSON events on
+`distributed_ml.storage.events` (INFO): exact job/attempt/worker attribution,
+immutable input version, staging bytes/durations, NFS copy errors/retries,
+selection policy/reason, committed checkpoint publication ID and SDK-confirmed
+recovery latency. No handler/DB/schema/config/UI is installed or enabled. Events
+are advisory; default logging is suppressed and legacy storage remains unchanged.
+See the [contract, units, delivery limits and tests](../docs/storage/49-structured-events.md).
+
+## Admin observations — Phase 12.2
+
+[`admin_observations.py`](admin_observations.py) provides optional kernel-only
+`NFSHealthProbe` and `AdminObservations`: accepted signed inventory can publish
+one bounded private LOCAL diagnostic snapshot beside its actual SQLite DB.
+Explicit `InventoryReporter(..., nfs_health=...)` opts into inventory v3 on the
+same existing HMAC channel; omitting it preserves v1/v2. Explicit
+`CacheInventory(..., admin_observations=...)` enables the snapshot; omission
+writes nothing. No automatic bootstrap, new DB table or scheduler authority.
+
+The existing portal's admin-only aggregate panel uses readonly registry and
+staging records, plus session/sequence/heartbeat-matched NFS observations.
+Unknown/stale telemetry cannot imply healthy/eligible cache. Mount identity is
+not an I/O availability test. Controller/parser must be upgraded before workers
+opt into v3. See [the contract, security, tests and rollback](../docs/storage/50-admin-storage-observability.md).

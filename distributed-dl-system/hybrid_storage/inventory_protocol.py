@@ -144,9 +144,14 @@ def challenge(raw):
 
 
 def report(raw):
-    value = fields(decode(raw), 'version worker_id session_id controller_epoch cache_id cache_epoch boot_id sequence base_sequence kind entries disk')
-    if type(value['version']) is not int or value['version'] != 1:
+    value = decode(raw)
+    if type(value) is not dict or type(value.get('version')) is not int or value['version'] not in (1, 2, 3):
         raise InventoryError('Unsupported inventory version')
+    fields(value, 'version worker_id session_id controller_epoch cache_id cache_epoch boot_id sequence base_sequence kind entries disk'
+           + (' transfer' if value['version'] >= 2 else '') + (' nfs' if value['version'] == 3 else ''))
+    # Version 2 carries optional advisory measurements under the SAME request-
+    # bound HMAC. Malformed telemetry is discarded separately, not execution data.
+    # Explicit opt-in v3 adds advisory NFS mount identity. v1/v2 remain unchanged.
     worker_id(value['worker_id'])
     for name in ('session_id', 'controller_epoch', 'cache_id'):
         hex_id(value[name])

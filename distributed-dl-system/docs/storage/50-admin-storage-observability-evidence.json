@@ -1,0 +1,209 @@
+{
+  "phase": "12.2",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "PASS",
+  "stop_before": "12.3",
+  "phase12_complete": false,
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "baseline_catalog": "/tmp/hybrid-12-2/baseline.json",
+  "snapshot_files": 308,
+  "modified_existing_files": [
+    "controller/portal_static/index.html",
+    "controller/portal_static/portal.css",
+    "controller/portal_static/portal.js",
+    "controller/student_portal.py",
+    "docs/storage/implementation-progress.md",
+    "docs/student-interface.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/cache_inventory.py",
+    "hybrid_storage/inventory_protocol.py",
+    "hybrid_storage/inventory_reporter.py",
+    "tests/README.md"
+  ],
+  "new_files": [
+    "controller/portal_admin.py",
+    "controller/admin_storage_view.py",
+    "hybrid_storage/admin_observations.py",
+    "tests/test_admin_storage.py",
+    "tests/test_admin_storage_ui.cjs",
+    "docs/storage/50-admin-storage-observability.md",
+    "docs/storage/50-admin-storage-observability-evidence.json"
+  ],
+  "untouched_original_files": 297,
+  "file_hashes": {
+    "controller/admin_storage_view.py": {
+      "before": null,
+      "after": "7955b5db141414bfc8d0d81eb4344ea437bf06f15bd30ac7fc27ea8b76d98b6a"
+    },
+    "controller/portal_admin.py": {
+      "before": null,
+      "after": "f0096d0a06e970054df8f96040ebb6862027e73879f203d5c44ed0b080508c63"
+    },
+    "controller/portal_static/index.html": {
+      "before": "e944aaf3a9942784e1616f56a388778334bf5ba304ba38de749773c0c09406c4",
+      "after": "eb2740d83e6174af5ee66ec5a335093eeeb74e98d4c5ecdc1d9b54b7548f5331"
+    },
+    "controller/portal_static/portal.css": {
+      "before": "8a9ec881f6d8827c9b3fd9ad9d681ab534dd2f6c7feb8851f151f70a9548c287",
+      "after": "e2a5abbf2edce30ac84daea68cb8d6e1185c90a66c49e3bc7189cdb3eb1742c0"
+    },
+    "controller/portal_static/portal.js": {
+      "before": "15a437f7e0a2867fe9f7bc61e26bd443c781f5a2e229033aa9e5590ede19d23f",
+      "after": "059eba4cc42fb59cf893a02517b7945f25d535742c5b41e600488aee7efcc988"
+    },
+    "controller/student_portal.py": {
+      "before": "269119d1d26b3f6db8616081a688008b84c25beda6670b785008c1ccedadf6c0",
+      "after": "a513840067214d5f5f9142b2bc5d11c072d1e74073b39ba1d22ea165bfe9447c"
+    },
+    "docs/storage/50-admin-storage-observability.md": {
+      "before": null,
+      "after": "fc2eda1c03a51955c04747f4bcd581f49fd4579bf1e069b834723d80eed8bd14"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "f5e5d0279ba075d7782456f614baf486197865546c797a672935c4bda1d5cb62",
+      "after": "31482b4397e00e2b5fe6d3bf90c3389a6bb64211d5ffba0a0999d27adf79fdbf"
+    },
+    "docs/student-interface.md": {
+      "before": "a081920ae84d8bffae41482ef902a828e4f7eef2ec70ab92d3e017a204a627cb",
+      "after": "2780269a562b4b281a2be84fe8e95a8cb587a92da353059aa186c014b0b7058d"
+    },
+    "hybrid_storage/README.md": {
+      "before": "5cf9a360db994cb7002c92e3fb9d4967cc608030bb1342e5777aaa4806a71254",
+      "after": "8961ac3f8bd7a19abf6af51891322484a6fbe5aa2d34165399f1a06ed5ea324c"
+    },
+    "hybrid_storage/admin_observations.py": {
+      "before": null,
+      "after": "8ece3257b36a226d5acda3db64aba1b7dfe413fd5d056d12314fdb918fb16c2d"
+    },
+    "hybrid_storage/cache_inventory.py": {
+      "before": "31a8843b7cba6df501d54cf828638cb77382e379e10c751dfcb3ba5ae4b46aa2",
+      "after": "b1ed5ca99d7e4604b54fb4d89e34e55d00cbec982acd9835be5e7a123c8d3754"
+    },
+    "hybrid_storage/inventory_protocol.py": {
+      "before": "08b31ef61b87b8856b8953b36c95f2e68676ad05e54a425021db83c0f1a61602",
+      "after": "c751be74e4fc583c9b6afff20e10d9a674c38418e433a989dc5877bc58663e25"
+    },
+    "hybrid_storage/inventory_reporter.py": {
+      "before": "8ecc51cd673691060840a18f73be829769a9d274e4cac9510497f70414827355",
+      "after": "2bc4aa3ba8304b2402f7e9bc6b834f22624c1fe73df129b492da2f3f98654b9f"
+    },
+    "tests/README.md": {
+      "before": "1f962a1a3bdce810eafd170959e44d963c02bd8c85e0289040703e5933618f37",
+      "after": "1d4b9e8086fd4cc8efb914cca75bb893d250a030575372637e5c2d64a709f5f9"
+    },
+    "tests/test_admin_storage.py": {
+      "before": null,
+      "after": "5c8a02e0f1bafa4994d38d83d1c490550d6b574167fc0cb28e080c70adb49941"
+    },
+    "tests/test_admin_storage_ui.cjs": {
+      "before": null,
+      "after": "c7902e582560177f20ce251f891c62649ecb114bf42a5fd7b883589114398402"
+    }
+  },
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_student_portal.py test_staging_portal.py test_cache_inventory.py",
+      "log": "/tmp/hybrid-12-2/baseline-tests.log",
+      "sha256": "4ded708debf4610457c6407cf4a53a4e65199cfacff23e390fff03a64f38e4f0",
+      "counts": {
+        "test_student_portal.py": 17,
+        "test_staging_portal.py": 17,
+        "test_cache_inventory.py": 38
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_admin_storage.py test_student_portal.py test_staging_portal.py test_cache_inventory.py test_cache_coverage.py test_transfer_metrics.py test_storage_events.py",
+      "log": "/tmp/hybrid-12-2/final-tests.log",
+      "sha256": "d04318e8e16c5af5fb5172f95e4689ca21833446716a735c24ccad60693432ac",
+      "counts": {
+        "test_admin_storage.py": 16,
+        "test_student_portal.py": 17,
+        "test_staging_portal.py": 17,
+        "test_cache_inventory.py": 38,
+        "test_cache_coverage.py": 31,
+        "test_transfer_metrics.py": 17,
+        "test_storage_events.py": 19
+      },
+      "result": "PASS"
+    }
+  ],
+  "latest_distinct_total": 155,
+  "remaining_failures": 0,
+  "remaining_errors": 0,
+  "remaining_skips": 0,
+  "additional_ui_check": {
+    "command": "/usr/lib/chatgpt/resources/cua_node/bin/node tests/test_staging_portal_ui.cjs",
+    "log": "/tmp/hybrid-12-2/legacy-ui.log",
+    "sha256": "59523e6e3f77f03a566ff50c333574e0ad27accf8129254c545521a54fb22026",
+    "result": "PASS"
+  },
+  "initial_test_error": {
+    "log": "/tmp/hybrid-12-2/admin-tests.log",
+    "sha256": "bbfc839835e7fe99a12dd69397a83fcb0a61b050b4f1cbc1a41ab09755c293fe",
+    "description": "Node absent on PATH: one test error; used existing bundled Node via DL_NODE_BINARY, no installation."
+  },
+  "intermediate_new_tests": {
+    "log": "/tmp/hybrid-12-2/admin-tests-retry.log",
+    "sha256": "a24e4e94632ccf3276d558b31684b9d2000d1d716eef7db5735208d8d8bd10f3",
+    "result": "14/14 PASS before two bounded/offline cases added; not double counted"
+  },
+  "ui_preview": {
+    "result": "PASS",
+    "type": "Actual panel rendering/current CSS with synthetic fixture data only",
+    "screenshot": "/tmp/hybrid-12-2/admin-preview.png",
+    "sha256": "81cd4cc9e65b3931e97b213dd5d89fb87da74e8e4674539ac0f4a59a3d7460ee",
+    "fixture": "/tmp/hybrid-12-2/preview/index.html",
+    "fixture_sha256": "c16f9f30fb3998214d3c610ef9167191140e339715cb7ecdcfc9587a7ba5c4bc",
+    "browser": "Codex in-app browser; admin panel and expanded history visually inspected",
+    "network": "Temporary static localhost fixture only: 127.0.0.1:40393",
+    "cleanup": "Preview tab closed and owned fixture server interrupted/closed, exit130",
+    "limitation": "No live backend/Pi data, mobile or full accessibility acceptance. Initial sandbox bind denied; narrow temporary localhost execution approved. No Internet/dependency download."
+  },
+  "api_changes": [
+    "GET /api/admin/storage (admin only)",
+    "is_admin boolean added to existing session/login responses"
+  ],
+  "cli_changes": [
+    "--grant-admin EXISTING_LOGIN",
+    "--revoke-admin EXISTING_LOGIN"
+  ],
+  "db_changes": "None: read-only portal polling; no migrations/new tables/poll writes.",
+  "optional_local_files": [
+    "Private admins.json beside existing portal login files; operator-only explicit changes",
+    "cache-admin-observations.json beside same LOCAL DB: 256 workers, 256KiB, atomic0600; explicit opt-in only"
+  ],
+  "protocol_changes": "Explicit opt-in inventory v3 uses same existing request-bound HMAC route; v1/v2 unchanged. Upgrade controller first.",
+  "security": [
+    "Role checked before opening diagnostic data; no implicit admin; malformed/insecure grants fail closed.",
+    "No usernames, jobs, dataset names/IDs, hashes, filenames, addresses, credentials or shared paths in admin projection.",
+    "Existing owner checks remain even for admins; pending admin responses fenced on logout/account change.",
+    "Signed health snapshot must match session/sequence/received timestamp and diagnostic freshness; not scheduling authority."
+  ],
+  "live_mutations": false,
+  "production_admin_grant": false,
+  "pi_contact": false,
+  "storage_defaults_unchanged": true,
+  "commit_stash_or_reset": false,
+  "residual_limits": [
+    "Cache quota not published: Unknown; physical disk capacity separately labeled.",
+    "NFS kernel mount identity is not I/O/server reachability.",
+    "Conservative wall-clock freshness cannot replace inventory-owner memory or lease/resource gates.",
+    "20 dataset heads and10 transfers/worker from300-event window; truncation exposed.",
+    "Optional authenticated snapshot fsync cost not overhead-benchmarked; Phase12.4 broader testing pending.",
+    "Phase12.3 student progress work remains pending.",
+    "Central controller/local SQLite/authoritative storage are single point of failure.",
+    "Historical loaded-run HTTP409 remains unresolved; no new physical Pi acceptance."
+  ],
+  "rollback": {
+    "check": "git apply --reverse --check /tmp/hybrid-12-2/12.2.patch",
+    "apply": "git apply --reverse /tmp/hybrid-12-2/12.2.patch",
+    "immediate_access": "Existing local operator CLI --revoke-admin EXISTING_LOGIN",
+    "optional_telemetry": "Omit admin_observations/nfs_health in next reviewed bootstrap",
+    "verification": "/tmp/hybrid-12-2/source-verification.json",
+    "avoid": "No whole-file HEAD restore or deletion of runtime/user data."
+  }
+}

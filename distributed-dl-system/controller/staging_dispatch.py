@@ -9,7 +9,8 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 import json
 from pathlib import Path
 
-from hybrid_storage.config import StorageConfig, StorageConfigError
+from hybrid_storage.config import StorageConfig
+from hybrid_storage.scheduling import SchedulingPolicy
 from hybrid_storage.registry import StorageRegistry
 from hybrid_storage import registry_schema, staging_schema, cleanup_schema
 from hybrid_storage.staging_lifecycle import StagingLifecycle, require_ready
@@ -19,11 +20,12 @@ from staging_recovery import StagingRecovery
 
 
 class StagingDispatch(StagingRecovery):
-    def __init__(self, registry, client, *, settings=StorageConfig(), stage_parallelism=3):
+    def __init__(self, registry, client, *, settings=StorageConfig(), stage_parallelism=3,
+                 coverage=None, choice_logger=None):
         if not isinstance(registry, StorageRegistry) or not isinstance(client, StagingClient):
             raise TypeError('Expected explicit registry and authenticated control client')
-        if settings != StorageConfig('nfs', True, True, 'resource'):
-            raise StorageConfigError('Dispatch requires explicit NFS/cache/staging/resource settings')
+        self.scheduler = SchedulingPolicy(registry,settings=settings,coverage=coverage,choice_logger=choice_logger,
+                                          stage_parallelism=stage_parallelism)
         if type(stage_parallelism) is not int or not 1 <= stage_parallelism <= 32:
             raise ValueError('Stage parallelism must be an integer from 1 to 32')
         self.registry, self.client = registry, client
@@ -31,6 +33,11 @@ class StagingDispatch(StagingRecovery):
         self.lifecycle = StagingLifecycle(registry, settings=settings)
         self._launching = set()
         self._finishing=set();self._owned_stages=set()
+
+    def set_scheduler_policy(self, policy):
+        """Trusted caller's immediate resource fallback for future placements only."""
+        self.scheduler.set_policy(policy)
+        self.lifecycle.settings = self.scheduler.settings
 
     def _reader(self, db):
         """Reuse the registry's read-only validators in the caller's locked snapshot.
@@ -66,6 +73,8 @@ class StagingDispatch(StagingRecovery):
         raise ValueError('NFS checkpoint jobs require explicit trusted recovery coordinator')
 
     def recovery_source(self, job):return None
+
+    def recovery_started(self, job, workers, source):pass
 
     def prepare_recovery(self, job, stage, workers, leases, source):pass
 
@@ -237,12 +246,12 @@ class StagingDispatch(StagingRecovery):
         if not ownership.settings()['enabled']:
             raise ValueError('Hybrid execution requires existing watchdog leases')
         # Validate ACL, immutable binding and every plan before reserving a slot.
-        self.plans(job)
+        plans = self.plans(job)
         spec = json.loads(job['job_config'])
         source=self.recovery_source(job)
         if spec['execution']['workers'] > 1:
-            workers = (ddp.select_group(job,excluded,source['metadata'],require_ownership=True) if source else
-                       ddp.select_group(job,excluded,require_ownership=True))
+            selection_args = (job,excluded,source['metadata']) if source else (job,excluded)
+            workers = self.scheduler.select(job,plans,ddp.select_group,*selection_args,require_ownership=True)
             if not workers:return False
             import secrets
             context = dict(world_size=len(workers),master_addr=workers[0]['ip'],
@@ -250,13 +259,14 @@ class StagingDispatch(StagingRecovery):
         else:
             allowed = [r['node_id'] for r in store.get_job_environments(job['job_id'])
                        if not source or r['record']['compatibility_key']==source['metadata']['compatibility_key']]
-            selected = dispatcher.select_best_node(allowed_nodes=allowed,requirements=spec['resources_per_worker'],
+            selected = self.scheduler.select(job,plans,dispatcher.select_best_node,allowed_nodes=allowed,requirements=spec['resources_per_worker'],
                 reserved_nodes={r['node_id'] for r in store.get_reservations()},excluded_nodes=excluded)
             if not selected or not ownership.supported(selected.get('resources')):return False
             workers, context = [selected['node']], None
         store.mark_scheduled(job['job_id'],workers[0]['id'],workers[0]['ip'],spec['resources_per_worker'],
                              workers,context,storage_runtime=self)
         job = store.get_job(job['job_id'])
+        self.recovery_started(job,workers,source)
         stage = None
         try:
             leases = [ownership.ensure(job,node['id']) for node in workers]

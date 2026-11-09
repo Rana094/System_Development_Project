@@ -3,6 +3,7 @@
 from pathlib import Path
 import json
 import requests
+from scheduler_metrics import begin_selection
 
 CONFIG_FILE = Path(__file__).resolve().parents[1] / "config/nodes.json"
 
@@ -41,8 +42,15 @@ def select_best_node(
     allowed_nodes=None,
     requirements=None,
     reserved_nodes=None,
+    *,
+    locality=None,
 ):
     """Filter unavailable, busy or excluded nodes, then rank the remaining resources."""
+    if locality is not None:
+        from hybrid_storage.locality import JobLocality
+        if not isinstance(locality, JobLocality):raise TypeError('Expected explicit job-bound JobLocality')
+        locality.reset()
+    measurement=begin_selection('single')
     if excluded_nodes is None:
         excluded_nodes = set()
 
@@ -52,31 +60,43 @@ def select_best_node(
     candidates = []
 
     for node in nodes:
+        if measurement is not None:measurement.examined+=1
         # Optional placement constraints keep benchmark hardware comparable.
         if allowed_nodes is not None and node["id"] not in allowed_nodes:
+            if measurement is not None:measurement.skip('not_allowed',node['id'])
             continue
 
         if node["id"] in reserved_nodes:
+            if measurement is not None:measurement.skip('reserved',node['id'])
             continue
 
         if node["id"] in excluded_nodes:
+            if measurement is not None:measurement.skip('excluded',node['id'])
 
             print(f"{node['id']} skipped " "(temporarily unhealthy)")
 
             continue
 
+        if measurement is not None:measurement.queries+=1
         resources = get_resources(node)
 
         if resources is None:
+            if measurement is not None:measurement.skip('unavailable',node['id'])
             print(f"{node['id']} unavailable")
             continue
 
         if resources["node_state"] != "IDLE":
+            if measurement is not None:measurement.skip('busy',node['id'])
             print(f"{node['id']} skipped " f"({resources['node_state']})")
             continue
 
         if not resources_fit(resources, requirements):
+            if measurement is not None:measurement.skip('resources',node['id'])
             continue
+
+        if measurement is not None:
+            measurement.eligible+=1
+            measurement.candidate(node['id'],resources['cpu']['usage_percent'],resources['memory']['available_gb'])
 
         print(
             f"[SCHEDULER] candidate={node['id']} "
@@ -94,11 +114,16 @@ def select_best_node(
         )
 
     if not candidates:
+        if locality is not None:locality.single([])
+        if measurement is not None:measurement.finish([])
         return None
 
     candidates.sort(key=lambda item: (item["cpu"], -item["ram"]))
 
-    return candidates[0]
+    selected = candidates[0] if locality is None else locality.single(candidates)
+    if measurement is not None:
+        measurement.finish([selected['node']],policy='resource' if locality is None else locality.snapshot().policy)
+    return selected
 
 
 if __name__ == "__main__":

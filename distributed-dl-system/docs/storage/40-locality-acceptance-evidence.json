@@ -1,0 +1,311 @@
+{
+  "acceptance": {
+    "DDP_bytes_and_per_rank_capacity": "PASS",
+    "all_three_physical_Pis": "NOT RUN; required before cluster acceptance",
+    "exact_0_2_502_MB": "PASS",
+    "legacy_OFF_and_existing_regressions": "PASS",
+    "no_locality_starvation_in_bounded_feasible_simulation": "PASS",
+    "phase_10_4": "NOT IMPLEMENTED",
+    "preserve_prior_runtime": "PASS",
+    "quotas_and_reservations": "PASS",
+    "resource_exclusion": "PASS",
+    "stale_missing_unknown": "PASS"
+  },
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "baseline_tests": 87,
+  "branch": "main",
+  "changed_files": [
+    "docs/storage/implementation-progress.md",
+    "tests/README.md",
+    "tests/test_scheduler_locality_acceptance.py",
+    "docs/storage/40-locality-acceptance.md",
+    "docs/storage/40-locality-acceptance-evidence.json"
+  ],
+  "changes": {
+    "API": false,
+    "DB_schema_or_migration": false,
+    "configuration_flags_or_defaults": false,
+    "policy_activation": false,
+    "queue_quota_reservation_lease_rules": false,
+    "runtime_code": false,
+    "security_trust_boundaries": false
+  },
+  "date": "2026-11-09",
+  "development_errors": [
+    {
+      "cause": "new recursive mkdir fixture gave intermediate cache algorithm directory 0755",
+      "log": "/tmp/hybrid-10-3/acceptance-initial.log",
+      "new_test_errors": 1,
+      "passed_new_queue_tests": 4,
+      "resolution": "explicitly create both cache path components 0700; existing runtime correctly rejected unsafe mode and was unchanged",
+      "sha256": "0c63821982552a857a82099998ece01cf4cba67425a34debda2f52026d78be32"
+    }
+  ],
+  "environment": {
+    "packages": {
+      "Flask": "3.1.3",
+      "numpy": "2.5.3",
+      "requests": "2.34.2",
+      "torch": "2.14.1"
+    },
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+  },
+  "exact_MB_fixture": {
+    "MB": 1000000,
+    "inventory_permutations": 6,
+    "missing_bytes": {
+      "pi01": 0,
+      "pi02": 2000000,
+      "pi03": 502000000
+    },
+    "required_input_bytes": 502000072,
+    "scope": "fake prepared manifests/resources; signed inventory and registry selectors real",
+    "storage": "real distinct local inodes; no sparse/hardlink/synthetic presence",
+    "three_rank_missing_bytes": 504000000,
+    "two_rank_missing_bytes": 2000000
+  },
+  "exact_fixture_checks": [
+    "real streaming publication and hash verification",
+    "duplicate manifest alias counted once per worker",
+    "actual private independent cache inodes",
+    "all three identities with authenticated FULL inventory",
+    "six inventory permutations for single and two/three-rank selectors",
+    "resource-only stable inventory choice",
+    "CPU/RAM exclusion precedes locality",
+    "per-rank full inputs; capacity/reservation/ownership cannot permit incomplete group",
+    "stale/missing inventory unknown and resource fallback",
+    "missing verified object row loses hit; authenticated FULL repairs",
+    "selection does not mutate registry DB"
+  ],
+  "final_distinct_tests": 115,
+  "final_errors": 0,
+  "final_failures": 0,
+  "final_files": 9,
+  "final_skips": 0,
+  "fingerprints": {
+    "docs/storage/40-locality-acceptance.md": {
+      "after_sha256": "2d09d3e99aa476249f94b48e2a5a5b8f32d54c2ffa39351c0889f2f1e531aa6d",
+      "before_sha256": null
+    },
+    "docs/storage/implementation-progress.md": {
+      "after_sha256": "364987e81efd8c305bc726634a804c51704d164853ce79b67b38ffc4fdfe8cd9",
+      "before_sha256": "5f5727bfff380f4332cb226d4a4555a24a06b6501f8435f43619b3a5dc360ec2"
+    },
+    "tests/README.md": {
+      "after_sha256": "b01863c2a39dcaa5a5019b34d6b4d2711839111cc1e1d1a81975953e796636b4",
+      "before_sha256": "d014de403e13fc7017d909ff478340556b1a047797f02ea362ea1a728690729c"
+    },
+    "tests/test_scheduler_locality_acceptance.py": {
+      "after_sha256": "d71ae7c5eca57a13f967660032be1e610c930be444ccd2cc62d51a89e7c1d9ba",
+      "before_sha256": null
+    }
+  },
+  "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "initial_status": [
+    " M distributed-dl-system/controller/distributed_dispatch.py",
+    " M distributed-dl-system/controller/scheduler.py",
+    " M distributed-dl-system/docs/storage/implementation-progress.md",
+    " M distributed-dl-system/hybrid_storage/README.md",
+    " M distributed-dl-system/hybrid_storage/cache_coverage.py",
+    " M distributed-dl-system/tests/README.md",
+    "?? distributed-dl-system/controller/scheduler_metrics.py",
+    "?? distributed-dl-system/docs/storage/38-resource-scheduler-metrics-evidence.json",
+    "?? distributed-dl-system/docs/storage/38-resource-scheduler-metrics.md",
+    "?? distributed-dl-system/docs/storage/39-locality-tie-breaker-evidence.json",
+    "?? distributed-dl-system/docs/storage/39-locality-tie-breaker.md",
+    "?? distributed-dl-system/hybrid_storage/locality.py",
+    "?? distributed-dl-system/tests/fixtures/resource-scheduler-v1.json",
+    "?? distributed-dl-system/tests/test_scheduler_locality.py",
+    "?? distributed-dl-system/tests/test_scheduler_metrics.py"
+  ],
+  "limits": [
+    "fixture needs 1.638 GB free and must skip honestly if absent; this run zero skips",
+    "not an upload, sandbox, physical Pi, live NFS or training lifecycle proof",
+    "bounded fairness simulation does not guarantee permanently infeasible/nonterminating jobs progress",
+    "cache/workspace disk admission and hash/ACL/lease verification still required at staging",
+    "production policy wiring/logs/broader simulations belong to 10.4",
+    "Phase 9 all-three-Pi physical gate still pending; no new readiness probes",
+    "controller/LOCAL SQLite/authoritative storage remains a single point of failure"
+  ],
+  "mocked_or_synthetic": [
+    "prepared manifest wrappers for exact MB jobs (actual registered object bytes and binding validation)",
+    "worker resource telemetry and ownership capability",
+    "queue simulation inventory/transport/launch and confirmed terminal acknowledgments"
+  ],
+  "new_test_methods": 5,
+  "not_performed": [
+    "live DB/job/cache/checkpoint writes",
+    "Pi/SSH/remote probes",
+    "live NFS/mount/network/power tests",
+    "deploy/service/export/fstab/firewall/systemd changes",
+    "runtime package/download/Internet transfer",
+    "Git commit/reset/stash",
+    "physical worker training",
+    "production policy activation or throughput benchmark"
+  ],
+  "old_resource_golden_scenarios": 25,
+  "queue_simulation": {
+    "arrival_rounds": 8,
+    "cold_start_rounds": [
+      0,
+      1
+    ],
+    "dispatches": 10,
+    "resource_locality_repeated_traces_equal": true,
+    "scope": "controlled queue simulation; inventory and launch mocked"
+  },
+  "rollback": {
+    "commands": [
+      "git apply --reverse --check /tmp/hybrid-10-3/10.3.patch",
+      "git apply --reverse /tmp/hybrid-10-3/10.3.patch"
+    ],
+    "only_check_executed": true,
+    "patch": "/tmp/hybrid-10-3/10.3.patch",
+    "retains_10_1_10_2_runtime": true,
+    "run_from": "/home/rana/Projects/System Project/System_Development_Project",
+    "schema_or_data_rollback_required": false
+  },
+  "simulation_checks": [
+    "existing fair_queue and dispatch_queued_jobs control flow",
+    "atomic mark_scheduled/reservations in real disposable SQLite",
+    "continuous warm arrivals with cold FIFO rounds 0 and 1",
+    "resource and two locality run traces equal",
+    "infeasible cold head does not block another owner",
+    "SCHEDULED/CANCELLING retain active quota/reservations",
+    "one DDP owner slot, multiple exclusive workers, no partial warm gang, other owner can use remaining worker"
+  ],
+  "snapshot": {
+    "complete_starting_prefix_preserved": [
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "controller_agent_hybrid_storage_files_unchanged": 88,
+    "directory": "/tmp/hybrid-10-3/before",
+    "files": 313,
+    "manifest": "/tmp/hybrid-10-3/before.json",
+    "manifest_sha256": "71413c4a303caa88f8bf0a7493056be755ac07451341534d2ac6ac7ae0879809",
+    "modified_original_files": [
+      "docs/storage/implementation-progress.md",
+      "tests/README.md"
+    ],
+    "unchanged_original_files": 311
+  },
+  "starting_boundary": "10.2 local PASS and explicit 10.3 user continuation; no new commit inferred",
+  "status": "PASS local; STOP before 10.4",
+  "subphase": "10.3",
+  "tests": {
+    "acceptance_second": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality_acceptance.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-3/acceptance-second.log",
+      "passed_files": [
+        "test_scheduler_locality_acceptance.py"
+      ],
+      "sha256": "1d36c221d32a99a519e04c64f957f83d18d191399fc9b1efdbb4aa1ad9e84c1f",
+      "tail": [
+        "Ran 5 tests in 15.803s",
+        "",
+        "OK",
+        "LOCALITY_EXACT_MB {\"MB\": 1000000, \"required_input_bytes\": 502000072, \"missing_bytes\": {\"pi01\": 0, \"pi02\": 2000000, \"pi03\": 502000000}, \"two_rank_missing_bytes\": 2000000, \"three_rank_missing_bytes\": 504000000, \"inventory_permutations\": 6, \"storage\": \"real distinct local inodes; no sparse/hardlink/synthetic presence\", \"scope\": \"fake prepared manifests/resources; signed inventory and registry selectors real\"}",
+        "LOCALITY_QUEUE {\"arrival_rounds\": 8, \"cold_start_rounds\": [0, 1], \"dispatches\": 10, \"resource_locality_repeated_traces_equal\": true, \"scope\": \"controlled queue simulation; inventory and launch mocked\"}",
+        "PASS test_scheduler_locality_acceptance.py",
+        "",
+        "1/1 test files passed in 16.3s."
+      ],
+      "test_counts": [
+        5
+      ]
+    },
+    "baseline": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality.py test_scheduler_metrics.py test_cache_coverage.py test_queue_controls.py test_resource_allocation.py test_storage_config.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-3/baseline-tests.log",
+      "passed_files": [
+        "test_scheduler_locality.py",
+        "test_scheduler_metrics.py",
+        "test_cache_coverage.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py",
+        "test_storage_config.py"
+      ],
+      "sha256": "8c4cc7786ee4b03b1b6156cd6f936f299e51ac1222801263c22b12f1596c5af9",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 17 tests in 1.082s",
+        "",
+        "OK",
+        "PASS test_storage_config.py",
+        "",
+        "6/6 test files passed in 17.6s."
+      ],
+      "test_counts": [
+        13,
+        10,
+        31,
+        10,
+        6,
+        17
+      ]
+    },
+    "ddp": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_distributed_dispatch.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-3/ddp-tests.log",
+      "passed_files": [
+        "test_distributed_dispatch.py"
+      ],
+      "sha256": "20bfae1aee9f25750c605d1e223870b4f52ac2eb5d27959fe23d8f9bbe4c6ccf",
+      "tail": [
+        "[DDP_STOP_PENDING] group rank=1: offline",
+        "[DDP_RESTART] group: QUEUED; all ranks stopped",
+        "[DDP_CONTACT_PENDING] group rank=1: lost reply",
+        "[DDP_RUNNING] group: 2 ranks",
+        "[DDP_COMPLETED] group: all 2 ranks finished",
+        "PASS test_distributed_dispatch.py",
+        "",
+        "1/1 test files passed in 6.4s."
+      ],
+      "test_counts": [
+        7
+      ]
+    },
+    "final": {
+      "command": "env PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_scheduler_locality_acceptance.py test_scheduler_locality.py test_scheduler_metrics.py test_cache_coverage.py test_queue_controls.py test_resource_allocation.py test_storage_config.py test_ddp_staging.py",
+      "exit_code": 0,
+      "log": "/tmp/hybrid-10-3/final-tests.log",
+      "passed_files": [
+        "test_scheduler_locality_acceptance.py",
+        "test_scheduler_locality.py",
+        "test_scheduler_metrics.py",
+        "test_cache_coverage.py",
+        "test_queue_controls.py",
+        "test_resource_allocation.py",
+        "test_storage_config.py",
+        "test_ddp_staging.py"
+      ],
+      "sha256": "3984e444cab78f711f8bd559b03b8aa6e34e2169dc71dc8c10e68c9cd084abe6",
+      "tail": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 16 tests in 46.066s",
+        "",
+        "OK",
+        "PASS test_ddp_staging.py",
+        "",
+        "8/8 test files passed in 74.1s."
+      ],
+      "test_counts": [
+        5,
+        13,
+        10,
+        31,
+        10,
+        6,
+        17,
+        16
+      ]
+    }
+  }
+}

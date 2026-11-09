@@ -1,0 +1,424 @@
+{
+  "active_config": {
+    "runtime": "legacy",
+    "settings": {
+      "scheduler_policy": "resource",
+      "storage_aware_staging": false,
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false
+    }
+  },
+  "api_db_schema_config_security_changes": false,
+  "branch": "main",
+  "changed_files": [
+    "docs/storage/46-phase11-closeout.md",
+    "docs/storage/46-phase11-closeout-evidence.json",
+    "docs/storage/implementation-progress.md"
+  ],
+  "commit_created": false,
+  "deploy_approval_requested": false,
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "live_mutations": false,
+  "phase11_implementation": "COMPLETE",
+  "phase11_selected_local_acceptance": "PASS",
+  "physical_production_acceptance": "INCOMPLETE; pi01 timeout; reviewed all-three-node deployment/isolation required",
+  "pi01_availability_question": "pending user answer; configured address times out",
+  "preservation": {
+    "new_report_sha256": "e9713805d67f137093f4626dd4f4749924dd9474c69fcece3b0209e8a19f86e1",
+    "progress_after_sha256": "22d58f3c2922af132f0140f8f535ef1242c68055c1bca8983b232bb79646bb10",
+    "progress_before_sha256": "14bdba9cda9e7e9d2a5895496de99ddc9d4f5bfbfa9b54dd160a7e20e6409549",
+    "progress_prefix_preserved": true,
+    "status_before": "/tmp/hybrid-11-closeout/status-before.txt"
+  },
+  "readiness": {
+    "nodes": [
+      {
+        "configured_ip": "100.101.90.46",
+        "health": {
+          "detail": "<urlopen error timed out>",
+          "error": "URLError"
+        },
+        "id": "pi01",
+        "resources": {
+          "detail": "<urlopen error timed out>",
+          "error": "URLError"
+        },
+        "ssh": {
+          "command": [
+            "ssh",
+            "-T",
+            "-o",
+            "BatchMode=yes",
+            "-o",
+            "ConnectTimeout=5",
+            "-o",
+            "ConnectionAttempts=1",
+            "-o",
+            "StrictHostKeyChecking=yes",
+            "-o",
+            "UpdateHostKeys=no",
+            "-o",
+            "ControlMaster=no",
+            "-o",
+            "ControlPath=none",
+            "-o",
+            "PermitLocalCommand=no",
+            "pi01",
+            "python3 -B -"
+          ],
+          "returncode": 255,
+          "stderr": "ssh: connect to host 100.101.90.46 port 22: Connection timed out"
+        },
+        "ssh_alias": "pi01"
+      },
+      {
+        "configured_ip": "100.91.135.18",
+        "health": {
+          "architecture": "aarch64",
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "identity_matches": true,
+          "node": "pi02",
+          "python": "3.11.16",
+          "status": "ONLINE"
+        },
+        "id": "pi02",
+        "resources": {
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "identity_matches": true,
+          "node": "pi02",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "status": "ONLINE"
+        },
+        "ssh": {
+          "command": [
+            "ssh",
+            "-T",
+            "-o",
+            "BatchMode=yes",
+            "-o",
+            "ConnectTimeout=5",
+            "-o",
+            "ConnectionAttempts=1",
+            "-o",
+            "StrictHostKeyChecking=yes",
+            "-o",
+            "UpdateHostKeys=no",
+            "-o",
+            "ControlMaster=no",
+            "-o",
+            "ControlPath=none",
+            "-o",
+            "PermitLocalCommand=no",
+            "pi02",
+            "python3 -B -"
+          ],
+          "facts": {
+            "deployed_files": {
+              "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+              "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+              "agent/checkpoint_service.py": null,
+              "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+              "agent/staging.py": null,
+              "hybrid_storage/bandwidth.py": null,
+              "hybrid_storage/cache_eviction.py": null,
+              "hybrid_storage/staging_protocol.py": null,
+              "hybrid_storage/transfer_metrics.py": null,
+              "hybrid_storage/worker_cache.py": null
+            },
+            "hostname": "pi02",
+            "machine": "aarch64",
+            "matches_checkout": {
+              "agent/agent.py": false,
+              "agent/checkpoint_protocol.py": true,
+              "agent/dl_checkpoint.py": true
+            },
+            "mounts": {
+              "output": "{\n   \"filesystems\": [\n      {\n         \"source\": \"192.168.10.150:/srv/nfs/cifar10_data\",\n         \"target\": \"/mnt/nfs_share\",\n         \"fstype\": \"nfs4\",\n         \"options\": \"rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.150\"\n      }\n   ]\n}",
+              "returncode": 0
+            },
+            "python": "3.11.2",
+            "service": {
+              "properties": {
+                "ActiveState": "active",
+                "PrivateMounts": "no",
+                "SubState": "running",
+                "User": "pi",
+                "WorkingDirectory": "/home/pi/distributed-dl-system"
+              },
+              "returncode": 0
+            }
+          },
+          "returncode": 0,
+          "stderr": ""
+        },
+        "ssh_alias": "pi02"
+      },
+      {
+        "configured_ip": "100.64.202.71",
+        "health": {
+          "architecture": "aarch64",
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "identity_matches": true,
+          "node": "pi03",
+          "python": "3.11.16",
+          "status": "ONLINE"
+        },
+        "id": "pi03",
+        "resources": {
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "identity_matches": true,
+          "node": "pi03",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "status": "ONLINE"
+        },
+        "ssh": {
+          "command": [
+            "ssh",
+            "-T",
+            "-o",
+            "BatchMode=yes",
+            "-o",
+            "ConnectTimeout=5",
+            "-o",
+            "ConnectionAttempts=1",
+            "-o",
+            "StrictHostKeyChecking=yes",
+            "-o",
+            "UpdateHostKeys=no",
+            "-o",
+            "ControlMaster=no",
+            "-o",
+            "ControlPath=none",
+            "-o",
+            "PermitLocalCommand=no",
+            "pi03",
+            "python3 -B -"
+          ],
+          "facts": {
+            "deployed_files": {
+              "agent/agent.py": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+              "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+              "agent/checkpoint_service.py": null,
+              "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+              "agent/staging.py": null,
+              "hybrid_storage/bandwidth.py": null,
+              "hybrid_storage/cache_eviction.py": null,
+              "hybrid_storage/staging_protocol.py": null,
+              "hybrid_storage/transfer_metrics.py": null,
+              "hybrid_storage/worker_cache.py": null
+            },
+            "hostname": "pi03",
+            "machine": "aarch64",
+            "matches_checkout": {
+              "agent/agent.py": false,
+              "agent/checkpoint_protocol.py": true,
+              "agent/dl_checkpoint.py": true
+            },
+            "mounts": {
+              "output": "{\n   \"filesystems\": [\n      {\n         \"source\": \"192.168.10.150:/srv/nfs/cifar10_data\",\n         \"target\": \"/mnt/nfs_share\",\n         \"fstype\": \"nfs4\",\n         \"options\": \"rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.150\"\n      }\n   ]\n}",
+              "returncode": 0
+            },
+            "python": "3.11.2",
+            "service": {
+              "properties": {
+                "ActiveState": "active",
+                "PrivateMounts": "no",
+                "SubState": "running",
+                "User": "pi",
+                "WorkingDirectory": "/home/pi/distributed-dl-system"
+              },
+              "returncode": 0
+            }
+          },
+          "returncode": 0,
+          "stderr": ""
+        },
+        "ssh_alias": "pi03"
+      }
+    ],
+    "remote_program": "import hashlib,json,os,platform,subprocess,sys\nfrom pathlib import Path\nresult={'hostname':platform.node(),'machine':platform.machine(),'python':platform.python_version()}\nargs=['systemctl','show','dl-node-agent.service','--no-pager','-p','ActiveState','-p','SubState','-p','User','-p','WorkingDirectory','-p','PrivateMounts']\np=subprocess.run(args,capture_output=True,text=True,timeout=5)\nresult['service']={'returncode':p.returncode,'properties':dict(line.split('=',1) for line in p.stdout.splitlines() if '=' in line)}\np=subprocess.run(['findmnt','-J','-t','nfs,nfs4','-o','SOURCE,TARGET,FSTYPE,OPTIONS'],capture_output=True,text=True,timeout=5)\nresult['mounts']={'returncode':p.returncode,'output':p.stdout.strip()}\nroot=result['service']['properties'].get('WorkingDirectory')\nresult['deployed_files']={}\nif root:\n for name in ('agent/agent.py','agent/dl_checkpoint.py','agent/checkpoint_protocol.py','agent/staging.py','agent/checkpoint_service.py','hybrid_storage/staging_protocol.py','hybrid_storage/worker_cache.py','hybrid_storage/transfer_metrics.py','hybrid_storage/bandwidth.py','hybrid_storage/cache_eviction.py'):\n  path=Path(root)/name\n  result['deployed_files'][name]=hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None\n path=Path(root)/'config/storage.json'\n if path.is_file():\n  conf=json.loads(path.read_text());result['storage_flags']={key:conf.get(key) for key in ('storage_backend','worker_cache_enabled','storage_aware_staging','scheduler_policy')}\nprint(json.dumps(result))",
+    "scope": "read-only GET/SSH; no jobs, mounts, service or deployment mutations",
+    "time_utc": "2026-11-09T17:33:01.379747+00:00"
+  },
+  "residual_risks": [
+    "all-three-Pi/Phase9 physical acceptance pending",
+    "active reachable worker roots lack queried hybrid modules",
+    "no reviewed protected bootstrap or hybrid deployment bundle supplied by this closeout",
+    "actual shared-link prediction accuracy and power-loss durability untested",
+    "historical loaded-run cold-stage HTTP409 not root-caused",
+    "central controller/LOCAL SQLite/authoritative storage single point of failure"
+  ],
+  "rollback_applied": false,
+  "rollback_patch": "/tmp/hybrid-11-closeout/closeout.patch",
+  "runtime_config_source_checks": {
+    "all_match_passing_11_4_snapshot": true,
+    "count": 103,
+    "sha256": {
+      "agent/agent.py": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a",
+      "agent/cache_storage.py": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c",
+      "agent/checkpoint_protocol.py": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9",
+      "agent/checkpoint_restore_service.py": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2",
+      "agent/checkpoint_service.py": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f",
+      "agent/custom_runner.py": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130",
+      "agent/dl_checkpoint.py": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c",
+      "agent/environment_worker.py": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875",
+      "agent/execution_lease.py": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83",
+      "agent/lease_runner.py": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5",
+      "agent/staging.py": "a2534e31fb8950d4d7397068c4427de4d9c83c0ded23c3353b910b5382e22c05",
+      "config/README.md": "ce40cbd45792537dac841d31b08b19124db2295da4c942b8b9ecef6e7003cbd4",
+      "config/execution_leases.json": "0c487e5d01a121f2b26ea81aa9f6cf1f30b1736d7addc925bf1303935faf30f8",
+      "config/job.schema.json": "8531e354517de209fe12e300b2e93effc1468c00a002e465d8a3f4f77e0e128d",
+      "config/nfs-clients.json": "c45ffd428c3237cc4c1d1f4be689479fc98cc1a1ab9f4960a997b4b885ef1421",
+      "config/nfs-server.json": "29b721f25d5eeb9d0405b15affbfb5140bfc639f27b46163023a129e9f572146",
+      "config/nodes.json": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf",
+      "config/queue_policy.json": "d20d13c1987f69419c190fd09d52f9cdffd297cbc8ecf3c3f694fe2e612fba90",
+      "config/storage-examples/README.md": "ab4172ff889460f89ed1a1285f27f6cc778c463a59251bb6a73de0b2f6fe9ed5",
+      "config/storage-examples/legacy.json": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+      "config/storage-examples/nfs-bandwidth.json": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7",
+      "config/storage-examples/nfs-held.json": "8b320a9482a5fe93f0d800a7ff5f4d4186dd75898e0fcaf8514863d6391132f0",
+      "config/storage-examples/nfs-locality.json": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a",
+      "config/storage-examples/nfs-resource.json": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2",
+      "config/storage.json": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e",
+      "controller/cache_inventory.py": "e1641f5ce95213e0db1fa3d5d52a0435e867949944008f777b75e15afceaa945",
+      "controller/checkpoint_recovery.py": "9d2964f934178d00a8d835915d736cf438a56526e702f52765decc22df253574",
+      "controller/checkpoint_store.py": "e9df700d4da0f150a8055cd05b1cf611a2d3aedc8a9157de16b3571e5addf7da",
+      "controller/controller.py": "ca132e660fb9bacbd3fe00290a82ec44de90d789efd771abf84fa92d816d2f44",
+      "controller/custom_checkpoints.py": "4266dfd77fbab12c0905e340d9f35e1b6bc965821cb5da1f7c1bcccc0fd66299",
+      "controller/dispatcher.py": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d",
+      "controller/distributed_dispatch.py": "a1fdac0d8b63ec784c281d2d6a6d6433aba060ffc18b380a07b071d8ee825f2f",
+      "controller/execution_leases.py": "fa82ee030cc0c1b0e49e8dc9806caad80c37e69417581ff9561867afdd0d6507",
+      "controller/group_checkpoints.py": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2",
+      "controller/input_storage.py": "42ec1ef34eabd99f1bb9922304cd580c48d3be5bb630470a79ecc90994e213d9",
+      "controller/job_artifacts.py": "f8872c380d95783697edede27c8153aae62154c2d530012e7b7fc7ec7bbaaa99",
+      "controller/job_spec.py": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a",
+      "controller/job_status.py": "12d84f2cb1f082fb1de67ee9329115be4352b4f844db0e970b4fd44a0801b20b",
+      "controller/job_storage.py": "01d935c9240ec11873e7c592d019596da5ed86b93497ce29aca4218019b1f79b",
+      "controller/job_store.py": "a1d55ddb81f94649e4c78fea2849b89968aede677bdaa696e0d795d6f15d3f88",
+      "controller/job_timing.py": "dee072e79474e08bbdc97c8fb60584bf9c6ce7707536ce13ee3c194b67b201bf",
+      "controller/migrate_pytorch_jobs.py": "9c52a62a6cd1db3d92a893a8893f050348002ff5291d5f7d0a3c1e41fe2444b6",
+      "controller/prepare_job.py": "ab8bef60c8eb184040dda0d2c7a58a76485e9bbab6ae8c0349a16c4379a91976",
+      "controller/queue_ctl.py": "c9dead51875b1af7122351c35d1244aa93cc8a6e16e0212f50f4eabdbc63ad26",
+      "controller/queue_job.py": "18d5409d76c074d4bc586ecc6dda2e3049965b7a0dacc1427ef7e4e05a9fccc3",
+      "controller/queue_policy.py": "4a47c261a65b087904d7505a54255593449f8422949d0c34d39cef89cd11260b",
+      "controller/recovery_metrics.py": "dedbe915127817acca96fc0722108eb329f733d80900fcb1089aff8432973809",
+      "controller/recovery_report.py": "edaa3be7b94237a12d5b80ddde611afd666ffa5dd450d2433f149e63f1d9e38c",
+      "controller/scheduler.py": "4a3e16e3b23e36069f15d30e04f39bf596863ee560425d3df0cc5dae227b0e87",
+      "controller/scheduler_metrics.py": "29630f864ac628ec8df95037256aa4ef86f98af8c55bb0926e78e74b0f7524f7",
+      "controller/stage_job.py": "79e49d26131e6a453b2414a7a4cf2a3ad51e6041e307a74c433ddadea3debf86",
+      "controller/staging_dispatch.py": "f5cecf15a9cab6d29f1827b1581dc3d3a04bf093045e5af301b75cef072c4e91",
+      "controller/staging_recovery.py": "a8b2d1fea6e63a900f3a92b97e93bb2da898b1f59ff0dddb2e8287a8d1b45f34",
+      "controller/staging_view.py": "6e851fb5eedf3be5275bd0dbd93c0d399e4f39938ab0c6a7a51794988f22cc85",
+      "controller/storage_selection.py": "857fa007b6a3808a061d3798736b9ee5f9904a53796898d6d8160f4db881d75d",
+      "controller/student_portal.py": "269119d1d26b3f6db8616081a688008b84c25beda6670b785008c1ccedadf6c0",
+      "controller/submit_job.py": "540b36a9fec28c608e79c5d2148e1b9c17039dee5fbd032fe064ac82c4368247",
+      "hybrid_storage/README.md": "71a4e19b3cb61aa449256dfe82f55013732e4e30a0b4399d9f194c56c0535c1b",
+      "hybrid_storage/__init__.py": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57",
+      "hybrid_storage/artifacts.py": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b",
+      "hybrid_storage/backends.py": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0",
+      "hybrid_storage/bandwidth.py": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194",
+      "hybrid_storage/cache_copy_worker.py": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1",
+      "hybrid_storage/cache_coverage.py": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4",
+      "hybrid_storage/cache_eviction.py": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd",
+      "hybrid_storage/cache_fetch.py": "0f5042ca64eb093573761d4b9b214ff65cf780bb215ee6f14d3b96fa55bb5dd0",
+      "hybrid_storage/cache_inventory.py": "31a8843b7cba6df501d54cf828638cb77382e379e10c751dfcb3ba5ae4b46aa2",
+      "hybrid_storage/cache_registry_schema.py": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112",
+      "hybrid_storage/checkpoint_files.py": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850",
+      "hybrid_storage/checkpoint_publication.py": "1b76141edc2fae8a765585ba4597691cefc3eb9aa9a1bb7eedd56e1eed7fc83b",
+      "hybrid_storage/checkpoint_restore.py": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab",
+      "hybrid_storage/checkpoint_schema.py": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12",
+      "hybrid_storage/checkpoint_transfer.py": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6",
+      "hybrid_storage/cleanup_schema.py": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3",
+      "hybrid_storage/config.py": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e",
+      "hybrid_storage/dataset_manifests.py": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d",
+      "hybrid_storage/dataset_validation.py": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c",
+      "hybrid_storage/health.py": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6",
+      "hybrid_storage/health_worker.py": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01",
+      "hybrid_storage/input_manifests.py": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a",
+      "hybrid_storage/inputs.py": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc",
+      "hybrid_storage/inventory_protocol.py": "08b31ef61b87b8856b8953b36c95f2e68676ad05e54a425021db83c0f1a61602",
+      "hybrid_storage/inventory_reporter.py": "8ecc51cd673691060840a18f73be829769a9d274e4cac9510497f70414827355",
+      "hybrid_storage/legacy_registration.py": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640",
+      "hybrid_storage/locality.py": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0",
+      "hybrid_storage/metrics.py": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149",
+      "hybrid_storage/mount_identity.py": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f",
+      "hybrid_storage/nfs_client.py": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a",
+      "hybrid_storage/nfs_fault_probe.py": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d",
+      "hybrid_storage/nfs_mount.py": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8",
+      "hybrid_storage/nfs_server.py": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea",
+      "hybrid_storage/registry.py": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529",
+      "hybrid_storage/registry_schema.py": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc",
+      "hybrid_storage/restore_schema.py": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7",
+      "hybrid_storage/scheduling.py": "35d8bef1a0f4b4a998f70e6a5cf80cd987c6fe074bb85c22a150dfaf2dd3110c",
+      "hybrid_storage/staging_journal.py": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd",
+      "hybrid_storage/staging_lifecycle.py": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb",
+      "hybrid_storage/staging_metrics.py": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f",
+      "hybrid_storage/staging_protocol.py": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb",
+      "hybrid_storage/staging_schema.py": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9",
+      "hybrid_storage/transfer_metrics.py": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2",
+      "hybrid_storage/worker_cache.py": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272",
+      "hybrid_storage/workspaces.py": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+    }
+  },
+  "sandbox_attempt": {
+    "network_retry": "reviewed read-only elevated probe; no automatic-review rejection",
+    "raw_log_path": "/tmp/hybrid-11-closeout/readiness.log",
+    "raw_log_sha256": "096f8d7d7abede2ce4a9dfb080503c2e5ab8934cc75685bf7fd584ceae55010b",
+    "result": "EPERM socket restriction; no device availability conclusion"
+  },
+  "saved_tests": {
+    "combined_acceptance_source_unchanged": true,
+    "distinct": 428,
+    "errors": 0,
+    "evidence": "docs/storage/45-efficiency-acceptance-evidence.json",
+    "failures": 0,
+    "files": 20,
+    "new_test_run": false,
+    "skips": 0,
+    "verified_logs": {
+      "baseline-tests.log": {
+        "matches": true,
+        "path": "/tmp/hybrid-11-4/baseline-tests.log",
+        "sha256": "22f298ae6c2199fb9f96e483190a27eb96da333f99186201101195f68fa5d631"
+      },
+      "final-tests.log": {
+        "matches": true,
+        "path": "/tmp/hybrid-11-4/final-tests.log",
+        "sha256": "56b1e8a6c99b3616bce872aab71cab77d1a51706b64e9f5cbb72b8878ad57292"
+      },
+      "new-tests-rerun.log": {
+        "matches": true,
+        "path": "/tmp/hybrid-11-4/new-tests-rerun.log",
+        "sha256": "08609c9710be52167dce5b0a9c84e14a502db848a461c715b4428be170859ccc"
+      },
+      "new-tests.log": {
+        "matches": true,
+        "path": "/tmp/hybrid-11-4/new-tests.log",
+        "sha256": "a5805503fa583a43974916b02ba3f2dbfc98afa694bc366e1ccf771254d6ede6"
+      }
+    }
+  },
+  "scope": "Phase11 closeout only; source evidence verification and read-only all-three-Pi readiness",
+  "subphases": {
+    "11.1": "implementation/local acceptance PASS",
+    "11.2": "implementation/local acceptance PASS",
+    "11.3": "implementation/local acceptance PASS",
+    "11.4": "implementation/local acceptance PASS"
+  },
+  "time_utc": "2026-11-09T17:33:01.379747+00:00"
+}

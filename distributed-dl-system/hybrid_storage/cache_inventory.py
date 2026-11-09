@@ -23,8 +23,19 @@ from .worker_cache import _private_file, _protected
 
 class CacheInventory:
     def __init__(self, connect, credentials, *, configured_workers, state_root: Path,
-                 freshness_seconds=90, heartbeat_seconds=15, reconcile_seconds=30, clock=time.time_ns):
+                 freshness_seconds=90, heartbeat_seconds=15, reconcile_seconds=30, clock=time.time_ns,
+                 transfer_observations=None, admin_observations=None):
         self.connect, self.state_root, self.clock = connect, Path(state_root), clock
+        if transfer_observations is not None:
+            from .bandwidth import TransferObservations
+            if not isinstance(transfer_observations, TransferObservations):
+                raise TypeError('Expected explicitly configured TransferObservations')
+        self.transfer_observations = transfer_observations
+        if admin_observations is not None:
+            from .admin_observations import AdminObservations
+            if not isinstance(admin_observations,AdminObservations) or admin_observations.root!=self.state_root:
+                raise ValueError('Admin observations must use this exact LOCAL inventory root')
+        self.admin_observations=admin_observations
         if not self.state_root.is_absolute(): raise ValueError('Expected controller-local absolute state root')
         self.credentials = {credential.worker: credential for credential in credentials}
         if (len(self.credentials) != len(credentials)
@@ -60,8 +71,12 @@ class CacheInventory:
                     with base.transaction(db):
                         db.execute("UPDATE cache_registry_sessions SET state='STALE' WHERE state='ACTIVE'")
                 self.controller_epoch = secrets.token_hex(16)
+                if self.transfer_observations is not None:self.transfer_observations.forget()
                 self._database_path = Path(main)
                 self._owner = owner
+                if self.admin_observations is not None:
+                    try:self.admin_observations.reset()
+                    except Exception:pass  # Diagnostics never prevent authenticated inventory.
             except BaseException:
                 os.close(owner)
                 raise
@@ -76,6 +91,7 @@ class CacheInventory:
                 finally:
                     os.close(self._owner); self._owner = None
                     self._contexts.clear(); self._pending.clear(); self._accepted.clear()
+                    if self.transfer_observations is not None:self.transfer_observations.forget()
 
     def _ready(self, worker=None):
         if self._owner is None: raise p.InventoryError('Inventory owner not started')
@@ -124,6 +140,7 @@ class CacheInventory:
     def offline(self, worker):
         with self._lock:
             self._ready(worker)
+            if self.transfer_observations is not None:self.transfer_observations.forget(worker)
             # Invalidate in-memory admission even if a full/read-only/unavailable
             # disk prevents recording the durable STALE transition right now.
             self._contexts.pop(worker, None); self._pending.pop(worker, None); self._accepted.pop(worker, None)
@@ -186,7 +203,31 @@ class CacheInventory:
             self._contexts[worker]['sequence'] = sequence
             if kind == 'FULL': self._contexts[worker]['full_at'] = now
             self._accepted[worker] = request, digest
+            if self.admin_observations is not None:
+                try:self.admin_observations.accept(worker,report['session_id'],sequence,now,report.get('nfs'))
+                except Exception:pass
+            if self.transfer_observations is not None:
+                try:self.transfer_observations.accept(worker, report['session_id'],sequence,report.get('transfer'),now)
+                except Exception:self.transfer_observations.forget(worker)
             return kind
+
+    def bandwidth_facts(self, worker, session_id, sequence):
+        """Current authenticated disk + optional measured rates, no authority.
+
+        Compare the exact coverage session/sequence; offline/restart/stale reads
+        cannot recycle the last rate or disk report. No schema writes/migration.
+        """
+        with self._lock:
+            self._ready(worker)
+            if worker not in self._contexts:return None
+            with closing(self.connect()) as db, base.transaction(db,write=False):
+                if not self._eligible(db,worker,self.clock(),session_id=session_id):return None
+                row=db.execute('SELECT last_sequence,disk_available_bytes FROM cache_registry_sessions WHERE session_id=?',
+                               (session_id,)).fetchone()
+                if row is None or row[0]!=sequence:return None
+                rate=(None if self.transfer_observations is None else
+                      self.transfer_observations.read(worker,session_id,sequence))
+                return dict(disk_available_bytes=row[1],transfer=rate)
 
     def _apply(self, db, worker, report, digest, now):
         sid, cache_id, epoch = report['session_id'], report['cache_id'], report['cache_epoch']

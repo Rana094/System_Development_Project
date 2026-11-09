@@ -113,32 +113,50 @@ class CoverageAPI:
         """
         principal(actor); protocol.worker_id(worker_id); job_identity(job_id)
         with self.inventory._lock, self.registry._tx(write=False):
-            binding = self.registry._job_inputs(actor, job_id)
-            if binding is None:
-                raise CoverageUnavailable('Job has no immutable input binding; explicit registration required')
-            source = self.registry._source(actor, binding.source_sha256)
-            data = None if binding.dataset_id is None else self.registry._dataset(binding.dataset_id, binding.dataset_version, actor)
-            data_files = () if data is None else tuple(e for e in data.entries if e.type == 'file')
-            world_size = None
-            if rank is not None:
-                execution = json.loads(self.registry._job(job_id, actor)[3])['execution']
-                world_size = execution['workers']
-                if (type(world_size) is not int or not 1 <= world_size <= MAX_INTEGER
-                        or type(rank) is not int or not 0 <= rank < world_size):
-                    raise ValueError('Rank must belong to the pinned job execution declaration')
-            if requirements is not None:
-                if (not isinstance(requirements, RankRequirements) or rank is None
-                        or requirements.rank != rank or requirements.world_size != world_size
-                        or requirements.job_binding_sha256 != binding.sha256):
-                    raise ValueError('Rank declaration does not match the exact pinned job/rank/world size')
-                allowed = {e.sha256 for e in data_files}
-                if not set(requirements.dataset_hashes) <= allowed:
-                    raise PermissionError('Rank declaration contains objects outside the authorized pinned dataset')
-                data_files = tuple(e for e in data_files if e.sha256 in requirements.dataset_hashes)
-            required = _unique((*source.files, *data_files))
-            return self._coverage(worker_id, required, target_kind='job', target_id=job_id,
-                                  target_version=None, input_manifest_sha256=binding.sha256,
-                                  rank=rank, world_size=world_size)
+            return self._for_job(actor, worker_id, job_id, rank=rank, requirements=requirements)
+
+    def for_job_workers(self, actor, worker_ids, job_id, *, rank=None):
+        """Full input sets for a placement pass in ONE locked read snapshot.
+
+        Current trainers stage the whole dataset at every rank. This batch has
+        no partition/shard declaration and grants no execution authority.
+        """
+        principal(actor); job_identity(job_id)
+        if type(worker_ids) is not tuple or not 1 <= len(worker_ids) <= 4096:
+            raise ValueError('Expected 1..4096 unique candidate worker IDs')
+        for worker in worker_ids: protocol.worker_id(worker)
+        if len(set(worker_ids)) != len(worker_ids):
+            raise ValueError('Duplicate candidate worker')
+        with self.inventory._lock, self.registry._tx(write=False):
+            return tuple(self._for_job(actor, worker, job_id, rank=rank) for worker in worker_ids)
+
+    def _for_job(self, actor, worker_id, job_id, *, rank=None, requirements=None):
+        binding = self.registry._job_inputs(actor, job_id)
+        if binding is None:
+            raise CoverageUnavailable('Job has no immutable input binding; explicit registration required')
+        source = self.registry._source(actor, binding.source_sha256)
+        data = None if binding.dataset_id is None else self.registry._dataset(binding.dataset_id, binding.dataset_version, actor)
+        data_files = () if data is None else tuple(e for e in data.entries if e.type == 'file')
+        world_size = None
+        if rank is not None:
+            execution = json.loads(self.registry._job(job_id, actor)[3])['execution']
+            world_size = execution['workers']
+            if (type(world_size) is not int or not 1 <= world_size <= MAX_INTEGER
+                    or type(rank) is not int or not 0 <= rank < world_size):
+                raise ValueError('Rank must belong to the pinned job execution declaration')
+        if requirements is not None:
+            if (not isinstance(requirements, RankRequirements) or rank is None
+                    or requirements.rank != rank or requirements.world_size != world_size
+                    or requirements.job_binding_sha256 != binding.sha256):
+                raise ValueError('Rank declaration does not match the exact pinned job/rank/world size')
+            allowed = {e.sha256 for e in data_files}
+            if not set(requirements.dataset_hashes) <= allowed:
+                raise PermissionError('Rank declaration contains objects outside the authorized pinned dataset')
+            data_files = tuple(e for e in data_files if e.sha256 in requirements.dataset_hashes)
+        required = _unique((*source.files, *data_files))
+        return self._coverage(worker_id, required, target_kind='job', target_id=job_id,
+                              target_version=None, input_manifest_sha256=binding.sha256,
+                              rank=rank, world_size=world_size)
 
     def _view(self, db, worker, now):
         owner = self.inventory

@@ -1,0 +1,198 @@
+{
+  "phase": "12.1",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "PASS",
+  "stop_before": "12.2",
+  "phase12_complete": false,
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "baseline_catalog": "/tmp/hybrid-12-1/baseline.json",
+  "baseline_snapshot_files": 303,
+  "modified_existing_files": [
+    "agent/staging.py",
+    "controller/checkpoint_recovery.py",
+    "controller/staging_dispatch.py",
+    "docs/storage/implementation-progress.md",
+    "hybrid_storage/README.md",
+    "hybrid_storage/cache_fetch.py",
+    "hybrid_storage/checkpoint_publication.py",
+    "hybrid_storage/scheduling.py",
+    "tests/README.md"
+  ],
+  "new_files": [
+    "hybrid_storage/events.py",
+    "tests/test_storage_events.py",
+    "docs/storage/49-structured-events.md",
+    "docs/storage/49-structured-events-evidence.json"
+  ],
+  "unchanged_original_files": 294,
+  "source_hashes": {
+    "agent/staging.py": {
+      "before": "a2534e31fb8950d4d7397068c4427de4d9c83c0ded23c3353b910b5382e22c05",
+      "after": "71d456830fba4e591547098f1a4e54904cc2e9812afa82d63c5ffb2504a6d836"
+    },
+    "controller/checkpoint_recovery.py": {
+      "before": "9d2964f934178d00a8d835915d736cf438a56526e702f52765decc22df253574",
+      "after": "62ab8eca6ad9263c92046a08126f227edcf5d73c4187ac55af395a1e8c0fc39f"
+    },
+    "controller/staging_dispatch.py": {
+      "before": "f5cecf15a9cab6d29f1827b1581dc3d3a04bf093045e5af301b75cef072c4e91",
+      "after": "de4a7f4170fae3100e3e97874dd2274be3a8253e916c5d2070331eb3b3fb843c"
+    },
+    "docs/storage/49-structured-events.md": {
+      "before": null,
+      "after": "934d0e5e23d542296f6fc19cc37b461a76319af341ebe77421e4eea232d1b1b4"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "28c8a5581e35cdbb6c139570479b15f1abc584b067a8bfe641cbbbe5c180fe87",
+      "after": "f5e5d0279ba075d7782456f614baf486197865546c797a672935c4bda1d5cb62"
+    },
+    "hybrid_storage/README.md": {
+      "before": "c1dfbf33691d025b058d026122a41e7931eff0914a6c6e64f293f86d48e2587c",
+      "after": "5cf9a360db994cb7002c92e3fb9d4967cc608030bb1342e5777aaa4806a71254"
+    },
+    "hybrid_storage/cache_fetch.py": {
+      "before": "0f5042ca64eb093573761d4b9b214ff65cf780bb215ee6f14d3b96fa55bb5dd0",
+      "after": "640633945c5db03b57718ffc5bed4d9cd2a73592077a41937234d9413f2a7550"
+    },
+    "hybrid_storage/checkpoint_publication.py": {
+      "before": "1b76141edc2fae8a765585ba4597691cefc3eb9aa9a1bb7eedd56e1eed7fc83b",
+      "after": "892e7fad864b716a773faeefa9b9420744792f958765974e44dfb84196da8b87"
+    },
+    "hybrid_storage/events.py": {
+      "before": null,
+      "after": "735da9a7a50a5e81d4b8375e91a5aced701584c5200bcda04844424f1b47bb29"
+    },
+    "hybrid_storage/scheduling.py": {
+      "before": "35d8bef1a0f4b4a998f70e6a5cf80cd987c6fe074bb85c22a150dfaf2dd3110c",
+      "after": "a3abeb09402b01ae9a4afc74b4141b68a4b05b00ea954ae7331f4e008a4d6418"
+    },
+    "tests/README.md": {
+      "before": "15be704a9be00b706e95972791729afff49a1b987e3669fb6273bf31ac174e69",
+      "after": "1f962a1a3bdce810eafd170959e44d963c02bd8c85e0289040703e5933618f37"
+    },
+    "tests/test_storage_events.py": {
+      "before": null,
+      "after": "207fa868a6f6fc29bb6b320b02f964fe30d1b8baea5c074bd17200252b49830d"
+    }
+  },
+  "tests": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_staging_dispatch.py test_scheduler_policy.py test_checkpoint_publication.py test_hybrid_checkpoint_recovery.py",
+      "log": "/tmp/hybrid-12-1/baseline-tests.log",
+      "sha256": "ff401509a39f8607f9b9516e4abd00076a9e9ce14e569212ad3f3b06f762f309",
+      "counts": {
+        "test_staging_dispatch.py": 25,
+        "test_scheduler_policy.py": 17,
+        "test_checkpoint_publication.py": 25,
+        "test_hybrid_checkpoint_recovery.py": 18
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_events.py test_staging_dispatch.py test_staging_portal.py test_staging_recovery.py test_cache_fetch.py test_scheduler_policy.py test_checkpoint_publication.py test_hybrid_checkpoint_recovery.py",
+      "log": "/tmp/hybrid-12-1/regression-tests.log",
+      "sha256": "a20c82c04f7d6079aae4fba104cd3ff19707316901a527e4ab7c5120aaf1b384",
+      "counts": {
+        "test_storage_events.py": 17,
+        "test_staging_dispatch.py": 25,
+        "test_staging_portal.py": 17,
+        "test_staging_recovery.py": 34,
+        "test_cache_fetch.py": 33,
+        "test_scheduler_policy.py": 17,
+        "test_checkpoint_publication.py": 25,
+        "test_hybrid_checkpoint_recovery.py": 18
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_events.py test_staging_dispatch.py",
+      "log": "/tmp/hybrid-12-1/final-event-staging-tests.log",
+      "sha256": "91c0dcb93d433d61d2476d57a3ed925bc2b000793d4f4399ef256969481afdfc",
+      "counts": {
+        "test_storage_events.py": 18,
+        "test_staging_dispatch.py": 25
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_events.py",
+      "log": "/tmp/hybrid-12-1/final-events.log",
+      "sha256": "acc68f22d2c912a30aa16557cd5d4ca0c94e5f70f7667a187939fd8be8421115",
+      "counts": {
+        "test_storage_events.py": 19
+      },
+      "result": "PASS"
+    }
+  ],
+  "latest_distinct_counts": {
+    "test_staging_dispatch.py": 25,
+    "test_scheduler_policy.py": 17,
+    "test_checkpoint_publication.py": 25,
+    "test_hybrid_checkpoint_recovery.py": 18,
+    "test_storage_events.py": 19,
+    "test_staging_portal.py": 17,
+    "test_staging_recovery.py": 34,
+    "test_cache_fetch.py": 33
+  },
+  "latest_distinct_total": 188,
+  "remaining_failures": 0,
+  "remaining_errors": 0,
+  "remaining_skips": 0,
+  "initial_development_errors": [
+    {
+      "log": "/tmp/hybrid-12-1/event-tests.log",
+      "sha256": "ab2945b8090c0ce54bcc8396fe2afaf1d9c17ed51f4f622301a4e2e75b1e8836",
+      "description": "Six fixture import-name errors; fixed harness order."
+    },
+    {
+      "log": "/tmp/hybrid-12-1/event-tests-retry.log",
+      "sha256": "529f37a3dc735933950a949aba22f5e29a272ff1fed32ee86f3344a0ce5c75eb",
+      "description": "One incorrect test assertion on existing HTTP409 behavior; fixed expected HTTPError."
+    },
+    {
+      "log": "/tmp/hybrid-12-1/final-tests.log",
+      "sha256": "751e483eb5d155bd4d476afa6cf392bd5ea9fcc5936a00337be83ae1720c2d38",
+      "description": "Nonexistent test_storage_metrics.py name rejected by runner before tests. Corrected selection."
+    }
+  ],
+  "synthetic_jsonl": {
+    "path": "/tmp/hybrid-12-1/synthetic-event.jsonl",
+    "sha256": "fdc763085c7ad818ef58819bf6fb5e38ca263218d7ec47681ffbc1619c915992",
+    "result": "PASS",
+    "measured_workload": false
+  },
+  "public_api_changes": false,
+  "new_db_tables": false,
+  "migrations": false,
+  "new_config": false,
+  "live_mutations": false,
+  "pi_contact": false,
+  "legacy_defaults_unchanged": true,
+  "committed": false,
+  "stash_or_reset": false,
+  "scopes": {
+    "runtime": "Existing explicitly bootstrapped hybrid paths only; operator INFO logging opt-in.",
+    "security": "Allowlisted private operator metadata; no exception strings/paths/lease credentials; no new student endpoint.",
+    "recovery_latency": "Monotonic reserved-dispatch to validated SDK ACK, not failure downtime; unknown after restart.",
+    "transfer_bytes": "Verified accepted payload, not wire traffic or partial failed reads.",
+    "event_delivery": "Best effort; no outbox; event IDs identify observations, checkpoint IDs identify committed publications."
+  },
+  "residual_risks": [
+    "No new live Pi validation/deployment.",
+    "Synchronous external handlers can block; bounded nonblocking handler remains operator responsibility.",
+    "Phase12.2/12.3 UI and Phase12.4 full retention/permissions/stale/overhead tests pending.",
+    "Historical loaded-run HTTP409 not root-caused.",
+    "Controller/local SQLite/authoritative storage remain single point of failure."
+  ],
+  "rollback": {
+    "immediate": "logging.getLogger('distributed_ml.storage.events').setLevel(logging.WARNING)",
+    "scoped_patch": "/tmp/hybrid-12-1/12.1.patch",
+    "verification": "/tmp/hybrid-12-1/source-verification.json",
+    "check": "git apply --reverse --check /tmp/hybrid-12-1/12.1.patch",
+    "apply": "git apply --reverse /tmp/hybrid-12-1/12.1.patch",
+    "avoid": "Do not restore entire files from HEAD; preserve earlier uncommitted phases."
+  }
+}

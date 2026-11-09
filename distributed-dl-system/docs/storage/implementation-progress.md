@@ -1934,3 +1934,600 @@ fstab/firewall/SSH/systemd changed, no live DB/data mutation or Git commit.
 The earlier two-Pi Phase 2 exception does not satisfy this three-Pi requirement.
 Do not claim Phase 9 complete. Controller/LOCAL SQLite/authoritative checkpoint
 disk remains a single point of failure. **STOP at 9.4.**
+
+## 2026-11-09 — Phase 10.1: existing resource scheduler metrics
+
+Started from clean `main` at `7edef1ccd8e3264d9716a3482cbd214188d009b6`;
+snapshotted 304 inventoried files. Added a bounded, immutable, caller-owned metrics
+observer around existing single-worker and DDP group selectors. Default OFF
+performs no measurement clock reads or metrics I/O. Enabled records expose duration,
+filter/query/eligible/group counts and selected IDs; observer failures do not
+replace choices. Public selector/dispatch APIs, sort keys, probe order and stdout
+are preserved. No new config, DB/schema, route, lease, storage or policy change.
+
+Traced CPU/RAM/inventory single ties versus CPU/RAM/node-ID DDP ties and first
+encountered compatible-group total-CPU ties. Documented persisted owner turns,
+aging, atomic quotas/reservations, one quota slot per DDP job, full-worker group
+reservations and existing lease gates. Checked-in active quota is three (the
+missing-policy fallback is one), pending quota twenty, aging 300 seconds.
+
+Baseline 33 tests PASS. Final **66 distinct tests PASS, six files, zero remaining
+failures/errors/skips**: ten new metrics tests (including 25 pre-edit golden
+scenarios in three observation modes), resource, queue, config, mocked staging and
+existing native two-rank CPU Gloo. A corrected golden-generation dependency and
+initial missing-fixture test error are recorded. No benchmark or hardware claim.
+See [10.1 report](38-resource-scheduler-metrics.md) and
+[evidence](38-resource-scheduler-metrics-evidence.json) for commands, exact files,
+source fingerprints, results, scoped diff and rollback.
+
+No commit, service/deploy/export/mount/SSH/firewall/systemd change, Pi contact or
+live DB/cache/job/checkpoint mutation. Legacy/OFF/resource fallback is preserved.
+Locality computation, activation and simulations belong to 10.2–10.4. Physical
+pi01/pi02/pi03 acceptance remains required and Phase 9's hardware gate remains
+pending. Controller/LOCAL SQLite/authoritative storage is still a single point
+of failure. **10.1 local PASS; STOP before 10.2.**
+
+## 2026-11-09 — Phase 10.2: verified locality tie breaking
+
+Preserved all nine uncommitted 10.1 files at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 309 inventoried files.
+Added explicit job/owner/immutable-binding-bound `JobLocality` and optional
+`locality=` to the existing selectors. Full-input cache coverage for eligible
+workers uses one locked SQLite read snapshot and existing authenticated inventory
+freshness/sequence/ACL checks. Single placements keep CPU/RAM primary ordering;
+DDP keeps the original winning ordered resource profile, compatible whole groups
+and world size, then compares summed per-rank verified missing unique bytes.
+Equal locality ties retain existing final ordering. Partial/stale/missing/failed
+coverage restores the exact resource-only choice without inventing cache facts.
+
+Immutable diagnostics expose age/status/session/sequence, known bytes and effective
+policy/fallback reason. Current trainers require full inputs on every rank; no
+sample/shard caching, bandwidth model or private-workspace disk prediction was
+invented. No new config/schema/routes, runtime policy activation, queue fairness,
+quotas, reservations, lease, authorization or staging-security changes. Existing
+dispatchers still use resource policy; 10.4 will wire reviewed configuration/logs.
+
+Baseline **74 PASS**. Final **148 distinct tests PASS, nine files, zero remaining
+failures/errors/skips**, including thirteen new tests, the frozen resource-only
+scenarios, actual signed warm/empty inventory + SQLite selection, coverage/auth,
+queue/resource/config and existing native 2-rank CPU Gloo/mocked 3-rank staging.
+An initial new-fixture header typo caused three setup errors; it was corrected
+to the existing protocol header and all final checks passed. See the
+[10.2 report](39-locality-tie-breaker.md) and
+[evidence](39-locality-tie-breaker-evidence.json) for exact files, commands/results,
+preservation fingerprints, scoped diff, manual verification and rollback.
+
+No commit, SSH/Pi/live NFS/deployment/service/export/mount/firewall/systemd change,
+live DB/job/checkpoint/cache mutation or benchmark. All-three-Pi acceptance is
+still required; Phase 9 physical acceptance remains pending. The controller,
+LOCAL SQLite and authoritative storage remain a single point of failure.
+**10.2 local PASS; STOP before 10.3.** Exact-MB/starvation matrix and production
+configuration/choice logs/simulations remain separate 10.3/10.4 work.
+
+## 2026-11-09 — Phase 10.3: deterministic locality acceptance
+
+Preserved all fifteen pre-existing 10.1/10.2 status paths on `main` at
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 313 inventoried files.
+Added one acceptance file with five tests and documentation only. No controller,
+agent, hybrid-storage runtime, config, API, schema, job/FSM, queue, lease, auth,
+checkpoint or transport changes were needed.
+
+Actual SHA-published 500 MB + 2 MB objects, a duplicate logical path, common
+72-byte source/requirements inputs and three separate protected local caches
+produce exact verified misses pi01=0, pi02=2,000,000, pi03=502,000,000. Signed
+FULL inventories and actual registry/selectors choose pi01 across all six inventory
+orders; per-rank capacity/reservation/ownership exclusions remain hard. Two-rank
+missing total is 2 MB; three-rank total is 504 MB. Stale/missing inventory is unknown
+and restores resource ordering; a missing verified observation cannot count a hit.
+Prepared metadata/resources/capability are fixtures, not live upload or Pi execution.
+
+Controlled queue simulations use existing fair turns and atomic SQLite scheduling:
+two cold FIFO jobs start in rounds 0/1 amid eight rounds of warm arrivals. Full
+traces match resource-only and repeated locality runs. Infeasible heads do not
+block feasible owners; uncertain/cancelling jobs keep quota/reservations; a DDP
+job uses one owner slot and all its workers with no partial peer allocation.
+This is bounded progress evidence, not a promise for permanently infeasible jobs.
+
+Baseline **87 PASS**. Final **115 distinct tests PASS, nine files, zero remaining
+failures/errors/skips**, including existing frozen OFF/resource, coverage, queue,
+capacity/config, native two-rank CPU Gloo and mocked two/three-rank staging tests.
+An initial new-cache fixture's intermediate-directory mode was correctly rejected;
+fixed the fixture to create protected components 0700, retaining the runtime guard.
+See [10.3 report](40-locality-acceptance.md) and
+[evidence](40-locality-acceptance-evidence.json) for files, commands/results,
+scope limits, source fingerprints, scoped diff and rollback.
+
+No commit, deployment, Pi/SSH/live NFS contact, service/export/mount/firewall/systemd
+change, live DB/job/checkpoint/cache write, runtime download or benchmark. Legacy/
+resource defaults and NFS/cache/checkpoint trust boundaries remain unchanged.
+All-three-Pi validation and Phase 9 physical acceptance are still pending; the
+controller/LOCAL SQLite/authoritative storage is still a single point of failure.
+**10.3 local PASS; STOP before 10.4.** Production policy wiring/logs and broader
+workload simulations are not implemented by this acceptance subphase.
+
+## 2026-11-09 — Phase 10.4: configured policy, choice logs and rapid fallback
+
+Preserved eighteen prior 10.1–10.3 status paths at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 316 inventoried files.
+Wired validated resource/locality settings into the existing explicit trusted
+staging/checkpoint coordinators using authorized actual workspace plans and an
+optional same-registry CoverageAPI. Bandwidth remains unavailable. Resource with
+no explicit logger keeps original selector calls and performs no inventory/trace
+work; old legacy-bound jobs retain their existing branch. Ordinary unconfigured
+portal/dispatcher startup stays protected; no production bootstrap was fabricated.
+
+Locality now emits bounded operator SCHEDULER_CHOICE records with filtered IDs,
+candidate resources, verified/unknown bytes, freshness, policy/reason and explicit
+truncation/diagnostic availability. No filenames/NFS paths/IPs/credentials or new
+student route. INFO routing belongs to the trusted bootstrap; history remains
+available in memory. `set_scheduler_policy('resource')` restores future resource
+placements without DB/job/cache/pin/lease mutations. Read-only component config
+CLI/examples validate exact flags without starting a service or importing SQLite.
+
+Seeded 72-case matrix repeats 432 selections across single/two/three ranks and
+fresh/stale/absent/error/CPU/RAM/reservation/compatibility variants. Actual local
+signed single/three-rank staging and committed checkpoint resume pass, with mount/
+isolation/training fixtures. A modeled two-job counterexample raises total bytes
+2→100 under greedy locality; resource rollback restores 2. No universal bandwidth
+benefit is claimed; resource remains active/default. Existing 10.3 fairness and
+actual 0/2/502 MB acceptance and hard constraints passed again.
+
+Baseline **81 PASS**. Latest results **191 distinct tests PASS, 13 files, zero
+remaining failures/errors/skips**, including seventeen new policy checks and native
+CPU DDP. Initial new-fixture path/alias mistakes were corrected. One existing
+three-rank recovery case rejected cold staging with HTTP409 during concurrent
+heavy runs; it passed alone on saved pre-edit/current source, then full recovery
+passed serially. Cause was not established, no guard/timeout was weakened, and
+the initial error remains recorded as a loaded-run reliability limitation.
+See [10.4 report](41-scheduler-policy.md) and
+[evidence](41-scheduler-policy-evidence.json) for exact files, commands/latest-per-
+file counts, simulation results, failure history, logging/config examples and
+scoped source rollback.
+
+No schema/migration/state/format/auth/transport, active storage.json/nodes/quotas/
+leases/NFS config, live DB/data, service/deploy/Pi/SSH/firewall/systemd change,
+runtime download, benchmark or Git commit. All-three-Pi physical validation and
+Phase 9 hardware acceptance remain pending; central controller/LOCAL SQLite/
+authoritative storage is still a single point of failure. **10.4 and Phase 10
+local implementation/validation PASS; no live enable or production/physical
+acceptance claim. STOP at 10.4.**
+
+## 2026-11-09 — Phase 11.1: optional actual copy observations
+
+Preserved existing Phase 10 modifications at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 274 source/config/document
+files before edits. Added worker-local `TransferMetrics`, explicitly passed to
+the existing cache fetcher, disabled by omission. The existing trusted helper
+reports actual streamed bytes; samples require independent parent verification
+and positive payload/time. Old or malformed optional helper telemetry only loses
+a sample. Hash/mount/authorization/lease/publication gates remain unchanged.
+
+Bounded rolling median effective MiB/s and MAD include sample counts, age and
+stale/no-sample unknown values. Time includes helper/setup/verification/fsync,
+excludes admission/failed attempts/retry delay/workspace/training; bytes are
+application payload, not wire traffic. Warm/empty/failed copies are not successful
+rate samples. No active probes, speed tests, persistence, HTTP/registry transport,
+fixed-overhead prediction, bandwidth selection or eviction are introduced.
+Cross-worker contention remains explicitly unknown. Resource/locality policies,
+legacy/OFF defaults, config, schemas and job/checkpoint protocols remain intact.
+
+Baseline **66 PASS**. Latest **247 distinct tests PASS across 12 files, zero
+remaining failures/errors/skips**, including seventeen new statistics/copy tests.
+An initial portal regression assumed serial DDP stage order; its same failure
+reproduced with saved pre-edit runtime/test. Corrected only the test to observe
+each committed READY acknowledgment (1/2/3), preserving concurrent runtime and
+all launch guards. Full portal and final new suite pass. Initial failure and
+pre-edit reproduction are retained; prior 10.4 loaded-run HTTP409 remains an
+unresolved historical limitation. See [11.1 report](42-transfer-observations.md)
+and [evidence](42-transfer-observations-evidence.json) for exact files, commands,
+results, scope, source fingerprints and scoped rollback.
+
+No live Pi/SSH/NFS, service/export/mount/firewall/systemd, live DB/job/cache/data,
+checkpoint or deployment change, Internet transfer, benchmark or Git commit.
+All-three-Pi/Phase 9 physical acceptance and trusted deployment bootstrap remain
+pending. Central controller/LOCAL SQLite/authoritative storage is still a single
+point of failure. **11.1 local PASS; Phase 11 incomplete. STOP before 11.2.**
+
+## 2026-11-09 — Phase 11.2: optional measured input-copy cost
+
+Preserved prior uncommitted work at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 278 source/config/document
+files before edits. Enabled the existing bandwidth enum only for explicitly
+constructed trusted coordinators; ordinary unconfigured startup remains gated.
+Resource stays the legacy/OFF default, and resource/locality require no rate
+collector. No active config or service was changed.
+
+Verified copies now optionally decompose the helper interval and measured
+per-object residual without double-counting inclusive 11.1 rates. Shared explicit
+worker collectors publish bounded numerical summaries via optional authenticated
+inventory report v2 on the existing request-bound HMAC channel. Default reports
+remain v1; old workers imply unknown rates. Controller ingestion follows existing
+enrollment/session/generation/sequence/transaction checks and keeps rates volatile.
+Duplicate replies, stale/offline sessions, restart and missing/malformed telemetry
+cannot refresh old predictive certainty. No DB migration or new download API.
+
+Bandwidth preferences use exact authorized missing unique bytes/object counts,
+at least three recent decomposed copies, measured median rate/residual and live
+disk facts, only among equivalent CPU/RAM profiles and complete compatible groups.
+Unknown/insufficient inputs restore resource ordering. Choice logs show age/count,
+observed scenario range, size extrapolation, disk/quota limitations and actual
+bounded parallelism with an explicit contention assumption. Residual cost is not
+proven size-independent; cross-job/server contention remains unknown. Estimates
+exclude training, workspace/restore/queue/failure cost and are not total completion
+predictions. Existing fairness, reservations, quotas, authorization, leases and
+all-rank staging/launch barriers remain authoritative. Immediate resource rollback
+preserves running state and performs no DB mutation.
+
+Baseline **102 PASS**. Latest **290 distinct tests PASS across 15 files, zero
+failures/errors/skips**, including 22 new measurement/auth/policy/dispatch checks.
+The broad 15-file run passed; final targeted validation after range/validation/log
+bounds passed 73 tests in three files. Synthetic rate fixtures test arithmetic;
+local real copies, signed Flask inventory and single/three-rank staging use mocked
+NFS/trainer/isolation. Existing genuine CPU checkpoint resume also passed. No
+hardware throughput was invented. Only old bandwidth-unavailable test assertions
+were updated for the supported opt-in component. See [11.2 report](43-bandwidth-policy.md)
+and [evidence](43-bandwidth-policy-evidence.json) for exact files, commands, model
+limitations, protocol compatibility, fingerprints and scoped rollback.
+
+No live Pi/SSH/NFS, deployment, exports/mounts/firewall/systemd/service changes,
+live DB/job/checkpoint/cache data mutation, Internet transfer, benchmark or commit.
+All-three-Pi/Phase 9 physical acceptance and reviewed protected deployment remain
+pending. Prior loaded-run HTTP409 remains a historical unresolved limitation.
+Central controller/LOCAL SQLite/authoritative storage is still a single point of
+failure. Optional efficiency is not a production-stability prerequisite.
+**11.2 local PASS; Phase 11 incomplete. STOP before 11.3.**
+
+## 2026-11-09 — Phase 11.3: explicit dry-run-first idle cache eviction
+
+Preserved earlier uncommitted changes at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 283 source/config/document
+files. Added inactive trusted `CacheEvictor`/`cache_maintenance` using the existing
+fetcher's max-cache quota and free-space reserve. Planning uses read-only SQLite,
+bounded deterministic LRU, pin counts, inode fingerprints and local mount checks.
+Apply remains dry-run unless explicitly requested on that instance's issued plan;
+stale/foreign/insufficient plans cannot delete. No automatic admission/startup GC.
+
+Shared OS activity guards now cover verified readers, complete fetch/materialization
+and the actual signed agent fetch-to-pin gap. Any persistent cache pin blocks ALL
+eviction, including READY/running/unproven terminal attempts. Existing terminal
+quiescence proof alone releases pins. Existing inherited producer locks retain
+capacity for expired/orphaned NFS helpers. No pin or lease policy was weakened.
+
+Only unchanged registered local replicas are eligible. Quarantine/parts/unknown
+files, private workspaces, output/checkpoints and authoritative inputs are retained.
+Dedicated trusted roots and declared protected roots remain required; co-located
+controller authoritative roots must be protected explicitly. Missing metadata is
+committed before checked unlink/fsync; crash reconciliation verifies actual local
+bytes without replaying deletion or dropping pins. Existing signed FULL or
+CACHE_REMOVED reports reconcile the advisory controller registry, with explicit
+notification/lag status. No schema or wire change; worker DB remains v1 and the
+controller DB remains LOCAL. The additive activity lock requires upgraded,
+cooperating trusted clients before any maintenance rollout.
+
+Baseline **143 PASS**; early activity-guard regression **105 PASS**. Latest
+**396 distinct tests PASS across 17 files, zero failures/errors/skips**, including
+23 new safety/integration checks. The broad 17-file run passed; final cleanup
+refinement/new restage case passed in a 56-test targeted rerun. Tests use real
+local files, real child-process crashes around unlink, signed local Flask inventory
+updates, actual staging-gap/READY/running pin protection, simulated disk/unlink/
+notification errors and authorized fake-NFS restage. Existing single/DDP recovery,
+portal, queue, coverage, resource/locality/bandwidth and CPU saved-state resume
+regressions passed. No hardware throughput or physical recovery was fabricated.
+See [11.3 report](44-cache-eviction.md) and
+[evidence](44-cache-eviction-evidence.json) for exact files, commands, ownership,
+source fingerprints, manual previews, residual risks and scoped rollback.
+
+No live cache/data/DB/job/checkpoint cleanup, Pi/SSH/NFS/deployment, exports/mount/
+firewall/systemd/service change, Internet transfer, benchmark or commit. Legacy/OFF/
+resource defaults and all active config remain unchanged. All-three-Pi/Phase 9
+physical acceptance and reviewed isolation/bootstrap remain pending; the historical
+loaded-run HTTP409 remains unresolved. Central controller/LOCAL SQLite/authoritative
+storage is still a single point of failure. **11.3 local PASS; Phase 11 incomplete.
+STOP before 11.4.**
+
+## 2026-11-09 — Phase 11.4: combined efficiency and fault acceptance
+
+Preserved prior uncommitted work at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`; snapshotted 254 selected source/config/
+document files. Added ten combined acceptance tests and appended documentation
+only. No runtime, API, DB/schema, wire/auth, security, deployment or config change.
+All 252 other snapshotted originals remain byte-identical; the two documentation
+prefixes are preserved. No commit, stash or reset.
+
+Actual signed inventories/immutable binding/coverage/selectors verify controlled
+slower/faster rates, rolling-median response to a sustained drop, transparent
+missing-copy arithmetic and old/no-sample fallback despite fresh inventories.
+Actual queue/SQLite tests with modeled rates/launch preserve resource service
+traces, cold FIFO under warm arrivals, quotas/cancellation and full exclusive DDP
+groups. Actual signed bounded three-rank staging protects each fetch-to-pin gap,
+all-ready launch and running pins; resource rollback preserves the DB/group.
+Real child-process eviction crash plus local restart converges through signed
+inventory and one authorized refetch followed by a zero-copy warm repeat. Pinned
+quota refusal and reconciliation retain inputs and authoritative bytes.
+
+Pre-edit baseline **45 PASS**. Initial new fixtures had one failure/three errors
+(intermediate directory mode and omitted prospective pressure); corrected tests,
+with no runtime fix, then **10 PASS** standalone. Final selected regression:
+**428 distinct tests PASS across 20 files, zero failures/errors/skips**, including
+transfer, eviction, full-disk/error, cache/registry, resource/locality/bandwidth,
+exact-MB locality, queue, stage/cancel/DDP/portal/recovery and genuine CPU saved-state
+resume checks. No hardware rates, power-loss or training benchmark was fabricated.
+Scoped reverse patch passed workspace check and actual rollback on a disposable
+copy; no rollback was applied to this workspace. See [11.4 report](45-efficiency-acceptance.md)
+and [evidence](45-efficiency-acceptance-evidence.json) for exact files/commands,
+log hashes, initial fixture failures, preservation, rollback and residual risks.
+
+Legacy/OFF/resource defaults, immutable inputs, private workspace/trusted checkpoint
+boundaries and LOCAL SQLite remain unchanged. Optional efficiency is not required
+for production stability. No live Pi/SSH/NFS, cache cleanup, job/DB/checkpoint/data,
+exports/mount/firewall/systemd/service change, deployment or Internet transfer.
+All-three-Pi/Phase 9 physical acceptance and reviewed protected bootstrap remain
+pending; the Phase 2 two-Pi exception does not waive these. Historical loaded-run
+cold-stage HTTP409 remains unresolved. Predictions retain size/contention/age
+uncertainty and are not total-completion estimates; maintenance still requires
+idle cooperating clients, protected dedicated roots and durable pins. Central
+controller/LOCAL SQLite/authoritative storage remains a single point of failure.
+**11.4 and Phase 11 local implementation/selected acceptance PASS; production and
+all-three-Pi acceptance NOT PASSED / not run. STOP.**
+
+## Phase 11 closeout — implementation complete; live gates refreshed
+
+In response to the request to fully complete Phase 11, consolidated all four
+completed subphases in [46-phase11-closeout.md](46-phase11-closeout.md) with
+[fresh readiness evidence](46-phase11-closeout-evidence.json). Saved 11.4 test
+logs still match their SHA-256 evidence: **428 tests PASS / 20 files**, zero
+failures/errors/skips; runtime/config bytes remain unchanged since that passing
+snapshot. No redundant test run or runtime change was made for this closeout.
+
+Fresh bounded read-only HTTP/strict-key SSH to all three configured identities:
+pi01 still times out; pi02/pi03 match identities, report IDLE and run the legacy
+agent from `/home/pi/distributed-dl-system`. Queried hybrid staging, checkpoint,
+cache and Phase 11 modules are absent in those active service roots. Both show
+the legacy RW NFS4.2 mount; no input path was touched to activate automounts.
+Initial sandbox EPERM was resolved by the reviewed read-only network retry; it
+is not counted as a device outage. No remote files, jobs, services or mounts changed.
+
+Only this progress append and the new closeout report/evidence change. No API,
+DB/schema, config, security, runtime, deployment or commit. Legacy/OFF/resource
+remains active; controller SQLite/authoritative storage remains a single point
+of failure. The report states the ordered live prerequisites and rollback; no
+ready-to-apply deployment bundle/isolation implementation is implied. Requested
+pi01 availability/verified address before all-three-Pi validation. All three
+remain mandatory, with reviewed concrete artifacts and explicit approval before
+deployment/system changes. **Phase 11.1–11.4 local implementation/acceptance
+COMPLETE; physical/production acceptance INCOMPLETE. STOP before live mutation.**
+
+## Two-worker continuation — user exception and offline deployment preparation
+
+The user replied to the pi01 availability question: **"fow now continue withour
+pi1 / with pi2 and pi3"**. Current continuation therefore targets **pi02/pi03**,
+with pi01 deferred; the previous all-three prerequisite does not block this
+explicitly authorized two-node scope. No pi01 probe was made in this subphase.
+Three-rank physical acceptance is not claimed. Standing review/explicit-approval
+requirements for live deployment and system/service/network changes still apply.
+
+Added inactive `hybrid_storage/deployment_review.py`: offline source catalogs and
+deterministic private local review archives with exact member/archive hashes,
+explicit selected endpoints and `apply_ready=false`. Includes hybrid modules
+missing from the unchanged legacy installer bundle. Excludes active config, DBs,
+credentials, jobs/caches/checkpoints/venvs; no SSH/extract/install/apply action.
+Actual local artifacts have **77 worker files /112 controller files**. Reviewed
+both archive hashes and member sets. No archive was uploaded or extracted remotely.
+
+Fresh read-only pi02/pi03 GET/strict-key SSH: both matching ONLINE/IDLE, legacy
+active roots still lack hybrid modules, bwrap/unshare/systemd-run/setpriv found,
+nft/iptables absent on probe PATH, differing numeric pi UID/GIDs. Namespace/cgroup
+facts and free disk recorded; no containment trial, mount activation, sudo,
+package/service/firewall/config/job/data change. Tool presence is not containment
+proof. Protected OS/network isolation and exact trusted bootstrap remain the next
+required preparation artifacts before a concrete live deployment approval.
+
+Baseline **8 PASS**. Selected final **76 PASS across five files**, zero failures/
+errors/skips, including six new offline safety/integration tests. Default storage
+config stays legacy/OFF/resource; no API/DB/schema/runtime/security or existing
+deployment code change, no commit/stash/reset. See [47 preparation report](47-two-worker-deployment-preparation.md)
+and [evidence](47-two-worker-deployment-preparation-evidence.json) for exact files,
+commands, bundle/probe hashes, next plan and scoped rollback. **PASS: one offline
+preparation subphase. STOP before bootstrap/isolation implementation or live apply.**
+
+## 2026-11-10 — Phase 11 full tests and approved pi02/pi03 acceptance
+
+The user explicitly approved completing full Phase 11 and all necessary tests,
+retaining the current **pi02/pi03-only exception; pi01 deferred and not contacted**.
+Completed the approved scope. Added an explicit trusted
+probe/bootstrap, plan-only-default live driver and four local tests. Production
+agents, student launcher, storage flags, existing APIs/DBs/schema/leases/checkpoint
+formats remain unchanged; the test is not a general production DDP sandbox.
+
+Snapshotted 277 selected source/config/document files before editing. Preserved
+all earlier uncommitted work at `main` HEAD
+`7edef1ccd8e3264d9716a3482cbd214188d009b6`. Four original documentation files were
+appended; other originals unchanged. No commit/stash/reset. Actual publisher UID125
+registered three public immutable CAS fixtures (7 MiB total, 0444), after fixing
+a pre-publication private-checkout import failure; both attempts are recorded.
+Source-only reviewed archive went into new root-private `/var/tmp` trees on the
+two Pis. Started only their installed RO NFS readiness; no config/system unit/
+export/firewall/SSH edits, package install, production restart or Internet transfer.
+
+**56/56 existing regression files passed** in 788.7 s, including genuine CPU
+two-/three-rank DDP and checkpoint crash/resume. Ten schema skips due to absent
+venv jsonschema were resolved by rerunning that entire file with installed system
+Python/jsonschema: **15/15 PASS**. Four new probe tests passed; latest aggregate
+**946 unittest cases plus one standalone checkpoint script PASS across 57 files,
+zero remaining failures/errors/skips**, no duplicated reruns. Local PyTorch2.14.1,
+Python3.12.3/Flask3.1.3; actual worker probe Python3.11.2.
+
+**Both physical Pis PASS:** NFS4.1 exact RO source, 7,340,032 cold bytes each,
+warm repeat0, observed whole-ensure effective rates pi02 1.64518 MiB/s and pi03
+1.56435 MiB/s (not wire speed/benchmark claims). Corruption refetch, one-copy
+concurrent miss, actual quota refusal, private workspace/pin/reader protection,
+distinct UID65534 readonly/private-path/no-network probe passed. Real disposable
+eviction-process crash reconciled to missing2,097,152 bytes; actual authenticated
+LOCAL controller registry agreed, refetched exactly that amount and warm-staged0.
+Offline inventory rejected, signed reconnect restored eligibility. Final RO write
+checks returned EROFS30; all three authoritative hashes/modes/UIDs unchanged.
+Production agent PIDs stayed pi02=946 and pi03=902, both final IDLE. All owned probe
+sessions exited; only new private fixture trees/public immutable objects retained.
+
+Real copy-cost examples also expose uncertainty: prior-sample estimates of
+1.08147/1.15789 s exceeded later measured copy intervals of 0.22112/0.22223 s.
+Cache/concurrency conditions changed and causes were not isolated. No efficiency
+or confidence-bound claim is made; resource remains active, bandwidth optional.
+
+See [48 completion report](48-phase11-live-acceptance.md) and
+[evidence](48-phase11-live-acceptance-evidence.json) for exact files, commands,
+all test counts, program/bundle/log hashes, publisher setup failure, scope and
+scoped source/live rollback. Legacy/OFF/resource defaults remain active. Physical
+link/power loss and production hostile-code/DDP enablement are not claimed; pi01
+three-rank hardware tests remain deferred. Historical loaded-run HTTP409 remains
+disclosed, not root-caused. The central controller/LOCAL SQLite/authoritative
+storage remains a single point of failure. **Phase 11 COMPLETE / PASS under the
+approved two-worker component-validation scope. STOP before the next phase.**
+## 2026-11-10 — Phase 12.1 structured storage events
+
+Implemented **12.1 only**. New `hybrid_storage/events.py` defines schema-one
+allowlisted JSON events on INFO logger `distributed_ml.storage.events`, stable
+type/observation IDs, UTC epoch nanoseconds, integer bytes and monotonic durations.
+Existing trusted staging emits exact manifest/dataset version, unique verified
+hit/accepted transfer bytes, durations and failed-stage counters. Bounded copy
+retry decisions emit numeric errno/closed error classes without messages/paths.
+Existing selectors emit policy/reason proposals without new resource-mode
+inventory/tracing queries. Immutable checkpoint events follow actual commit;
+per-rank recovery events require existing full SDK restore acknowledgment.
+Reserved-dispatch-to-restore latency is process-local, bounded to 128 starts and
+null after restart/eviction. No new execution authority or checkpoint format.
+
+All handlers/config/DB schemas/public APIs and signed payloads remain unchanged;
+no new persistent event table, UI, worker deployment or Pi contact. Logging is
+default-suppressed, with no event clocks/serialization when disabled; errors in
+logging cannot veto staging/commit. Protected operator metadata is not exposed
+to student routes. Default active storage stays legacy/OFF/resource. Existing
+Phase 10/11 work is preserved; no commit/stash/reset/service/network mutation.
+
+Baseline **85 PASS in four files**. Final distinct **188 tests PASS across eight
+files**, zero remaining failures/errors/skips; reruns not doubled. Includes real
+signed local staging/cold/warm/failure, three-rank attribution, all-rank SDK event
+barrier, checkpoint idempotency, restart-null latency, redaction and disabled/
+broken logging; existing portal/lease/checkpoint regressions pass. Initial
+test-harness import/assertion errors and rejected nonexistent test name are
+recorded and corrected, not labeled pre-existing failures. No physical hardware
+acceptance or event-overhead benchmark claimed. Broader UI permissions/retention/
+stale-event tests remain Phase 12.2–12.4.
+
+See [49 contract and report](49-structured-events.md) and
+[machine-readable evidence](49-structured-events-evidence.json) for exact source
+files, commands/results, units/deduplication/delivery limits and scoped source
+rollback. **12.1 PASS. STOP before 12.2; Phase 12 overall remains incomplete.**
+
+## 2026-11-10 — Phase 12.2 admin storage panel
+
+Implemented **12.2 only**. Inspection found no existing web admin role (the other
+cluster dashboard is console-only), so reused the student portal and its login
+sessions with a private, LOCAL operator grant/revoke allowlist. No implicit admin
+username, public grants or relaxed job ownership. New guarded read-only
+`GET /api/admin/storage` reports configured pi01/pi02/pi03 aggregate cache/disk,
+current dataset coverage, inventory age, NFS mount identity and bounded successful
+staging history. Students/anonymous receive 403/401 before data access; roles are
+rechecked each request. UI clears old data and fences late responses on logout.
+
+Reuse existing registry and INPUTS_STAGED metadata, no DB schema/migration/poll
+writes or Pi calls. Optional signed inventory v3 reports kernel-only RO mount
+identity under the existing request-bound per-worker HMAC; v1/v2 defaults remain
+unchanged. Optional controller diagnostic snapshot is private/local/atomic and
+bounded to 256 workers/256KiB, session/sequence/receive-time checked. No automatic
+runtime opt-in, production admin grant, deployment, service/mount/config change.
+Unreported cache quota, stale/absent coverage and NFS observations are Unknown;
+mount identity is not I/O reachability or scheduler eligibility.
+
+Baseline 72/72 tests in three files PASS. Final **155/155 distinct tests across
+seven files PASS**, no failures/errors/skips; existing student UI harness PASS
+separately. Initial Node-not-on-PATH error corrected using the existing bundled
+runtime, no installation. Current panel HTML/CSS was visually checked in the
+in-app browser with explicitly synthetic three-worker data and expanded transfer
+history; saved screenshot, closed tab/stopped temporary localhost fixture server.
+No physical worker result is claimed. Prior uncommitted work preserved, legacy/
+OFF/resource unchanged; source rollback checked against the 308-file snapshot.
+
+See [50 implementation report](50-admin-storage-observability.md) and
+[evidence](50-admin-storage-observability-evidence.json) for exact files, API and
+v3 compatibility, local operator commands, tests, limits and scoped rollback.
+**12.2 PASS. STOP before 12.3; Phase 12 overall is not complete.**
+
+## 2026-11-10 — Phase 12.3 student staging/recovery progress
+
+Implemented **12.3 only**. Reused the existing job list/detail, staging metrics
+and log selector. New owner-scoped `controller/recovery_view.py` projects the
+current retry's committed source and exact input/copy/launch/SDK milestones from
+LOCAL SQLite only. No file/NFS/worker reads, checkpoint deserialization, new DB
+schema/migration or runtime recovery/scheduler changes. Existing hybrid overview/
+detail add `recovery`; the existing logs route gains `view=recovery`. Legacy
+payloads stay unchanged; initial hybrid attempts have no recovery panel.
+
+A copied checkpoint/process start is not labeled resumed. The existing complete
+DDP SDK barrier controls confirmed counts; full restart and checkpoint mode with
+no saved source mark restoration Not required, not a fabricated SDK success.
+Missing/stale/inconsistent/foreign source metadata remains unknown. Owner checks
+precede private side tables, admin role does not bypass job ownership, and no
+shared paths/hashes/credentials/other-owner identifiers enter the new progress
+payload. Progress/staging share a readonly snapshot; stale outer job retry/status
+cannot mix attempts. Browser account revision guards now cover overview/detail/
+logs, clear old content/log selection and preserve the static empty-detail hint.
+
+Baseline **52 PASS in three files**. Latest distinct **127 tests PASS across seven
+files**, zero failures/errors/skips; repeated runs not doubled. Final focused
+15 recovery +17 staging tests validate cold-retry refinement. New suite includes
+actual signed local staging/recovery/SQLite/Flask ownership, three-rank SDK
+barrier and actual recovery/staging/admin JS. Existing checkpoint tests include
+genuine local CPU state resume; new UI fixtures mock NFS/trainer/isolation.
+Visually checked current portal HTML/CSS with explicitly synthetic three-rank
+progress in the in-app browser. Full-page capture failed; normal top/scrolled
+viewport captures succeeded. Saved screenshots, closed tab and stopped approved
+temporary localhost static fixture. No physical Pi or production deployment.
+
+Preserved earlier uncommitted work; no commit/stash/reset. Legacy/OFF/resource
+configuration unchanged; no production login/role/service/DB/data/network/mount
+mutation. Snapshot of315 original source/doc files retained; source-only rollback
+verified in a disposable copy. See [51 report](51-student-recovery-progress.md)
+and [evidence](51-student-recovery-progress-evidence.json) for exact files, commands,
+source hashes, safeguards, limits and rollback. **12.3 PASS. STOP before 12.4;
+Phase12 overall remains incomplete.**
+
+
+## 2026-11-10 — Phase 12.4 observability acceptance
+
+Completed **12.4 only** with fourteen acceptance tests and a bounded offline
+JSONL microbenchmark. New tests reproduced two pre-turn gaps, now fixed: admin
+history rejects malformed/nonfinite/out-of-range timestamps instead of exposing
+arbitrary text, and the existing browser formatter handles epoch zero, rejects
+nonnumeric/invalid dates and shows the local timezone (including repeated DST).
+No new routes, DB schema/migration, grants, storage flags or runtime control flow.
+
+Baseline **50/50 PASS** in three files. First acceptance run had two reproduced
+failures, both corrected; focused12/12 then PASS. Final **243/243 distinct tests
+PASS in13 files**, zero failures/errors/skips, including final14 acceptance cases,
+all Phase12 suites, existing owner UI, staging/restore, signed inventory/coverage,
+OFF config, queue fairness and resources. Actual JS runs in UTC/Dhaka/New York
+plus all three existing storage UI harnesses. No new browser/mobile/layout or
+physical Pi result is claimed.
+
+Measured150 reads +30 emissions leave disposable SQLite bytes identical
+(106,496 before/after);100 signed heartbeats preserve1/1/1 session/entry/event
+counts and86 pages, bounded249-byte snapshot. Query interruption, bounded history,
+private snapshot failures, log rotation, stale/replayed/clock-skew reports and
+integer-safe/deduplicated JSONL experiment consumption pass. Existing real cache
+FULL/change and job audit history is retained; the entire historical DB is not
+claimed fixed-size. No records are pruned.
+
+Actual synthetic local5x5,000-call benchmark: median0.721us disabled event call,
+28.771us enabled JSONL emission to memory;25,000 records validated. This is not
+Pi/NFS/disk/network or total training overhead; custom synchronous handlers can
+block and deployed log retention still needs reviewed operator configuration.
+
+All prior changes preserved, no stash/reset/commit. LOCAL DB, legacy/OFF/resource
+and existing authorization/fencing remain intact. No live services/accounts/data,
+mounts/exports/firewall/SSH/Pis touched; pi01 deferral retained. Source snapshot320
+files; scoped rollback checked/applied only in a disposable copy. See
+[52 report](52-observability-acceptance.md) and
+[evidence](52-observability-acceptance-evidence.json) for exact files/diffs, commands,
+results, limits and rollback. **12.4 PASS; Phase12 repository observability work
+complete under this local scope. STOP; no next phase or live enable.**

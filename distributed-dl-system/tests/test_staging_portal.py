@@ -212,14 +212,18 @@ class StagingPortalTests(unittest.TestCase):
 
     def test_three_rank_partial_readiness_then_complete_metrics_sum_actual_worker_copies(self):
         import distributed_dispatch as ddp
-        f=self.f;nodes=f.ddp_job();observed=[];original=f.client.call
-        def call(node,path,body):
-            if path==STAGE_PATH and node['id']=='pi02':observed.append(self.detail()['staging'])
-            return original(node,path,body)
-        with patch.object(f.client,'call',side_effect=call):
+        f=self.f;nodes=f.ddp_job();observed=[];original=f.runtime.lifecycle.record_ready
+        def ready(*args,**kwargs):
+            result=original(*args,**kwargs)
+            # Rank copies overlap. Observe the committed controller acknowledgment,
+            # not a peer RPC's start, which says nothing about another rank's READY.
+            observed.append(self.detail()['staging'])
+            return result
+        with patch.object(f.runtime.lifecycle,'record_ready',side_effect=ready):
             with patch.object(ddp,'select_group',return_value=nodes):
                 self.assertTrue(f.dispatch())
-        self.assertEqual((observed[0]['ready_ranks'],observed[0]['total_ranks'],observed[0]['measured_ranks']),(1,3,1))
+        self.assertEqual([(v['ready_ranks'],v['total_ranks'],v['measured_ranks']) for v in observed],
+                         [(1,3,1),(2,3,2),(3,3,3)])
         view=self.detail()['staging']
         self.assertEqual((view['ready_ranks'],view['measured_ranks']),(3,3))
         self.assertEqual(view['metrics']['staged_bytes'],sum(rank['metrics']['staged_bytes'] for rank in view['ranks']))

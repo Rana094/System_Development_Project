@@ -1,0 +1,504 @@
+{
+  "expected": {
+    "ddp_cpu_before_ram": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi03",
+          "ip": "192.0.2.1",
+          "port": 5000
+        },
+        {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_equal_uses_node_id": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_full_three": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        },
+        {
+          "id": "pi03",
+          "ip": "192.0.2.1",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_group_lower_total_cpu": {
+      "probes": [
+        "pi04",
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi02",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        {
+          "id": "pi01",
+          "ip": "192.0.2.4",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_group_tie_inventory": {
+      "probes": [
+        "pi04",
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi03",
+          "ip": "192.0.2.2",
+          "port": 5000
+        },
+        {
+          "id": "pi04",
+          "ip": "192.0.2.1",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_never_mix_incomplete_groups": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": null,
+      "stdout": ""
+    },
+    "ddp_ram_before_node_id": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi03",
+          "ip": "192.0.2.1",
+          "port": 5000
+        },
+        {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_requires_lease": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_reserved_before_excluded_unprepared": {
+      "probes": [
+        "pi01"
+      ],
+      "result": null,
+      "stdout": ""
+    },
+    "ddp_resource_filters": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": null,
+      "stdout": ""
+    },
+    "ddp_resume_compatibility": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "ddp_unprepared_not_probed": {
+      "probes": [
+        "pi02",
+        "pi01"
+      ],
+      "result": [
+        {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        }
+      ],
+      "stdout": ""
+    },
+    "single_allowed_reserved_excluded": {
+      "probes": [],
+      "result": null,
+      "stdout": "pi01 skipped (temporarily unhealthy)\n"
+    },
+    "single_available_cores_precedes_logical": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": {
+        "cpu": 10,
+        "node": {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        },
+        "ram": 4,
+        "resources": {
+          "cpu": {
+            "available_cores": 4,
+            "logical_cores": 4,
+            "usage_percent": 10
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 4
+          },
+          "node_state": "IDLE",
+          "temperature_c": 40
+        },
+        "temperature": 40
+      },
+      "stdout": "[SCHEDULER] candidate=pi02 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi01 cpu=10% available_ram=4GB\n"
+    },
+    "single_cpu_before_ram": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": {
+        "cpu": 1,
+        "node": {
+          "id": "pi01",
+          "ip": "192.0.2.3",
+          "port": 5000
+        },
+        "ram": 1,
+        "resources": {
+          "cpu": {
+            "available_cores": 4,
+            "logical_cores": 4,
+            "usage_percent": 1
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 1
+          },
+          "node_state": "IDLE",
+          "temperature_c": 40
+        },
+        "temperature": 40
+      },
+      "stdout": "[SCHEDULER] candidate=pi03 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi02 cpu=2% available_ram=100GB\n[SCHEDULER] candidate=pi01 cpu=1% available_ram=1GB\n"
+    },
+    "single_empty_inventory": {
+      "probes": [],
+      "result": null,
+      "stdout": ""
+    },
+    "single_equal_keeps_inventory": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": {
+        "cpu": 10,
+        "node": {
+          "id": "pi03",
+          "ip": "192.0.2.1",
+          "port": 5000
+        },
+        "ram": 4,
+        "resources": {
+          "cpu": {
+            "available_cores": 4,
+            "logical_cores": 4,
+            "usage_percent": 10
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 4
+          },
+          "node_state": "IDLE",
+          "temperature_c": 40
+        },
+        "temperature": 40
+      },
+      "stdout": "[SCHEDULER] candidate=pi03 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi02 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi01 cpu=10% available_ram=4GB\n"
+    },
+    "single_equal_reversed": {
+      "probes": [
+        "pi01",
+        "pi02",
+        "pi03"
+      ],
+      "result": {
+        "cpu": 10,
+        "node": {
+          "id": "pi01",
+          "ip": "192.0.2.1",
+          "port": 5000
+        },
+        "ram": 4,
+        "resources": {
+          "cpu": {
+            "available_cores": 4,
+            "logical_cores": 4,
+            "usage_percent": 10
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 4
+          },
+          "node_state": "IDLE",
+          "temperature_c": 40
+        },
+        "temperature": 40
+      },
+      "stdout": "[SCHEDULER] candidate=pi01 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi02 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi03 cpu=10% available_ram=4GB\n"
+    },
+    "single_insufficient_cpu_cores": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": null,
+      "stdout": ""
+    },
+    "single_insufficient_gpus": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": null,
+      "stdout": ""
+    },
+    "single_insufficient_memory_gb": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": null,
+      "stdout": ""
+    },
+    "single_logical_cores_fallback": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": {
+        "cpu": 10,
+        "node": {
+          "id": "pi03",
+          "ip": "192.0.2.1",
+          "port": 5000
+        },
+        "ram": 4,
+        "resources": {
+          "cpu": {
+            "logical_cores": 4,
+            "usage_percent": 10
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 4
+          },
+          "node_state": "IDLE",
+          "temperature_c": 40
+        },
+        "temperature": 40
+      },
+      "stdout": "[SCHEDULER] candidate=pi03 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi02 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi01 cpu=10% available_ram=4GB\n"
+    },
+    "single_offline_busy_capacity": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": null,
+      "stdout": "pi03 unavailable\npi02 skipped (RUNNING)\n"
+    },
+    "single_ram_breaks_cpu_tie": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": {
+        "cpu": 10,
+        "node": {
+          "id": "pi02",
+          "ip": "192.0.2.2",
+          "port": 5000
+        },
+        "ram": 8,
+        "resources": {
+          "cpu": {
+            "available_cores": 4,
+            "logical_cores": 4,
+            "usage_percent": 10
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 8
+          },
+          "node_state": "IDLE",
+          "temperature_c": 40
+        },
+        "temperature": 40
+      },
+      "stdout": "[SCHEDULER] candidate=pi03 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi02 cpu=10% available_ram=8GB\n[SCHEDULER] candidate=pi01 cpu=10% available_ram=4GB\n"
+    },
+    "single_temperature_is_not_a_filter": {
+      "probes": [
+        "pi03",
+        "pi02",
+        "pi01"
+      ],
+      "result": {
+        "cpu": 10,
+        "node": {
+          "id": "pi03",
+          "ip": "192.0.2.1",
+          "port": 5000
+        },
+        "ram": 4,
+        "resources": {
+          "cpu": {
+            "available_cores": 4,
+            "logical_cores": 4,
+            "usage_percent": 10
+          },
+          "gpu": {
+            "available": 0
+          },
+          "lease_test": true,
+          "memory": {
+            "available_gb": 4
+          },
+          "node_state": "IDLE",
+          "temperature_c": 100
+        },
+        "temperature": 100
+      },
+      "stdout": "[SCHEDULER] candidate=pi03 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi02 cpu=10% available_ram=4GB\n[SCHEDULER] candidate=pi01 cpu=10% available_ram=4GB\n"
+    }
+  },
+  "schema_version": 1,
+  "source_head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "source_sha256": {
+    "controller/distributed_dispatch.py": "260d4efe0ca3fbf269b84f51e2db041093d928e67fe2d7e73f5875b166c5c26a",
+    "controller/scheduler.py": "577f915ed80b44dec1f798c6d7166a5100a276cab4ba12f07f9033c38cc8c58b"
+  }
+}

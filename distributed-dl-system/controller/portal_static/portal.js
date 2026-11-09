@@ -3,10 +3,16 @@ const $ = id => document.getElementById(id);
 let csrf = '', owner = null, examples = {}, selected = null, latest = null, busy = false, detailData = null;
 let logSelection = '', rankSelection = '0', specExtras = {};
 const terminal = ['COMPLETED','FAILED','CANCELLED'];
+let isAdmin=false, authRevision=0;
+const emptyDetail=$('detail').innerHTML;
 const esc = value => String(value ?? '—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const badge = value => `<span class="badge ${/^[A-Z_]+$/.test(value)?value:''}">${esc(value)}</span>`;
-const stamp = value => value ? new Date(value*1000).toLocaleString() : '—';
-const inputBadge = job => job.status==='SCHEDULED' && ['STAGING','READY'].includes(job.staging?.phase) ? 'STAGING' : job.status;
+const stamp = value => {
+  if(!Number.isFinite(value))return '—';
+  const date=new Date(value*1000);
+  return Number.isFinite(date.getTime())?date.toLocaleString(undefined,{timeZoneName:'short'}):'—';
+};
+const inputBadge = job => job.status==='SCHEDULED' && ['STAGING','RESTORING','STARTING','CONFIRMING','CONFIRMED'].includes(job.recovery?.phase) ? 'RECOVERING' : job.status==='SCHEDULED' && ['STAGING','READY'].includes(job.staging?.phase) ? 'STAGING' : job.status;
 const inputBytes = value => Number.isFinite(value) ? value.toLocaleString()+' B' : 'Not recorded';
 const inputSeconds = value => Number.isFinite(value) ? (value/1e9).toFixed(3)+' s' : 'Not recorded';
 function renderStaging(view){
@@ -16,6 +22,19 @@ function renderStaging(view){
     <div class="facts"><div><small>REUSED FROM CACHE</small><strong>${inputBytes(metrics?.cache_hit_bytes)}</strong></div><div><small>STAGED TO WORKERS</small><strong>${inputBytes(metrics?.staged_bytes)}</strong></div><div><small>MEASURED RANKS</small><strong>${view.measured_ranks}/${view.total_ranks}</strong></div></div>
     ${table(['Rank','Inputs','Cache reused','Staged','Verification','Copy'],view.ranks.map(rank=>`<tr><td>${rank.rank}</td><td>${rank.ready?'Ready':'Awaiting acknowledgement'}</td><td>${inputBytes(rank.metrics?.cache_hit_bytes)}</td><td>${inputBytes(rank.metrics?.staged_bytes)}</td><td>${inputSeconds(rank.metrics?.verification_ns)}</td><td>${inputSeconds(rank.metrics?.copy_ns)}</td></tr>`))}
     <p class="muted small">Measurements cover acknowledged staging requests. Totals sum worker copies, including repeated data across distributed ranks. Verification and copy times overlap. Byte counts describe file sizes. Training starts after every worker is ready and execution ownership is valid.</p></section>`;
+}
+function renderRecovery(view){
+  if(!view)return '';
+  const count=value=>Number.isInteger(value)?esc(value)+' / '+esc(view.total_ranks):'Not recorded';
+  const source=view.source;
+  const selected=source.state==='committed'?`Selected committed checkpoint: step ${esc(source.global_step)}, from attempt ${esc(source.from_attempt)}.`:
+    view.restore_required===false?'Full restart; checkpoint restoration is not required.':'Checkpoint selection has not been confirmed.';
+  const checkpoint=value=>view.restore_required===false?'Not required':count(value);
+  const state=value=>value===true?'Acknowledged':value===false?'Awaiting acknowledgement':'Not recorded';
+  return `<section class="input-staging" aria-label="Recovery progress"><h3>Recovery progress · attempt ${esc(view.attempt)}</h3><p role="status">${esc(view.label)}</p><p class="muted small">${selected}</p>
+    <div class="facts"><div><small>INPUTS READY</small><strong>${count(view.inputs_ready_ranks)}</strong></div><div><small>CHECKPOINT COPIES READY</small><strong>${checkpoint(view.checkpoint_ready_ranks)}</strong></div><div><small>TRAINING STATE RESTORED</small><strong>${checkpoint(view.restored_ranks)}</strong></div></div>
+    ${table(['Rank','Inputs','Checkpoint copy','Launch','Training state'],view.ranks.map(r=>`<tr><td>${esc(r.rank)}</td><td>${state(r.inputs_ready)}</td><td>${view.restore_required===false?'Not required':state(r.checkpoint_ready)}</td><td>${state(r.launch_acknowledged)}</td><td>${view.restore_required===false?'Not required':state(r.training_state_restored)}</td></tr>`))}
+    <p class="muted small">${view.ranks_truncated?'Only the first 256 ranks are listed; totals cover the group. ':''}Progress reflects controller records, not a live worker probe. A copied checkpoint or launched process does not confirm that training state was restored. Distributed restoration requires every rank. No transfer percentage is inferred.</p></section>`;
 }
 function notice(message) {
   $('notice').textContent=message; $('notice').hidden=!message;
@@ -30,8 +49,11 @@ async function api(path, options={}) {
   if (!response.ok) { if(response.status===401 && path!='/login') showLogin(); throw new Error(data.error || 'Request failed'); }
   return data;
 }
-function showLogin() { owner=null; selected=null; $('workspace').hidden=true; $('account').hidden=true; $('login-screen').hidden=false; }
+function clearAdminStorage(){isAdmin=false;authRevision++;$('admin-storage').hidden=true;$('admin-storage').innerHTML='';}
+function clearJobView(){selected=null;latest=null;detailData=null;logSelection='';rankSelection='0';$('jobs').innerHTML='';$('detail').innerHTML=emptyDetail;}
+function showLogin() { clearAdminStorage();clearJobView();owner=null; $('workspace').hidden=true; $('account').hidden=true; $('login-screen').hidden=false; }
 async function enter(data) {
+  clearAdminStorage();clearJobView();isAdmin=data.is_admin===true;
   csrf=data.csrf; owner=data.owner;
   if(!owner) return showLogin();
   $('owner').textContent=owner; $('workspace').hidden=false; $('account').hidden=false; $('login-screen').hidden=true;
@@ -91,7 +113,7 @@ function renderJobs(){
   const scroll=$('jobs').scrollTop;
   $('jobs').innerHTML=jobs.length?jobs.map(j=>{
     const preparing=['PENDING','PREPARING'].includes(j.preparation?.state);
-    return `<button class="job ${j.job_id===selected?'selected':''}" data-job="${esc(j.job_id)}"><div class="job-head"><strong>${esc(j.name)}</strong>${badge(preparing?'PREPARING':inputBadge(j))}</div><p>${esc(j.execution.mode)} · ${esc(j.execution.workers)} worker(s) · ${esc(stamp(j.created_at))}</p><p>${j.position?`Queue #${j.position} · `:''}${esc(j.staging?.label || j.queue_reason || (preparing?'Preparing worker environments':j.node_id || j.preparation?.error || 'Waiting for preparation'))}</p></button>`;
+    return `<button class="job ${j.job_id===selected?'selected':''}" data-job="${esc(j.job_id)}"><div class="job-head"><strong>${esc(j.name)}</strong>${badge(preparing?'PREPARING':inputBadge(j))}</div><p>${esc(j.execution.mode)} · ${esc(j.execution.workers)} worker(s) · ${esc(stamp(j.created_at))}</p><p>${j.position?`Queue #${j.position} · `:''}${esc(j.recovery?.label || j.staging?.label || j.queue_reason || (preparing?'Preparing worker environments':j.node_id || j.preparation?.error || 'Waiting for preparation'))}</p></button>`;
   }).join(''):'<div class="empty"><h2>No jobs here yet</h2><p>Submit a training example or upload your project.</p></div>';
   $('jobs').scrollTop=scroll;
   $('jobs').querySelectorAll('[data-job]').forEach(button=>button.onclick=async()=>{selected=button.dataset.job;logSelection='';rankSelection='0';renderJobs();try{await loadDetail();}catch(e){notice(e.message);}});
@@ -99,18 +121,52 @@ function renderJobs(){
 $('filter').onchange=()=>{if(latest)renderJobs();};
 async function refresh(){
   if(!owner||busy)return; busy=true;
+  const revision=authRevision;
   try{
-    latest=await api('/overview');
+    const data=await api('/overview');
+    if(!owner||revision!==authRevision)return;
+    latest=data;
     $('dispatcher-warning').hidden=latest.dispatcher_running;
     $('refresh-state').textContent='Live cluster · updated '+new Date(latest.timestamp*1000).toLocaleTimeString();
     $('quota').textContent=`Up to ${latest.limits.max_active_per_owner} active jobs · ${latest.limits.max_pending_per_owner} pending submissions`;
     $('nodes').innerHTML=latest.nodes.map(n=>`<article class="node panel"><div class="section-title"><h2>${esc(n.id)}</h2>${badge(n.state)}</div><div class="metrics"><div><small>CPU USED</small>${esc(n.cpu?.usage_percent ?? '—')}${n.cpu?'%':''}</div><div><small>RAM FREE</small>${esc(n.memory?.available_gb ?? '—')} GB</div><div><small>SLOTS FREE</small>${esc(n.slots?.available ?? '—')}</div></div></article>`).join('');
     renderJobs(); if(selected)await loadDetail();
-  }catch(error){notice(error.message); $('refresh-state').textContent='Connection interrupted · retrying…';}finally{busy=false;}
+    if(isAdmin)await loadAdminStorage();
+  }catch(error){if(owner&&revision===authRevision){notice(error.message); $('refresh-state').textContent='Connection interrupted · retrying…';}}finally{busy=false;}
 }
 function table(head,body){return `<div class="table-wrap"><table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${body.join('')}</tbody></table></div>`;}
+function storageBytes(value){return Number.isFinite(value)?esc(value.toLocaleString())+' B':'Unknown';}
+function renderAdminStorage(view){
+  const statuses={reported_fresh:'Fresh report',stale_or_untrusted:'Stale or untrusted',not_reported:'Not reported'};
+  const mounts={verified_readonly:'Verified read-only',unavailable:'Unavailable',unknown:'Unknown'};
+  return `<div class="section-title"><h2>Cluster storage</h2><span class="eyebrow">ADMIN ONLY</span></div>
+    <p class="muted small">Last reported values · updated ${esc(stamp(view.recorded_at))}. Inventory is advisory; this view does not establish scheduling eligibility. Mount identity does not prove current NFS I/O availability.</p>
+    ${table(['Worker','Local cache / disk','Dataset coverage','Inventory age','NFS mount identity'],view.workers.map(w=>`<tr><td>${esc(w.worker_id)}<small>${esc(statuses[w.inventory_status]||'Unknown')}</small></td>
+      <td>${storageBytes(w.verified_cache_bytes)} cached<small>Disk: ${storageBytes(w.disk_available_bytes)} available / ${storageBytes(w.disk_total_bytes)} total</small><small>Cache quota: ${storageBytes(w.cache_limit_bytes)}</small></td>
+      <td>${w.dataset_coverage?`${storageBytes(w.dataset_coverage.cached_bytes)} / ${storageBytes(w.dataset_coverage.required_bytes)}<small>${esc(w.dataset_coverage.complete_versions)} / ${esc(w.dataset_coverage.dataset_versions)} dataset versions complete</small>`:'Unknown'}</td>
+      <td>${Number.isFinite(w.inventory_age_seconds)?esc(w.inventory_age_seconds.toFixed(1))+' s':'Unknown'}<small>Last seen: ${esc(stamp(w.last_seen_at))}</small></td>
+      <td>${esc(mounts[w.nfs?.status]||'Unknown')}<small>Observed: ${esc(stamp(w.nfs?.observed_at))}</small><small>I/O availability: untested</small></td></tr>`))}
+    <p class="muted small">Coverage aggregates up to ${esc(view.coverage_limit)} current dataset versions, counting each digest once per version. Bytes shared by separate datasets count in each dataset.${view.coverage_truncated?' More datasets exist; this is a bounded window.':''} Stale reports have unknown coverage.</p>
+    <details><summary>Recent successful input transfers</summary>${view.workers.map(w=>`<h3>${esc(w.worker_id)}</h3>${w.transfer_history.length?table(['Recorded','Cache reused','Copied to cache','Copy time','Verification'],w.transfer_history.map(t=>`<tr><td>${esc(stamp(t.recorded_at))}</td><td>${storageBytes(t.cache_hit_bytes)}</td><td>${storageBytes(t.transferred_bytes)}</td><td>${esc(t.copy_seconds.toFixed(3))} s</td><td>${esc(t.verification_seconds.toFixed(3))} s</td></tr>`)):'<p class="muted small">No recorded staging measurements.</p>'}`).join('')}
+    <p class="muted small">At most ${esc(view.transfer_history_limit)} records per worker from the latest ${esc(view.transfer_scan_limit)} acknowledged stages. Payload bytes are not wire traffic; copy and verification times overlap. Warm stages can copy zero bytes. No student names, files or shared paths are shown.</p></details>`;
+}
+async function loadAdminStorage(){
+  if(!isAdmin)return;
+  const revision=authRevision;
+  try{
+    const view=await api('/admin/storage');
+    if(!isAdmin||revision!==authRevision)return;
+    const expanded=$('admin-storage').querySelector('details')?.open||false;
+    $('admin-storage').innerHTML=renderAdminStorage(view);$('admin-storage').hidden=false;
+    const details=$('admin-storage').querySelector('details');if(details)details.open=expanded;
+  }catch(error){
+    if(!isAdmin||revision!==authRevision)return;
+    $('admin-storage').innerHTML='<h2>Cluster storage</h2><p class="muted small">Storage observations unavailable. Refresh or ask the operator to check access and telemetry.</p>';
+    $('admin-storage').hidden=false;
+  }
+}
 async function loadDetail(){
-  const id=selected; const data=await api('/jobs/'+encodeURIComponent(id)); if(id!==selected)return;
+  const id=selected,revision=authRevision; const data=await api('/jobs/'+encodeURIComponent(id)); if(id!==selected||revision!==authRevision||!owner)return;
   detailData=data;
   if(['log-source','rank-source'].includes(document.activeElement?.id)){await loadLog();return;}
   const disclosure=$('detail').querySelector('details')?.open || false;
@@ -126,12 +182,14 @@ async function loadDetail(){
   if(['PENDING','PREPARING'].includes(prep?.state))logSelection='preparation.log';
   else if(logSelection==='preparation.log'&&['RUNNING','SCHEDULED'].includes(j.status))logSelection='';
   if(terminal.includes(j.status)&&!logSelection)logSelection=data.logs.findLast(n=>n.startsWith('attempt-')) || data.logs[0] || '';
+  if(data.recovery && ['QUEUED','SCHEDULED','CANCELLING'].includes(j.status) && !logSelection)logSelection='@recovery';
   if(data.staging && ['SCHEDULED','CANCELLING'].includes(j.status) && !logSelection)logSelection='@staging';
-  const sourceOptions=[['','Live training'],...('staging' in data?[['@staging','Input staging']]:[]),...data.logs.map(name=>[name,name])];
+  const sourceOptions=[['','Live training'],...('staging' in data?[['@staging','Input staging']]:[]),...(data.recovery?[['@recovery','Recovery progress']]:[]),...data.logs.map(name=>[name,name])];
   if(logSelection&&!sourceOptions.some(([v])=>v===logSelection))sourceOptions.push([logSelection,logSelection]);
-  $('detail').innerHTML=`<div class="section-title"><h2>${esc(data.spec.name)}</h2>${badge(inputBadge({...j,staging:data.staging}))}</div><p class="id">${esc(j.job_id)}</p>
+  $('detail').innerHTML=`<div class="section-title"><h2>${esc(data.spec.name)}</h2>${badge(inputBadge({...j,staging:data.staging,recovery:data.recovery}))}</div><p class="id">${esc(j.job_id)}</p>
     <div class="facts"><div><small>EXECUTION</small><strong>${esc(data.spec.execution.mode)} · ${data.spec.execution.workers} workers</strong></div><div><small>ATTEMPT</small><strong>${j.retry_count+1}</strong></div><div><small>CENTRAL CHECKPOINT</small><strong>${ck?.global_step!==undefined?'Step '+esc(ck.global_step):'Not yet saved'}</strong></div></div>
     ${renderStaging(data.staging)}
+    ${renderRecovery(data.recovery)}
     <div class="actions">${controls.map(([a,label])=>`<button data-action="${a}" class="${a==='cancel'?'danger':'quiet'}">${label}</button>`).join('')}${terminal.includes(j.status)?`<a class="button" href="/api/jobs/${encodeURIComponent(id)}/results">Download results ZIP</a>`:''}</div>
     ${j.last_error||j.error||prep?.error?`<p class="warning">${esc(j.last_error || j.error || prep.error)}</p>`:''}<p class="muted small">${esc(j.queue_reason || (prep?.state==='PREPARING'?'Preparing compatible environments…':''))}</p>
     ${data.timing?'<h3>Training time</h3>'+table(['Measurement','Seconds'],[
@@ -155,11 +213,11 @@ async function loadDetail(){
   await loadLog(); if(selected===id){$('training-log').scrollTop=follow?$('training-log').scrollHeight:scroll;}
 }
 async function loadLog(){
-  const id=selected, source=logSelection, rank=rankSelection;
+  const id=selected, source=logSelection, rank=rankSelection,revision=authRevision;
   let data;
-  try{data=await api('/jobs/'+encodeURIComponent(id)+'/logs?'+new URLSearchParams({...(source==='@staging'?{view:'staging'}:source?{file:source}:{}),rank}));}
+  try{data=await api('/jobs/'+encodeURIComponent(id)+'/logs?'+new URLSearchParams({...(source==='@staging'?{view:'staging'}:source==='@recovery'?{view:'recovery'}:source?{file:source}:{}),rank}));}
   catch(error){data={text:error.message==='Log not collected yet'?'Waiting for the first log output…':error.message,source:source||'Live training'};}
-  if(id!==selected||source!==logSelection||rank!==rankSelection)return;
+  if(id!==selected||source!==logSelection||rank!==rankSelection||revision!==authRevision||!owner)return;
   $('training-log').textContent=data.text; $('log-caption').textContent=data.source+' · most recent 64 KiB';
 }
 api('/session').then(enter).catch(e=>notice(e.message));

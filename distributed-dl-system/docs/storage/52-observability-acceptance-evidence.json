@@ -1,0 +1,240 @@
+{
+  "phase": "12.4",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "PASS",
+  "phase12_complete": true,
+  "completion_scope": "Repository observability implementation and isolated local acceptance, not production deployment/physical cluster acceptance.",
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "7edef1ccd8e3264d9716a3482cbd214188d009b6",
+  "snapshot_files": 320,
+  "baseline_catalog": "/tmp/hybrid-12-4/before-hashes.json",
+  "modified_existing_files": [
+    "controller/admin_storage_view.py",
+    "controller/portal_static/portal.js",
+    "docs/storage/implementation-progress.md",
+    "docs/student-interface.md",
+    "tests/README.md",
+    "tools/README.md"
+  ],
+  "new_files": [
+    "tests/test_observability_acceptance.py",
+    "tests/test_observability_ui.cjs",
+    "tools/benchmarks/observability_overhead.py",
+    "docs/storage/52-observability-acceptance.md",
+    "docs/storage/52-observability-acceptance-evidence.json"
+  ],
+  "untouched_original_files": 314,
+  "file_hashes": {
+    "controller/admin_storage_view.py": {
+      "before": "7955b5db141414bfc8d0d81eb4344ea437bf06f15bd30ac7fc27ea8b76d98b6a",
+      "after": "872021d7d72d6fb68b01045d2ac1e9973ad23c3069ebb9e970e503d511302467"
+    },
+    "controller/portal_static/portal.js": {
+      "before": "43fd9db08bcce29e09e982f1eb155191647267489e64faaeb187682aa835e17a",
+      "after": "468575c874f5727e406173bcb3c3d439774ef2718deeba10b1e2105470fb2b2b"
+    },
+    "docs/storage/52-observability-acceptance.md": {
+      "before": null,
+      "after": "611e28f2ea6377b3ebc461d204933033f3669ab6ecf71fa0df6e7f8a038fdf1f"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "c404b9928665b82abd29a7a82aee92e63ddffd4e0c6ce39455cbb3442432403d",
+      "after": "da6bb7483234f8c31799dc102954ef6617dbfbf4a0760db8d13ef91973548d70"
+    },
+    "docs/student-interface.md": {
+      "before": "c9184ef47f3b34a0a2250cd4e5a8468ef064dcaa600721710558400d54ecec85",
+      "after": "9bdbdc8241a6907cf7aece8b3a97f063bbdcb75b6ccfc38ea1550821657d3afa"
+    },
+    "tests/README.md": {
+      "before": "9e98cb86a87cf80aee951812ca50e7c33240b4b3185a689ff8e9e2fc3eaa99c7",
+      "after": "b414ada12927435f7269e8e1826f3475b9a868a05d719f5f412f807c994d07f7"
+    },
+    "tests/test_observability_acceptance.py": {
+      "before": null,
+      "after": "fdffd3cb0f392784b86fed589dc44fdea22db4eae69e02bedcc4ae6406611f28"
+    },
+    "tests/test_observability_ui.cjs": {
+      "before": null,
+      "after": "46c8fcc45e602e2bed4fd048e201b33bf01d5d217d450185b0d27ca3d7050d4d"
+    },
+    "tools/README.md": {
+      "before": "ebb58476055e339e88929bd87734f903eea7ff704dde1ba3b76992dbfe31379a",
+      "after": "a3ce2b47b40e9bfcfa6de61a184ee8f62f622ed42bf613e516f4fc69d42c92e1"
+    },
+    "tools/benchmarks/observability_overhead.py": {
+      "before": null,
+      "after": "e677f23b1f0d66f5d70235ec9e9daa77c2be84d8b0c1e18ff55cfb29fa7f73ae"
+    }
+  },
+  "tests": {
+    "baseline": {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_events.py test_admin_storage.py test_recovery_portal.py",
+      "log": "/tmp/hybrid-12-4/baseline-tests.log",
+      "sha256": "5008c2dc8d40acee6f2b0a83f1c24fe16caf82b15b635f43e4ee5631170396f7",
+      "result": "50/50 PASS,3 files"
+    },
+    "first_acceptance": {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_observability_acceptance.py",
+      "log": "/tmp/hybrid-12-4/first-acceptance.log",
+      "sha256": "123e6acbefadc59ed8c30b0ed98edcb837b82d24a8e06d14b6d9f56da9913030",
+      "result": "10 PASS,2 reproduced pre-turn failures: strict timestamp formatting and arbitrary history timestamp text"
+    },
+    "focused": {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_observability_acceptance.py",
+      "log": "/tmp/hybrid-12-4/acceptance-tests.log",
+      "sha256": "4f5cc1ab9c0957662b534e6961a9f922c1d7838ec5bb2a37e9b7a18ee98ec1d1",
+      "result": "12/12 PASS after fixes; before adding2 cases"
+    },
+    "final": {
+      "command": "DL_NODE_BINARY=/usr/lib/chatgpt/resources/cua_node/bin/node PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_observability_acceptance.py test_storage_events.py test_admin_storage.py test_recovery_portal.py test_student_portal.py test_staging_portal.py test_cache_inventory.py test_cache_coverage.py test_staging_dispatch.py test_hybrid_checkpoint_recovery.py test_storage_config.py test_queue_controls.py test_resource_allocation.py",
+      "log": "/tmp/hybrid-12-4/final-tests.log",
+      "sha256": "33e92dd581eba1d597601e5adc6039a962abc7f6443c250f9445c25a5d8e458e",
+      "counts": {
+        "test_observability_acceptance.py": 14,
+        "test_storage_events.py": 19,
+        "test_admin_storage.py": 16,
+        "test_recovery_portal.py": 15,
+        "test_student_portal.py": 17,
+        "test_staging_portal.py": 17,
+        "test_cache_inventory.py": 38,
+        "test_cache_coverage.py": 31,
+        "test_staging_dispatch.py": 25,
+        "test_hybrid_checkpoint_recovery.py": 18,
+        "test_storage_config.py": 17,
+        "test_queue_controls.py": 10,
+        "test_resource_allocation.py": 6
+      },
+      "result": "243/243 PASS,13 files",
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "measurements": {
+    "heartbeat_growth": {
+      "heartbeats": 100,
+      "before_counts": {
+        "cache_registry_sessions": 1,
+        "cache_registry_entries": 1,
+        "cache_registry_events": 1
+      },
+      "after_counts": {
+        "cache_registry_sessions": 1,
+        "cache_registry_entries": 1,
+        "cache_registry_events": 1
+      },
+      "before_pages": 86,
+      "after_pages": 86,
+      "snapshot_bytes": 249
+    },
+    "poll_growth": {
+      "requests": 150,
+      "events": 30,
+      "before_bytes": 106496,
+      "after_bytes": 106496,
+      "db_bytes_identical": true
+    }
+  },
+  "benchmark": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/observability_overhead.py",
+    "raw_log": "/tmp/hybrid-12-4/event-overhead.json",
+    "sha256": "e240aed5071d619442435069002edcce50726c2a74056cde2a33f8a201a0bc80",
+    "schema_version": 1,
+    "kind": "synthetic_event_microbenchmark",
+    "measured_at_ns": 1794253854702799468,
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "iterations": 5000,
+    "repeats": 5,
+    "ns_per_call": {
+      "empty_call": {
+        "median": 27.189,
+        "minimum": 25.8566,
+        "maximum": 36.9976,
+        "samples": [
+          36.9976,
+          25.8566,
+          27.137,
+          33.6874,
+          27.189
+        ]
+      },
+      "disabled": {
+        "median": 720.9094,
+        "minimum": 646.6938,
+        "maximum": 934.8516,
+        "samples": [
+          934.8516,
+          646.6938,
+          733.537,
+          720.9094,
+          685.4528
+        ]
+      },
+      "enabled_memory_jsonl": {
+        "median": 28771.348,
+        "minimum": 28292.5878,
+        "maximum": 42168.2398,
+        "samples": [
+          42168.2398,
+          28292.5878,
+          28309.8784,
+          28771.348,
+          28848.8096
+        ]
+      }
+    },
+    "validated_jsonl_records": 25000,
+    "units": "nanoseconds per synchronous call",
+    "limits": "Memory JSONL sink only; not disk/network/NFS/Pi/UI or total training overhead; no performance pass threshold."
+  },
+  "js": {
+    "runtime": "/usr/lib/chatgpt/resources/cua_node/bin/node",
+    "timezones": [
+      "UTC",
+      "Asia/Dhaka",
+      "America/New_York"
+    ],
+    "suites": [
+      "tests/test_observability_ui.cjs",
+      "tests/test_admin_storage_ui.cjs",
+      "tests/test_recovery_portal_ui.cjs",
+      "tests/test_staging_portal_ui.cjs"
+    ],
+    "result": "PASS actual portal.js with offline VM DOM/fetch; no screenshot/browser/mobile/accessibility acceptance this turn"
+  },
+  "api_changes": "No new routes; existing admin transfer history discards invalid timestamp rows.",
+  "db_schema_changes": false,
+  "migrations": false,
+  "new_grants": false,
+  "new_transport": false,
+  "new_flags": false,
+  "security": [
+    "Owner/admin/anonymous matrix on existing progress/admin routes; cookie role claim ignored; revocation immediate.",
+    "Malformed historical timestamp cannot serialize arbitrary text; event allowlist unchanged.",
+    "Queries remain readonly/budgeted; repeated polling/events do not write SQLite.",
+    "Stale, replayed, future-skewed or insecure snapshot cannot assert healthy/eligible inventory.",
+    "UTC epoch integer/ns and monotonic durations unchanged; browser displays valid numeric seconds with timezone."
+  ],
+  "live_service_or_data_mutation": false,
+  "pi_contact": false,
+  "commit_stash_or_reset": false,
+  "legacy_off_resource_unchanged": true,
+  "residual_limits": [
+    "Global historical DB is not fixed-size; legitimate FULL/change/job audit rows retained without pruning.",
+    "Rotation tested only with disposable local operator handler, not applied live; synchronous handlers can block.",
+    "Synthetic memory-sink microbenchmark does not measure physical Pi/NFS/disk/network or total training overhead.",
+    "Existing isolation/trainer/NFS mocks are not hostile-code containment or physical DDP proof.",
+    "pi01 deferred; no new physical worker validation; earlier loaded Phase10.4 HTTP409 remains undiagnosed.",
+    "Central controller/local SQLite/authoritative storage remain a single point of failure."
+  ],
+  "rollback": {
+    "patch": "/tmp/hybrid-12-4/12.4.patch",
+    "check": "git apply --reverse --check /tmp/hybrid-12-4/12.4.patch",
+    "apply": "git apply --reverse /tmp/hybrid-12-4/12.4.patch",
+    "verification": "/tmp/hybrid-12-4/source-verification.json",
+    "note": "Review scoped patch; no DB/data rollback; do not restore whole files from HEAD over earlier uncommitted phases."
+  }
+}

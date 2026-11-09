@@ -17,10 +17,17 @@ from .worker_cache import CacheMiss, _child, _private_file
 
 class InventoryReporter:
     def __init__(self, cache, credential, *, full_interval_seconds=30, clock=time.time_ns,
-                 monotonic=time.monotonic):
+                 monotonic=time.monotonic, transfer_metrics=None, nfs_health=None):
         if type(full_interval_seconds) not in (int, float) or not 1 <= full_interval_seconds <= 300:
             raise ValueError('Full reconciliation interval must be 1..300 seconds')
         self.cache, self.credential = cache, credential
+        if transfer_metrics is not None:
+            from .transfer_metrics import TransferMetrics
+            if not isinstance(transfer_metrics, TransferMetrics) or transfer_metrics.worker != credential.worker:
+                raise ValueError('Transfer collector must match authenticated worker')
+        self.transfer_metrics = transfer_metrics
+        if nfs_health is not None and not callable(nfs_health):raise TypeError('Expected trusted health probe')
+        self.nfs_health=nfs_health
         self.clock, self.monotonic = clock, monotonic
         self.full_interval = full_interval_seconds
         self._lock = threading.Lock()
@@ -31,6 +38,7 @@ class InventoryReporter:
         self._sequence = 0
         self._last_raw = None
         self._reply_cache = None
+        self._force_full = False
 
     def initialize(self, *, boot_id=None):
         """Call once per trusted process startup; persist strictly newer epoch."""
@@ -84,6 +92,16 @@ class InventoryReporter:
                 os.close(self._owner)
                 self._owner = None
 
+    def request_full(self):
+        """Trusted local maintenance notification; next fresh challenge is FULL.
+
+        Existing cached/lost replies retain their original sequence/body. No
+        network push or deletion acknowledgment is fabricated here.
+        """
+        with self._lock:
+            if self._owner is None:raise protocol.InventoryError('Reporter not initialized')
+            self._force_full=True
+
     def _scan(self, *, full):
         records = self.cache.inventory()
         if len(records) > protocol.MAX_ENTRIES:
@@ -125,7 +143,7 @@ class InventoryReporter:
             else:
                 if not new and request['sequence'] != self._sequence:
                     raise protocol.InventoryError('Inventory cursor mismatch; reconnect')
-                full = new or request['full'] or self.monotonic() - self._full_at >= self.full_interval
+                full = new or request['full'] or self._force_full or self.monotonic() - self._full_at >= self.full_interval
                 current = self._scan(full=full)
                 previous = {} if new else self._previous
                 removed = sorted(set(previous) - set(current))
@@ -141,15 +159,30 @@ class InventoryReporter:
                 base = request['sequence']
                 sequence = base if kind == 'HEARTBEAT' else base + 1
                 space = self.cache.space()
-                response = protocol.encode(dict(version=1, worker_id=self.credential.worker,
+                document = dict(version=1, worker_id=self.credential.worker,
                     session_id=request['session_id'], controller_epoch=request['controller_epoch'],
                     cache_id=self.cache_id, cache_epoch=self.epoch, boot_id=self.boot_id,
                     sequence=sequence, base_sequence=base, kind=kind, entries=entries,
-                    disk=dict(total=space.total_bytes, free=space.free_bytes, available=space.available_bytes)))
+                    disk=dict(total=space.total_bytes, free=space.free_bytes, available=space.available_bytes))
+                if self.transfer_metrics is not None:
+                    try:
+                        transfer = self.transfer_metrics.prediction_snapshot()
+                        transfer['generated_at_ns'] = self.clock()
+                    except Exception:
+                        transfer = None  # Optional measurements cannot break cache inventory.
+                    document.update(version=2, transfer=transfer)
+                if self.nfs_health is not None:
+                    try:
+                        from .admin_observations import health
+                        nfs=health(self.nfs_health(),self.clock())
+                    except Exception:nfs=None
+                    document.update(version=3,transfer=document.get('transfer'),nfs=nfs)
+                response = protocol.encode(document)
                 protocol.report(response)
                 self._context, self._sequence = context, sequence
                 if full:
                     self._previous, self._full_at = current, self.monotonic()
+                    self._force_full=False
                 elif kind == 'CACHE_REMOVED':
                     for sha in removed: previous.pop(sha)
                     self._previous = previous

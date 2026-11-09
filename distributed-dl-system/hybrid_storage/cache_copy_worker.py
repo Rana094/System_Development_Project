@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from hybrid_storage.artifacts import ArtifactMismatch, _verify
@@ -23,6 +24,8 @@ def copy_request(root: str, source: str, sha256: str, size_bytes: int, output_fd
             raise PermissionError("Copy target must be a fresh private local file")
         backend = NFSObjectStorageBackend(Path(root), source=source)
         with os.fdopen(os.dup(output_fd), "w+b") as outgoing:
+            try:started = time.perf_counter_ns()
+            except Exception:started = None
             with backend.open_artifact(object_key(sha256)) as incoming:
                 before = os.fstat(incoming.fileno())
                 if before.st_size != size_bytes:
@@ -49,7 +52,12 @@ def copy_request(root: str, source: str, sha256: str, size_bytes: int, output_fd
             _verify(outgoing, sha256, size_bytes)
             os.fchmod(outgoing.fileno(), 0o400)
             os.fsync(outgoing.fileno())
-        return {"status": "ready", "sha256": sha256, "size_bytes": size_bytes}
+            try:
+                transfer_ns = None if started is None else time.perf_counter_ns() - started
+                if type(transfer_ns) is not int or transfer_ns <= 0:transfer_ns = None
+            except Exception:transfer_ns = None
+        return {"status": "ready", "sha256": sha256, "size_bytes": size_bytes,
+                "transferred_bytes": total, "transfer_ns": transfer_ns}
     except MountNotReady:
         return {"status": "mount_unavailable"}
     except ArtifactMismatch:

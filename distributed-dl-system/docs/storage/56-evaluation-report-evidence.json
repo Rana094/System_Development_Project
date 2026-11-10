@@ -1,0 +1,349 @@
+{
+  "phase": "13.4",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "OFFLINE_REPORTING_PASS_FULL_PHYSICAL_EVALUATION_INCOMPLETE",
+  "phase13_complete": false,
+  "stop": "No next phase/live enable/deployment",
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "f3b371beff5c5f0414bf2acc3513a063fc118d04",
+  "initial_git_status": " M docs/storage/implementation-progress.md\n M tests/README.md\n M tools/README.md\n?? docs/storage/13-experiments.md\n?? docs/storage/53-evaluation-runner-evidence.json\n?? docs/storage/54-policy-matrix-evidence.json\n?? docs/storage/55-fault-evaluation-evidence.json\n?? reports/\n?? tests/test_storage_evaluation.py\n?? tests/test_storage_fault_evaluation.py\n?? tests/test_storage_matrix.py\n?? tools/benchmarks/evaluation/\n?? tools/benchmarks/storage_evaluation.py\n?? tools/benchmarks/storage_fault_evaluation.py\n",
+  "baseline": {
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/baseline.json",
+    "sha256": "4c1030593303fe2f79717b4be0e0e5298875d565f97d02a051112f33874a9ec0",
+    "files": 389,
+    "untouched": 385,
+    "provenance": "Captured before13.4 edits; prior uncommitted13.1/13.2/13.3 changes preserved."
+  },
+  "modified_existing_files": [
+    "docs/storage/13-experiments.md",
+    "docs/storage/implementation-progress.md",
+    "tests/README.md",
+    "tools/README.md"
+  ],
+  "new_files": [
+    "tools/benchmarks/storage_evaluation_report.py",
+    "tools/benchmarks/evaluation/report_records.py",
+    "tools/benchmarks/evaluation/reporting.py",
+    "tools/benchmarks/evaluation/report_charts.py",
+    "tools/benchmarks/evaluation/reporting-requirements.txt",
+    "tests/test_storage_evaluation_report.py",
+    "tests/test_storage_report_charts.py",
+    "docs/storage/56-evaluation-report-evidence.json"
+  ],
+  "hashes": {
+    "docs/storage/13-experiments.md": {
+      "before": "fda2f2f72b94cdec73959b68ddd4dfd517b8b92c007e84f7aa835193dad0d7d3",
+      "after": "e18d1b7a789b9b551c6655f69f66d53f008140498b930e83006c7ed92d31b100"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "fc13e0e3ffd6f9925fa50b2998283b7bf371e5df49e55e335529d88413dca5fd",
+      "after": "bb69b65b9289a5eefe6d88832125d1e02fc2807a48c6df76e28d478aa809b32a"
+    },
+    "tests/README.md": {
+      "before": "e0ae72c308ba8a2ad5c249ec831935ff5e9f67b488317f8fc066e49aaa5af2f9",
+      "after": "64b582e3d02401da0fd3364cb3e14b9cecb6bc6a50f748533cbe89442bd52f86"
+    },
+    "tests/test_storage_evaluation_report.py": {
+      "before": null,
+      "after": "3a5da3c0f5e12c03e683da727a22f251cd8c78ba54fe34eee5db02b1a3687fbf"
+    },
+    "tests/test_storage_report_charts.py": {
+      "before": null,
+      "after": "cf94dd38288e6b092946701ac5b0094c83b57fe6102df70d7db583dd286b130a"
+    },
+    "tools/README.md": {
+      "before": "720ca2280e44daea3b1ada9392ef467b6446232def38876cede263f945cf3df8",
+      "after": "26445816cbc724bdaf14aa207c72fb4947ae982307fb21f42b7c77c830797c1a"
+    },
+    "tools/benchmarks/evaluation/report_charts.py": {
+      "before": null,
+      "after": "bfb114f1a751aab22ca1a095ebe8511933291770c53ebd8dfc0898c783ca2337"
+    },
+    "tools/benchmarks/evaluation/report_records.py": {
+      "before": null,
+      "after": "2aee3cf8d66e8c20e72e30193f7dbf7cc9ffab550bb90774137b36b1cd87a374"
+    },
+    "tools/benchmarks/evaluation/reporting-requirements.txt": {
+      "before": null,
+      "after": "0c008fa401973b3947d0dcd208832189d9c3903cbc38fad524f507507c69065f"
+    },
+    "tools/benchmarks/evaluation/reporting.py": {
+      "before": null,
+      "after": "b91f6ab29351d3036f44dfd1c52e2f02cfd066c86026581dc4da994b015ee3eb"
+    },
+    "tools/benchmarks/storage_evaluation_report.py": {
+      "before": null,
+      "after": "148616ab6d7929ce6f0eca1dda980f365fbc115e9f75a3ada5fbc0fc52105d4f"
+    }
+  },
+  "behavior": {
+    "default": "Read-only validation; explicit --write creates NEW private offline report; --charts optional.",
+    "validation": "Bounded/no-follow local reads; strict JSON/schema/numbers; CSV/JSONL/per-record/per-rank/frozen-source consistency.",
+    "no_execution": "No training, fault injection, source import, tensor/checkpoint load, DB open, SSH or live Pi action.",
+    "grouping": "Experiment/scope/host/workload/source/input version/hash/world/size/config/cache phase separate; failure denominators retained.",
+    "metrics": "Measured wall/loop/staging/byte counters, derived payload cache ratio, observed fault phases, current retained-tree disk stats; explicit null coverage for missing metrics."
+  },
+  "tests": {
+    "distinct_passed": 42,
+    "files": 4,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "baseline": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_matrix.py test_storage_config.py",
+      "counts": {
+        "test_storage_matrix": 11,
+        "test_storage_config": 17
+      },
+      "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/baseline-tests.log",
+      "sha256": "0cb71340457fb91aef1f866e4364d025350725d7c94ccea8f8c25d456c5dcee1",
+      "result": "PASS"
+    },
+    "final": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 reports/eval-13-4-plot-env/bin/python tools/run_tests.py --isolated test_storage_evaluation_report.py test_storage_report_charts.py",
+      "counts": {
+        "test_storage_evaluation_report": 12,
+        "test_storage_report_charts": 2
+      },
+      "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/final-report-tests.log",
+      "sha256": "8a751d6cbaa958d4e62e4688f9cb7f426088d27a5668ee7053eb8393049e4dd1",
+      "result": "PASS"
+    },
+    "first": {
+      "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/first-tests.log",
+      "count": 11,
+      "result": "PASS"
+    },
+    "optional_dependency": "Two chart tests explicitly skip without optional matplotlib; both actually ran/passed in reporting environment."
+  },
+  "actual_report": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 reports/eval-13-4-plot-env/bin/python tools/benchmarks/storage_evaluation_report.py --inputs reports/eval-13-1-local-three-rank reports/eval-13-1-local-two-rank reports/eval-13-2-controlled-local reports/eval-13-3-local-faults-v2 reports/eval-13-3-initial-cache reports/eval-13-3-local-faults --write --charts --report-id eval-13-4-collected-v2",
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-collected-v2",
+    "records": 101,
+    "experiments": 6,
+    "summary_groups": 53,
+    "figures": 5,
+    "png_svg_files": 10,
+    "plotted_points": 264,
+    "observed_coverage": {
+      "completion_seconds": 80,
+      "training_seconds": 80,
+      "staging_seconds": 76,
+      "cache_hit_bytes": 54,
+      "copied_payload_bytes": 54,
+      "cache_hit_ratio": 54,
+      "time_to_first_step_seconds": 0,
+      "nfs_wire_bytes": 0,
+      "checkpoint_save_seconds": 0,
+      "checkpoint_restore_seconds": 0,
+      "recovery_seconds": 0,
+      "server_bandwidth_bytes_per_second": 0,
+      "detection_seconds": 6,
+      "agent_restart_seconds": 2,
+      "harness_seconds": 21
+    },
+    "disk_observations": {
+      "eval-13-1-local-three-rank": {
+        "observed_at_utc_ns": 1794296276353258960,
+        "logical_unique_file_bytes": 554732,
+        "path_entry_bytes": 554732,
+        "allocated_unique_file_bytes": 790528,
+        "retained_checkpoint_model_bytes": 365425,
+        "unique_regular_files": 98,
+        "skipped_links_or_special": 0,
+        "scope": "current retained report tree; not peak cache/disk use or authoritative/server storage; not an atomic filesystem snapshot"
+      },
+      "eval-13-1-local-two-rank": {
+        "observed_at_utc_ns": 1794296276373866452,
+        "logical_unique_file_bytes": 153200,
+        "path_entry_bytes": 153200,
+        "allocated_unique_file_bytes": 270336,
+        "retained_checkpoint_model_bytes": 29246,
+        "unique_regular_files": 46,
+        "skipped_links_or_special": 0,
+        "scope": "current retained report tree; not peak cache/disk use or authoritative/server storage; not an atomic filesystem snapshot"
+      },
+      "eval-13-2-controlled-local": {
+        "observed_at_utc_ns": 1794296276657818444,
+        "logical_unique_file_bytes": 27643690,
+        "path_entry_bytes": 27643690,
+        "allocated_unique_file_bytes": 32772096,
+        "retained_checkpoint_model_bytes": 4387149,
+        "unique_regular_files": 2838,
+        "skipped_links_or_special": 0,
+        "scope": "current retained report tree; not peak cache/disk use or authoritative/server storage; not an atomic filesystem snapshot"
+      },
+      "eval-13-3-local-faults-v2": {
+        "observed_at_utc_ns": 1794296276915019098,
+        "logical_unique_file_bytes": 27580424,
+        "path_entry_bytes": 27580424,
+        "allocated_unique_file_bytes": 32796672,
+        "retained_checkpoint_model_bytes": 0,
+        "unique_regular_files": 2365,
+        "skipped_links_or_special": 0,
+        "scope": "current retained report tree; not peak cache/disk use or authoritative/server storage; not an atomic filesystem snapshot"
+      },
+      "eval-13-3-initial-cache": {
+        "observed_at_utc_ns": 1794296277083875217,
+        "logical_unique_file_bytes": 4939614,
+        "path_entry_bytes": 4939614,
+        "allocated_unique_file_bytes": 5873664,
+        "retained_checkpoint_model_bytes": 0,
+        "unique_regular_files": 422,
+        "skipped_links_or_special": 0,
+        "scope": "current retained report tree; not peak cache/disk use or authoritative/server storage; not an atomic filesystem snapshot"
+      },
+      "eval-13-3-local-faults": {
+        "observed_at_utc_ns": 1794296277230439309,
+        "logical_unique_file_bytes": 27570195,
+        "path_entry_bytes": 27570195,
+        "allocated_unique_file_bytes": 32718848,
+        "retained_checkpoint_model_bytes": 0,
+        "unique_regular_files": 2347,
+        "skipped_links_or_special": 0,
+        "scope": "current retained report tree; not peak cache/disk use or authoritative/server storage; not an atomic filesystem snapshot"
+      }
+    },
+    "runtime_log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/final-collected-report.log",
+    "output_catalog": {
+      "chart-data.json": {
+        "bytes": 64757,
+        "sha256": "6ff551d57cec73e0c88de9107d980dfcaf3a8211f0047f57d074ceaf2f738120"
+      },
+      "collected-outcomes.png": {
+        "bytes": 64916,
+        "sha256": "1da373aceedcc19c9a7d841f85f515bf30da9a46d6bfca3ad05b2d91f75bc613"
+      },
+      "collected-outcomes.svg": {
+        "bytes": 53580,
+        "sha256": "46c3b798aa9b4b605c1d8d8f2dfd0e3dbb5d7f3c98aba289df543260f36b132a"
+      },
+      "coverage.csv": {
+        "bytes": 194077,
+        "sha256": "4c961ed44967c1fc00e8f76723001842c6ca30547b79183bcafe2698d7e98e7e"
+      },
+      "eval-13-2-controlled-local-cache.png": {
+        "bytes": 197095,
+        "sha256": "6492791d65980308a45b8fe123f7715cea6ed1ab671a4c2588b7f0fb35d78687"
+      },
+      "eval-13-2-controlled-local-cache.svg": {
+        "bytes": 156136,
+        "sha256": "87e915af3fe85353719abb3531a962b5553ea05c3fc3a25057b42db452005363"
+      },
+      "eval-13-2-controlled-local-timing.png": {
+        "bytes": 197138,
+        "sha256": "2802fcc84b399b0095c2fc53f6b5eaeb8e3cb43a2a3b282b4bfbb628d770ebc0"
+      },
+      "eval-13-2-controlled-local-timing.svg": {
+        "bytes": 157171,
+        "sha256": "6ef2d3852c1d34a0298e8e3bb9238d1d1cf87976341aed2df75aaa329f5b8f24"
+      },
+      "eval-13-3-local-faults-fault-phases.png": {
+        "bytes": 88542,
+        "sha256": "66e8cf38908f575340f6456504626194e79600f53ab4aabc96b3861de84263a7"
+      },
+      "eval-13-3-local-faults-fault-phases.svg": {
+        "bytes": 70828,
+        "sha256": "114d6661ff091bb392c1666363344c89d39381823be1b93f84d79e706adf5775"
+      },
+      "eval-13-3-local-faults-v2-fault-phases.png": {
+        "bytes": 88696,
+        "sha256": "2df565992df79b416570e938892b8949f507532bdbacb8d46de45176df5c8b32"
+      },
+      "eval-13-3-local-faults-v2-fault-phases.svg": {
+        "bytes": 71031,
+        "sha256": "85b6aa81255092cb0dc87a069b8b5a7a4f67b518995f2fed4cf7c028e8859abe"
+      },
+      "files.json": {
+        "bytes": 2562,
+        "sha256": "ee655461d56c732fb1ea4166e3231d1715377bea3579e3fdf379a5b9a6e7fbc9"
+      },
+      "metrics.csv": {
+        "bytes": 16046,
+        "sha256": "a41e14f8d6ad280f7524dea2a8c123fff3cd472ecce02157ea9bc66f5e478eeb"
+      },
+      "metrics.json": {
+        "bytes": 275920,
+        "sha256": "1dc5dba91ba1db0f25da6a22f5c9b378c3135172aaf0a4ea44a94109bf0f1c46"
+      },
+      "provenance.json": {
+        "bytes": 443620,
+        "sha256": "3c8afcf039a396fbbfee539195679114333b914653fd1d7c07afad0f336564ec"
+      },
+      "report.md": {
+        "bytes": 4607,
+        "sha256": "962ddae4193938df51e637b2dd49e708e01ddb9984ab74424bdecc74aed6dd75"
+      },
+      "summary.json": {
+        "bytes": 288768,
+        "sha256": "280994324df67d417cb112717dbaf2d24c6dd386cdb0113c1e81933d956ddcb4"
+      }
+    },
+    "retained_draft": "reports/eval-13-4-collected; preserved before final schema/layout refinement, not a new experimental cohort.",
+    "failures_visible": "Both13.3 development-failure cohorts are included separately; final10/10 fault and72/72 matrix outcomes are not pooled with them."
+  },
+  "artifact_verification": {
+    "result": "PASS",
+    "experiments": 6,
+    "records": 101,
+    "groups": 53,
+    "figures": 5,
+    "plotted_points": 264,
+    "verified_input_file_entries": 1110,
+    "prior_raw_files_unchanged": 1162,
+    "all_six_missing_metrics_remain_null": true,
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/artifact-verification.json",
+    "sha256": "fd809a6d8a8614255e1ba56b6e102c8b0f855e878a9c51bbb3630bf4d40a99df",
+    "manual_command": "python3 -B reports/eval-13-4-validation/verify_report.py"
+  },
+  "visual_qa": {
+    "result": "PASS",
+    "inspected": [
+      "matrix timing",
+      "matrix cache",
+      "final fault phases",
+      "outcome counts"
+    ],
+    "final_cache_preview": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/eval-13-4-collected-v2-cache-preview.png",
+    "notes": "Raw dots/mean ticks, explicit N/A for unknown A payload, actual failure denominators, labelled local scope and units; final axis headroom/short labels inspected."
+  },
+  "plotting_environment": {
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-plot-env",
+    "versions": {
+      "matplotlib": "3.11.2",
+      "numpy": "2.5.4"
+    },
+    "requirements": "tools/benchmarks/evaluation/reporting-requirements.txt",
+    "setup_command": "python3 -m venv reports/eval-13-4-plot-env; reports/eval-13-4-plot-env/bin/python -m pip install --disable-pip-version-check matplotlib",
+    "installation_log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/plot-dependency-install.log",
+    "internet": "One-time controller-only dependency download; no runtime auto-install or worker transfers.",
+    "production_training_environment_changed": false,
+    "worker_environment_changed": false
+  },
+  "api_db_config_changes": "Standalone CLI/output only. No production route, API, DB/schema, config, trainer or13.1/13.2/13.3 Python change; legacy/OFF/resource preserved.",
+  "safety": [
+    "All inputs local/no-follow and bounded; source bytes hashed but never executed.",
+    "No SQLite open or torch/pickle deserialization.",
+    "New private output IDs; no existing experiment/report replacement.",
+    "Disk stat scan stays in selected retained experiment trees; links/special files skipped and counted.",
+    "No live job/Pi/service/account/ownership/permission/export/fstab/firewall changes.",
+    "No stash/reset/commit; all prior raw results preserved."
+  ],
+  "residual_limits": [
+    "First-step, NFS wire bytes, server bandwidth, checkpoint save/restore durations and end-to-end recovery overhead remain unmeasured and null.",
+    "Copied payload/cache ratio are application counters, not wire or Linux/NFS page-cache metrics.",
+    "Disk sizes are current retained-tree observations, not historical peak or authoritative/server disk use.",
+    "Timing groups have small/dependent sample sizes; no physical speedup, reliability probability or generalized confidence claim.",
+    "13.2 physical A/B/C/D comparisons and13.3 physical faults remain pending idle-window/approval/isolation prerequisites.",
+    "No all-three-Pi validation; pi01 remains deferred. Central controller/NFS remains a single point of failure."
+  ],
+  "rollback": {
+    "patch": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/13.4.patch",
+    "verification": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-4-validation/source-verification.json",
+    "check_command": "git -C .. apply --reverse --check distributed-dl-system/reports/eval-13-4-validation/13.4.patch",
+    "apply_after_review": "git -C .. apply --reverse distributed-dl-system/reports/eval-13-4-validation/13.4.patch",
+    "data": "Retain all prior experiments, report bundles, optional plotting environment and Pi TEST objects/source bundles. Source rollback needs no live service/config/data action."
+  }
+}

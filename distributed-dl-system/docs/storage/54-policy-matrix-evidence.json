@@ -1,0 +1,181 @@
+{
+  "phase": "13.2",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "LOCAL_PROTOCOL_PASS_NATIVE_COMPARISON_PENDING",
+  "phase13_complete": false,
+  "stop_before": "13.3",
+  "pi_training_started": false,
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "f3b371beff5c5f0414bf2acc3513a063fc118d04",
+  "scope": "A/B/C/D component protocol; local rehearsals and approved preparation on pi02/pi03 only; no physical placement or native timing results",
+  "preserved_previous_phase": "13.1 working changes and raw artifacts; no commit/stash/reset",
+  "baseline": {
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-validation/baseline-reconstructed.json",
+    "sha256": "9a9299063ad56958072230bd5d004a5896adc9f1ac28dff665ef00ca34370b0d",
+    "original_files": 375,
+    "untouched_original_files": 369,
+    "provenance": "Original /tmp snapshot disappeared across user turns. Five edited files reconstructed byte-exact from retained13.1 source/verified text prefixes; all original375 files catalogued. Earlier untouched file hashes recorded from preserved worktree."
+  },
+  "modified_existing_files": [
+    "docs/storage/13-experiments.md",
+    "docs/storage/implementation-progress.md",
+    "tests/README.md",
+    "tools/README.md",
+    "tools/benchmarks/evaluation/rank_launcher.py",
+    "tools/benchmarks/storage_evaluation.py"
+  ],
+  "new_files": [
+    "tools/benchmarks/evaluation/matrix.py",
+    "tools/benchmarks/evaluation/matrix_context.py",
+    "tests/test_storage_matrix.py",
+    "docs/storage/54-policy-matrix-evidence.json"
+  ],
+  "hashes": {
+    "docs/storage/13-experiments.md": {
+      "before": "85361571a9c6d801a5f27550a02fdb2208ce22f77430da840a1dd74cd3339d79",
+      "after": "bc72de3733cb42f55453db2c41ceee572533fa751c86192983b52e3b538dc329"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "ca2e579cf9c6fbaeab4be29bc0f7ab3f71399e8884bfeb2b24ffc16d6c2cf0ca",
+      "after": "fe1735a948459c5e625db208c308c6e5f554dbfc7cba7e39d8a22efd4cef978c"
+    },
+    "tests/README.md": {
+      "before": "8ca29af08e3336192378b0f1f2b4d9eed7a79856cdccb14473ce67936d38b14a",
+      "after": "cef9071b3cae84d0bf47b6f8703c866bf00607468edad121ad631c98f58165f0"
+    },
+    "tests/test_storage_matrix.py": {
+      "before": null,
+      "after": "0693038024a88c0b439f61fe375e06f4f718fd84f822fb6b124ce0c9f2f26c22"
+    },
+    "tools/README.md": {
+      "before": "06fef3c2dc3f77eb063954efe8fa9a055be7bef430de0d890518bd9308537849",
+      "after": "103273b704e0a7637203e816d67f91f56404e7885d8f4f4c39c30995cb624b26"
+    },
+    "tools/benchmarks/evaluation/matrix.py": {
+      "before": null,
+      "after": "4bd9dc7de0ac6ae7472131549bc24cbc8435723f82112b9cf1b9f1d912585b31"
+    },
+    "tools/benchmarks/evaluation/matrix_context.py": {
+      "before": null,
+      "after": "b3e1b95e9985d3c32f16baeb928ada4b5f0043f91031ebdd51a8db6895e56738"
+    },
+    "tools/benchmarks/evaluation/rank_launcher.py": {
+      "before": "3a2707417e80844149edced0e87f9b686d37d89741500df3fe3223a726a6b8c6",
+      "after": "6ecb1f890267c9088e0a0efbd683571da5431ef80deb30386611b4697b107823"
+    },
+    "tools/benchmarks/storage_evaluation.py": {
+      "before": "e2e913ffac635dda5d4deaf9a4ebcd513e56cfd0eb8e030287b4e92f956e4822",
+      "after": "ff81cb59b3c538bceff52a16184d2b287e85e3285b38a7a55f779afad0acfabd"
+    }
+  },
+  "tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_matrix.py test_storage_evaluation.py test_scheduler_locality.py test_cache_fetch.py test_storage_config.py",
+    "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-validation/final-tests.log",
+    "sha256": "a76d25af74f429b979f32373120f481645ea37572c656302e6966ebbfe7f1e15",
+    "counts": {
+      "test_storage_matrix.py": 11,
+      "test_storage_evaluation.py": 18,
+      "test_scheduler_locality.py": 13,
+      "test_cache_fetch.py": 33,
+      "test_storage_config.py": 17
+    },
+    "total": 92,
+    "result": "PASS",
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "development_corrections": [
+      "New manifest encoded-byte hash mismatch corrected before final tests.",
+      "New test expected-list/dict assertion corrected before final tests."
+    ],
+    "baseline": "Selected original evaluation18/locality13 tests passed; no pre-existing selected-test failures observed. Earlier /tmp baseline logs unavailable; final originals rerun and retained."
+  },
+  "actual_run": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/storage_evaluation.py --matrix --source-mode local-rehearsal --experiment-id eval-13-2-controlled-local --rows 12 --repeats 3 --workloads regression cnn ddp --world-size 3 --run",
+    "output": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-controlled-local",
+    "scope": "local_component_rehearsal",
+    "completed_trials": 72,
+    "configs": {
+      "D": 18,
+      "A": 18,
+      "B": 18,
+      "C": 18
+    },
+    "ddp_three_rank_groups": 24,
+    "summary_groups": 24,
+    "n_per_group": 3,
+    "kernel_cache": "uncontrolled_preverified",
+    "inference": "Functional validation only; no physical Pi/NFS performance or speedup inference"
+  },
+  "artifact_verification": {
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-validation/artifact-verification.json",
+    "sha256": "6c4a4694ec9cf9eac92a4ab58e1ca5115eefa630217758b937ee0c488b322302",
+    "result": "PASS",
+    "previous_phase_raw_files_unchanged": 144
+  },
+  "live_preparation": {
+    "authorization": "User approved publication/staging on pi02/pi03 only; explicitly wait for idle window before training.",
+    "pi01": "deferred by user",
+    "plan": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-live-review/plan.json",
+    "plan_sha256": "72dff687bdc9ea9ce76d8bb339703afaa91f9698800f330445c7b8cd6c677082",
+    "historical_plan_status": "REVIEW_ONLY_NOT_DEPLOYED retained unchanged; actual receipts supersede effects",
+    "archive_sha256": "ecd4080242b7f5310aecb1ac39b070a596f93d71bb95c4d9584229ec8caa6714",
+    "source_members_per_pi": 69,
+    "source_root": "/var/tmp/dl-eval13-76f05cf7d7dc/source",
+    "objects": 8,
+    "publisher_identity": "ml-publisher125:125",
+    "publication": {
+      "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-validation/publication-verified.json",
+      "sha256": "3f2f0433aa106b87232b5244a91b66426ef57a81d4a0d49c107990b096b86ef3",
+      "result": "PASS",
+      "user_terminal_report": "PUBLISHED_TEST_INPUTS_ONLY;8 created=true;effective_uid125; independently verified"
+    },
+    "nodes": {
+      "pi02": {
+        "staging": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-live-review/pi02-staging.json",
+        "verification": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-live-review/pi02-privileged-read-verification.json",
+        "verification_sha256": "d296c1e312ea468112af9bbf197ba0bc64fdd796a22f2f219b1976d6a2c3713d",
+        "nfs_version": "4.1",
+        "test_objects_verified": 8,
+        "agent_pid": 946,
+        "agent_unchanged": true
+      },
+      "pi03": {
+        "staging": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-live-review/pi03-staging.json",
+        "verification": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-live-review/pi03-privileged-read-verification.json",
+        "verification_sha256": "156acb67a38f7803f2ecd2ff4a84c64d40b2db0eb0b241a5e19f640ce12aa42a",
+        "nfs_version": "4.1",
+        "test_objects_verified": 8,
+        "agent_pid": 902,
+        "agent_unchanged": true
+      }
+    },
+    "identity_correction": "Sandbox user namespace overflow IDs65534 were mistakenly treated as actual nobody ownership. User assertion failed before writes. Read-only host probe/config proved125:125; helper corrected and revalidated. No existing ownership/mode changes.",
+    "mount_access": "Root-owned0700 parent retained on each Pi; verifier used existing sudo only for reads; ordinary pi user is denied as expected."
+  },
+  "api_changes": "Evaluation CLI options and experiment-private per-rank mapping only; no production route/API changes",
+  "db_changes": "Only NEW experiment-local registry/cache SQLite databases; no production DB/migration changes",
+  "config_changes": "None; production legacy/OFF/resource retained",
+  "existing_trainers_changed": false,
+  "production_mutations": "Only approved8 immutable TEST objects and new private publisher scratch; source bundles staged separately. No job/checkpoint/DB/service/config changes.",
+  "residual_limits": [
+    "Native A/B/C/D timings await an explicitly confirmed idle window and reviewed trusted execution/admission plan.",
+    "Live physical controller-placement executor absent; logical slots share one host even in native component mode.",
+    "No inter-Pi DDP or pi01 validation; no all-three-Pi claim.",
+    "Small single-size matrix rehearsals do not establish large-data performance, bandwidth benefit or fairness under live load.",
+    "NFS/Linux page caches uncontrolled; accepted source payload bytes are not wire bytes. A transfer counters unknown.",
+    "First-step/checkpoint/recovery/server measurements and charts remain13.4 work; no13.3 failure injection.",
+    "Hard NFS I/O can outlive userspace timeouts; failed execution conservatively retains pins.",
+    "Central controller/NFS server remains a single point of failure.",
+    "Earlier transient /tmp evidence lost across turns; reconstructed original prefixes verified against retained13.1 hashes."
+  ],
+  "rollback": {
+    "patch": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-validation/13.2.patch",
+    "verification": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-2-validation/source-verification.json",
+    "check_command": "git -C .. apply --reverse --check distributed-dl-system/reports/eval-13-2-validation/13.2.patch",
+    "apply_command_after_review": "git -C .. apply --reverse distributed-dl-system/reports/eval-13-2-validation/13.2.patch",
+    "data": "Keep all raw reports/private caches/staged bundles and authoritative TEST objects; no automatic runtime cleanup or live config rollback needed."
+  }
+}

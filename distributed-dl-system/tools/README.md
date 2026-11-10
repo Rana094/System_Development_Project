@@ -131,3 +131,65 @@ JSON on stdout includes nanoseconds per call, every sample, platform and limits.
 No controller imports, DB, NFS, Internet or worker operations. This does not
 measure disk/network handlers or estimate total training overhead. See
 [Phase 12.4 acceptance](../docs/storage/52-observability-acceptance.md).
+
+## Reproducible evaluation — Phase 13.1
+
+[`benchmarks/storage_evaluation.py`](benchmarks/storage_evaluation.py) prints a
+read-only plan by default; explicit `--run` executes unchanged regression/CNN/DDP
+trainers locally, saving immutable source/input identities and raw CSV/JSON/logs
+under a new private `reports/<experiment-id>/`. No dispatcher, production DB,
+worker HTTP/SSH, install, Internet transfer, mount operation or service action.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/storage_evaluation.py --experiment-id review-plan
+```
+
+Read [the methodology](../docs/storage/13-experiments.md) before an actual run.
+Local smoke measurements are not A/B/C/D comparisons or physical Pi results;
+unprobed worker eligibility/NFS/cache/scheduler metrics remain unknown.
+
+The explicit `--matrix` path adds randomized repeated A/B/C/D component trials.
+Use `--source-mode local-rehearsal` for Pi-less functional validation; every such
+result is labeled rehearsal. Native NFS mode requires an existing verified RO
+mount and explicit trusted-input acknowledgment; it has no fake/local fallback.
+`--prepare-inputs` only builds a fresh local public-input review bundle and never
+publishes it. Read the [13.2 methodology/security/uncertainty limits](../docs/storage/13-experiments.md)
+before running. These modes do not activate or measure the live cluster scheduler.
+
+## Disposable failure evaluation — Phase 13.3
+
+[`benchmarks/storage_fault_evaluation.py`](benchmarks/storage_fault_evaluation.py)
+prints a read-only allowlisted plan. Explicit `--run` creates NEW local private
+source/fixture trees and retains raw case CSV/JSON/logs. It can kill only its own
+disposable health agent, publisher or CPU/Gloo ranks; cache corruption and copy
+interruption target new replicas. It never SSHs, stops live agents/NFS, changes
+mounts or disconnects an interface. Real network/server/Pi disruption is explicitly
+NOT_RUN. The earlier Pi idle-window restriction still applies.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/storage_fault_evaluation.py --experiment-id review-faults
+```
+
+Read [13.3 scope, commands and missing timings](../docs/storage/13-experiments.md)
+before adding `--run`. Keep per-case detection, staging and restart values separate;
+whole-test duration is not recovery latency. Local mocked NFS errors and real
+local DDP failures are never physical Pi/NFS results.
+
+## Collected evaluation reports — Phase 13.4
+
+[`benchmarks/storage_evaluation_report.py`](benchmarks/storage_evaluation_report.py)
+validates existing experiment directories read-only by default. `--write` creates
+a NEW report with per-record CSV/JSON, coverage, cohort-safe summary, input/source
+hash provenance and a retained-disk observation. It starts no jobs or faults and
+never loads tensor/checkpoint payloads or opens a database. Optional `--charts`
+uses a separate controller-side Matplotlib environment; it never installs anything
+at runtime. Pinned plotting-only dependencies are under
+[`evaluation/reporting-requirements.txt`](benchmarks/evaluation/reporting-requirements.txt).
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/storage_evaluation_report.py --inputs reports/eval-13-2-controlled-local --report-id review-report
+```
+
+See [13.4 reproduction, actual charts and measurement gaps](../docs/storage/13-experiments.md).
+NFS wire bytes, first-step/checkpoint timings and full recovery latency cannot be
+reconstructed from old payload counters or whole-test durations.

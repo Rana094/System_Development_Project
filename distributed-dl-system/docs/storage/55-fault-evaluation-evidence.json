@@ -1,0 +1,374 @@
+{
+  "phase": "13.3",
+  "date": "2026-11-10",
+  "timezone": "Asia/Dhaka",
+  "result": "LOCAL_PASS_PHYSICAL_NOT_RUN",
+  "stop_before": "13.4",
+  "phase13_complete": false,
+  "previous_phase13_2": "Local protocol passed; physical comparisons still pending a user-confirmed idle window.",
+  "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+  "branch": "main",
+  "head": "f3b371beff5c5f0414bf2acc3513a063fc118d04",
+  "initial_git_status": " M docs/storage/implementation-progress.md\n M tests/README.md\n M tools/README.md\n?? docs/storage/13-experiments.md\n?? docs/storage/53-evaluation-runner-evidence.json\n?? docs/storage/54-policy-matrix-evidence.json\n?? reports/\n?? tests/test_storage_evaluation.py\n?? tests/test_storage_matrix.py\n?? tools/benchmarks/evaluation/\n?? tools/benchmarks/storage_evaluation.py\n",
+  "baseline": {
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/baseline.json",
+    "sha256": "5aa5d47bfff0c513eb35264b1bd2ec44099e0439ea28af9aee7ef8d63ffac464",
+    "original_files": 384,
+    "untouched_original_files": 380,
+    "provenance": "Captured complete nonignored git file set before13.3 source edits, including preserved uncommitted13.1/13.2 work."
+  },
+  "modified_existing_files": [
+    "docs/storage/13-experiments.md",
+    "docs/storage/implementation-progress.md",
+    "tests/README.md",
+    "tools/README.md"
+  ],
+  "new_files": [
+    "tools/benchmarks/storage_fault_evaluation.py",
+    "tools/benchmarks/evaluation/faults.py",
+    "tools/benchmarks/evaluation/fault_worker.py",
+    "tests/test_storage_fault_evaluation.py",
+    "docs/storage/55-fault-evaluation-evidence.json"
+  ],
+  "hashes": {
+    "docs/storage/13-experiments.md": {
+      "before": "bc72de3733cb42f55453db2c41ceee572533fa751c86192983b52e3b538dc329",
+      "after": "fda2f2f72b94cdec73959b68ddd4dfd517b8b92c007e84f7aa835193dad0d7d3"
+    },
+    "docs/storage/implementation-progress.md": {
+      "before": "fe1735a948459c5e625db208c308c6e5f554dbfc7cba7e39d8a22efd4cef978c",
+      "after": "fc13e0e3ffd6f9925fa50b2998283b7bf371e5df49e55e335529d88413dca5fd"
+    },
+    "tests/README.md": {
+      "before": "cef9071b3cae84d0bf47b6f8703c866bf00607468edad121ad631c98f58165f0",
+      "after": "e0ae72c308ba8a2ad5c249ec831935ff5e9f67b488317f8fc066e49aaa5af2f9"
+    },
+    "tests/test_storage_fault_evaluation.py": {
+      "before": null,
+      "after": "f1414cbb02ef78023933c18eb3252a43cb11bcf9d1c5a47d6f7091057867252c"
+    },
+    "tools/README.md": {
+      "before": "103273b704e0a7637203e816d67f91f56404e7885d8f4f4c39c30995cb624b26",
+      "after": "720ca2280e44daea3b1ada9392ef467b6446232def38876cede263f945cf3df8"
+    },
+    "tools/benchmarks/evaluation/fault_worker.py": {
+      "before": null,
+      "after": "928287bef668b4a6e4cf6729bab242998f0e4529836702b4a472d3b6cfe70451"
+    },
+    "tools/benchmarks/evaluation/faults.py": {
+      "before": null,
+      "after": "44228713ef6f5d5837395c914cd5ccaaa98119a4994a101f56ebd3decf05612b"
+    },
+    "tools/benchmarks/storage_fault_evaluation.py": {
+      "before": null,
+      "after": "99322da5c138cbd47fa0269522285734bfb63b6aa6a7c7df625f0eba35e5175e"
+    }
+  },
+  "behavior": {
+    "entry_point": "tools/benchmarks/storage_fault_evaluation.py",
+    "default": "Read-only PLAN_ONLY",
+    "run": "NEW private local copies, static10-case allowlist, source snapshot, raw CSV/JSON/logs",
+    "measured_scope": "local_disposable_failure_rehearsal",
+    "no_live_fault_options": true,
+    "case_process_groups": "All selected child Popen calls contained in owned worker group; driver signals only that group on timeout/exit."
+  },
+  "tests": {
+    "distinct_top_level_passed": 104,
+    "files": 6,
+    "single_all_passing_run": false,
+    "baseline": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_cache_fetch.py test_hybrid_checkpoint_faults.py",
+      "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/baseline-tests.log",
+      "sha256": "7036c6b11b5f9106bd42d03110a322a309c19635f980d914330a1a9560779571",
+      "counts": {
+        "test_cache_fetch": 33,
+        "test_hybrid_checkpoint_faults": 16
+      },
+      "result": "PASS"
+    },
+    "original_regressions": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_fault_evaluation.py test_storage_matrix.py test_storage_evaluation.py test_storage_config.py",
+      "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/regression-tests-attempt1.log",
+      "sha256": "01d1817c04431486e5c19b65da19cb512fc3b61b395441c5fc7a1ad1f990ab84",
+      "passing_original_counts": {
+        "test_storage_matrix": 11,
+        "test_storage_evaluation": 18,
+        "test_storage_config": 17
+      },
+      "overall_result": "3/4 files; new adapter test failed before correction; original three files all PASS"
+    },
+    "final_new": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_fault_evaluation.py",
+      "log": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/final-new-tests.log",
+      "sha256": "2713b2947ad039d8449ce43f1380c0b59c6d525a111a9200e0f2b4e259968e1c",
+      "count": 9,
+      "result": "PASS",
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "baseline_failures_observed": 0,
+    "development_issues": [
+      "New helper string literal syntax error; initial cache cohort FAILED and retained.",
+      "New harness prepended agent import path, shadowing namespace package; first full cohort3/10 passed,7 import errors retained.",
+      "Private fixture snapshot omitted required public execution-leases timing policy; added only exact reviewed static public-policy fields."
+    ],
+    "initial_logs": [
+      "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/first-tests.log",
+      "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/second-tests.log",
+      "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/regression-tests-attempt1.log"
+    ]
+  },
+  "campaign": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/storage_fault_evaluation.py --run --experiment-id eval-13-3-local-faults-v2",
+    "output": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-local-faults-v2",
+    "result": "LOCAL_PASS_LIVE_DEFERRED",
+    "attempted": 10,
+    "passed": 10,
+    "source_files_verified": 208,
+    "csv_json_equal": true,
+    "metrics": [
+      {
+        "case": "agent_process_down",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 967505170,
+        "detection_ns": 5560631,
+        "staging_ns": null,
+        "restart_ns": 358046270,
+        "recovery_ns": null,
+        "metric_scope": "private loopback health-only agent process; not job recovery",
+        "details": {
+          "killed_owned_pid": 14572,
+          "replacement_owned_pid": 14575,
+          "failed_probe": "ConnectionResetError",
+          "production_agent": false
+        }
+      },
+      {
+        "case": "interrupted_staging",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 1117909133,
+        "detection_ns": 139936045,
+        "staging_ns": 515940180,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "injected helper read error to retry spawn (includes backoff); full ensure duration overlaps detection",
+        "details": {
+          "attempts": 2,
+          "accepted_payload_bytes": 165,
+          "interrupted_read_bytes": 3,
+          "retry_started_without_final_object": true,
+          "partials_accepted": false
+        }
+      },
+      {
+        "case": "cache_corruption",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 1068121367,
+        "detection_ns": 17837236,
+        "staging_ns": 223133755,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "forced cache verification and subsequent repair ensure; no trainer restart",
+        "details": {
+          "refetched_bytes": 165,
+          "quarantine_preserved": true,
+          "warm_followup_transferred_bytes": 0,
+          "authoritative_sha256": "0cb28871cf66d68026f61a434086adfca958eb18c1353bd76fde4151a687e897"
+        }
+      },
+      {
+        "case": "worker_lease_outage",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 2972161987,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_staging_recovery.RecoveryTests.test_offline_worker_keeps_reservation_until_safe_expiry_and_cleans_on_return",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      },
+      {
+        "case": "partial_checkpoint",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 4275460309,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_hybrid_checkpoint_faults.CheckpointFaultTests.test_interrupted_upload_and_real_connection_reopen_keep_only_previous_commit",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      },
+      {
+        "case": "publisher_process_crash",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 4076256346,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_hybrid_checkpoint_faults.CheckpointFaultTests.test_sigkill_controller_publisher_process_after_rename_preserves_head_on_reopen",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      },
+      {
+        "case": "nfs_outage_model",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 4826141318,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_hybrid_checkpoint_faults.CheckpointFaultTests.test_nfs_outage_warm_recovery_uses_zero_missing_bytes_and_cold_replacement_fails_closed",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      },
+      {
+        "case": "ddp_rank_failure",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 20164319885,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_hybrid_checkpoint_ddp_resume.RealHybridDDPTests.test_sigkill_rank_then_committed_three_rank_resume_matches_baseline_with_stated_fp32_tolerance",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      },
+      {
+        "case": "ddp_checkpoint_failure",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 16906865285,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_ddp_acceptance.NativeMatrixTests.test_three_rank_crash_during_checkpoint_ack_keeps_old_cut_then_recovers_entire_group",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      },
+      {
+        "case": "stale_rank_fencing",
+        "scope": "local_disposable_failure_rehearsal",
+        "status": "PASS",
+        "exit_code": 0,
+        "harness_elapsed_ns": 14558061338,
+        "detection_ns": null,
+        "staging_ns": null,
+        "restart_ns": null,
+        "recovery_ns": null,
+        "metric_scope": "phase latencies not instrumented in reused regression fixture",
+        "details": {
+          "test": "test_hybrid_checkpoint_faults.CheckpointFaultTests.test_ddp_stale_rank_checkpoint_result_rejected_for_entire_group",
+          "tests_run": 1,
+          "phase_latencies_missing": true
+        }
+      }
+    ],
+    "recovery_latency": "Unmeasured; null for every case. Harness duration is not recovery latency.",
+    "actual_native_ddp": "Two selected scenarios SIGKILL real owned local CPU/Gloo ranks and validate committed three-rank full-group recovery; outer launcher/isolation/NFS facts mocked.",
+    "floating_tolerance": {
+      "rtol": 1e-07,
+      "atol": 1e-08
+    },
+    "nonfloating_state": "exact comparison",
+    "physical_tests_run": 0,
+    "prior_failed_cohorts": [
+      "reports/eval-13-3-initial-cache",
+      "reports/eval-13-3-local-faults"
+    ],
+    "failed_cohorts_pooled": false
+  },
+  "artifact_verification": {
+    "path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/artifact-verification.json",
+    "sha256": "adb8a80e59d46236acd3b781b227483729a23ecce52de005db8acfe61f1d7708",
+    "result": "PASS",
+    "raw_catalog_files": 52,
+    "prior_raw_files_unchanged": 1110,
+    "manual_command": "python3 -B reports/eval-13-3-validation/verify_artifacts.py"
+  },
+  "deferred": [
+    {
+      "case": "physical_network_disconnect",
+      "status": "NOT_RUN",
+      "reason": "Requires explicit disconnect approval, confirmed idle window, disposable job and independently tested return path."
+    },
+    {
+      "case": "physical_nfs_server_outage",
+      "status": "NOT_RUN",
+      "reason": "Shared controller/NFS is a single point of failure; no proven isolation from other students. Never stop the live server for this runner."
+    },
+    {
+      "case": "physical_pi_agent_or_rank_failure",
+      "status": "NOT_RUN",
+      "reason": "Pi training idle window remains unconfirmed; pi01 deferred. Prior staging/publication approval did not authorize live process kills."
+    }
+  ],
+  "live_review": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-live-review/plan.json",
+  "api_changes": "New standalone benchmark CLI only; no production routes or13.1/13.2 entry point changes",
+  "db_changes": "Only NEW disposable local SQLite DBs via existing migrations; no live DB/schema edits",
+  "config_changes": "None; selected public timing config read and copied, not changed. Legacy/OFF/resource preserved.",
+  "security": [
+    "No SSH or live Pi contact/job/deployment/service mutation in13.3.",
+    "No shared CAS/checkpoint/job/data mutation; only NEW disposable cache replicas/fixture checkpoints are faulted.",
+    "Root-only NFS mount permissions and previously published8 TEST objects remain unchanged.",
+    "Only a private loopback agent GET /health is exposed; all other routes return404.",
+    "No live credentials/auth files or lease authority copied; child environment uses an allowlist.",
+    "No Internet transfers, packages, exports, fstab, firewall or physical network operations.",
+    "No reset/stash/commit; user changes and all prior raw results preserved."
+  ],
+  "residual_limits": [
+    "Physical faults NOT_RUN; no confirmed Pi idle window, verified disconnect return path or proof of shared-server isolation.",
+    "pi01 remains deferred. No all-three-Pi or inter-Pi recovery result.",
+    "Modeled ESTALE/ENETUNREACH and fixture clock expiry are not physical NFS/network outage behavior.",
+    "Only three probes have selected phase timings; checkpoint/DDP phase durations are null.",
+    "One injection/case demonstrates local correctness, not failure-rate probability or latency distribution.",
+    "Native fixture internal temporary tensors/checkpoints are consumed by assertions then cleaned by existing tests; top-level raw logs/receipts and frozen sources retained.",
+    "Controller/NFS remains a single point of failure;13.2 native comparisons and13.4 measurements/charts remain incomplete."
+  ],
+  "rollback": {
+    "patch": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/13.3.patch",
+    "verification": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/eval-13-3-validation/source-verification.json",
+    "check_command": "git -C .. apply --reverse --check distributed-dl-system/reports/eval-13-3-validation/13.3.patch",
+    "apply_after_review": "git -C .. apply --reverse distributed-dl-system/reports/eval-13-3-validation/13.3.patch",
+    "data": "Keep every experiment, private cache/quarantine, staged Pi bundle and authoritative TEST object. Source rollback needs no live configuration/service changes."
+  }
+}

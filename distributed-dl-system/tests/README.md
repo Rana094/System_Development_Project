@@ -720,3 +720,64 @@ The Node path is this machine's existing runtime; use your installed Node path
 elsewhere. The second command emits a synthetic local microbenchmark as JSON on
 stdout, never imports the controller and enables logging only in that process.
 See [12.4 results, scope and rollback](../docs/storage/52-observability-acceptance.md).
+
+## Evaluation runner — Phase 13.1
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_evaluation.py
+```
+
+Eighteen tests verify dataset reproducibility/no replacement/size bounds, source
+snapshots, report-path safety, no DB planning, scrubbed lease/credentials, owned
+process timeout cleanup, failed/null raw results, rank validation and actual
+existing regression/CNN CPU training. Test fixtures do not contact Pis. Genuine
+2/3-process local DDP is validated separately with the new runner and loopback
+permission; it is not substituted with mocked ranks. See the
+[methodology and retained artifacts](../docs/storage/13-experiments.md).
+
+## Controlled comparison protocol — Phase 13.2
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_matrix.py
+```
+
+Eleven tests cover deterministic randomized blocks/pairs, all four definitions,
+NFS readiness/trusted-source gates, actual signed registry coverage, actual cold/
+warm cache and private workspace, resource/locality ties and stale-group fallback,
+no-reuse/missing-result retention, public-input preparation, distributions and
+mixed-scope/input rejection. A mocked failing trainer is used only in an isolated
+failure-retention test; retained rehearsal measurements use real trainers.
+[Methodology and limits](../docs/storage/13-experiments.md) distinguish local
+rehearsal, native single-host NFS components and pending full cluster evaluation.
+
+## Disposable fault campaign — Phase 13.3
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_fault_evaluation.py
+```
+
+Nine tests cover read-only planning, static case/command bounds, deferred physical
+faults, scrubbed child credentials, missing/wrong/invalid metric receipts, timeout
+cleanup of an owned descendant group while preserving an unrelated process,
+actual cache repair/quarantine, no experiment replacement and the reused partial
+checkpoint fixture in a private source copy. Reused fixture phase durations remain
+null. The standalone10-case campaign additionally runs a real private loopback
+health agent and native CPU/Gloo rank kills; those need local socket permission.
+No live Pi agent, shared NFS service, job or interface is faulted.
+
+## Offline measurement reports — Phase 13.4
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_evaluation_report.py
+PYTHONDONTWRITEBYTECODE=1 reports/eval-13-4-plot-env/bin/python tools/run_tests.py --isolated test_storage_evaluation_report.py test_storage_report_charts.py
+```
+
+The first12 tests need no plotting library. They cover strict JSON/numeric/schema
+validation, immutable source/rank/CSV/JSON agreement, traversal/symlink/FIFO and
+duplicate input rejection, exact units/cache ratios, unknown values, cohort and
+failure separation, hardlink-aware disk snapshots, read-only planning, no output
+replacement and missing-dependency refusal before writes. Two optional Matplotlib
+integration tests verify real PNG/SVG artifacts and exact chart-data provenance,
+including no imputed direct-NFS bytes or whole-harness recovery timing. Plot tests
+skip explicitly when the optional dependency is absent; both ran and passed in
+the isolated reporting environment. No training, fault injection, Pi or service.

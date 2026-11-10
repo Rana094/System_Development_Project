@@ -2531,3 +2531,177 @@ files; scoped rollback checked/applied only in a disposable copy. See
 [evidence](52-observability-acceptance-evidence.json) for exact files/diffs, commands,
 results, limits and rollback. **12.4 PASS; Phase12 repository observability work
 complete under this local scope. STOP; no next phase or live enable.**
+
+## 2026-11-10 — Phase 13.1 reproducible local evaluation runner
+
+Implemented **13.1 only**. New `tools/benchmarks/storage_evaluation.py` and
+identifiable `tools/benchmarks/evaluation/` helpers plan read-only by default;
+explicit --run snapshots unchanged regression/CNN/DDP example trainers and SDK,
+generates versioned deterministic multi-size CSV datasets and executes bounded
+local CPU smoke jobs. Records experiment/workload/input hashes, actual sizes,
+source/argv/version/host/config observations, configured pi01/pi02/pi03 identities,
+local NFS mount options when observed, and raw CSV/JSONL/per-rank JSON/logs.
+Unknown Pi eligibility/host, live scheduler choice/NFS metrics stay null/missing;
+local ranks are never mislabeled physical Pis. No A/B/C/D/E comparison claim.
+
+New experiment IDs only, private LOCAL roots, no symlink/traversal/remote output,
+no source/data replacement, bounded generator/source reads and timeout cleanup of
+owned children. Existing trusted trainers/SDK formats unchanged. No production
+lease/resume credentials inherited, no controller/DB/dispatcher imports, agent
+HTTP/SSH, package install/Internet, services/mounts or worker deployment. Git main
+started clean at f3b371beff5c5f0414bf2acc3513a063fc118d04; prior committed work
+preserved, no commit/stash/reset and legacy/OFF/resource unchanged.
+
+Baseline36 tests PASS. New initial16 tests PASS; final **54/54 distinct tests PASS
+across3 files** (evaluation18, config17, events19), no failures/errors/skips.
+Actual regression/CNN CPU training is in the new suite. Separately executed and
+retained **8/8 real local trials** under reports/: two sizes per regression/CNN,
+plus DDP at both sizes with actual2 and3 Gloo ranks. All rank parameter hashes
+synchronized. Explicit local-socket commands approved automatically; no remote Pi
+contact. Rehashed retained source/datasets and verified CSV/JSON equality. An
+initial4-trial earlier-source rehearsal is kept separately in /tmp, not combined.
+
+Full methodology and exact manual/rollback commands:
+[13-experiments.md](13-experiments.md); machine evidence:
+[53-evaluation-runner-evidence.json](53-evaluation-runner-evidence.json).
+Raw experiments retain independent identities and measured data; generated dirs
+are Git-ignored, not deleted. Kernel page cache uncontrolled/likely warmed by
+creation/hashing; application cache/staging not used. No Pi/NFS speedup, policy
+advantage, confidence interval, fault result or chart invented. pi01 deferral and
+central-controller single point of failure remain. **13.1 PASS for local runner;
+Phase13 overall incomplete. STOP before13.2.**
+
+## 2026-11-10 — Phase 13.2 controlled matrix and approved preparation
+
+Implemented13.2 only: explicit A direct trusted-input reads, B fresh local staging,
+C persistent staging/resource and D persistent staging/locality component modes.
+Deterministic randomized paired blocks retain first-before-repeat dependencies;
+all cells retain identical workload/input hashes, world size and fixed logical
+resource profiles. Real CAS/cache/workspace, signed inventory/coverage and
+production selector components are reused in NEW local experiment DBs. Raw
+CSV/JSONL, per-rank results/logs and descriptive distributions are retained;
+unknown wire/first-step/recovery/live-placement measurements remain missing.
+Native NFS mode requires exact RO mount identity and explicit trusted-input
+acknowledgment. Explicit local rehearsal substitutes only kernel mount facts and
+never claims actual NFS or physical Pi scheduling/DDP results.
+
+Final **92/92 tests PASS across5 files**: matrix11, evaluation18, locality13,
+fetch33, config17. Retained actual local matrix: **72/72 completed trials**,
+18 each A/B/C/D, regression/CNN/3-rank Gloo,3 repetitions, first/repeat. All24
+DDP groups synchronized; warm C/D repeated staging transfers0 new payload bytes.
+Rehash verification confirms CSV/JSON equality,67 source hashes and all144
+retained13.1 raw files unchanged. This small, single-size-per-workload laptop
+rehearsal is functional evidence, not a Pi/NFS performance or speedup claim.
+
+Explicit approval allowed staging/publication only on pi02/pi03; pi01 remains
+deferred and training waits for a user-confirmed idle window. Both Pis now have
+69 verified source files under `/var/tmp/dl-eval13-76f05cf7d7dc/source`. The user
+published8 approved immutable TEST objects; independent controller and NFS4.1 RO
+checks verified every SHA/size, host owner125:125 and readonly file mode. Agent
+PIDs946/902 remain active/unchanged. No Pi training or measured native trial ran.
+
+An initial helper assertion safely rejected publication because sandbox overflow
+UID65534 was mistaken for the real storage owner. Host-namespace/config checks
+established ml-publisher125:125; the corrected helper was validated before user
+execution. Existing ownership/permissions were never changed. Root-only NFS
+parent permissions remain intact; remote verification used read-only sudo.
+
+No production API/DB/config/trainer or job/checkpoint data changed; defaults stay
+legacy/OFF/resource. No install/Internet, exports/fstab/firewall/account/service
+changes, fault injection, reset/stash/commit. Earlier transient logs disappeared;
+fresh final logs and raw evidence are retained under reports, and the scoped
+baseline reconstruction is documented. See [methodology](13-experiments.md),
+[54 evidence](54-policy-matrix-evidence.json) and scoped reversible diff under
+`reports/eval-13-2-validation/13.2.patch`. Source rollback was verified only in a
+disposable copy; all raw reports, staged bundles and TEST objects remain intact.
+
+**13.2 local protocol PASS; physical A/B/C/D comparison PENDING. Phase13 remains
+incomplete. STOP before13.3 and before any Pi training.** The live physical
+controller-placement executor is still absent; even future single-host NFS trials
+must retain that limitation. Central server remains a single point of failure.
+
+## 2026-11-10 — Phase 13.3 disposable failure evaluation
+
+Added a separate read-only-by-default failure runner and identifiable helpers in
+`tools/benchmarks/evaluation/`. Explicit --run uses NEW private source/fixture
+copies and allowlisted local cases only. Real owned Flask health-agent process
+crash/restart, interrupted3-byte copy + verified retry, cache corruption + forced
+verification/quarantine/refetch, actual publisher SIGKILL after rename, partial
+checkpoint rejection, stale fencing and native3-rank CPU/Gloo full-group recovery
+reuse existing implementation/tests. Modeled worker/NFS errors remain explicitly
+modeled. No alternate checkpoint format, arbitrary command/PID/host or live-fault
+CLI option is introduced. Owned case process groups bound timeout cleanup.
+
+Final retained **10/10 local cases PASS** under
+`reports/eval-13-3-local-faults-v2/`. Three probes separately measure detection,
+copy/repair staging and private agent restart; uninstrumented fixture phase and
+end-to-end recovery fields remain null. Whole-test duration is never substituted
+for recovery. Real DDP state comparison retains rtol1e-7/atol1e-8 for FP32 and
+exact other-state checks. No physical Pi/DDP/NFS availability/latency claim.
+
+Original baseline49 tests PASS (cache33/checkpoint faults16). Original matrix11,
+evaluation18 and config17 also PASS; final new suite9 PASS: **104 distinct tests
+across6 files** in recorded runs. An initial broader run retained a new adapter
+failure; corrected new suite was rerun, without rerunning unchanged passing
+originals. New syntax/import-order/missing-public-policy issues and initial
+failed cohorts are recorded, never hidden or called pre-existing failures.
+Verification:208 source hashes, raw CSV/JSON equality and all1,110 prior raw
+records unchanged. No commit/stash/reset; all384 baseline files preserved except
+the four intentional documentation appends; scoped rollback is verified only in
+a disposable copy. See [methodology](13-experiments.md),
+[55 evidence](55-fault-evaluation-evidence.json), and
+`reports/eval-13-3-validation/13.3.patch`.
+
+Production Python/API/DB/config/trainers and legacy/OFF/resource are unchanged;
+only NEW disposable local DBs/files/processes are exercised. No SSH, live Pi job,
+service/account/permission/export/mount/firewall change, Internet transfer or
+physical failure injection. Pi01 deferral persists. Physical network disconnect,
+shared NFS/controller outage and Pi agent/rank faults are explicitly NOT_RUN:
+prior publication/staging approval still requires a confirmed Pi idle window;
+disconnect additionally needs explicit approval and a tested independent return
+path. Shared-server isolation is unproven and central server remains a SPOF.
+
+**13.3 local fault campaign PASS; physical acceptance pending.13.2 native
+comparisons also remain pending. Phase13 incomplete. STOP before13.4.**
+
+## 2026-11-10 — Phase 13.4 collected measurement reports and charts
+
+Added a separate read-only-by-default offline reporter and three identifiable
+helpers under `tools/benchmarks/evaluation/`, with optional controller-only pinned
+plot dependencies and two test files. Explicit --write creates NEW private output;
+no training/fault/Pi job runs. Bounded no-follow readers verify frozen source,
+per-rank/per-record and CSV/JSON hashes/identity/schema. No pickle/torch loads,
+source execution or DB open. Different experiments/workloads/input versions,
+world sizes, scopes and cache phases remain separate; failures stay visible.
+
+Actual final bundle `reports/eval-13-4-collected-v2/`: **101 recorded observations
+from6 cohorts,53 summary groups,5 PNG+SVG figures and264 traceable plotted points**.
+Includes both retained13.3 development-failure cohorts. Reports measured training/
+completion/staging and application payload/cache ratios, selected fault phases,
+and current retained-file disk observations. Physical NFS wire bytes/server
+bandwidth, first-step timestamps, checkpoint save/restore timers and end-to-end
+recovery are explicitly unmeasured; no invented zeros, speedups or physical claims.
+Training time is max per-rank loop time; whole process/test time is not recovery.
+Disk metadata is current retained-tree use, not historical peak or server storage.
+
+Baseline28 tests PASS (matrix11/config17). New reporter12 +real Matplotlib chart2
+PASS: **42 distinct tests in4 files**, no failures/errors/skips in selected runs.
+Frozen/leaf/raw numerical provenance, safe paths/schema/duplicates, exact unknown
+semantics, failure/cohort separation, hardlinks, no output replacement and chart
+point provenance tested. Actual images visually inspected; draft report retained
+before final headroom/label/schema refinement, not overwritten. A NEW optional
+reporting venv downloaded plotting packages on controller only; existing training
+and worker environments remain unchanged. Runtime itself never installs/downloads.
+
+See [full methodology, gaps and commands](13-experiments.md),
+[56 evidence](56-evaluation-report-evidence.json), and scoped
+`reports/eval-13-4-validation/13.4.patch`. All389 baseline files preserved except
+four intentional documentation appends; no existing Python/API/DB/config/trainer
+change, stash/reset/commit, live Pi contact, service/export/mount/firewall change.
+Legacy/OFF/resource and controller-local SQLite remain intact. Reversible source
+rollback is exercised only in a disposable copy; retain all data/reports/TEST
+objects. Pi01 remains deferred and prior idle-window/isolation prerequisites hold.
+
+**13.4 local reporting PASS; full Phase13 NOT complete.13.2 native comparisons,
+physical13.3 faults and the uncollected13.4 metrics remain pending. STOP; no next
+phase or deployment. Central controller/NFS remains a single point of failure.**

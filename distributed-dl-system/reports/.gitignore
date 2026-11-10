@@ -1,0 +1,3 @@
+# Raw experiment directories contain generated datasets, logs and checkpoints.
+# Retain them locally; share reviewed archives separately, not as source commits.
+/*/

@@ -121,7 +121,8 @@ def checked_upload(upload, directory, name):
 
 class PreparationQueue:
     """Persist browser preparation requests so a portal restart can continue them."""
-    def __init__(self):
+    def __init__(self,hybrid_service=None):
+        self.hybrid_service=hybrid_service
         with closing(store.get_connection()) as db, db:
             db.execute('''CREATE TABLE IF NOT EXISTS portal_preparation (
                 job_id TEXT PRIMARY KEY, profile TEXT NOT NULL, state TEXT NOT NULL,
@@ -132,9 +133,11 @@ class PreparationQueue:
             raise ValueError('Unknown environment profile')
         with closing(store.get_connection()) as db, db:
             db.execute('BEGIN IMMEDIATE')
-            storage_selection.require_execution(db, job_id)
+            hybrid=(self.hybrid_service is not None and storage_selection.binding(db,job_id)['backend']=='nfs')
+            if hybrid:self.hybrid_service.pending(db,job_id,profile)
+            else:storage_selection.require_execution(db, job_id)
             job = db.execute('SELECT status FROM jobs WHERE job_id=?', (job_id,)).fetchone()
-            if not job or job['status'] not in ('STAGED', 'READY'):
+            if not job or (not hybrid and job['status'] not in ('STAGED', 'READY')):
                 raise ValueError('Only staged or ready jobs can be prepared')
             old = db.execute('SELECT state FROM portal_preparation WHERE job_id=?', (job_id,)).fetchone()
             if old and old['state'] in ('PENDING', 'PREPARING'):
@@ -153,6 +156,15 @@ class PreparationQueue:
             return False
         task = tasks[0]
         job = store.get_job(task['job_id'])
+        if self.hybrid_service is not None and store.get_storage_binding(job['job_id'])['backend']=='nfs':
+            self.update(job['job_id'],'PREPARING')
+            try:
+                self.hybrid_service.prepare(job['job_id'],task['profile'])
+                self.update(job['job_id'],'DONE')
+            except Exception:
+                self.update(job['job_id'],'CANCELLED' if store.get_job(job['job_id'])['status']=='CANCELLED' else 'ERROR',
+                            'Offline preparation failed; contact the operator or retry.')
+            return True
         if job['status'] not in ('STAGED', 'READY'):
             self.update(job['job_id'], 'CANCELLED' if job['status']=='CANCELLED' else 'DONE')
             return True
@@ -209,7 +221,7 @@ class PreparationQueue:
 
 
 def dispatcher_running():
-    path = ROOT/'controller/.dispatcher.lock'
+    path = Path(store.DB_FILE).parent/'.dispatcher.lock'
     if not path.exists():
         return False
     with path.open('r') as lock:
@@ -247,14 +259,20 @@ class ClusterView:
             return self.value
 
 
-def create_app(directory=None, background=False):
-    storage_settings = require_controller_config(load_config(ROOT / 'config/storage.json'))
+def create_app(directory=None, background=False, *, hybrid_service=None):
+    if hybrid_service is None:
+        storage_settings = require_controller_config(load_config(ROOT / 'config/storage.json'))
+    else:
+        from hybrid_storage.portal_service import HybridPortal
+        if not isinstance(hybrid_service,HybridPortal) or hybrid_service.db_path.resolve()!=Path(store.DB_FILE).resolve():
+            raise ValueError('Explicit matching hybrid portal service required')
+        storage_settings=hybrid_service.settings
     directory = Path(directory or ROOT/'storage/portal')
     app = Flask(__name__, static_folder='portal_static', static_url_path='/static')
     app.secret_key = configure_storage(directory)
     app.config.update(MAX_CONTENT_LENGTH=256*1024*1024, SESSION_COOKIE_HTTPONLY=True,
                       SESSION_COOKIE_SAMESITE='Strict', PERMANENT_SESSION_LIFETIME=8*3600)
-    preparation = PreparationQueue()
+    preparation = PreparationQueue(hybrid_service)
     app.extensions['preparation'] = preparation
     cluster = ClusterView()
     attempts = {}
@@ -394,8 +412,14 @@ def create_app(directory=None, background=False):
 
     @app.post('/api/jobs')
     def submit():
-        backend = select_submission_backend(storage_settings, request.form.get('storage_backend'))
+        if hybrid_service is None:
+            backend = select_submission_backend(storage_settings, request.form.get('storage_backend'))
+        else:
+            backend=request.form.get('storage_backend','nfs')
+            if backend!='nfs':raise ValueError('Use the legacy installation for legacy submissions')
         profile = request.form.get('profile','pytorch-cpu')
+        if hybrid_service is not None and profile not in ('pytorch-cpu','isolated'):
+            raise ValueError('Use an approved offline environment profile')
         if profile not in ('pytorch-cpu','isolated','worker-base'):
             raise ValueError('Unknown environment profile')
         document = json.loads(request.form.get('spec','{}'))
@@ -442,6 +466,9 @@ def create_app(directory=None, background=False):
                 store.control_job(job_id,session['owner'],'cancel')
                 raise
         if backend == 'nfs':
+            if hybrid_service is not None:
+                preparation.enqueue(job_id,profile)
+                return jsonify(job_id=job_id,status=stored['status'],storage_backend='nfs',reason='Preparing immutable inputs'),202
             return jsonify(job_id=job_id,status=stored['status'],storage_backend='nfs',
                            reason=storage_selection.NFS_HELD_REASON),202
         preparation.enqueue(job_id,profile)
@@ -514,6 +541,9 @@ def create_app(directory=None, background=False):
             preparation.enqueue(job_id,request.get_json().get('profile','pytorch-cpu'))
             return jsonify(status='PENDING'),202
         if action not in ('cancel','hold','release'): abort(404)
+        if hybrid_service is not None and hybrid_job(job_id) and action=='release':
+            with hybrid_service.context() as runtime:
+                return jsonify(status=store.control_job(job_id,session['owner'],action,storage_runtime=runtime))
         return jsonify(status=store.control_job(job_id,session['owner'],action))
 
     @app.get('/api/jobs/<job_id>/logs')

@@ -43,10 +43,17 @@ def network_interface():
 
 INTERFACE = network_interface()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+CODE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = CODE_DIR
+if os.environ.get('DL_AGENT_STATE_ROOT'):
+    sys.path.insert(0,str(CODE_DIR))
+    from hybrid_storage.backends import _directory, _root
+    from hybrid_storage.worker_cache import _protected
+    BASE_DIR = _root(Path(os.environ['DL_AGENT_STATE_ROOT']))
+    with _directory(BASE_DIR) as fd:_protected(fd,directory=True)
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import execution_lease as ownership
-TRAINING_DIR = BASE_DIR / "training"
+TRAINING_DIR = CODE_DIR / "training"
 CHECKPOINT_DIR = BASE_DIR / "checkpoints"
 LOG_DIR = BASE_DIR / "logs"
 
@@ -653,7 +660,7 @@ def start_job():
         except (OSError,ValueError,KeyError,TypeError) as error:
             return jsonify({'error':str(error)}),400
         checkpoint_path = directory / 'checkpoints'
-        command = [sys.executable,str(BASE_DIR / 'agent/custom_runner.py'),
+        command = [sys.executable,str((CODE_DIR if staging_service is not None else BASE_DIR) / 'agent/custom_runner.py'),
                    '--root',str(BASE_DIR / 'worker-storage'),'--job-id',job_id,
                    '--attempt-token',data['attempt_token']]
         resume=data.get('resume_checkpoint')
@@ -809,7 +816,7 @@ def start_job():
         }
 
     script_path = (
-        BASE_DIR / 'agent/custom_runner.py' if job_type == 'custom' else
+        (CODE_DIR if staging_service is not None else BASE_DIR) / 'agent/custom_runner.py' if job_type == 'custom' else
         TRAINING_DIR / "benchmark_job.py"
         if job_type == "benchmark"
         else DUMMY_JOB_SCRIPT if job_type == "dummy" else PYTORCH_JOB_SCRIPT
@@ -864,7 +871,7 @@ def start_job():
                 ownership.accept(BASE_DIR,lease,job_id,data['attempt_token'],node_id())
             except (ValueError,KeyError,OSError) as error:
                 return jsonify({'error':str(error)}),409
-            command=[sys.executable,str(BASE_DIR/'agent/lease_runner.py'),
+            command=[sys.executable,str((CODE_DIR if staging_service is not None else BASE_DIR)/'agent/lease_runner.py'),
                      '--lease-path',str(ownership.lease_path(BASE_DIR,lease)),'--',*command]
         if job_type=='custom' and lease:
             # A fresh owner must not inherit final files from a failed attempt.

@@ -1,0 +1,2692 @@
+{
+  "schema_version": 1,
+  "phase": "14.2",
+  "at_utc": "2026-11-10T08:29:24.874224+00:00",
+  "status": "OFFLINE_PREPARATION_PASS_DEPLOYMENT_BLOCKED",
+  "apply_ready": false,
+  "executor_implemented": false,
+  "full_phase14_complete": false,
+  "next_subphase": "14.3",
+  "next_subphase_blocked": true,
+  "repository": {
+    "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "branch": "main",
+    "initial_status": " M docs/storage/implementation-progress.md\n?? docs/storage/57-production-readiness-evidence.json\n?? docs/storage/57-production-readiness.md\n",
+    "baseline_files": 399,
+    "prior_14_1_work_preserved": true
+  },
+  "changes": {
+    "new_files": [
+      "hybrid_storage/delivery_plan.py",
+      "tools/hybrid_deploy.py",
+      "tests/test_delivery_plan.py",
+      "docs/storage/58-deployment-playbook.md",
+      "docs/storage/58-deployment-preparation-evidence.json"
+    ],
+    "existing_documentation_appends": [
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "tools/README.md"
+    ],
+    "existing_python_api_schema_db_config_changes": []
+  },
+  "commands": {
+    "plan": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/hybrid_deploy.py plan --output '/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-2-delivery/review-v2'",
+    "verify": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/hybrid_deploy.py verify --output '/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-2-delivery/review-v2'",
+    "baseline_tests": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_config.py test_storage_selection.py test_deployment_review.py test_nfs_client_setup.py",
+    "new_tests": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_delivery_plan.py"
+  },
+  "tests": {
+    "distinct_final_pass": 88,
+    "final_failed": 0,
+    "final_errors": 0,
+    "final_skipped": 0,
+    "test_files": {
+      "test_storage_config.py": 17,
+      "test_storage_selection.py": 21,
+      "test_deployment_review.py": 6,
+      "test_nfs_client_setup.py": 28,
+      "test_delivery_plan.py": 16
+    },
+    "development_runs": [
+      {
+        "log": "new-tests-initial.log",
+        "tests": 13,
+        "failures": 2,
+        "cause": "Raw-config byte drift not fingerprinted; relocated test-root audit mismatch. Both corrected, not baseline failures."
+      },
+      {
+        "log": "new-tests-fixed.log",
+        "tests": 13,
+        "failures": 0
+      },
+      {
+        "log": "final-tests.log",
+        "tests": 14,
+        "failures": 0
+      },
+      {
+        "log": "final-expanded-tests.log",
+        "tests": 15,
+        "failures": 0
+      },
+      {
+        "log": "final-concurrent-tests.log",
+        "tests": 16,
+        "failures": 0
+      }
+    ],
+    "migration_rehearsal": "Existing actual controller fixture copied into disposable roots, WAL database backed up through sqlite3.Connection.backup, six explicit additive migrations run twice on restored copy. Legacy rows/user_version/source fixture preserved; second dump identical; quick_check ok and foreign_key_check empty.",
+    "security_and_idempotency": [
+      "No network/subprocess/DB access by prepare/verify; runtime DB FIFO remains unread",
+      "All-three identity requirement; mismatched aliases and missing pi01 evidence rejected",
+      "Same complete output reused without changing bytes/modes/mtime; distinct output gets distinct snapshot ID",
+      "Concurrent same output either verifies complete result or safely refuses partial state",
+      "Raw config/audit/source drift and source change during preparation fail closed",
+      "Interrupted output and symlinks/existing files retained without overwrite",
+      "Resealed traversal/link/duplicate/missing-member archives and compressed oversized headers rejected without extraction",
+      "Edited/missing plan cannot bypass unconditional apply refusal",
+      "CLI import has no SQLite or controller bootstrap side effects"
+    ],
+    "not_run": [
+      "Live SSH/Pi probe or transfer",
+      "Production database read/backup/migration/restore",
+      "sudo/systemd/NFS/exports/fstab/firewall changes",
+      "Package install or worker Internet transfer",
+      "Live job, cancellation, worker fault/recovery, three-rank DDP or boot acceptance"
+    ]
+  },
+  "actual_review_directory": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-2-delivery/review-v2",
+  "actual_review_verification": {
+    "plan": {
+      "exit_code": 0,
+      "result": {
+        "apply_ready": false,
+        "blocker_ids": [
+          "B1",
+          "B2",
+          "B3",
+          "B4",
+          "B5",
+          "B6",
+          "B7",
+          "B8",
+          "B9",
+          "B10"
+        ],
+        "executor_implemented": false,
+        "live_readiness_verified": false,
+        "plan_sha256": "382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094",
+        "release_id": "release-2d924028652737d1019dd1d7",
+        "selected_workers": [
+          "pi01",
+          "pi02",
+          "pi03"
+        ],
+        "snapshot_id": "snap-20261110T082453Z-78a0011db2562841",
+        "verified": true
+      },
+      "stderr": ""
+    },
+    "verify": {
+      "exit_code": 0,
+      "result": {
+        "apply_ready": false,
+        "blocker_ids": [
+          "B1",
+          "B2",
+          "B3",
+          "B4",
+          "B5",
+          "B6",
+          "B7",
+          "B8",
+          "B9",
+          "B10"
+        ],
+        "executor_implemented": false,
+        "live_readiness_verified": false,
+        "plan_sha256": "382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094",
+        "release_id": "release-2d924028652737d1019dd1d7",
+        "selected_workers": [
+          "pi01",
+          "pi02",
+          "pi03"
+        ],
+        "snapshot_id": "snap-20261110T082453Z-78a0011db2562841",
+        "verified": true
+      },
+      "stderr": ""
+    },
+    "byte_and_mtime_idempotent": true,
+    "file_inventory": {
+      "delivery.json": {
+        "sha256": "12262db68675777b5da3dedfce9af812192d1ddb94b1a4d0392f8d95eacc49cd",
+        "mtime_ns": 1794299093977135922,
+        "mode": "0o600"
+      },
+      "nodes-current.json": {
+        "sha256": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf",
+        "mtime_ns": 1794299093941780452,
+        "mode": "0o600"
+      },
+      "storage-current.json": {
+        "sha256": "71a33d4dc87b074ab84952208c4b30d2998bd53f6d84940f5569a60304ac9247",
+        "mtime_ns": 1794299093933664556,
+        "mode": "0o600"
+      },
+      "plan.json": {
+        "sha256": "382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094",
+        "mtime_ns": 1794299093925464319,
+        "mode": "0o600"
+      },
+      "storage-opt-in.example.json": {
+        "sha256": "708c826593411b370925cceb96d344d0dc0a0a7f27e5fe7d0c2e7b08f85ffb0a",
+        "mtime_ns": 1794299093937568033,
+        "mode": "0o600"
+      },
+      "RUNBOOK.md": {
+        "sha256": "791b8877b464a8866b2d8f683d26e6c3670099a9e67ec912786103af2de132ca",
+        "mtime_ns": 1794299093929968678,
+        "mode": "0o600"
+      },
+      "source/worker-source.tar.gz": {
+        "sha256": "ec87a0c0271b145fc9dd5097af61c16db3d62e014241fff49e8bdda12f0752be",
+        "mtime_ns": 1794299093810950753,
+        "mode": "0o600"
+      },
+      "source/controller-source.tar.gz": {
+        "sha256": "d7cc9f39d3dcf4a76ef9622d75e24d6727d5bb5cdb1765f71af3e40f76cee468",
+        "mtime_ns": 1794299093907954927,
+        "mode": "0o600"
+      },
+      "source/review.json": {
+        "sha256": "bc3f46e8dfcee5c4845ffe6742db9ed2c995b4a2cf203ef8a54d553f44632603",
+        "mtime_ns": 1794299093919171650,
+        "mode": "0o600"
+      }
+    },
+    "archives": {
+      "controller": {
+        "members": 119,
+        "bytes": 281351,
+        "filename": "controller-source.tar.gz",
+        "sha256": "d7cc9f39d3dcf4a76ef9622d75e24d6727d5bb5cdb1765f71af3e40f76cee468"
+      },
+      "worker": {
+        "members": 81,
+        "bytes": 185040,
+        "filename": "worker-source.tar.gz",
+        "sha256": "ec87a0c0271b145fc9dd5097af61c16db3d62e014241fff49e8bdda12f0752be"
+      }
+    },
+    "production_changes": false
+  },
+  "actual_plan": {
+    "acceptance": {
+      "execute": false,
+      "required_workers": [
+        "pi01",
+        "pi02",
+        "pi03"
+      ],
+      "tests": [
+        "strict SSH/API identity and dependency/version match",
+        "NFS mount source/flags, authorized TEST SHA256 and RO write rejection",
+        "authenticated full and incremental inventory; stale/spoofed events rejected",
+        "authorized cold/warm job execution and legacy flag-OFF regression",
+        "cancellation during staging; expired attempt cannot launch",
+        "isolated worker fault and committed-checkpoint recovery",
+        "three-rank DDP full-group stage/checkpoint/recovery and stale rank fencing",
+        "student/admin data boundaries and service boot under reviewed isolation"
+      ]
+    },
+    "all_three_pi_acceptance_proven": false,
+    "apply_ready": false,
+    "audit": {
+      "bytes": 113800,
+      "path": "docs/storage/57-production-readiness-evidence.json",
+      "sha256": "bd3fc5cb0fa65c2016fc739a63f793653abb809430b3cd4830b9f52ffacf147d"
+    },
+    "blockers": [
+      {
+        "id": "B1",
+        "issue": "Production controller and worker bootstrap does not construct trusted hybrid runtime; controller gate rejects cache/locality/bandwidth execution.",
+        "required": "Implement and test reviewed explicit bootstrap and lifecycle wiring before enabling flags; preserve legacy in-flight jobs."
+      },
+      {
+        "id": "B2",
+        "issue": "Production untrusted-code containment, peer-only DDP networking, termination/quiescence, protected roots and separately provisioned credentials are not validated.",
+        "required": "Review enforceable OS/network boundary and least-privilege trusted staging/checkpoint providers; do not expose NFS or credentials to training."
+      },
+      {
+        "id": "B3",
+        "issue": "pi01 LAN is 192.168.0.107; configured NFS server 192.168.10.214:2049 times out; input mount and client units absent.",
+        "required": "Approve verified reachable topology and narrowly scoped export/client setup for pi01; never infer its old HostKeyAlias is a current IP."
+      },
+      {
+        "id": "B4",
+        "issue": "All three agent pip checks fail; pi01 torch import timed out; sampled cached training versions differ.",
+        "required": "Prepare pinned compatible offline ARM CPU dependencies, verify pi01 import and a complete three-rank compatibility group; no runtime Internet transfer."
+      },
+      {
+        "id": "B5",
+        "issue": "No reviewed aggregate disk/resource budgets; pi01 has only 6083952640 free bytes at probe.",
+        "required": "Budget cache, workspaces, temporary copies, checkpoints, environments and free reserve separately per worker; enforce limits without deleting user data."
+      },
+      {
+        "id": "B6",
+        "issue": "No verified consistent application-state backup or tested restore point found in queried locations; privileged NFS backup directories unreadable.",
+        "required": "Plan unique SQLite-consistent local backup plus matching manifests/checkpoints/objects/config/source/credential recovery and isolated restore verification."
+      },
+      {
+        "id": "B7",
+        "issue": "Legacy deploy bundle omits hybrid_storage; installer replaces its one previous snapshot and can use Internet pip installs.",
+        "required": "Prepare reviewed idempotent dry-run-first all-three-node delivery with immutable release/snapshot identities and rollback; do not execute old installer."
+      },
+      {
+        "id": "B8",
+        "issue": "pi02 has unrelated wildcard rw no_root_squash CIFAR export configured; pi02/pi03 have a legacy rw NFS share mounted.",
+        "required": "Review ownership/users and isolation/exposure; do not remove or reconfigure an unrelated existing service without explicit approval."
+      },
+      {
+        "id": "B9",
+        "issue": "Fresh effective export table, privileged client TEST reads/RO-write denial, reboot/boot behavior and complete hybrid job acceptance remain unverified.",
+        "required": "After exact plan approval, verify all three nodes and roll back failed acceptance safely; retain legacy fallback and all data."
+      },
+      {
+        "id": "B10",
+        "issue": "Phase13 native controlled comparisons, physical faults and several physical timing/bandwidth measurements remain pending.",
+        "required": "Keep evaluation claims limited to retained measurements; arrange approved isolated idle window before collecting missing physical results."
+      }
+    ],
+    "configuration": {
+      "change_active_config": false,
+      "current": {
+        "scheduler_policy": "resource",
+        "storage_aware_staging": false,
+        "storage_backend": "legacy",
+        "worker_cache_enabled": false
+      },
+      "input_files": {
+        "config/execution_leases.json": {
+          "bytes": 76,
+          "sha256": "0c487e5d01a121f2b26ea81aa9f6cf1f30b1736d7addc925bf1303935faf30f8"
+        },
+        "config/nfs-clients.json": {
+          "bytes": 201,
+          "sha256": "c45ffd428c3237cc4c1d1f4be689479fc98cc1a1ab9f4960a997b4b885ef1421"
+        },
+        "config/nfs-server.json": {
+          "bytes": 289,
+          "sha256": "29b721f25d5eeb9d0405b15affbfb5140bfc639f27b46163023a129e9f572146"
+        },
+        "config/nodes.json": {
+          "bytes": 309,
+          "sha256": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf"
+        },
+        "config/queue_policy.json": {
+          "bytes": 103,
+          "sha256": "d20d13c1987f69419c190fd09d52f9cdffd297cbc8ecf3c3f694fe2e612fba90"
+        },
+        "config/storage.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        }
+      },
+      "new_runtime_file": null,
+      "nfs_topology": "pi01 route/export/client setup unresolved; do not infer IP from HostKeyAlias",
+      "proposal_only": true,
+      "worker_credentials": "SEPARATE_PROTECTED_PROVISIONING_REQUIRED"
+    },
+    "executor_implemented": false,
+    "hosts": {
+      "controller": {
+        "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+        "audited_free_bytes": 43530088448,
+        "audited_gid": 1000,
+        "audited_uid": 1000,
+        "disk_budget": null,
+        "disk_budget_status": "UNRESOLVED_NO_CAPACITY_RESERVED",
+        "observations_not_live": true,
+        "release_directory": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/releases/release-2d924028652737d1019dd1d7/controller",
+        "release_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/releases",
+        "role": "controller",
+        "service_user": "rana",
+        "services": {
+          "dl-dispatcher.service": {
+            "audited_pid": "1662",
+            "audited_state": "active",
+            "desired_unit_delta": null,
+            "scope": "user",
+            "unit_delta_status": "UNRESOLVED_NOT_GENERATED",
+            "unit_file": "/home/rana/.config/systemd/user/dl-dispatcher.service"
+          },
+          "dl-student-portal.service": {
+            "audited_pid": "1663",
+            "audited_state": "active",
+            "desired_unit_delta": null,
+            "scope": "user",
+            "unit_delta_status": "UNRESOLVED_NOT_GENERATED",
+            "unit_file": "/home/rana/.config/systemd/user/dl-student-portal.service"
+          }
+        },
+        "snapshot_directory": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/snapshots/snap-20261110T082453Z-78a0011db2562841/controller"
+      },
+      "pi01": {
+        "application_root": "/home/pi/distributed-dl-system",
+        "audited_free_bytes": 6083952640,
+        "audited_gid": 1000,
+        "audited_uid": 1000,
+        "disk_budget": null,
+        "disk_budget_status": "UNRESOLVED_NO_CAPACITY_RESERVED",
+        "observations_not_live": true,
+        "release_directory": "/home/pi/distributed-dl-system/.hybrid-deploy/releases/release-2d924028652737d1019dd1d7/worker",
+        "release_root": "/home/pi/distributed-dl-system/.hybrid-deploy/releases",
+        "role": "worker",
+        "service_user": "pi",
+        "services": {
+          "dl-node-agent.service": {
+            "audited_pid": "1036",
+            "audited_state": "active",
+            "desired_unit_delta": null,
+            "scope": "system",
+            "unit_delta_status": "UNRESOLVED_NOT_GENERATED",
+            "unit_file": "/etc/systemd/system/dl-node-agent.service"
+          }
+        },
+        "snapshot_directory": "/home/pi/distributed-dl-system/.hybrid-deploy/snapshots/snap-20261110T082453Z-78a0011db2562841/pi01",
+        "ssh": {
+          "alias": "pi01",
+          "host_key_alias": "192.168.10.125",
+          "host_key_alias_is_current_lan": false,
+          "hostname": "100.101.90.46",
+          "options": [
+            "BatchMode=yes",
+            "StrictHostKeyChecking=yes",
+            "UpdateHostKeys=no",
+            "ControlMaster=no",
+            "ControlPath=none",
+            "PermitLocalCommand=no"
+          ],
+          "port": 22,
+          "user": "pi"
+        }
+      },
+      "pi02": {
+        "application_root": "/home/pi/distributed-dl-system",
+        "audited_free_bytes": 11457048576,
+        "audited_gid": 1000,
+        "audited_uid": 1000,
+        "disk_budget": null,
+        "disk_budget_status": "UNRESOLVED_NO_CAPACITY_RESERVED",
+        "observations_not_live": true,
+        "release_directory": "/home/pi/distributed-dl-system/.hybrid-deploy/releases/release-2d924028652737d1019dd1d7/worker",
+        "release_root": "/home/pi/distributed-dl-system/.hybrid-deploy/releases",
+        "role": "worker",
+        "service_user": "pi",
+        "services": {
+          "dl-node-agent.service": {
+            "audited_pid": "946",
+            "audited_state": "active",
+            "desired_unit_delta": null,
+            "scope": "system",
+            "unit_delta_status": "UNRESOLVED_NOT_GENERATED",
+            "unit_file": "/etc/systemd/system/dl-node-agent.service"
+          }
+        },
+        "snapshot_directory": "/home/pi/distributed-dl-system/.hybrid-deploy/snapshots/snap-20261110T082453Z-78a0011db2562841/pi02",
+        "ssh": {
+          "alias": "pi02",
+          "host_key_alias": "192.168.10.150",
+          "host_key_alias_is_current_lan": false,
+          "hostname": "100.91.135.18",
+          "options": [
+            "BatchMode=yes",
+            "StrictHostKeyChecking=yes",
+            "UpdateHostKeys=no",
+            "ControlMaster=no",
+            "ControlPath=none",
+            "PermitLocalCommand=no"
+          ],
+          "port": 22,
+          "user": "pi"
+        }
+      },
+      "pi03": {
+        "application_root": "/home/pi/distributed-dl-system",
+        "audited_free_bytes": 9281269760,
+        "audited_gid": 1002,
+        "audited_uid": 1002,
+        "disk_budget": null,
+        "disk_budget_status": "UNRESOLVED_NO_CAPACITY_RESERVED",
+        "observations_not_live": true,
+        "release_directory": "/home/pi/distributed-dl-system/.hybrid-deploy/releases/release-2d924028652737d1019dd1d7/worker",
+        "release_root": "/home/pi/distributed-dl-system/.hybrid-deploy/releases",
+        "role": "worker",
+        "service_user": "pi",
+        "services": {
+          "dl-node-agent.service": {
+            "audited_pid": "902",
+            "audited_state": "active",
+            "desired_unit_delta": null,
+            "scope": "system",
+            "unit_delta_status": "UNRESOLVED_NOT_GENERATED",
+            "unit_file": "/etc/systemd/system/dl-node-agent.service"
+          }
+        },
+        "snapshot_directory": "/home/pi/distributed-dl-system/.hybrid-deploy/snapshots/snap-20261110T082453Z-78a0011db2562841/pi03",
+        "ssh": {
+          "alias": "pi03",
+          "host_key_alias": "192.168.10.101",
+          "host_key_alias_is_current_lan": false,
+          "hostname": "100.64.202.71",
+          "options": [
+            "BatchMode=yes",
+            "StrictHostKeyChecking=yes",
+            "UpdateHostKeys=no",
+            "ControlMaster=no",
+            "ControlPath=none",
+            "PermitLocalCommand=no"
+          ],
+          "port": 22,
+          "user": "pi"
+        }
+      }
+    },
+    "idempotency": {
+      "future_apply": "Exclusive per-snapshot lock and intent/completion journal; skip only exact verified files/schema versions, never refresh a backup or replay a restart blindly.",
+      "incomplete_output": "Retain for diagnosis; select a NEW output/snapshot, no overwrite or cleanup",
+      "review": "Existing complete output is verified and reused byte-for-byte; any drift or partial output fails without writes."
+    },
+    "kind": "hybrid-delivery-dry-run",
+    "migrations": {
+      "db_path": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/controller/jobs.db",
+      "execute": false,
+      "legacy_initializer": "controller/job_store.py::initialize_database",
+      "legacy_initializer_automatically_called": false,
+      "local_disk_required": true,
+      "no_automatic_backfill": true,
+      "rehearse_twice_on_restored_copy": true,
+      "sequence": [
+        {
+          "bytes": 10143,
+          "file": "hybrid_storage/registry_schema.py",
+          "function": "migrate",
+          "module": "hybrid_storage.registry_schema",
+          "order": 1,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        {
+          "bytes": 14701,
+          "file": "hybrid_storage/cache_registry_schema.py",
+          "function": "migrate",
+          "module": "hybrid_storage.cache_registry_schema",
+          "order": 2,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        {
+          "bytes": 9370,
+          "file": "hybrid_storage/staging_schema.py",
+          "function": "migrate",
+          "module": "hybrid_storage.staging_schema",
+          "order": 3,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        {
+          "bytes": 3195,
+          "file": "hybrid_storage/cleanup_schema.py",
+          "function": "migrate",
+          "module": "hybrid_storage.cleanup_schema",
+          "order": 4,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        {
+          "bytes": 6824,
+          "file": "hybrid_storage/checkpoint_schema.py",
+          "function": "migrate",
+          "module": "hybrid_storage.checkpoint_schema",
+          "order": 5,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        {
+          "bytes": 4389,
+          "file": "hybrid_storage/restore_schema.py",
+          "function": "migrate",
+          "module": "hybrid_storage.restore_schema",
+          "order": 6,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        }
+      ]
+    },
+    "planner": {
+      "bytes": 23824,
+      "file": "hybrid_storage/delivery_plan.py",
+      "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+    },
+    "prohibited": [
+      "network or subprocess execution by this tool",
+      "sudo/remote config/service/mount changes",
+      "automatic package download",
+      "copying secrets or user data into source archives",
+      "claiming audit data is fresh readiness"
+    ],
+    "release_id": "release-2d924028652737d1019dd1d7",
+    "restart_plan": {
+      "commands": [
+        {
+          "action": "stop",
+          "approval_required": true,
+          "argv": [
+            "systemctl",
+            "--user",
+            "stop",
+            "dl-dispatcher.service"
+          ],
+          "execute": false,
+          "host": "controller",
+          "scope": "user",
+          "unit": "dl-dispatcher.service"
+        },
+        {
+          "action": "start",
+          "approval_required": true,
+          "argv": [
+            "systemctl",
+            "--user",
+            "start",
+            "dl-dispatcher.service"
+          ],
+          "execute": false,
+          "host": "controller",
+          "scope": "user",
+          "unit": "dl-dispatcher.service"
+        },
+        {
+          "action": "stop",
+          "approval_required": true,
+          "argv": [
+            "systemctl",
+            "--user",
+            "stop",
+            "dl-student-portal.service"
+          ],
+          "execute": false,
+          "host": "controller",
+          "scope": "user",
+          "unit": "dl-student-portal.service"
+        },
+        {
+          "action": "start",
+          "approval_required": true,
+          "argv": [
+            "systemctl",
+            "--user",
+            "start",
+            "dl-student-portal.service"
+          ],
+          "execute": false,
+          "host": "controller",
+          "scope": "user",
+          "unit": "dl-student-portal.service"
+        },
+        {
+          "action": "stop",
+          "approval_required": true,
+          "argv": [
+            "sudo",
+            "--",
+            "systemctl",
+            "stop",
+            "dl-node-agent.service"
+          ],
+          "execute": false,
+          "host": "pi01",
+          "scope": "system",
+          "unit": "dl-node-agent.service"
+        },
+        {
+          "action": "start",
+          "approval_required": true,
+          "argv": [
+            "sudo",
+            "--",
+            "systemctl",
+            "start",
+            "dl-node-agent.service"
+          ],
+          "execute": false,
+          "host": "pi01",
+          "scope": "system",
+          "unit": "dl-node-agent.service"
+        },
+        {
+          "action": "stop",
+          "approval_required": true,
+          "argv": [
+            "sudo",
+            "--",
+            "systemctl",
+            "stop",
+            "dl-node-agent.service"
+          ],
+          "execute": false,
+          "host": "pi02",
+          "scope": "system",
+          "unit": "dl-node-agent.service"
+        },
+        {
+          "action": "start",
+          "approval_required": true,
+          "argv": [
+            "sudo",
+            "--",
+            "systemctl",
+            "start",
+            "dl-node-agent.service"
+          ],
+          "execute": false,
+          "host": "pi02",
+          "scope": "system",
+          "unit": "dl-node-agent.service"
+        },
+        {
+          "action": "stop",
+          "approval_required": true,
+          "argv": [
+            "sudo",
+            "--",
+            "systemctl",
+            "stop",
+            "dl-node-agent.service"
+          ],
+          "execute": false,
+          "host": "pi03",
+          "scope": "system",
+          "unit": "dl-node-agent.service"
+        },
+        {
+          "action": "start",
+          "approval_required": true,
+          "argv": [
+            "sudo",
+            "--",
+            "systemctl",
+            "start",
+            "dl-node-agent.service"
+          ],
+          "execute": false,
+          "host": "pi03",
+          "scope": "system",
+          "unit": "dl-node-agent.service"
+        }
+      ],
+      "commands_are_data_only": true,
+      "missing_prerequisites": [
+        "reviewed admission pause",
+        "all-job/attempt/rank drain and quiescence",
+        "concrete trusted bootstrap/unit/config deltas",
+        "explicit later apply approval"
+      ],
+      "start_order": [
+        "pi01:dl-node-agent.service",
+        "pi02:dl-node-agent.service",
+        "pi03:dl-node-agent.service",
+        "controller:dl-student-portal.service",
+        "controller:dl-dispatcher.service"
+      ],
+      "stop_order": [
+        "controller:dl-student-portal.service",
+        "controller:dl-dispatcher.service",
+        "pi01:dl-node-agent.service",
+        "pi02:dl-node-agent.service",
+        "pi03:dl-node-agent.service"
+      ]
+    },
+    "rollback": {
+      "automatic_executor": false,
+      "retain_all_user_data": true,
+      "retained_additive_schema_preferred": true,
+      "steps": [
+        "Close admission; fence new attempts and prove descendants quiescent before releasing pins or slots.",
+        "Stop only reviewed affected services, record failure evidence and service states.",
+        "For each journaled source/config/unit path compare installed release hash before restoring saved bytes/metadata; on external changes stop for review.",
+        "Quarantine release-created source files outside import paths; never remove arbitrary paths, jobs, cache objects or checkpoint data.",
+        "Restore prior unit/drop-in/offline environment/config identities; keep legacy/OFF/resource as approved fallback.",
+        "Keep additive schema only if old-version regression was proven. Never down-migrate or blindly replace live DB. Any DB restore needs stopped writers, separately retained failed state, matching manifest/checkpoint/object recovery point and explicit approval.",
+        "Restore originally active/enabled service states without enabling new services; verify legacy health before reopening admission."
+      ]
+    },
+    "schema_version": 1,
+    "selected_workers": [
+      "pi01",
+      "pi02",
+      "pi03"
+    ],
+    "snapshot_id": "snap-20261110T082453Z-78a0011db2562841",
+    "source_catalogs": {
+      "controller": {
+        "agent/agent.py": {
+          "bytes": 50886,
+          "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+        },
+        "agent/cache_storage.py": {
+          "bytes": 3481,
+          "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c"
+        },
+        "agent/checkpoint_protocol.py": {
+          "bytes": 7554,
+          "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9"
+        },
+        "agent/checkpoint_restore_service.py": {
+          "bytes": 7897,
+          "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2"
+        },
+        "agent/checkpoint_service.py": {
+          "bytes": 8020,
+          "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f"
+        },
+        "agent/custom_runner.py": {
+          "bytes": 8713,
+          "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130"
+        },
+        "agent/dl_checkpoint.py": {
+          "bytes": 23991,
+          "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c"
+        },
+        "agent/environment_worker.py": {
+          "bytes": 20474,
+          "sha256": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875"
+        },
+        "agent/execution_lease.py": {
+          "bytes": 6828,
+          "sha256": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83"
+        },
+        "agent/lease_runner.py": {
+          "bytes": 2390,
+          "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5"
+        },
+        "agent/staging.py": {
+          "bytes": 21170,
+          "sha256": "71d456830fba4e591547098f1a4e54904cc2e9812afa82d63c5ffb2504a6d836"
+        },
+        "config/runtime-requirements.txt": {
+          "bytes": 148,
+          "sha256": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c"
+        },
+        "config/storage-examples/legacy.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        },
+        "config/storage-examples/nfs-bandwidth.json": {
+          "bytes": 131,
+          "sha256": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7"
+        },
+        "config/storage-examples/nfs-locality.json": {
+          "bytes": 130,
+          "sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a"
+        },
+        "config/storage-examples/nfs-resource.json": {
+          "bytes": 130,
+          "sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2"
+        },
+        "controller/admin_storage_view.py": {
+          "bytes": 8521,
+          "sha256": "872021d7d72d6fb68b01045d2ac1e9973ad23c3069ebb9e970e503d511302467"
+        },
+        "controller/cache_inventory.py": {
+          "bytes": 3444,
+          "sha256": "e1641f5ce95213e0db1fa3d5d52a0435e867949944008f777b75e15afceaa945"
+        },
+        "controller/checkpoint_recovery.py": {
+          "bytes": 18159,
+          "sha256": "62ab8eca6ad9263c92046a08126f227edcf5d73c4187ac55af395a1e8c0fc39f"
+        },
+        "controller/checkpoint_store.py": {
+          "bytes": 1053,
+          "sha256": "e9df700d4da0f150a8055cd05b1cf611a2d3aedc8a9157de16b3571e5addf7da"
+        },
+        "controller/controller.py": {
+          "bytes": 4671,
+          "sha256": "ca132e660fb9bacbd3fe00290a82ec44de90d789efd771abf84fa92d816d2f44"
+        },
+        "controller/custom_checkpoints.py": {
+          "bytes": 4254,
+          "sha256": "4266dfd77fbab12c0905e340d9f35e1b6bc965821cb5da1f7c1bcccc0fd66299"
+        },
+        "controller/dispatcher.py": {
+          "bytes": 37726,
+          "sha256": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d"
+        },
+        "controller/distributed_dispatch.py": {
+          "bytes": 19482,
+          "sha256": "a1fdac0d8b63ec784c281d2d6a6d6433aba060ffc18b380a07b071d8ee825f2f"
+        },
+        "controller/execution_leases.py": {
+          "bytes": 12101,
+          "sha256": "fa82ee030cc0c1b0e49e8dc9806caad80c37e69417581ff9561867afdd0d6507"
+        },
+        "controller/group_checkpoints.py": {
+          "bytes": 7724,
+          "sha256": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2"
+        },
+        "controller/input_storage.py": {
+          "bytes": 2820,
+          "sha256": "42ec1ef34eabd99f1bb9922304cd580c48d3be5bb630470a79ecc90994e213d9"
+        },
+        "controller/job_artifacts.py": {
+          "bytes": 2729,
+          "sha256": "f8872c380d95783697edede27c8153aae62154c2d530012e7b7fc7ec7bbaaa99"
+        },
+        "controller/job_spec.py": {
+          "bytes": 9886,
+          "sha256": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a"
+        },
+        "controller/job_status.py": {
+          "bytes": 6469,
+          "sha256": "12d84f2cb1f082fb1de67ee9329115be4352b4f844db0e970b4fd44a0801b20b"
+        },
+        "controller/job_storage.py": {
+          "bytes": 17470,
+          "sha256": "01d935c9240ec11873e7c592d019596da5ed86b93497ce29aca4218019b1f79b"
+        },
+        "controller/job_store.py": {
+          "bytes": 39340,
+          "sha256": "a1d55ddb81f94649e4c78fea2849b89968aede677bdaa696e0d795d6f15d3f88"
+        },
+        "controller/job_timing.py": {
+          "bytes": 5296,
+          "sha256": "dee072e79474e08bbdc97c8fb60584bf9c6ce7707536ce13ee3c194b67b201bf"
+        },
+        "controller/migrate_pytorch_jobs.py": {
+          "bytes": 2608,
+          "sha256": "9c52a62a6cd1db3d92a893a8893f050348002ff5291d5f7d0a3c1e41fe2444b6"
+        },
+        "controller/portal_admin.py": {
+          "bytes": 1875,
+          "sha256": "f0096d0a06e970054df8f96040ebb6862027e73879f203d5c44ed0b080508c63"
+        },
+        "controller/portal_static/index.html": {
+          "bytes": 5788,
+          "sha256": "eb2740d83e6174af5ee66ec5a335093eeeb74e98d4c5ecdc1d9b54b7548f5331"
+        },
+        "controller/portal_static/portal.css": {
+          "bytes": 6903,
+          "sha256": "f02148a28886731ac8cfa6ba6e608322d9d88e9c76f8771f1554b6535e57d8e0"
+        },
+        "controller/portal_static/portal.js": {
+          "bytes": 23590,
+          "sha256": "468575c874f5727e406173bcb3c3d439774ef2718deeba10b1e2105470fb2b2b"
+        },
+        "controller/prepare_job.py": {
+          "bytes": 10177,
+          "sha256": "ab8bef60c8eb184040dda0d2c7a58a76485e9bbab6ae8c0349a16c4379a91976"
+        },
+        "controller/queue_ctl.py": {
+          "bytes": 2046,
+          "sha256": "c9dead51875b1af7122351c35d1244aa93cc8a6e16e0212f50f4eabdbc63ad26"
+        },
+        "controller/queue_job.py": {
+          "bytes": 880,
+          "sha256": "18d5409d76c074d4bc586ecc6dda2e3049965b7a0dacc1427ef7e4e05a9fccc3"
+        },
+        "controller/queue_policy.py": {
+          "bytes": 3289,
+          "sha256": "4a47c261a65b087904d7505a54255593449f8422949d0c34d39cef89cd11260b"
+        },
+        "controller/recovery_metrics.py": {
+          "bytes": 4006,
+          "sha256": "dedbe915127817acca96fc0722108eb329f733d80900fcb1089aff8432973809"
+        },
+        "controller/recovery_report.py": {
+          "bytes": 6238,
+          "sha256": "edaa3be7b94237a12d5b80ddde611afd666ffa5dd450d2433f149e63f1d9e38c"
+        },
+        "controller/recovery_view.py": {
+          "bytes": 9997,
+          "sha256": "c4ab849c5ea328b584fa80f563a0de88089d3a76bd64c211872dfa5e73ef802f"
+        },
+        "controller/scheduler.py": {
+          "bytes": 4928,
+          "sha256": "4a3e16e3b23e36069f15d30e04f39bf596863ee560425d3df0cc5dae227b0e87"
+        },
+        "controller/scheduler_metrics.py": {
+          "bytes": 5652,
+          "sha256": "29630f864ac628ec8df95037256aa4ef86f98af8c55bb0926e78e74b0f7524f7"
+        },
+        "controller/stage_job.py": {
+          "bytes": 2206,
+          "sha256": "79e49d26131e6a453b2414a7a4cf2a3ad51e6041e307a74c433ddadea3debf86"
+        },
+        "controller/staging_dispatch.py": {
+          "bytes": 17160,
+          "sha256": "de4a7f4170fae3100e3e97874dd2274be3a8253e916c5d2070331eb3b3fb843c"
+        },
+        "controller/staging_recovery.py": {
+          "bytes": 15817,
+          "sha256": "a8b2d1fea6e63a900f3a92b97e93bb2da898b1f59ff0dddb2e8287a8d1b45f34"
+        },
+        "controller/staging_view.py": {
+          "bytes": 5501,
+          "sha256": "6e851fb5eedf3be5275bd0dbd93c0d399e4f39938ab0c6a7a51794988f22cc85"
+        },
+        "controller/storage_selection.py": {
+          "bytes": 2490,
+          "sha256": "857fa007b6a3808a061d3798736b9ee5f9904a53796898d6d8160f4db881d75d"
+        },
+        "controller/student_portal.py": {
+          "bytes": 33194,
+          "sha256": "350ed86665cd7bac26c0b491fc5088969b923d9a18ba83a5e9083cecb27fbe97"
+        },
+        "controller/submit_job.py": {
+          "bytes": 12517,
+          "sha256": "540b36a9fec28c608e79c5d2148e1b9c17039dee5fbd032fe064ac82c4368247"
+        },
+        "hybrid_storage/__init__.py": {
+          "bytes": 243,
+          "sha256": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57"
+        },
+        "hybrid_storage/admin_observations.py": {
+          "bytes": 4463,
+          "sha256": "8ece3257b36a226d5acda3db64aba1b7dfe413fd5d056d12314fdb918fb16c2d"
+        },
+        "hybrid_storage/artifacts.py": {
+          "bytes": 9794,
+          "sha256": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b"
+        },
+        "hybrid_storage/backends.py": {
+          "bytes": 8929,
+          "sha256": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0"
+        },
+        "hybrid_storage/bandwidth.py": {
+          "bytes": 11617,
+          "sha256": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194"
+        },
+        "hybrid_storage/cache_copy_worker.py": {
+          "bytes": 3677,
+          "sha256": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1"
+        },
+        "hybrid_storage/cache_coverage.py": {
+          "bytes": 11700,
+          "sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4"
+        },
+        "hybrid_storage/cache_eviction.py": {
+          "bytes": 14889,
+          "sha256": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd"
+        },
+        "hybrid_storage/cache_fetch.py": {
+          "bytes": 23535,
+          "sha256": "640633945c5db03b57718ffc5bed4d9cd2a73592077a41937234d9413f2a7550"
+        },
+        "hybrid_storage/cache_inventory.py": {
+          "bytes": 18570,
+          "sha256": "b1ed5ca99d7e4604b54fb4d89e34e55d00cbec982acd9835be5e7a123c8d3754"
+        },
+        "hybrid_storage/cache_registry_schema.py": {
+          "bytes": 14701,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        "hybrid_storage/checkpoint_files.py": {
+          "bytes": 3110,
+          "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850"
+        },
+        "hybrid_storage/checkpoint_publication.py": {
+          "bytes": 19924,
+          "sha256": "892e7fad864b716a773faeefa9b9420744792f958765974e44dfb84196da8b87"
+        },
+        "hybrid_storage/checkpoint_restore.py": {
+          "bytes": 3895,
+          "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab"
+        },
+        "hybrid_storage/checkpoint_schema.py": {
+          "bytes": 6824,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        "hybrid_storage/checkpoint_transfer.py": {
+          "bytes": 6923,
+          "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6"
+        },
+        "hybrid_storage/cleanup_schema.py": {
+          "bytes": 3195,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        "hybrid_storage/config.py": {
+          "bytes": 7958,
+          "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+        },
+        "hybrid_storage/dataset_manifests.py": {
+          "bytes": 10840,
+          "sha256": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d"
+        },
+        "hybrid_storage/dataset_validation.py": {
+          "bytes": 5780,
+          "sha256": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c"
+        },
+        "hybrid_storage/delivery_plan.py": {
+          "bytes": 23824,
+          "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+        },
+        "hybrid_storage/deployment_review.py": {
+          "bytes": 8377,
+          "sha256": "4472ea15c4a61a87e46687ce33e02b085ba4a1d56dfb963b641001b2db101b27"
+        },
+        "hybrid_storage/events.py": {
+          "bytes": 10271,
+          "sha256": "735da9a7a50a5e81d4b8375e91a5aced701584c5200bcda04844424f1b47bb29"
+        },
+        "hybrid_storage/health.py": {
+          "bytes": 10444,
+          "sha256": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6"
+        },
+        "hybrid_storage/health_worker.py": {
+          "bytes": 623,
+          "sha256": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01"
+        },
+        "hybrid_storage/input_manifests.py": {
+          "bytes": 5659,
+          "sha256": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a"
+        },
+        "hybrid_storage/inputs.py": {
+          "bytes": 9586,
+          "sha256": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc"
+        },
+        "hybrid_storage/inventory_protocol.py": {
+          "bytes": 7810,
+          "sha256": "c751be74e4fc583c9b6afff20e10d9a674c38418e433a989dc5877bc58663e25"
+        },
+        "hybrid_storage/inventory_reporter.py": {
+          "bytes": 10508,
+          "sha256": "2bc4aa3ba8304b2402f7e9bc6b834f22624c1fe73df129b492da2f3f98654b9f"
+        },
+        "hybrid_storage/legacy_registration.py": {
+          "bytes": 5918,
+          "sha256": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640"
+        },
+        "hybrid_storage/locality.py": {
+          "bytes": 7780,
+          "sha256": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0"
+        },
+        "hybrid_storage/metrics.py": {
+          "bytes": 2956,
+          "sha256": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149"
+        },
+        "hybrid_storage/mount_identity.py": {
+          "bytes": 1282,
+          "sha256": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f"
+        },
+        "hybrid_storage/nfs_client.py": {
+          "bytes": 17953,
+          "sha256": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a"
+        },
+        "hybrid_storage/nfs_fault_probe.py": {
+          "bytes": 14734,
+          "sha256": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d"
+        },
+        "hybrid_storage/nfs_mount.py": {
+          "bytes": 5175,
+          "sha256": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8"
+        },
+        "hybrid_storage/nfs_server.py": {
+          "bytes": 24217,
+          "sha256": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea"
+        },
+        "hybrid_storage/phase11_probe.py": {
+          "bytes": 12507,
+          "sha256": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa"
+        },
+        "hybrid_storage/registry.py": {
+          "bytes": 24029,
+          "sha256": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529"
+        },
+        "hybrid_storage/registry_schema.py": {
+          "bytes": 10143,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        "hybrid_storage/restore_schema.py": {
+          "bytes": 4389,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        },
+        "hybrid_storage/scheduling.py": {
+          "bytes": 10300,
+          "sha256": "a3abeb09402b01ae9a4afc74b4141b68a4b05b00ea954ae7331f4e008a4d6418"
+        },
+        "hybrid_storage/staging_journal.py": {
+          "bytes": 5600,
+          "sha256": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd"
+        },
+        "hybrid_storage/staging_lifecycle.py": {
+          "bytes": 16473,
+          "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb"
+        },
+        "hybrid_storage/staging_metrics.py": {
+          "bytes": 1390,
+          "sha256": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f"
+        },
+        "hybrid_storage/staging_protocol.py": {
+          "bytes": 4867,
+          "sha256": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb"
+        },
+        "hybrid_storage/staging_schema.py": {
+          "bytes": 9370,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        "hybrid_storage/transfer_metrics.py": {
+          "bytes": 7006,
+          "sha256": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2"
+        },
+        "hybrid_storage/worker_cache.py": {
+          "bytes": 19316,
+          "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272"
+        },
+        "hybrid_storage/workspaces.py": {
+          "bytes": 29971,
+          "sha256": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+        },
+        "training/benchmark_job.py": {
+          "bytes": 6960,
+          "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76"
+        },
+        "training/demo_job.py": {
+          "bytes": 2723,
+          "sha256": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49"
+        },
+        "training/evaluate_checkpoint.py": {
+          "bytes": 3213,
+          "sha256": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41"
+        },
+        "training/pytorch_job.py": {
+          "bytes": 13508,
+          "sha256": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0"
+        },
+        "training/reference/equation.py": {
+          "bytes": 1610,
+          "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+        },
+        "training/reference/logistic.py": {
+          "bytes": 1438,
+          "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+        },
+        "training/reference/logistic_train.py": {
+          "bytes": 2001,
+          "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+        },
+        "training/reference/numpy_mlp.py": {
+          "bytes": 1681,
+          "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+        },
+        "training/reference/numpy_mlp_train.py": {
+          "bytes": 2078,
+          "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+        },
+        "training/reference/resnet18.py": {
+          "bytes": 4171,
+          "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+        },
+        "training/reference/resnet18_inference.py": {
+          "bytes": 1768,
+          "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+        },
+        "training/reference/resnet18_train.py": {
+          "bytes": 2604,
+          "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+        },
+        "training/reference/tiny_cnn.py": {
+          "bytes": 3650,
+          "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+        },
+        "training/reference/tiny_cnn_inference.py": {
+          "bytes": 3591,
+          "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
+        },
+        "training/reference/tiny_cnn_train.py": {
+          "bytes": 6559,
+          "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+        }
+      },
+      "worker": {
+        "agent/agent.py": {
+          "bytes": 50886,
+          "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+        },
+        "agent/cache_storage.py": {
+          "bytes": 3481,
+          "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c"
+        },
+        "agent/checkpoint_protocol.py": {
+          "bytes": 7554,
+          "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9"
+        },
+        "agent/checkpoint_restore_service.py": {
+          "bytes": 7897,
+          "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2"
+        },
+        "agent/checkpoint_service.py": {
+          "bytes": 8020,
+          "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f"
+        },
+        "agent/custom_runner.py": {
+          "bytes": 8713,
+          "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130"
+        },
+        "agent/dl_checkpoint.py": {
+          "bytes": 23991,
+          "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c"
+        },
+        "agent/environment_worker.py": {
+          "bytes": 20474,
+          "sha256": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875"
+        },
+        "agent/execution_lease.py": {
+          "bytes": 6828,
+          "sha256": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83"
+        },
+        "agent/lease_runner.py": {
+          "bytes": 2390,
+          "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5"
+        },
+        "agent/staging.py": {
+          "bytes": 21170,
+          "sha256": "71d456830fba4e591547098f1a4e54904cc2e9812afa82d63c5ffb2504a6d836"
+        },
+        "config/runtime-requirements.txt": {
+          "bytes": 148,
+          "sha256": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c"
+        },
+        "config/storage-examples/legacy.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        },
+        "config/storage-examples/nfs-bandwidth.json": {
+          "bytes": 131,
+          "sha256": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7"
+        },
+        "config/storage-examples/nfs-locality.json": {
+          "bytes": 130,
+          "sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a"
+        },
+        "config/storage-examples/nfs-resource.json": {
+          "bytes": 130,
+          "sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2"
+        },
+        "hybrid_storage/__init__.py": {
+          "bytes": 243,
+          "sha256": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57"
+        },
+        "hybrid_storage/admin_observations.py": {
+          "bytes": 4463,
+          "sha256": "8ece3257b36a226d5acda3db64aba1b7dfe413fd5d056d12314fdb918fb16c2d"
+        },
+        "hybrid_storage/artifacts.py": {
+          "bytes": 9794,
+          "sha256": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b"
+        },
+        "hybrid_storage/backends.py": {
+          "bytes": 8929,
+          "sha256": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0"
+        },
+        "hybrid_storage/bandwidth.py": {
+          "bytes": 11617,
+          "sha256": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194"
+        },
+        "hybrid_storage/cache_copy_worker.py": {
+          "bytes": 3677,
+          "sha256": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1"
+        },
+        "hybrid_storage/cache_coverage.py": {
+          "bytes": 11700,
+          "sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4"
+        },
+        "hybrid_storage/cache_eviction.py": {
+          "bytes": 14889,
+          "sha256": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd"
+        },
+        "hybrid_storage/cache_fetch.py": {
+          "bytes": 23535,
+          "sha256": "640633945c5db03b57718ffc5bed4d9cd2a73592077a41937234d9413f2a7550"
+        },
+        "hybrid_storage/cache_inventory.py": {
+          "bytes": 18570,
+          "sha256": "b1ed5ca99d7e4604b54fb4d89e34e55d00cbec982acd9835be5e7a123c8d3754"
+        },
+        "hybrid_storage/cache_registry_schema.py": {
+          "bytes": 14701,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        "hybrid_storage/checkpoint_files.py": {
+          "bytes": 3110,
+          "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850"
+        },
+        "hybrid_storage/checkpoint_publication.py": {
+          "bytes": 19924,
+          "sha256": "892e7fad864b716a773faeefa9b9420744792f958765974e44dfb84196da8b87"
+        },
+        "hybrid_storage/checkpoint_restore.py": {
+          "bytes": 3895,
+          "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab"
+        },
+        "hybrid_storage/checkpoint_schema.py": {
+          "bytes": 6824,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        "hybrid_storage/checkpoint_transfer.py": {
+          "bytes": 6923,
+          "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6"
+        },
+        "hybrid_storage/cleanup_schema.py": {
+          "bytes": 3195,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        "hybrid_storage/config.py": {
+          "bytes": 7958,
+          "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+        },
+        "hybrid_storage/dataset_manifests.py": {
+          "bytes": 10840,
+          "sha256": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d"
+        },
+        "hybrid_storage/dataset_validation.py": {
+          "bytes": 5780,
+          "sha256": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c"
+        },
+        "hybrid_storage/delivery_plan.py": {
+          "bytes": 23824,
+          "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+        },
+        "hybrid_storage/deployment_review.py": {
+          "bytes": 8377,
+          "sha256": "4472ea15c4a61a87e46687ce33e02b085ba4a1d56dfb963b641001b2db101b27"
+        },
+        "hybrid_storage/events.py": {
+          "bytes": 10271,
+          "sha256": "735da9a7a50a5e81d4b8375e91a5aced701584c5200bcda04844424f1b47bb29"
+        },
+        "hybrid_storage/health.py": {
+          "bytes": 10444,
+          "sha256": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6"
+        },
+        "hybrid_storage/health_worker.py": {
+          "bytes": 623,
+          "sha256": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01"
+        },
+        "hybrid_storage/input_manifests.py": {
+          "bytes": 5659,
+          "sha256": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a"
+        },
+        "hybrid_storage/inputs.py": {
+          "bytes": 9586,
+          "sha256": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc"
+        },
+        "hybrid_storage/inventory_protocol.py": {
+          "bytes": 7810,
+          "sha256": "c751be74e4fc583c9b6afff20e10d9a674c38418e433a989dc5877bc58663e25"
+        },
+        "hybrid_storage/inventory_reporter.py": {
+          "bytes": 10508,
+          "sha256": "2bc4aa3ba8304b2402f7e9bc6b834f22624c1fe73df129b492da2f3f98654b9f"
+        },
+        "hybrid_storage/legacy_registration.py": {
+          "bytes": 5918,
+          "sha256": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640"
+        },
+        "hybrid_storage/locality.py": {
+          "bytes": 7780,
+          "sha256": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0"
+        },
+        "hybrid_storage/metrics.py": {
+          "bytes": 2956,
+          "sha256": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149"
+        },
+        "hybrid_storage/mount_identity.py": {
+          "bytes": 1282,
+          "sha256": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f"
+        },
+        "hybrid_storage/nfs_client.py": {
+          "bytes": 17953,
+          "sha256": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a"
+        },
+        "hybrid_storage/nfs_fault_probe.py": {
+          "bytes": 14734,
+          "sha256": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d"
+        },
+        "hybrid_storage/nfs_mount.py": {
+          "bytes": 5175,
+          "sha256": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8"
+        },
+        "hybrid_storage/nfs_server.py": {
+          "bytes": 24217,
+          "sha256": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea"
+        },
+        "hybrid_storage/phase11_probe.py": {
+          "bytes": 12507,
+          "sha256": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa"
+        },
+        "hybrid_storage/registry.py": {
+          "bytes": 24029,
+          "sha256": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529"
+        },
+        "hybrid_storage/registry_schema.py": {
+          "bytes": 10143,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        "hybrid_storage/restore_schema.py": {
+          "bytes": 4389,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        },
+        "hybrid_storage/scheduling.py": {
+          "bytes": 10300,
+          "sha256": "a3abeb09402b01ae9a4afc74b4141b68a4b05b00ea954ae7331f4e008a4d6418"
+        },
+        "hybrid_storage/staging_journal.py": {
+          "bytes": 5600,
+          "sha256": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd"
+        },
+        "hybrid_storage/staging_lifecycle.py": {
+          "bytes": 16473,
+          "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb"
+        },
+        "hybrid_storage/staging_metrics.py": {
+          "bytes": 1390,
+          "sha256": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f"
+        },
+        "hybrid_storage/staging_protocol.py": {
+          "bytes": 4867,
+          "sha256": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb"
+        },
+        "hybrid_storage/staging_schema.py": {
+          "bytes": 9370,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        "hybrid_storage/transfer_metrics.py": {
+          "bytes": 7006,
+          "sha256": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2"
+        },
+        "hybrid_storage/worker_cache.py": {
+          "bytes": 19316,
+          "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272"
+        },
+        "hybrid_storage/workspaces.py": {
+          "bytes": 29971,
+          "sha256": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+        },
+        "training/benchmark_job.py": {
+          "bytes": 6960,
+          "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76"
+        },
+        "training/demo_job.py": {
+          "bytes": 2723,
+          "sha256": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49"
+        },
+        "training/evaluate_checkpoint.py": {
+          "bytes": 3213,
+          "sha256": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41"
+        },
+        "training/pytorch_job.py": {
+          "bytes": 13508,
+          "sha256": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0"
+        },
+        "training/reference/equation.py": {
+          "bytes": 1610,
+          "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+        },
+        "training/reference/logistic.py": {
+          "bytes": 1438,
+          "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+        },
+        "training/reference/logistic_train.py": {
+          "bytes": 2001,
+          "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+        },
+        "training/reference/numpy_mlp.py": {
+          "bytes": 1681,
+          "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+        },
+        "training/reference/numpy_mlp_train.py": {
+          "bytes": 2078,
+          "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+        },
+        "training/reference/resnet18.py": {
+          "bytes": 4171,
+          "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+        },
+        "training/reference/resnet18_inference.py": {
+          "bytes": 1768,
+          "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+        },
+        "training/reference/resnet18_train.py": {
+          "bytes": 2604,
+          "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+        },
+        "training/reference/tiny_cnn.py": {
+          "bytes": 3650,
+          "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+        },
+        "training/reference/tiny_cnn_inference.py": {
+          "bytes": 3591,
+          "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
+        },
+        "training/reference/tiny_cnn_train.py": {
+          "bytes": 6559,
+          "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+        }
+      }
+    },
+    "source_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "steps": [
+      {
+        "action": "Re-probe all host identities, full mount tables, dependency compatibility, disk budgets and export exposure; resolve every gate; approve exact plan hash.",
+        "executable": false,
+        "id": "01-review"
+      },
+      {
+        "action": "Use reviewed admission-maintenance provider; drain jobs and staging, verify leases/reservations and all descendants quiescent on all three workers. No forced termination of user jobs.",
+        "executable": false,
+        "id": "02-drain"
+      },
+      {
+        "action": "Create exclusive per-host snapshot/journal below planned namespace. Back up exact changed files, metadata, unit/drop-ins/config, offline environment identity and protected credential recovery. Record absent paths and original service states.",
+        "executable": false,
+        "id": "03-snapshot"
+      },
+      {
+        "action": "After drain proof, stop portal then dispatcher using listed argv. Verify no other SQLite writers; capture LOCAL SQLite backup with sqlite3.Connection.backup, FULL/FK and bounded busy handling, verify quick_check/foreign_key_check and an isolated restore. Record matching manifests, committed checkpoints and object references.",
+        "executable": false,
+        "id": "04-freeze-controller"
+      },
+      {
+        "action": "Transfer only role archive to its immutable release directory; verify digest and regular member allowlist before bounded extraction. Do not touch authoritative inputs, checkpoints, jobs, caches or active source yet. Provision pinned offline dependencies in a separate reviewed environment.",
+        "executable": false,
+        "id": "05-stage"
+      },
+      {
+        "action": "Rehearse listed additive migrations twice on a separate restored local DB copy; check row/state/lease and FK/schema invariants. After explicit DB-change approval, apply the same reviewed sequence to idle production DB; no job backfill, table repair or enum rewrite.",
+        "executable": false,
+        "id": "06-migrations"
+      },
+      {
+        "action": "Stop idle agents only after quiescence. Journal/compare old file hashes and metadata, then publish only exact reviewed source files atomically; record intent before each operation and completion after fsync. Preserve unrelated files; proposed unit/config deltas remain unresolved and cannot be installed.",
+        "executable": false,
+        "id": "07-install"
+      },
+      {
+        "action": "Start and verify pi01, pi02, pi03 agents; then portal and dispatcher using listed argv. Restore only originally enabled/active states; no enable/reboot/linger action inferred. Admission remains closed until acceptance.",
+        "executable": false,
+        "id": "08-start"
+      },
+      {
+        "action": "Run approved disposable all-three acceptance; on any failure fence new attempts and execute reviewed rollback. Never disrupt unrelated students.",
+        "executable": false,
+        "id": "09-accept"
+      }
+    ],
+    "wrapper": {
+      "bytes": 276,
+      "file": "tools/hybrid_deploy.py",
+      "sha256": "dcf26d4e10f4f701a249f2d06e0f8fc647c6e41fe530962a5ca94379330d8c25"
+    }
+  },
+  "source_review_manifest": {
+    "activation": "No SSH, extraction, install, migration, mount, service or config action",
+    "all_three_pi_acceptance_proven": false,
+    "all_three_workers_selected": true,
+    "apply_ready": false,
+    "archives": {
+      "controller": {
+        "bytes": 281351,
+        "filename": "controller-source.tar.gz",
+        "sha256": "d7cc9f39d3dcf4a76ef9622d75e24d6727d5bb5cdb1765f71af3e40f76cee468"
+      },
+      "worker": {
+        "bytes": 185040,
+        "filename": "worker-source.tar.gz",
+        "sha256": "ec87a0c0271b145fc9dd5097af61c16db3d62e014241fff49e8bdda12f0752be"
+      }
+    },
+    "blockers": [
+      "Reviewed OS AND network containment, termination/quiescence and trusted bootstrap required",
+      "Protected local roots and separately provisioned credentials required",
+      "Fresh worker/controller identity, disk, RO NFS mount and dependency compatibility required",
+      "Exact deployment/system/service changes and rollback require explicit approval"
+    ],
+    "deferred_workers": [],
+    "dependencies": "Requirements only; no wheels/weights supplied and no Internet runtime download allowed",
+    "files": {
+      "controller": {
+        "agent/agent.py": {
+          "bytes": 50886,
+          "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+        },
+        "agent/cache_storage.py": {
+          "bytes": 3481,
+          "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c"
+        },
+        "agent/checkpoint_protocol.py": {
+          "bytes": 7554,
+          "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9"
+        },
+        "agent/checkpoint_restore_service.py": {
+          "bytes": 7897,
+          "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2"
+        },
+        "agent/checkpoint_service.py": {
+          "bytes": 8020,
+          "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f"
+        },
+        "agent/custom_runner.py": {
+          "bytes": 8713,
+          "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130"
+        },
+        "agent/dl_checkpoint.py": {
+          "bytes": 23991,
+          "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c"
+        },
+        "agent/environment_worker.py": {
+          "bytes": 20474,
+          "sha256": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875"
+        },
+        "agent/execution_lease.py": {
+          "bytes": 6828,
+          "sha256": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83"
+        },
+        "agent/lease_runner.py": {
+          "bytes": 2390,
+          "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5"
+        },
+        "agent/staging.py": {
+          "bytes": 21170,
+          "sha256": "71d456830fba4e591547098f1a4e54904cc2e9812afa82d63c5ffb2504a6d836"
+        },
+        "config/runtime-requirements.txt": {
+          "bytes": 148,
+          "sha256": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c"
+        },
+        "config/storage-examples/legacy.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        },
+        "config/storage-examples/nfs-bandwidth.json": {
+          "bytes": 131,
+          "sha256": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7"
+        },
+        "config/storage-examples/nfs-locality.json": {
+          "bytes": 130,
+          "sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a"
+        },
+        "config/storage-examples/nfs-resource.json": {
+          "bytes": 130,
+          "sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2"
+        },
+        "controller/admin_storage_view.py": {
+          "bytes": 8521,
+          "sha256": "872021d7d72d6fb68b01045d2ac1e9973ad23c3069ebb9e970e503d511302467"
+        },
+        "controller/cache_inventory.py": {
+          "bytes": 3444,
+          "sha256": "e1641f5ce95213e0db1fa3d5d52a0435e867949944008f777b75e15afceaa945"
+        },
+        "controller/checkpoint_recovery.py": {
+          "bytes": 18159,
+          "sha256": "62ab8eca6ad9263c92046a08126f227edcf5d73c4187ac55af395a1e8c0fc39f"
+        },
+        "controller/checkpoint_store.py": {
+          "bytes": 1053,
+          "sha256": "e9df700d4da0f150a8055cd05b1cf611a2d3aedc8a9157de16b3571e5addf7da"
+        },
+        "controller/controller.py": {
+          "bytes": 4671,
+          "sha256": "ca132e660fb9bacbd3fe00290a82ec44de90d789efd771abf84fa92d816d2f44"
+        },
+        "controller/custom_checkpoints.py": {
+          "bytes": 4254,
+          "sha256": "4266dfd77fbab12c0905e340d9f35e1b6bc965821cb5da1f7c1bcccc0fd66299"
+        },
+        "controller/dispatcher.py": {
+          "bytes": 37726,
+          "sha256": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d"
+        },
+        "controller/distributed_dispatch.py": {
+          "bytes": 19482,
+          "sha256": "a1fdac0d8b63ec784c281d2d6a6d6433aba060ffc18b380a07b071d8ee825f2f"
+        },
+        "controller/execution_leases.py": {
+          "bytes": 12101,
+          "sha256": "fa82ee030cc0c1b0e49e8dc9806caad80c37e69417581ff9561867afdd0d6507"
+        },
+        "controller/group_checkpoints.py": {
+          "bytes": 7724,
+          "sha256": "4f4f32cddf5d9cadf7b648c1b6240e2d7d4f463b28dce9aaf59a727259d36fc2"
+        },
+        "controller/input_storage.py": {
+          "bytes": 2820,
+          "sha256": "42ec1ef34eabd99f1bb9922304cd580c48d3be5bb630470a79ecc90994e213d9"
+        },
+        "controller/job_artifacts.py": {
+          "bytes": 2729,
+          "sha256": "f8872c380d95783697edede27c8153aae62154c2d530012e7b7fc7ec7bbaaa99"
+        },
+        "controller/job_spec.py": {
+          "bytes": 9886,
+          "sha256": "3cadb38e648fe634db5cce73b5f84a53d3caa24a6ebe8b21877f00743791594a"
+        },
+        "controller/job_status.py": {
+          "bytes": 6469,
+          "sha256": "12d84f2cb1f082fb1de67ee9329115be4352b4f844db0e970b4fd44a0801b20b"
+        },
+        "controller/job_storage.py": {
+          "bytes": 17470,
+          "sha256": "01d935c9240ec11873e7c592d019596da5ed86b93497ce29aca4218019b1f79b"
+        },
+        "controller/job_store.py": {
+          "bytes": 39340,
+          "sha256": "a1d55ddb81f94649e4c78fea2849b89968aede677bdaa696e0d795d6f15d3f88"
+        },
+        "controller/job_timing.py": {
+          "bytes": 5296,
+          "sha256": "dee072e79474e08bbdc97c8fb60584bf9c6ce7707536ce13ee3c194b67b201bf"
+        },
+        "controller/migrate_pytorch_jobs.py": {
+          "bytes": 2608,
+          "sha256": "9c52a62a6cd1db3d92a893a8893f050348002ff5291d5f7d0a3c1e41fe2444b6"
+        },
+        "controller/portal_admin.py": {
+          "bytes": 1875,
+          "sha256": "f0096d0a06e970054df8f96040ebb6862027e73879f203d5c44ed0b080508c63"
+        },
+        "controller/portal_static/index.html": {
+          "bytes": 5788,
+          "sha256": "eb2740d83e6174af5ee66ec5a335093eeeb74e98d4c5ecdc1d9b54b7548f5331"
+        },
+        "controller/portal_static/portal.css": {
+          "bytes": 6903,
+          "sha256": "f02148a28886731ac8cfa6ba6e608322d9d88e9c76f8771f1554b6535e57d8e0"
+        },
+        "controller/portal_static/portal.js": {
+          "bytes": 23590,
+          "sha256": "468575c874f5727e406173bcb3c3d439774ef2718deeba10b1e2105470fb2b2b"
+        },
+        "controller/prepare_job.py": {
+          "bytes": 10177,
+          "sha256": "ab8bef60c8eb184040dda0d2c7a58a76485e9bbab6ae8c0349a16c4379a91976"
+        },
+        "controller/queue_ctl.py": {
+          "bytes": 2046,
+          "sha256": "c9dead51875b1af7122351c35d1244aa93cc8a6e16e0212f50f4eabdbc63ad26"
+        },
+        "controller/queue_job.py": {
+          "bytes": 880,
+          "sha256": "18d5409d76c074d4bc586ecc6dda2e3049965b7a0dacc1427ef7e4e05a9fccc3"
+        },
+        "controller/queue_policy.py": {
+          "bytes": 3289,
+          "sha256": "4a47c261a65b087904d7505a54255593449f8422949d0c34d39cef89cd11260b"
+        },
+        "controller/recovery_metrics.py": {
+          "bytes": 4006,
+          "sha256": "dedbe915127817acca96fc0722108eb329f733d80900fcb1089aff8432973809"
+        },
+        "controller/recovery_report.py": {
+          "bytes": 6238,
+          "sha256": "edaa3be7b94237a12d5b80ddde611afd666ffa5dd450d2433f149e63f1d9e38c"
+        },
+        "controller/recovery_view.py": {
+          "bytes": 9997,
+          "sha256": "c4ab849c5ea328b584fa80f563a0de88089d3a76bd64c211872dfa5e73ef802f"
+        },
+        "controller/scheduler.py": {
+          "bytes": 4928,
+          "sha256": "4a3e16e3b23e36069f15d30e04f39bf596863ee560425d3df0cc5dae227b0e87"
+        },
+        "controller/scheduler_metrics.py": {
+          "bytes": 5652,
+          "sha256": "29630f864ac628ec8df95037256aa4ef86f98af8c55bb0926e78e74b0f7524f7"
+        },
+        "controller/stage_job.py": {
+          "bytes": 2206,
+          "sha256": "79e49d26131e6a453b2414a7a4cf2a3ad51e6041e307a74c433ddadea3debf86"
+        },
+        "controller/staging_dispatch.py": {
+          "bytes": 17160,
+          "sha256": "de4a7f4170fae3100e3e97874dd2274be3a8253e916c5d2070331eb3b3fb843c"
+        },
+        "controller/staging_recovery.py": {
+          "bytes": 15817,
+          "sha256": "a8b2d1fea6e63a900f3a92b97e93bb2da898b1f59ff0dddb2e8287a8d1b45f34"
+        },
+        "controller/staging_view.py": {
+          "bytes": 5501,
+          "sha256": "6e851fb5eedf3be5275bd0dbd93c0d399e4f39938ab0c6a7a51794988f22cc85"
+        },
+        "controller/storage_selection.py": {
+          "bytes": 2490,
+          "sha256": "857fa007b6a3808a061d3798736b9ee5f9904a53796898d6d8160f4db881d75d"
+        },
+        "controller/student_portal.py": {
+          "bytes": 33194,
+          "sha256": "350ed86665cd7bac26c0b491fc5088969b923d9a18ba83a5e9083cecb27fbe97"
+        },
+        "controller/submit_job.py": {
+          "bytes": 12517,
+          "sha256": "540b36a9fec28c608e79c5d2148e1b9c17039dee5fbd032fe064ac82c4368247"
+        },
+        "hybrid_storage/__init__.py": {
+          "bytes": 243,
+          "sha256": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57"
+        },
+        "hybrid_storage/admin_observations.py": {
+          "bytes": 4463,
+          "sha256": "8ece3257b36a226d5acda3db64aba1b7dfe413fd5d056d12314fdb918fb16c2d"
+        },
+        "hybrid_storage/artifacts.py": {
+          "bytes": 9794,
+          "sha256": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b"
+        },
+        "hybrid_storage/backends.py": {
+          "bytes": 8929,
+          "sha256": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0"
+        },
+        "hybrid_storage/bandwidth.py": {
+          "bytes": 11617,
+          "sha256": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194"
+        },
+        "hybrid_storage/cache_copy_worker.py": {
+          "bytes": 3677,
+          "sha256": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1"
+        },
+        "hybrid_storage/cache_coverage.py": {
+          "bytes": 11700,
+          "sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4"
+        },
+        "hybrid_storage/cache_eviction.py": {
+          "bytes": 14889,
+          "sha256": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd"
+        },
+        "hybrid_storage/cache_fetch.py": {
+          "bytes": 23535,
+          "sha256": "640633945c5db03b57718ffc5bed4d9cd2a73592077a41937234d9413f2a7550"
+        },
+        "hybrid_storage/cache_inventory.py": {
+          "bytes": 18570,
+          "sha256": "b1ed5ca99d7e4604b54fb4d89e34e55d00cbec982acd9835be5e7a123c8d3754"
+        },
+        "hybrid_storage/cache_registry_schema.py": {
+          "bytes": 14701,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        "hybrid_storage/checkpoint_files.py": {
+          "bytes": 3110,
+          "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850"
+        },
+        "hybrid_storage/checkpoint_publication.py": {
+          "bytes": 19924,
+          "sha256": "892e7fad864b716a773faeefa9b9420744792f958765974e44dfb84196da8b87"
+        },
+        "hybrid_storage/checkpoint_restore.py": {
+          "bytes": 3895,
+          "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab"
+        },
+        "hybrid_storage/checkpoint_schema.py": {
+          "bytes": 6824,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        "hybrid_storage/checkpoint_transfer.py": {
+          "bytes": 6923,
+          "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6"
+        },
+        "hybrid_storage/cleanup_schema.py": {
+          "bytes": 3195,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        "hybrid_storage/config.py": {
+          "bytes": 7958,
+          "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+        },
+        "hybrid_storage/dataset_manifests.py": {
+          "bytes": 10840,
+          "sha256": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d"
+        },
+        "hybrid_storage/dataset_validation.py": {
+          "bytes": 5780,
+          "sha256": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c"
+        },
+        "hybrid_storage/delivery_plan.py": {
+          "bytes": 23824,
+          "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+        },
+        "hybrid_storage/deployment_review.py": {
+          "bytes": 8377,
+          "sha256": "4472ea15c4a61a87e46687ce33e02b085ba4a1d56dfb963b641001b2db101b27"
+        },
+        "hybrid_storage/events.py": {
+          "bytes": 10271,
+          "sha256": "735da9a7a50a5e81d4b8375e91a5aced701584c5200bcda04844424f1b47bb29"
+        },
+        "hybrid_storage/health.py": {
+          "bytes": 10444,
+          "sha256": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6"
+        },
+        "hybrid_storage/health_worker.py": {
+          "bytes": 623,
+          "sha256": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01"
+        },
+        "hybrid_storage/input_manifests.py": {
+          "bytes": 5659,
+          "sha256": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a"
+        },
+        "hybrid_storage/inputs.py": {
+          "bytes": 9586,
+          "sha256": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc"
+        },
+        "hybrid_storage/inventory_protocol.py": {
+          "bytes": 7810,
+          "sha256": "c751be74e4fc583c9b6afff20e10d9a674c38418e433a989dc5877bc58663e25"
+        },
+        "hybrid_storage/inventory_reporter.py": {
+          "bytes": 10508,
+          "sha256": "2bc4aa3ba8304b2402f7e9bc6b834f22624c1fe73df129b492da2f3f98654b9f"
+        },
+        "hybrid_storage/legacy_registration.py": {
+          "bytes": 5918,
+          "sha256": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640"
+        },
+        "hybrid_storage/locality.py": {
+          "bytes": 7780,
+          "sha256": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0"
+        },
+        "hybrid_storage/metrics.py": {
+          "bytes": 2956,
+          "sha256": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149"
+        },
+        "hybrid_storage/mount_identity.py": {
+          "bytes": 1282,
+          "sha256": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f"
+        },
+        "hybrid_storage/nfs_client.py": {
+          "bytes": 17953,
+          "sha256": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a"
+        },
+        "hybrid_storage/nfs_fault_probe.py": {
+          "bytes": 14734,
+          "sha256": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d"
+        },
+        "hybrid_storage/nfs_mount.py": {
+          "bytes": 5175,
+          "sha256": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8"
+        },
+        "hybrid_storage/nfs_server.py": {
+          "bytes": 24217,
+          "sha256": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea"
+        },
+        "hybrid_storage/phase11_probe.py": {
+          "bytes": 12507,
+          "sha256": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa"
+        },
+        "hybrid_storage/registry.py": {
+          "bytes": 24029,
+          "sha256": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529"
+        },
+        "hybrid_storage/registry_schema.py": {
+          "bytes": 10143,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        "hybrid_storage/restore_schema.py": {
+          "bytes": 4389,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        },
+        "hybrid_storage/scheduling.py": {
+          "bytes": 10300,
+          "sha256": "a3abeb09402b01ae9a4afc74b4141b68a4b05b00ea954ae7331f4e008a4d6418"
+        },
+        "hybrid_storage/staging_journal.py": {
+          "bytes": 5600,
+          "sha256": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd"
+        },
+        "hybrid_storage/staging_lifecycle.py": {
+          "bytes": 16473,
+          "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb"
+        },
+        "hybrid_storage/staging_metrics.py": {
+          "bytes": 1390,
+          "sha256": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f"
+        },
+        "hybrid_storage/staging_protocol.py": {
+          "bytes": 4867,
+          "sha256": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb"
+        },
+        "hybrid_storage/staging_schema.py": {
+          "bytes": 9370,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        "hybrid_storage/transfer_metrics.py": {
+          "bytes": 7006,
+          "sha256": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2"
+        },
+        "hybrid_storage/worker_cache.py": {
+          "bytes": 19316,
+          "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272"
+        },
+        "hybrid_storage/workspaces.py": {
+          "bytes": 29971,
+          "sha256": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+        },
+        "training/benchmark_job.py": {
+          "bytes": 6960,
+          "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76"
+        },
+        "training/demo_job.py": {
+          "bytes": 2723,
+          "sha256": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49"
+        },
+        "training/evaluate_checkpoint.py": {
+          "bytes": 3213,
+          "sha256": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41"
+        },
+        "training/pytorch_job.py": {
+          "bytes": 13508,
+          "sha256": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0"
+        },
+        "training/reference/equation.py": {
+          "bytes": 1610,
+          "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+        },
+        "training/reference/logistic.py": {
+          "bytes": 1438,
+          "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+        },
+        "training/reference/logistic_train.py": {
+          "bytes": 2001,
+          "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+        },
+        "training/reference/numpy_mlp.py": {
+          "bytes": 1681,
+          "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+        },
+        "training/reference/numpy_mlp_train.py": {
+          "bytes": 2078,
+          "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+        },
+        "training/reference/resnet18.py": {
+          "bytes": 4171,
+          "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+        },
+        "training/reference/resnet18_inference.py": {
+          "bytes": 1768,
+          "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+        },
+        "training/reference/resnet18_train.py": {
+          "bytes": 2604,
+          "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+        },
+        "training/reference/tiny_cnn.py": {
+          "bytes": 3650,
+          "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+        },
+        "training/reference/tiny_cnn_inference.py": {
+          "bytes": 3591,
+          "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
+        },
+        "training/reference/tiny_cnn_train.py": {
+          "bytes": 6559,
+          "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+        }
+      },
+      "worker": {
+        "agent/agent.py": {
+          "bytes": 50886,
+          "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+        },
+        "agent/cache_storage.py": {
+          "bytes": 3481,
+          "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c"
+        },
+        "agent/checkpoint_protocol.py": {
+          "bytes": 7554,
+          "sha256": "1b6a000aa70acd8ccea1f80bd54045171475eea6d26759df7ce8a1e286104df9"
+        },
+        "agent/checkpoint_restore_service.py": {
+          "bytes": 7897,
+          "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2"
+        },
+        "agent/checkpoint_service.py": {
+          "bytes": 8020,
+          "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f"
+        },
+        "agent/custom_runner.py": {
+          "bytes": 8713,
+          "sha256": "078bae882d48ac254e72ffe246830ccc7823b5f9d5308e271faa1fa21529c130"
+        },
+        "agent/dl_checkpoint.py": {
+          "bytes": 23991,
+          "sha256": "e369b66ae21c4bfc1afb0c22c82cd627e97a4288711942b22550b16d34196a1c"
+        },
+        "agent/environment_worker.py": {
+          "bytes": 20474,
+          "sha256": "dea824f4f1aa3167c45777ce37fa48152655c15c8707b0b095a0a9a2ddc6a875"
+        },
+        "agent/execution_lease.py": {
+          "bytes": 6828,
+          "sha256": "6d4583008f9c991c49c1ecb340124dcda03c0a0b06d12701deef885e7b11ea83"
+        },
+        "agent/lease_runner.py": {
+          "bytes": 2390,
+          "sha256": "ba1069eab0f10a5ee2fa5df8378dcca0e66c6f9fd898cbc2ae675cdbec6245a5"
+        },
+        "agent/staging.py": {
+          "bytes": 21170,
+          "sha256": "71d456830fba4e591547098f1a4e54904cc2e9812afa82d63c5ffb2504a6d836"
+        },
+        "config/runtime-requirements.txt": {
+          "bytes": 148,
+          "sha256": "164215749d40ac70b3469b297c9ebd9d0b2d46d7505622cca8d2855ba6ac6c0c"
+        },
+        "config/storage-examples/legacy.json": {
+          "bytes": 135,
+          "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+        },
+        "config/storage-examples/nfs-bandwidth.json": {
+          "bytes": 131,
+          "sha256": "48e5e8ecd3e3687dc60e4b123f11907747d51a2e87620c8058fcf7aef2f0d6d7"
+        },
+        "config/storage-examples/nfs-locality.json": {
+          "bytes": 130,
+          "sha256": "bf3e0813636cfd8dbbe9a7d4b73574278d68ed81d638c528bc393aa0b280b47a"
+        },
+        "config/storage-examples/nfs-resource.json": {
+          "bytes": 130,
+          "sha256": "3be3a428eceb369cfe9a86619e77207354a51354e6ce2b679c3c50961c223ae2"
+        },
+        "hybrid_storage/__init__.py": {
+          "bytes": 243,
+          "sha256": "2251bc35fe7c08bbb3a16fb98c9a8d17ba9553b99cd222164db81528d1c51c57"
+        },
+        "hybrid_storage/admin_observations.py": {
+          "bytes": 4463,
+          "sha256": "8ece3257b36a226d5acda3db64aba1b7dfe413fd5d056d12314fdb918fb16c2d"
+        },
+        "hybrid_storage/artifacts.py": {
+          "bytes": 9794,
+          "sha256": "02b9e33f156aa603f9913c0b6c03852e41176d1c525d31d0589dca05c8651d7b"
+        },
+        "hybrid_storage/backends.py": {
+          "bytes": 8929,
+          "sha256": "e6ae9133a71266f32e5f7471594fa8ee2bd2c4b97e8de2b317fe380af1953bb0"
+        },
+        "hybrid_storage/bandwidth.py": {
+          "bytes": 11617,
+          "sha256": "c65f100f2fe31e406f2729ca71c969cc0e025b994b0731530f351d806f16f194"
+        },
+        "hybrid_storage/cache_copy_worker.py": {
+          "bytes": 3677,
+          "sha256": "3c812e7ea87816100f8d6156116c97b412c7103dc43ea716bd4f921d8e17b8d1"
+        },
+        "hybrid_storage/cache_coverage.py": {
+          "bytes": 11700,
+          "sha256": "dd9628e57c0b9bfbbf5bc3edabf99cfb2c733e33969cfb9cdccd33d361ffafd4"
+        },
+        "hybrid_storage/cache_eviction.py": {
+          "bytes": 14889,
+          "sha256": "a87d489d557aee4db263a0c466501d68cbc1ecbfd8d81f60f3e5f90ec68768cd"
+        },
+        "hybrid_storage/cache_fetch.py": {
+          "bytes": 23535,
+          "sha256": "640633945c5db03b57718ffc5bed4d9cd2a73592077a41937234d9413f2a7550"
+        },
+        "hybrid_storage/cache_inventory.py": {
+          "bytes": 18570,
+          "sha256": "b1ed5ca99d7e4604b54fb4d89e34e55d00cbec982acd9835be5e7a123c8d3754"
+        },
+        "hybrid_storage/cache_registry_schema.py": {
+          "bytes": 14701,
+          "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112"
+        },
+        "hybrid_storage/checkpoint_files.py": {
+          "bytes": 3110,
+          "sha256": "b8d3b3e4199be035569c9a5863f78b26008893cbde38b420b5e91fd2e4119850"
+        },
+        "hybrid_storage/checkpoint_publication.py": {
+          "bytes": 19924,
+          "sha256": "892e7fad864b716a773faeefa9b9420744792f958765974e44dfb84196da8b87"
+        },
+        "hybrid_storage/checkpoint_restore.py": {
+          "bytes": 3895,
+          "sha256": "ca64df92d94bd0573fe16e0a048d15fa2fb180112086b10f02e62db91f21adab"
+        },
+        "hybrid_storage/checkpoint_schema.py": {
+          "bytes": 6824,
+          "sha256": "1d5584c1c076cbd893f744a4da6f597fdbf3e1e0f008979c3a5bb584fbf05b12"
+        },
+        "hybrid_storage/checkpoint_transfer.py": {
+          "bytes": 6923,
+          "sha256": "cde4be2c8d07c26b1443f00c2eac783d45caab8ecf350373156e0a36f28327c6"
+        },
+        "hybrid_storage/cleanup_schema.py": {
+          "bytes": 3195,
+          "sha256": "8cfa3d1482ac940126470188e59a3233b2bd4a2582aa8a72b7638182291e97e3"
+        },
+        "hybrid_storage/config.py": {
+          "bytes": 7958,
+          "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+        },
+        "hybrid_storage/dataset_manifests.py": {
+          "bytes": 10840,
+          "sha256": "26358389e89d85e3844d58dd77f934669664719b5e2c6f9f7959abb5c87c1d8d"
+        },
+        "hybrid_storage/dataset_validation.py": {
+          "bytes": 5780,
+          "sha256": "47509e38af661681e45f204086816d959ddd40a7fe1abe13e68bb9c1f6b94f3c"
+        },
+        "hybrid_storage/delivery_plan.py": {
+          "bytes": 23824,
+          "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+        },
+        "hybrid_storage/deployment_review.py": {
+          "bytes": 8377,
+          "sha256": "4472ea15c4a61a87e46687ce33e02b085ba4a1d56dfb963b641001b2db101b27"
+        },
+        "hybrid_storage/events.py": {
+          "bytes": 10271,
+          "sha256": "735da9a7a50a5e81d4b8375e91a5aced701584c5200bcda04844424f1b47bb29"
+        },
+        "hybrid_storage/health.py": {
+          "bytes": 10444,
+          "sha256": "7de4f2d2ad9727da3011380a238ade901fb8add7154658f343a373de992eefe6"
+        },
+        "hybrid_storage/health_worker.py": {
+          "bytes": 623,
+          "sha256": "056236188dd1856e85602fe618af9a553888da415b73b4f63302f9c281c03d01"
+        },
+        "hybrid_storage/input_manifests.py": {
+          "bytes": 5659,
+          "sha256": "a18c609ada9af7a949cb7640d257e6bc8842f1f258c1c8c46a336e6ac31e837a"
+        },
+        "hybrid_storage/inputs.py": {
+          "bytes": 9586,
+          "sha256": "182e95bad16a8398dba360882cdfe848cfcaa73fb5d5aaaa373366ff75659ebc"
+        },
+        "hybrid_storage/inventory_protocol.py": {
+          "bytes": 7810,
+          "sha256": "c751be74e4fc583c9b6afff20e10d9a674c38418e433a989dc5877bc58663e25"
+        },
+        "hybrid_storage/inventory_reporter.py": {
+          "bytes": 10508,
+          "sha256": "2bc4aa3ba8304b2402f7e9bc6b834f22624c1fe73df129b492da2f3f98654b9f"
+        },
+        "hybrid_storage/legacy_registration.py": {
+          "bytes": 5918,
+          "sha256": "b09287dd9b942b2d4a98d80fc315f91f99b12ef01f85851b34f9ef072e7df640"
+        },
+        "hybrid_storage/locality.py": {
+          "bytes": 7780,
+          "sha256": "01fde3b6409ffe9b1463b1ed4e9463ed89c15bf90cd75f2ba035974e1701d8b0"
+        },
+        "hybrid_storage/metrics.py": {
+          "bytes": 2956,
+          "sha256": "743b32611612d12bd99c7388f38de64ce6d9d549f6bf9b9b224cf065de827149"
+        },
+        "hybrid_storage/mount_identity.py": {
+          "bytes": 1282,
+          "sha256": "24839418fe6293cc0726aff8352d1e7312a6334752fb15581e824f1d0fb8752f"
+        },
+        "hybrid_storage/nfs_client.py": {
+          "bytes": 17953,
+          "sha256": "6a931c6ce9484463586d9fab4a651c2aee2e0f7b3e8d0dd39baae25a1f12840a"
+        },
+        "hybrid_storage/nfs_fault_probe.py": {
+          "bytes": 14734,
+          "sha256": "c0db85f23a033634c44232b6a809e598da219ac3af76f89c145ea2d8dab27a3d"
+        },
+        "hybrid_storage/nfs_mount.py": {
+          "bytes": 5175,
+          "sha256": "58ade4516e102c07b6daae61f6bb5e1e73bece808259fde9b5e34ec88ce1b8f8"
+        },
+        "hybrid_storage/nfs_server.py": {
+          "bytes": 24217,
+          "sha256": "086cd1535794512632a1be156441dc4009df40007ea683a79c1a93063768a2ea"
+        },
+        "hybrid_storage/phase11_probe.py": {
+          "bytes": 12507,
+          "sha256": "b6cf96974c9511ed1515905b7b42d4933227d6be429e2e22cb0258f32c2d69aa"
+        },
+        "hybrid_storage/registry.py": {
+          "bytes": 24029,
+          "sha256": "32caf102d2dadc2c12ccee0ef99bc80612c586a3f140f723c39da3a1eb025529"
+        },
+        "hybrid_storage/registry_schema.py": {
+          "bytes": 10143,
+          "sha256": "b585b56904b145ca5abeff917d56000911f58fa44f025970da557aa0e4f9a3cc"
+        },
+        "hybrid_storage/restore_schema.py": {
+          "bytes": 4389,
+          "sha256": "52b6e5e091060f334b298fda59864c794a327e29cbd2fc6142d1133ade28e5e7"
+        },
+        "hybrid_storage/scheduling.py": {
+          "bytes": 10300,
+          "sha256": "a3abeb09402b01ae9a4afc74b4141b68a4b05b00ea954ae7331f4e008a4d6418"
+        },
+        "hybrid_storage/staging_journal.py": {
+          "bytes": 5600,
+          "sha256": "b015ba9b82feb3ac61371d61bb76731139e3eb5e1fca0403b858fa9dad68b5fd"
+        },
+        "hybrid_storage/staging_lifecycle.py": {
+          "bytes": 16473,
+          "sha256": "f5baf4bf6825bd35fa5bcbe78e25fe8819f7a082a2eb318fac86543f0ad40dbb"
+        },
+        "hybrid_storage/staging_metrics.py": {
+          "bytes": 1390,
+          "sha256": "30097279b20ae18fd6669c3cefcc650bed88ab945cacaa05505609de01d66b2f"
+        },
+        "hybrid_storage/staging_protocol.py": {
+          "bytes": 4867,
+          "sha256": "897c75894b426bbd9e92d75038e9f1fc4a7974fd3072658ac13ad047920783fb"
+        },
+        "hybrid_storage/staging_schema.py": {
+          "bytes": 9370,
+          "sha256": "62b49cfa2442fdb4fd8360470c14f044ad0908a5d3f6f0119897335d68c27fd9"
+        },
+        "hybrid_storage/transfer_metrics.py": {
+          "bytes": 7006,
+          "sha256": "a1979833e30eb3e1f59460ff1fb25a229e0cd6f51a01812a88b5fd1bb2d3bab2"
+        },
+        "hybrid_storage/worker_cache.py": {
+          "bytes": 19316,
+          "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272"
+        },
+        "hybrid_storage/workspaces.py": {
+          "bytes": 29971,
+          "sha256": "c370968f3cdd4d4b715d5ce00d56e332bddf6857e6c621a65eecbcd6c6b8ea5a"
+        },
+        "training/benchmark_job.py": {
+          "bytes": 6960,
+          "sha256": "e6f91c109e0c3918530ca46e8c178960f92c0542417313aa0620f8284ec0ff76"
+        },
+        "training/demo_job.py": {
+          "bytes": 2723,
+          "sha256": "c55157ee10bf1f026665c4d0cf18c34b211b1e54dfacc5fccbc08683b00adc49"
+        },
+        "training/evaluate_checkpoint.py": {
+          "bytes": 3213,
+          "sha256": "0673dc4877312710486a8ba64de0ca24a82be954a9206226833522a9e05aba41"
+        },
+        "training/pytorch_job.py": {
+          "bytes": 13508,
+          "sha256": "980187923ec400dd9cbc8176e56a1be601ba28c4971c9301409fe64a62c44ed0"
+        },
+        "training/reference/equation.py": {
+          "bytes": 1610,
+          "sha256": "53c3126c3b02c2a88506c6c4f5023de816b363c34c68c4bfea94bd3f0555b0eb"
+        },
+        "training/reference/logistic.py": {
+          "bytes": 1438,
+          "sha256": "599687cf57e4123c12e164aa3fa61ac32439bef083739368e1a53aa085ddbe98"
+        },
+        "training/reference/logistic_train.py": {
+          "bytes": 2001,
+          "sha256": "67d0f7e62182607c4f785ea2e8293c6490b9559cbb4e1f50585da2d097e6377f"
+        },
+        "training/reference/numpy_mlp.py": {
+          "bytes": 1681,
+          "sha256": "367dca03cd6a3f91c4afb1461332282358667ce1803f840f792417507e1e1160"
+        },
+        "training/reference/numpy_mlp_train.py": {
+          "bytes": 2078,
+          "sha256": "219dd51789d2712c35a12579710ae943c4521b11d0626f1713825181398e71ac"
+        },
+        "training/reference/resnet18.py": {
+          "bytes": 4171,
+          "sha256": "fc5e721212513978884926bc9367dcd77df2f5d24b90bddf298b77c05d5b6c2e"
+        },
+        "training/reference/resnet18_inference.py": {
+          "bytes": 1768,
+          "sha256": "6c073de2897dfb5493bad7b28c928eb318df27f085ed3a5586488a56c7e0dd0c"
+        },
+        "training/reference/resnet18_train.py": {
+          "bytes": 2604,
+          "sha256": "9df8ec8c441eecdab66e02272dcf97ad81c87496c83c46c7660c5716b16338c0"
+        },
+        "training/reference/tiny_cnn.py": {
+          "bytes": 3650,
+          "sha256": "c851df67148af93ca707e0a8ee255dbbb4c7c6c04a32765381c5c0b294f3e3b0"
+        },
+        "training/reference/tiny_cnn_inference.py": {
+          "bytes": 3591,
+          "sha256": "cf0a6d322bad3488535c71a8751075ae379a45b04ca82f1ca600789199ce7a15"
+        },
+        "training/reference/tiny_cnn_train.py": {
+          "bytes": 6559,
+          "sha256": "94d4ef3141ce4bf23f2a5fbacc18f1ba52d51628752b5865132fdc8a2008ff55"
+        }
+      }
+    },
+    "schema_version": 1,
+    "scope": "offline_source_review_only",
+    "selected_workers": [
+      {
+        "id": "pi01",
+        "ip": "100.101.90.46",
+        "port": 5000
+      },
+      {
+        "id": "pi02",
+        "ip": "100.91.135.18",
+        "port": 5000
+      },
+      {
+        "id": "pi03",
+        "ip": "100.64.202.71",
+        "port": 5000
+      }
+    ]
+  },
+  "delivery_completion_marker": {
+    "apply_ready": false,
+    "files": {
+      "RUNBOOK.md": {
+        "bytes": 8045,
+        "sha256": "791b8877b464a8866b2d8f683d26e6c3670099a9e67ec912786103af2de132ca"
+      },
+      "nodes-current.json": {
+        "bytes": 309,
+        "sha256": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf"
+      },
+      "plan.json": {
+        "bytes": 55455,
+        "sha256": "382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094"
+      },
+      "source/controller-source.tar.gz": {
+        "bytes": 281351,
+        "sha256": "d7cc9f39d3dcf4a76ef9622d75e24d6727d5bb5cdb1765f71af3e40f76cee468"
+      },
+      "source/review.json": {
+        "bytes": 33383,
+        "sha256": "bc3f46e8dfcee5c4845ffe6742db9ed2c995b4a2cf203ef8a54d553f44632603"
+      },
+      "source/worker-source.tar.gz": {
+        "bytes": 185040,
+        "sha256": "ec87a0c0271b145fc9dd5097af61c16db3d62e014241fff49e8bdda12f0752be"
+      },
+      "storage-current.json": {
+        "bytes": 135,
+        "sha256": "71a33d4dc87b074ab84952208c4b30d2998bd53f6d84940f5569a60304ac9247"
+      },
+      "storage-opt-in.example.json": {
+        "bytes": 130,
+        "sha256": "708c826593411b370925cceb96d344d0dc0a0a7f27e5fe7d0c2e7b08f85ffb0a"
+      }
+    },
+    "plan_sha256": "382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094",
+    "schema_version": 1,
+    "status": "COMPLETE_DRY_RUN_ONLY"
+  },
+  "remaining_gate_explanation": "14.1 B1-B10 are retained as historical readiness gates. B7 source packaging/dry-run preparation addressed; concrete applying executor/runtime/unit/config changes still absent. No current host freshness or approval is inferred.",
+  "production_changes": {
+    "sudo": false,
+    "ssh_or_remote_contact": false,
+    "remote_writes": false,
+    "service_restarts": false,
+    "live_database_open": false,
+    "mount_export_firewall_changes": false,
+    "active_config_change": false,
+    "user_data_deleted_or_moved": false,
+    "stash_reset_commit": false
+  },
+  "delivery_source_fingerprints": [
+    {
+      "path": "hybrid_storage/delivery_plan.py",
+      "bytes": 23824,
+      "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+    },
+    {
+      "path": "tools/hybrid_deploy.py",
+      "bytes": 276,
+      "sha256": "dcf26d4e10f4f701a249f2d06e0f8fc647c6e41fe530962a5ca94379330d8c25"
+    },
+    {
+      "path": "tests/test_delivery_plan.py",
+      "bytes": 15930,
+      "sha256": "af7e026318f4005bf26db9777138e6c03ae4d4c32b211d7c680b02616e832193"
+    },
+    {
+      "path": "docs/storage/58-deployment-playbook.md",
+      "bytes": 16240,
+      "sha256": "ba6f925f3a9e0924c7b0cfbd78049bf93ad7d559dc1a288528efaefefbf46e3a"
+    },
+    {
+      "path": "hybrid_storage/README.md",
+      "bytes": 39600,
+      "sha256": "4d46d67e6ffaa39212a1377dc090dca6912c6359d1a4c8cc8abd463a6c9794f9"
+    },
+    {
+      "path": "tools/README.md",
+      "bytes": 10979,
+      "sha256": "8d4c08279a3dd11dd0660066f400659392dece4bce0d29f103354f79f36500e4"
+    },
+    {
+      "path": "docs/storage/implementation-progress.md",
+      "bytes": 180698,
+      "sha256": "14f317bb83219a6bbeb17a5f8158f50b18ea988bbb8f56f495f23a0f304619e2"
+    }
+  ],
+  "raw_evidence_files": [
+    {
+      "path": "reports/phase14-2-delivery/baseline-tests.log",
+      "bytes": 12035,
+      "sha256": "a58e33add72323ac4d63348105f7bd720fac8264a4a3c23ec423092f7614c328"
+    },
+    {
+      "path": "reports/phase14-2-delivery/baseline.json",
+      "bytes": 44060,
+      "sha256": "3cca78af23e8f5ad9c548f54b6575ab8793e9190efd27521d13993d58c11eff0"
+    },
+    {
+      "path": "reports/phase14-2-delivery/dry-run-result.json",
+      "bytes": 500,
+      "sha256": "006f300863b68db6aaa479acfa16fcc778d413af19c248f44c2eb12a2be7366f"
+    },
+    {
+      "path": "reports/phase14-2-delivery/dry-run-v2-result.json",
+      "bytes": 500,
+      "sha256": "64c9ccfd20cf2dd2d0c5ef4a19641c9a698ad5389be603aab7b52433b51cd0be"
+    },
+    {
+      "path": "reports/phase14-2-delivery/final-concurrent-tests.log",
+      "bytes": 3026,
+      "sha256": "312f2e5341973508100102c20bfa9fed00b9d1a6471d339b50e9ad3bc992b6b9"
+    },
+    {
+      "path": "reports/phase14-2-delivery/final-expanded-tests.log",
+      "bytes": 2828,
+      "sha256": "bcee163c296ae36594b122ef90e1ddafdc5d706455465e21581d0dcf1e402c9e"
+    },
+    {
+      "path": "reports/phase14-2-delivery/final-tests.log",
+      "bytes": 2648,
+      "sha256": "cb7b67ab88703873a0249d0ed275c87ba6763ee8a01dd08999bee56eb4f0b6ca"
+    },
+    {
+      "path": "reports/phase14-2-delivery/new-tests-fixed.log",
+      "bytes": 2472,
+      "sha256": "3345fc259e01be6885efa5f3235149f0c9737f9ceb701191fef39c95621ae011"
+    },
+    {
+      "path": "reports/phase14-2-delivery/new-tests-initial.log",
+      "bytes": 4101,
+      "sha256": "e4665cb8ab740f6c2e151e3ee1056c531a4b7ef5e0defbb0815f072a1c322b66"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2-verification.json",
+      "bytes": 3481,
+      "sha256": "8bb2a86ba6fa8527dea2bc1b2258290533d9f6f99af0b64bb4519242868a590a"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-verification.json",
+      "bytes": 3481,
+      "sha256": "109436810222a8bfebef0f3ad85dddf998dd0841f2ce9ba542f8afac99f91f4f"
+    },
+    {
+      "path": "reports/phase14-2-delivery/verify_review.py",
+      "bytes": 1286,
+      "sha256": "b00ea48e7fa797cf6b321d7afef12cf27c5c269b683f5d42036034166feb3fe6"
+    },
+    {
+      "path": "reports/phase14-2-delivery/verify_review_v2.py",
+      "bytes": 1292,
+      "sha256": "7b307b696ba60b9d2c6cbd20896be7a27755ed028ff62c7a9b78f4de533dfbab"
+    },
+    {
+      "path": "reports/phase14-2-delivery/write_evidence.py",
+      "bytes": 5848,
+      "sha256": "cfdc76a8f114bb7e22dbe917212216cd0661de343305bd681420232d96a19080"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/RUNBOOK.md",
+      "bytes": 8045,
+      "sha256": "791b8877b464a8866b2d8f683d26e6c3670099a9e67ec912786103af2de132ca"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/delivery.json",
+      "bytes": 1320,
+      "sha256": "12262db68675777b5da3dedfce9af812192d1ddb94b1a4d0392f8d95eacc49cd"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/nodes-current.json",
+      "bytes": 309,
+      "sha256": "5c0471cb8d4ef42b49606b4dfa06de2ad3cfcbf7535b7775284fc785c33d09bf"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/plan.json",
+      "bytes": 55455,
+      "sha256": "382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/source/controller-source.tar.gz",
+      "bytes": 281351,
+      "sha256": "d7cc9f39d3dcf4a76ef9622d75e24d6727d5bb5cdb1765f71af3e40f76cee468"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/source/review.json",
+      "bytes": 33383,
+      "sha256": "bc3f46e8dfcee5c4845ffe6742db9ed2c995b4a2cf203ef8a54d553f44632603"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/source/worker-source.tar.gz",
+      "bytes": 185040,
+      "sha256": "ec87a0c0271b145fc9dd5097af61c16db3d62e014241fff49e8bdda12f0752be"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/storage-current.json",
+      "bytes": 135,
+      "sha256": "71a33d4dc87b074ab84952208c4b30d2998bd53f6d84940f5569a60304ac9247"
+    },
+    {
+      "path": "reports/phase14-2-delivery/review-v2/storage-opt-in.example.json",
+      "bytes": 130,
+      "sha256": "708c826593411b370925cceb96d344d0dc0a0a7f27e5fe7d0c2e7b08f85ffb0a"
+    }
+  ],
+  "rollback": {
+    "patch": "reports/phase14-2-delivery/14.2.patch",
+    "verification": "reports/phase14-2-delivery/source-verification.json",
+    "check_from_git_root": "git apply --reverse --check distributed-dl-system/reports/phase14-2-delivery/14.2.patch",
+    "application_test_scope": "Disposable source copy only; preserve all prior 14.1 work and runtime data."
+  }
+}

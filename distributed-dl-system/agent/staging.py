@@ -307,7 +307,8 @@ def install_staging_service(module, service, *, watchdog=True):
         if request.method != 'POST':
             return None
         # Do not expose unsigned stop/renew/upload mutations as an auth bypass.
-        if request.path not in (STAGE_PATH, START_PATH, CONTROL_PATH):
+        from hybrid_storage.staging_protocol import PREPARE_PATH
+        if request.path not in (STAGE_PATH, START_PATH, CONTROL_PATH, PREPARE_PATH):
             if request.path == '/resources/cache-inventory':
                 return None  # Has its own independently domain-separated HMAC.
             return Response('Hybrid control action unavailable', status=403)

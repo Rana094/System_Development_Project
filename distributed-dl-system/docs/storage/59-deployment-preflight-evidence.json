@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "phase": "14.3",
+  "at_utc": "2026-11-10T15:33:09.625433+00:00",
+  "status": "PREFLIGHT_BLOCKED_NOT_DEPLOYED",
+  "phase14_3_complete": false,
+  "full_phase14_complete": false,
+  "repository": {
+    "root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "initial_status": " M docs/storage/implementation-progress.md\n M hybrid_storage/README.md\n M tools/README.md\n?? docs/storage/57-production-readiness-evidence.json\n?? docs/storage/57-production-readiness.md\n?? docs/storage/58-deployment-playbook.md\n?? docs/storage/58-deployment-preparation-evidence.json\n?? hybrid_storage/delivery_plan.py\n?? tests/test_delivery_plan.py\n?? tools/hybrid_deploy.py\n",
+    "baseline_nonignored_files": 404
+  },
+  "performed": [
+    "Read-only strict-host-key SSH metadata/health/TCP probes on pi01 pi02 pi03",
+    "Full kernel mount-table admission using existing guard",
+    "Local review-package verification",
+    "Local non-mutating apply entrypoint REFUSED/exit3",
+    "Active legacy config and negative controller/positive component-only config validation"
+  ],
+  "local_commands": {
+    "verify": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "tools/hybrid_deploy.py",
+        "verify",
+        "--output",
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-2-delivery/review-v2"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"apply_ready\": false,\n  \"blocker_ids\": [\n    \"B1\",\n    \"B2\",\n    \"B3\",\n    \"B4\",\n    \"B5\",\n    \"B6\",\n    \"B7\",\n    \"B8\",\n    \"B9\",\n    \"B10\"\n  ],\n  \"executor_implemented\": false,\n  \"live_readiness_verified\": false,\n  \"plan_sha256\": \"382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094\",\n  \"release_id\": \"release-2d924028652737d1019dd1d7\",\n  \"selected_workers\": [\n    \"pi01\",\n    \"pi02\",\n    \"pi03\"\n  ],\n  \"snapshot_id\": \"snap-20261110T082453Z-78a0011db2562841\",\n  \"verified\": true\n}\n",
+      "stderr": ""
+    },
+    "apply-entrypoint": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "tools/hybrid_deploy.py",
+        "apply",
+        "--output",
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-2-delivery/review-v2"
+      ],
+      "exit_code": 3,
+      "stdout": "{\"status\": \"REFUSED\", \"apply_ready\": false, \"reason\": \"No deployment executor: unresolved 14.1 gates, reviewed concrete runtime/unit/config changes and later explicit approval required.\"}\n",
+      "stderr": ""
+    },
+    "legacy-config": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "-m",
+        "hybrid_storage.config"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"runtime\": \"legacy\", \"settings\": {\"scheduler_policy\": \"resource\", \"storage_aware_staging\": false, \"storage_backend\": \"legacy\", \"worker_cache_enabled\": false}}\n",
+      "stderr": ""
+    }
+  },
+  "config_gates": {
+    "controller-opt-in-rejection": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "-m",
+        "hybrid_storage.config",
+        "--config",
+        "config/storage-examples/nfs-resource.json"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: config.py [-h] [--config CONFIG] [--runtime {controller,staging}]\nconfig.py: error: Cache/locality/bandwidth execution is not implemented/enabled\n"
+    },
+    "component-only-validation": {
+      "argv": [
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "-B",
+        "-m",
+        "hybrid_storage.config",
+        "--runtime",
+        "staging",
+        "--config",
+        "config/storage-examples/nfs-resource.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"automatic_startup\": false, \"runtime\": \"trusted-staging-component\", \"settings\": {\"scheduler_policy\": \"resource\", \"storage_aware_staging\": true, \"storage_backend\": \"nfs\", \"worker_cache_enabled\": true}}\n",
+      "stderr": ""
+    }
+  },
+  "fresh_worker_observations": {
+    "pi01": {
+      "at_utc": "2026-11-10T15:30:11.159424+00:00",
+      "ssh_exit_code": 0,
+      "ssh_stderr": "",
+      "mount_admission": {
+        "ready": false,
+        "reason": "Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready"
+      },
+      "observed": {
+        "at_utc_ns": 1794324612903467355,
+        "hostname": "pi01",
+        "uid": 1000,
+        "gid": 1000,
+        "system_python": "3.13.5",
+        "kernel": "6.18.50+rpt-rpi-2712",
+        "health": {
+          "status": "ONLINE"
+        },
+        "resources": {
+          "node_state": "IDLE",
+          "status": "ONLINE",
+          "timestamp": 1794324613.1278439
+        },
+        "service": {
+          "exit_code": 0,
+          "properties": {
+            "MainPID": "1036",
+            "WorkingDirectory": "/home/pi/distributed-dl-system",
+            "User": "pi",
+            "ActiveState": "active",
+            "FragmentPath": "/etc/systemd/system/dl-node-agent.service"
+          },
+          "stderr": ""
+        },
+        "nfs_tcp2049": "TimeoutError",
+        "sources": {
+          "agent/agent.py": {
+            "bytes": 46820,
+            "sha256": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a"
+          },
+          "agent/staging.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/config.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_service.py": {
+            "error": "FileNotFoundError"
+          }
+        },
+        "free_bytes": 6083911680,
+        "scope": "metadata/health/TCP only; no NFS input-file access, no sudo/config/service/job changes"
+      },
+      "full_mount_table_evidence": {
+        "path": "reports/phase14-3-preflight/pi01.json",
+        "bytes": 4543,
+        "sha256": "8f5f64034b6c0eb734b81b7921fb9a13d173fcc1a108925b92c94d9bfbeff18c"
+      }
+    },
+    "pi02": {
+      "at_utc": "2026-11-10T15:30:11.159944+00:00",
+      "ssh_exit_code": 0,
+      "ssh_stderr": "",
+      "mount_admission": {
+        "ready": true,
+        "mount_id": 509,
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "target": "/srv/mlnfs/inputs",
+        "version": "4.1",
+        "scope": "Metadata admission only; not server liveness, authorization or byte verification"
+      },
+      "observed": {
+        "at_utc_ns": 1794324611372018904,
+        "hostname": "pi02",
+        "uid": 1000,
+        "gid": 1000,
+        "system_python": "3.11.2",
+        "kernel": "6.12.25+rpt-rpi-2712",
+        "health": {
+          "status": "ONLINE"
+        },
+        "resources": {
+          "node_state": "IDLE",
+          "status": "ONLINE",
+          "timestamp": 1794324611.5773215
+        },
+        "service": {
+          "exit_code": 0,
+          "properties": {
+            "MainPID": "946",
+            "WorkingDirectory": "/home/pi/distributed-dl-system",
+            "User": "pi",
+            "ActiveState": "active",
+            "FragmentPath": "/etc/systemd/system/dl-node-agent.service"
+          },
+          "stderr": ""
+        },
+        "nfs_tcp2049": "reachable",
+        "sources": {
+          "agent/agent.py": {
+            "bytes": 46820,
+            "sha256": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a"
+          },
+          "agent/staging.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/config.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_service.py": {
+            "error": "FileNotFoundError"
+          }
+        },
+        "free_bytes": 11457761280,
+        "scope": "metadata/health/TCP only; no NFS input-file access, no sudo/config/service/job changes"
+      },
+      "full_mount_table_evidence": {
+        "path": "reports/phase14-3-preflight/pi02.json",
+        "bytes": 5450,
+        "sha256": "5af5254eb8427a064fc2029135d4e7896c9f0bab89e34a350c4296a9959c4288"
+      }
+    },
+    "pi03": {
+      "at_utc": "2026-11-10T15:30:11.160157+00:00",
+      "ssh_exit_code": 0,
+      "ssh_stderr": "",
+      "mount_admission": {
+        "ready": true,
+        "mount_id": 508,
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "target": "/srv/mlnfs/inputs",
+        "version": "4.1",
+        "scope": "Metadata admission only; not server liveness, authorization or byte verification"
+      },
+      "observed": {
+        "at_utc_ns": 1794324611603220578,
+        "hostname": "pi03",
+        "uid": 1002,
+        "gid": 1002,
+        "system_python": "3.11.2",
+        "kernel": "6.12.25+rpt-rpi-2712",
+        "health": {
+          "status": "ONLINE"
+        },
+        "resources": {
+          "node_state": "IDLE",
+          "status": "ONLINE",
+          "timestamp": 1794324611.8108213
+        },
+        "service": {
+          "exit_code": 0,
+          "properties": {
+            "MainPID": "902",
+            "WorkingDirectory": "/home/pi/distributed-dl-system",
+            "User": "pi",
+            "ActiveState": "active",
+            "FragmentPath": "/etc/systemd/system/dl-node-agent.service"
+          },
+          "stderr": ""
+        },
+        "nfs_tcp2049": "reachable",
+        "sources": {
+          "agent/agent.py": {
+            "bytes": 46820,
+            "sha256": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a"
+          },
+          "agent/staging.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/config.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_service.py": {
+            "error": "FileNotFoundError"
+          }
+        },
+        "free_bytes": 9283313664,
+        "scope": "metadata/health/TCP only; no NFS input-file access, no sudo/config/service/job changes"
+      },
+      "full_mount_table_evidence": {
+        "path": "reports/phase14-3-preflight/pi03.json",
+        "bytes": 5396,
+        "sha256": "f02309fd4b93703480dda7144db9280a3850c6fb196ccc75953c2ec619151ab5"
+      }
+    }
+  },
+  "deployment": {
+    "attempted_live_mutation": false,
+    "executor_implemented": false,
+    "apply_ready": false,
+    "application_guard_refused": true,
+    "automatic_approval_review_rejection": false,
+    "configured_runtime": "legacy/OFF/resource"
+  },
+  "remaining_work": [
+    "Production trusted controller/agent bootstrap with enforceable OS/network containment and termination/quiescence",
+    "Concrete reviewed runtime/config/unit deltas and idempotent applying executor with snapshots and rollback",
+    "Verified pi01 NFS route/export/client setup",
+    "Pinned offline compatible dependencies, combined per-host disk budgets and protected credential roots",
+    "Consistent application-state backups and tested restore; unrelated legacy export exposure review",
+    "Approved exact implementation/deployment and isolated all-three acceptance window"
+  ],
+  "acceptance_not_run": [
+    "NFS TEST read/hash and write-denial",
+    "Authenticated cache inventory sync",
+    "Cold/warm and flag-OFF legacy job execution",
+    "Cancellation and stale attempt fencing",
+    "Isolated worker failure and checkpoint recovery",
+    "Three-rank DDP staging/save/group recovery",
+    "Student/admin permissions",
+    "Service boot/reboot"
+  ],
+  "tests": {
+    "new_unit_suite_run": false,
+    "prior_14_2_88_pass_is_historical_only": true,
+    "actual_local_command_checks": 5,
+    "actual_ssh_probes": 3,
+    "all_three_ssh_exit_zero": true,
+    "readiness_pass": false
+  },
+  "runtime_changes": {
+    "sudo": false,
+    "remote_writes": false,
+    "service_restarts": false,
+    "db_open_migration_backup": false,
+    "mount_export_firewall_change": false,
+    "dependency_install_or_internet_transfer": false,
+    "training_or_fault_injection": false,
+    "user_data_deleted_or_moved": false
+  },
+  "source_references": [
+    {
+      "path": "hybrid_storage/config.py",
+      "bytes": 7958,
+      "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e"
+    },
+    {
+      "path": "hybrid_storage/delivery_plan.py",
+      "bytes": 23824,
+      "sha256": "3c90b2b5b0d272dfa34c2d8294da9cc7287e88de761a07d082ded5a20f91bb49"
+    },
+    {
+      "path": "controller/dispatcher.py",
+      "bytes": 37726,
+      "sha256": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d"
+    },
+    {
+      "path": "agent/agent.py",
+      "bytes": 50886,
+      "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a"
+    },
+    {
+      "path": "config/storage.json",
+      "bytes": 135,
+      "sha256": "6f998be2c61bc317aa2635a9c7a9b34389048099e4afc7d29f12f0bef125bb7e"
+    },
+    {
+      "path": "docs/storage/58-deployment-playbook.md",
+      "bytes": 16240,
+      "sha256": "ba6f925f3a9e0924c7b0cfbd78049bf93ad7d559dc1a288528efaefefbf46e3a"
+    },
+    {
+      "path": "docs/storage/59-deployment-preflight.md",
+      "bytes": 7437,
+      "sha256": "c97de34de223bf5dc06afc18a8a58de4f44f28d4581d55ac0beb1524725ee4ac"
+    }
+  ],
+  "raw_evidence_files": [
+    {
+      "path": "reports/phase14-3-preflight/baseline.json",
+      "bytes": 44834,
+      "sha256": "f574b72a275838051e083bba9ee963fb6d798cf7daf224c887b161671e8e0045"
+    },
+    {
+      "path": "reports/phase14-3-preflight/config-gates.json",
+      "bytes": 1135,
+      "sha256": "6828a917b415d8243b294e752ac5216cb23502d95fdde7d694e48129cb09defc"
+    },
+    {
+      "path": "reports/phase14-3-preflight/local-checks.json",
+      "bytes": 2089,
+      "sha256": "97c8a7677826623ba47f64095bee9a321116cc2d8eef21d3bb9b88e72f1bafbf"
+    },
+    {
+      "path": "reports/phase14-3-preflight/pi01.json",
+      "bytes": 4543,
+      "sha256": "8f5f64034b6c0eb734b81b7921fb9a13d173fcc1a108925b92c94d9bfbeff18c"
+    },
+    {
+      "path": "reports/phase14-3-preflight/pi02.json",
+      "bytes": 5450,
+      "sha256": "5af5254eb8427a064fc2029135d4e7896c9f0bab89e34a350c4296a9959c4288"
+    },
+    {
+      "path": "reports/phase14-3-preflight/pi03.json",
+      "bytes": 5396,
+      "sha256": "f02309fd4b93703480dda7144db9280a3850c6fb196ccc75953c2ec619151ab5"
+    },
+    {
+      "path": "reports/phase14-3-preflight/progress-before.md",
+      "bytes": 180698,
+      "sha256": "14f317bb83219a6bbeb17a5f8158f50b18ea988bbb8f56f495f23a0f304619e2"
+    },
+    {
+      "path": "reports/phase14-3-preflight/remote_probe.py",
+      "bytes": 2333,
+      "sha256": "b7c1a83ad20943fcc6e3328a0ca13c018cb3d5005ad2ab47da6ded5d6d7abe4f"
+    },
+    {
+      "path": "reports/phase14-3-preflight/run_preflight.py",
+      "bytes": 2477,
+      "sha256": "47313ee338a94e9cf54350ca3071bffc6818b27311431f9e3e786afd15e3962d"
+    },
+    {
+      "path": "reports/phase14-3-preflight/write_evidence.py",
+      "bytes": 4567,
+      "sha256": "87c190fd70fabfc7f83a9b7e7c472f6fa3dbcabab27d7c4e4fe72b23e035089f"
+    }
+  ],
+  "changes": [
+    "docs/storage/59-deployment-preflight.md",
+    "docs/storage/59-deployment-preflight-evidence.json",
+    "docs/storage/implementation-progress.md append only"
+  ],
+  "rollback": {
+    "runtime_action_needed": false,
+    "source_patch": "reports/phase14-3-preflight/14.3.patch",
+    "source_verification": "reports/phase14-3-preflight/source-verification.json",
+    "scope": "Only new 14.3 documentation; retain earlier 14.1/14.2 edits and all runtime data/reports."
+  },
+  "stop": "14.3 incomplete; do not proceed to14.4 or bypass guards."
+}

@@ -4,6 +4,10 @@ Date: 7 November 2026. Status: **proposed architecture for review; not implement
 or deployed**. This subphase adds documentation only. Protocol interfaces,
 schemas/migrations and configuration validation belong to subphases 1.2–1.4.
 
+This page records the Phase 1.1 design at the time of review. See the
+[deployed v8 diagram](../architecture.md#deployed-hybrid-pilot-v8) and
+[two-worker acceptance evidence](64-v8-pilot-deployment.md) for the implementation.
+
 The [Phase 0 audit](00-audit.md) and its
 [recorded evidence](00-audit-evidence.json) distinguish existing behavior from
 the design below. The audit's historical observation that this file was absent

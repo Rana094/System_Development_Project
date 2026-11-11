@@ -2705,3 +2705,387 @@ objects. Pi01 remains deferred and prior idle-window/isolation prerequisites hol
 **13.4 local reporting PASS; full Phase13 NOT complete.13.2 native comparisons,
 physical13.3 faults and the uncollected13.4 metrics remain pending. STOP; no next
 phase or deployment. Central controller/NFS remains a single point of failure.**
+
+## 2026-11-10 — Phase 14.1 all-three-Pi production readiness audit
+
+Read-only audit of controller and **pi01/pi02/pi03** completed. Starting main
+HEAD `7e88b8414b00d3169916e70495ce14d86f24e05b` clean;397 nonignored originals
+snapshotted. pi01 is online at Tailscale100.101.90.46/LAN192.168.0.107, replacing
+historical deferral for this audit only. Its old SSH HostKeyAlias is not its LAN
+address. NFS192.168.10.214:2049 times out there; input mount/units absent. pi02/
+pi03 retain RO NFS4.1 input mounts, accepted using complete mount-table guards;
+ordinary pi TEST reads are denied by root0700 parent. No fresh privileged hash/
+write-denial test or effective server export-table verification was possible.
+
+Production remains legacy/OFF/resource. Controller gate rejects cache/locality/
+bandwidth startup; main does not construct trusted hybrid dispatch runtime.
+All live agent roots have older source and lack queried hybrid modules. No
+reviewed production OS/network containment/bootstrap, protected credential/root
+setup or all-three DDP dependency group was validated. All agent pip checks fail
+on unsupported nvidia-cusparselt-cu13; pi01 torch import timed out twice. pi02/
+pi03 tiny isolated CPU/Gloo-import probes pass, not training/DDP acceptance.
+Prepared CPU environments have differing versions; existing resolved-package
+compatibility keys must remain enforced. No Internet worker installs occurred.
+
+All Pi Ethernet links report100Mbit/s; controller uses Wi-Fi with Ethernet down.
+No measured throughput claim. Free space controller40.541GiB/pi015.666GiB/
+pi0210.670GiB/pi038.644GiB requires aggregate budgets. SQLite remains LOCAL;
+no DB open/migration. Only source-only previous worker snapshots found in queried
+locations; root-only NFS backup journals unreadable, consistent application-state
+backup/restore and external backups unknown. Unrelated pi02 wildcard RW/
+no_root_squash CIFAR export and pi02/pi03 legacy RW mounts require exposure
+review without disturbing their users. Central server remains a SPOF.
+
+Selected config17/storage-selection21/deployment-review6/NFS-client28 tests:
+**72 PASS,0 fail/error/skip**,4 files. Existing environment failures are explicitly
+recorded. All observed controller/agent PIDs unchanged. No sudo, remote writes,
+install, service restart, export/mount/firewall change, live training, DDP group,
+fault injection or restore. Prior Phase13 physical gaps remain pending.
+
+Added [57 readiness report](57-production-readiness.md) and
+[57 evidence](57-production-readiness-evidence.json); this append is the only
+existing source change. Preserved396 other originals and all data. Scoped diff,
+source-hash verification and disposable-copy reverse-apply checks are retained
+under `reports/phase14-1-readiness/`. No stash/reset/commit. No API/DB/config/
+runtime change; legacy fallback intact.14.2 must prepare reviewed idempotent
+all-three deployment/snapshots/rollback and refuse unresolved prerequisites;
+14.3 mutations require explicit approval.14.4 demo/README not started.
+
+**14.1 audit PASS; deployment readiness FAIL/BLOCKED. Phase14 incomplete.
+STOP before14.2.**
+
+## 2026-11-10 — Phase 14.2 all-three delivery dry-run preparation
+
+Added `hybrid_storage/delivery_plan.py`, `tools/hybrid_deploy.py` and16 Pi-less
+tests. Explicit local plan output holds complete controller/worker source review,
+exact source/config/audit hashes, fresh unique snapshot namespaces per controller/
+pi01/pi02/pi03, LOCAL DB migration order, concrete service argv/order and rollback
+runbook as DATA. No deployment executor: apply always REFUSES/exit3 before reading
+a package. All-three requirement cannot be silently reduced; pi03 UID1002 and
+SSH HostKeyAlias distinction retained. Actual unit/config/bootstrap deltas and
+disk budgets remain null/UNRESOLVED. Defaults and production gates unchanged.
+
+Final `reports/phase14-2-delivery/review-v2/` verifies and repeated preparation
+preserves all bytes/modes/mtimes. Release `release-2d924028652737d1019dd1d7`,
+snapshot `snap-20261110T082453Z-78a0011db2562841`, plan SHA256
+`382724cc15cce5bebd6e8390a82deb561160a3a28264816ff4d894fd770f0094`.
+Controller119/worker81 regular source members; no secrets/user data/DB/checkpoints/
+environments/wheels. Six public configs and audit are drift checked. Symlinks,
+unsafe/resealed archives, decompression bombs, duplicates, concurrent/partial
+output and tampered gates tested. Earlier development review retained, never
+uploaded/applied. Source digest verifies consistency, not permission or freshness.
+
+Baseline72 PASS plus final new16 PASS = **88 distinct tests in5 files**; no final
+fail/error/skip. Initial new13 suite had2 implementation/test failures (raw config
+hash omission and relocated CLI fixture-root mismatch), corrected and retained.
+Six proposed additive migrations actually run twice on a SQLite-backup/restored
+WAL disposable actual-controller fixture: legacy rows/user_version unchanged,
+second logical dump unchanged, quick/FK checks clean. Not live restore acceptance.
+
+No sudo, SSH/remote contact or writes, installs/Internet, live DB open/migration/
+backup, service restart, mount/export/firewall change, training/fault/DDP/boot
+test.14.1 observations are historical inputs, not fresh Pi readiness. All B1–B10
+gates remain explicit; B7 packaging/preparation improved, no applying installer.
+Central controller/NFS remains a SPOF. Legacy/OFF/resource intact; no existing
+Python/API/schema/config changes or automatic data moves/registration.
+
+See [58 playbook](58-deployment-playbook.md) and
+[58 evidence](58-deployment-preparation-evidence.json). Preserved399 baseline
+files except3 intended documentation appends; previous uncommitted14.1 audit
+preserved exactly. New5 files; scoped rollback verified in disposable copy only.
+No reset/stash/commit, and no data/report cleanup. Top-level README/demo reserved
+for14.4. **14.2 preparation PASS; apply-ready deployment NOT delivered due to
+unresolved prerequisites.14.3 BLOCKED; Phase14 incomplete. STOP.**
+
+## 2026-11-10 — Phase 14.3 blocked deployment preflight
+
+Fresh read-only SSH metadata/health probes completed on all3 aliases; hostnames
+match and agents ONLINE/IDLE at probe time. pi01 input mount absent and configured
+NFS TCP2049 times out. pi02/pi03 retain admitted RO NFS4.1 mounts509/508. All3
+service roots still have old agent hash and lack queried staging/checkpoint/
+hybrid config modules. No privileged input read, write test or dependency repair.
+
+Actual reviewed14.2 package verifies exit0 but apply_ready=false and executor
+absent; apply entrypoint returns REFUSED/exit3 without any deployment operation.
+Legacy config validates exit0; controller NFS/cache example rejects exit2;
+explicit staging-component validation succeeds with automatic_startup=false.
+Current code still lacks trusted production bootstrap and applying executor;
+unit/config deltas and disk budgets remain unresolved. User's request to proceed
+does not turn a data-only plan into executable deployment. No guard bypassed.
+
+Five fresh local checks and3 SSH probes recorded; prior88 tests not rerun or
+claimed as14.3 hardware acceptance. No sudo, remote writes, deploy/restart,
+DB read/migration/backup, package install/Internet transfer, mount/export/firewall
+change, training/DDP/fault/boot test. Services remain legacy/OFF/resource; live
+acceptance NOT_RUN. Dependency/backup/containment and unrelated legacy export
+unknowns remain from14.1. Central server remains a SPOF.
+
+See [59 preflight](59-deployment-preflight.md) and
+[59 evidence](59-deployment-preflight-evidence.json). Added2 docs plus this append;
+404 prior nonignored originals preserved except this intentional append. Prior
+14.1/14.2 edits unchanged. Source-only scoped rollback verified in disposable
+copy; no runtime rollback needed because deployment never started.
+
+**14.3 BLOCKED/NOT COMPLETE; integrated bootstrap/executor and infrastructure
+prerequisites must be resolved and reviewed before apply. STOP before14.4.**
+
+## 2026-11-10 — 14.1 closeout continuation: real DB recovery and protected probes
+
+User asked to finish14.1/14.2 before deployment, kept pi01 on its existing network,
+and approved narrowly scoped sudo READ checks. Added explicit LOCAL SQLite backup/
+restore verification and fixed-path protected NFS probe modules plus CLI and17
+focused tests. No startup/API/config/legacy code change. 14.1 verification first;
+no full-phase completion asserted while infrastructure/approval inputs are missing.
+
+Actual live controller DB opened mode=ro, backed up to NEW private directory and
+separately restored/verified: both1,601,536B, identical SHA256
+`5e9fc64bf5c3f2fac165b7493c36ef2c82436476ad7e03f7bd0976d769572144`.
+LOCAL DB-only recovery point, not app-files/checkpoints/off-host/HA. Recovery files
+are ignored/private, no row data exposed. Another NEW clone ran six hybrid
+migrations twice:150 existing jobs/all13 legacy tables/user_version unchanged,
+second fingerprint unchanged, quick_check ok/FK clean. Live DB not migrated/restored.
+
+Approved root probes now verify pi02/pi03 RO NFS4.1, existing public165B TEST hash
+and EROFS/errno30 write-open denial with0 bytes written. Root setup-journal names
+listed only; no journal-content restore claim. pi01 has no matching mount or
+client journal, so TEST operation skipped with no local-directory fallback.
+Initial probe rejected kernel/proc/self; fixed to numeric own PID and added real
+portable-kernel-path test. Initial failures/program retained. Controller sudo-n
+needs password; its corrected read-only command supplied for user's terminal,
+output still pending. Approval persists only for protected reads, no setup changes.
+
+Measured tiny Tailscale path checks: controller→pi01 DERP(sin)114/121/117ms;
+pi02→pi01 DERP231/105/105ms;pi03→pi01 DERP250/113/113ms;pi02→pi03 directLAN2ms.
+No direct pi01 path established in3 tiny tries each. Latency/path observations,
+not bandwidth/DDP slowdown benchmark. NFS binds only192.168.10.214; LAN NFS to
+pi01 times out, tailscale100.73.90.91:2049 refuses on all3. No Internet-dependent
+NFS workaround enabled. Offline all-three restricted-export/client proposals
+validated; pi02/pi03 unit bytes unchanged. Bidirectional private no-SNAT route and
+router topology unknown. All3 service pip checks still fail on unsupported NVIDIA
+package; queried wheel caches absent. No packages/environment changes.
+
+Final105 tests PASS in7 files (prior88 +backup10 +probe7),0 fail/error/skip. Initial
+104 local pass preceded real/proc/self failure; regression-fixed105 retained.
+No sudo configuration, mounts/exports/network/firewall/service changes, live job,
+DDP/fault/boot test, production DB migration/restore, stash/reset/commit or data
+cleanup. New ignored DB copies only; controller/NFS remains a SPOF. Prior14.1–14.3
+source edits preserved; new modules intentionally make old frozen14.2 catalog
+historical, not silently regenerated or deployed.
+
+See [60 closeout](60-readiness-closeout.md) and
+[60 evidence](60-readiness-closeout-evidence.json). Scoped source rollback verified
+only in disposable copy; keep all private backups/reports. **14.1 readiness still
+BLOCKED;14.2 applying installer not completed;14.3 NOT RUN. STOP for protected
+controller output and a compatible private pi01 data path.**
+
+## 2026-11-10 — 14.1 controller terminal evidence and network requirement confirmed
+
+User supplied successful approved root controller probe JSON; provenance is
+user-terminal paste, not an assistant rerun. Nine local consistency checks PASS:
+effective input export only to pi02/pi03, ro/root_squash, managed-file agreement,
+comments-only main exports, NFS4.1/4.2 enabled and3/4.0 disabled, expected165B TEST
+hash and read-only/no-change probe scope. Controller write-open not attempted,
+as expected for trusted local publication; worker EROFS results remain separate.
+Root0700 setup-journal name confirmed, not journal-content or restore proof.
+Earlier sudo-auth failure remains historical; controller terminal output is no
+longer pending. See [updated closeout](60-readiness-closeout.md) and its evidence.
+
+User explicitly chose **local/private-only runtime data transfers**. pi01's
+current Internet DERP path cannot be used for dataset/checkpoint/DDP traffic;
+no requirement relaxation, relay NFS workaround or deployment approval inferred.
+Need verified private bidirectional routing while pi01 stays on its network;
+actual topology and router next hops remain unknown. All-three requirement holds.
+
+Updated four documentation/evidence files only; no runtime/API/DB/config/schema
+change. Prior105 tests not rerun for this evidence-only update. JSON consistency,
+source fingerprint/preservation and scoped reverse-patch checks recorded in
+`reports/phase14-1-controller-verification/`; exact narrower rollback patch is
+`documentation-update.patch`, tested only in a disposable copy. Reports/backups
+retained. No new SSH/sudo, live DB read, deployment, mount/export/route/service
+change, package transfer, benchmark or job/DDP test. Legacy/OFF/resource intact.
+
+**14.1 readiness remains BLOCKED** on pi01 private route, compatible offline
+dependencies, coordinated files/checkpoint/off-host recovery and trusted runtime
+containment/bootstrap. **14.2 applying installer remains unfinished;14.3 NOT RUN.**
+Central controller/NFS remains a SPOF. This closes one evidence gap only. STOP.
+
+## 2026-11-10 — Phase14.2 executable source-delivery tooling and dry-run acceptance
+
+Completed the missing explicit host installer, migration executor and guarded
+rollback in `deployment_executor.py`, `deployment_migrations.py` and
+`deployment_toolkit.py`, with `tools/hybrid_install.py`, three focused test files
+and [61 tooling report](61-installation-tooling.md)/evidence. Earlier uncommitted
+14.1–14.3 work preserved. Legacy `hybrid_deploy.py apply` still refuses; the new
+protected host launcher performs separately approved operations instead.
+
+Fresh non-sudo read-only source/unit/identity inventories succeeded on controller,
+pi01,pi02,pi03; no remote file or service changes. Actual UID/GID1002 on pi03 kept.
+Reviewed kit has controller124/worker86 source files,396 private regular files,
+snapshot `snap-20261110T170756Z-34c52925118fb87e`, KIT SHA256
+`cef5f6f443f0a20c3232cc219645fa86395e346fe40c089be99b1b84b31ce293`.
+Repeat preparation preserved bytes/modes/mtimes. Packaged controller dry-run passes
+with conservative2,695,448,936B budget; worker capacity previews derive only from
+fresh read-only inventory and locally verified payloads, not remote execution.
+Invalid example approval refuses exit2 before deployment namespace changes.
+
+Explicit unit/config deltas are empty: preserve exact service executable/argv,
+enablement, local config/credentials and legacy/OFF/resource. No requirements pip
+install or environment replacement. Exact interpreter/destination/stop/start/
+install/migrate/rollback argv supplied in OPERATIONS.json. No new flags or API.
+Separate ten-minute per-action/host/hash approvals and all-three maintenance/gate
+attestations required. Actual stopped-unit/cgroup/source/unit/config guards run;
+installer never kills training or starts services. Unique private snapshots,
+exclusive lock, preimage backups and fsynced journal precede atomic source writes.
+Rollback preserves external edits, restores only reviewed preimages and quarantines
+new source; never deletes jobs/cache/checkpoints or restores an old DB automatically.
+
+Controller migration step requires idle jobs/reservations/leases/staging and exact
+reviewed migration code; creates verified LOCAL DB recovery copies, rehearses six
+additive modules twice on a new restored fixture/copy and checks legacy rows/schema/
+user_version/FKs. Interrupted additive migrations can resume without refreshing
+original recovery files. Immutable SQLite reading is only for verified closed
+backup copies with empty WAL, never live controller state.
+
+Final **139PASS,0fail/error/skip,10files**: previous105 rerun plus20executor,
+7migration,7toolkit. Disposable fixtures prove interruption, legacy preservation,
+rollback, locks, disk-full/links/traversal, stale/bad approvals and config-off
+regressions. Initial fixture-row/SHM-mtime and later exception-expectation failures
+retained, corrected. Actual systemd volatile ExecStart fields handled/tested.
+Logs, raw inventories, repeatability and scoped rollback evidence under
+`reports/phase14-2-completion/`. No sudo, remote install/copy, service operation,
+live SQLite connection/backup/migration/restore, training/DDP/NFS fault/boot test.
+
+**14.2 compatible source-delivery tooling/dry-run acceptance PASS.** This is not
+a production hybrid bootstrap or containment implementation.14.1 private pi01
+data route, compatible offline dependencies, coordinated recovery and trusted
+runtime gates remain; pi02 active-unit/PID0 metadata does not imply healthy agent.
+All-three requirement and private-only data transfers preserved. Controller/NFS
+remains a SPOF. **Hybrid-enabled deployment readiness BLOCKED;14.3 NOT RUN. STOP
+before privileged staging, installation or restart.**
+
+## 2026-11-10 — 14.3 explicit two-node scope and fresh readiness checks
+
+User confirmed pi01 at another site and explicitly requested pi02/pi03-only work.
+Added `--workers pi02 pi03` support in deployment_toolkit.py; defaults remain all3.
+Exact selected hosts required, pi01 payload/operations absent, only pi01-specific
+gateB3 deferred. Executor receipts bind selected scope; legacy all_three_workers
+receipts accepted only for true three-worker plans. Cross-scope/ambiguous receipts
+refused without writes. No live node/config/flag change or Pi01 contact.
+
+Fresh read-only checks: pi02/pi03 expected identities ONLINE/IDLE with one available
+slot, controller NFS reachable and full-table RO mount admission PASS. Both service
+pip checks still FAIL on unsupported nvidia-cusparselt-cu13 0.8.1. Basic temporary
+namespace true-process smoke checks pass, not production containment acceptance.
+Controller query_only SQLite aggregate snapshot:0 active jobs/reservations/live
+leases/nonterminal staging, not a persistent admission fence. No student identifiers
+or secret values published. No sudo, remote writes/packages, service operation,
+fault/job/DDP/boot test, live migration or deployment.
+
+Prepared/verified new two-node final-review, all Pi payload verification local only;
+controller packaged dry-run passes. Prior reviews retained as dated evidence.
+Final49 local tests PASS in4files (20executor+7toolkit+6newscope+16delivery),0 fail/
+error/skip. Earlier139 result not relabeled as fresh full-suite/hardware acceptance.
+Source rollback verified only in new disposable copy; prior changes preserved.
+
+Actual engineering gap remains: dispatcher main does not construct/pass trusted
+runtime; normal worker startup lacks staging/inventory/checkpoint bootstrap and
+reviewed isolate/terminate/quiescent providers; controller config still rejects
+cache/locality execution. Installer is a legacy-preserving delivery profile, not
+the missing runtime. Clean offline candidate envs, protected service/job identities,
+network/cgroup isolation, admission/drain and coordinated recovery provisioning
+are needed. Recommendation: separate pi02/pi03 pilot before switching student services.
+Manual privileged host provisioning will be needed after the concrete runtime plan;
+deployment approval alone cannot supply missing code. Central server remains SPOF.
+
+See [62 pair scope and engineering plan](62-two-node-deployment-preflight.md) and
+companion evidence for exact files/interfaces, commands, tests and rollback.
+**14.3 NOT COMPLETE; no live deployment started. Pi01 is deferred, not blocking
+this two-node scope. Remaining blockers are real integration/dependency work. STOP.**
+
+## 2026-11-11 — 14.3 runtime assembly, actual NFS checks and Pi component tests
+
+Continued the authorized pi02/pi03 scope; pi01 was neither contacted nor used as
+a blocker. Implemented explicit `hybrid_storage/runtime_bootstrap.py` factories
+and wired `controller/dispatcher.py::main(storage_runtime=None)` into the existing
+four reconciliation/dispatch seams. Enforce matching configuration/LOCAL DB,
+operator enrollment, initialized checkpoint-store identity, protected separate
+worker roots, private endpoint configuration, actual RO mount identity and an
+explicit launch boundary. Reuse authenticated staging/inventory/checkpoint
+services, coverage, transfer observations and admin diagnostics. No new schema,
+route or checkpoint format. Default legacy calls/configuration are preserved.
+Failed worker setup cannot be retried as legacy; busy shutdown retains ownership.
+
+Added 28 startup tests. Actual broad local run: 250 PASS in 13 files, 0 fail/error/
+skip, 306.1s; its startup suite had 21 cases. Expanded final suite: 28 PASS locally
+and 28 PASS on each Pi under Python 3.11.16. Repeated runs are not distinct cases.
+Final transport review enforces selected polled endpoints and no redirects for
+coordinator GET/POST calls; that regression triggered the final local/Pi reruns.
+The Pi tests used a hashed 223-file temporary source bundle transferred over LAN,
+not installed services or live DBs. Local fixtures simulate NFS/containment and
+training; their pass is not a live cold/warm/DDP/recovery acceptance claim.
+
+Fresh privileged read-only checks on both Pis: exact RO NFS 4.1 input mount, known
+public TEST 165-byte hash PASS, write-open denied EROFS 30 with 0 bytes written.
+Controller and peer routes use eth0. CPU-only environment already on both nodes
+passes pip check; Torch 2.15.0+cpu/Gloo/tensor smoke check passes, with missing-NumPy
+warning. The old service environment's documented NVIDIA dependency issue was
+not repaired. Bubblewrap namespace capability and nftables v1.0.6 are available.
+
+Final test roots retained: pi02 `/tmp/dl-phase14-3-runtime-h6jg_46q`, pi03
+`/tmp/dl-phase14-3-runtime-qjoqhskb`; intermediate roots/receipts are retained too.
+After tests original agents remain active/IDLE
+with unchanged PIDs 946/902. No installed source/config, existing data, packages,
+services, exports, firewall, SSH, fstab or live DB/migration was changed. Controller
+sudo authentication still requires a terminal password; no password was requested.
+
+**Production gaps remain explicit:** LaunchBoundary is an interface with NO Linux
+provider in this delivery; normal agent startup still needs reviewed activation.
+Current pi account has NOPASSWD sudo ALL and is shared with training. Portal immutable
+intake/offline metadata preparation, protected result collection, durable drain,
+clean candidate envs and reviewed identity/root/key provisioning still need work.
+New factories alone do not implement these. Existing 14.2 installer is legacy-only;
+its older review packages must not be relabeled as an enabled hybrid release.
+
+See [63 runtime assembly](63-runtime-assembly.md), companion evidence and
+`reports/phase14-3-runtime/` for exact commands, measured receipts and scoped source
+rollback rehearsal. No production switch occurred. Controller remains a SPOF.
+**Assembly/local/Pi compatibility and actual NFS checks PASS; overall 14.3
+NOT PASSED. Live hybrid inventory/training/cancellation/recovery/DDP/boot tests
+remain NOT_RUN. STOP before unsafe activation; do not advance to 14.4.**
+
+## 2026-11-11 — 14.3 live v8 pilot acceptance
+
+**PASS for the operator-approved controller, pi02 and pi03 scope.** Activated
+`pilot-20261111-074d980811f0` with offline packages and private-LAN workers.
+The live suite passed owner permissions, cold training and result collection,
+warm reuse on both workers, cancellation of a running job, single-worker
+checkpoint recovery and two-rank DDP group recovery. Both recovered DDP ranks
+matched the uninterrupted model hash. Final checks verified active and enabled
+units, idle workers, signed inventory coverage and read-only NFS 4.1 access.
+
+The pilot remains active. Legacy state and rollback snapshots were retained.
+The three-worker and physical-reboot criteria remain unverified. See the
+[v8 deployment report](64-v8-pilot-deployment.md) for measured results, receipts,
+local regressions, manual verification commands and rollback. Phase 14.4 has
+not started.
+
+## 2026-11-11 — 14.4 supervisor demo and delivery documentation
+
+**PASS for the documentation deliverables and approved two-worker scope.**
+The [supervisor runbook](14-supervisor-demo.md) contains a timed live-demo script,
+an actual v8 sign-in screenshot, a recorded-evidence route, measured cold/warm
+and recovery results, the research contribution, limitations, and optional
+Linux lab and Wake-on-LAN plans. The README distinguishes the active pilot from
+legacy startup. The project architecture now shows the deployed data and trust
+boundaries. The original Phase 1 proposal remains available as design history.
+
+The runbook's read-only preflight passed on the controller, pi02 and pi03. Both
+Pis showed active and enabled agents and read-only NFS 4.1. All five receipt
+queries reproduced the documented values. The screenshot was captured from the
+pilot's LAN sign-in page and inspected. Relative links and `git diff --check`
+passed. The optional live submission and full timed presentation were not run
+in this documentation step. The original three-Pi acceptance remains unverified
+with pi01 deferred. No service, API, configuration, schema or deployment was
+changed. To roll back 14.4, reverse only the demo documentation and screenshot
+diff. Runtime rollback remains the separate procedure in the
+[v8 deployment report](64-v8-pilot-deployment.md#commands-and-rollback).

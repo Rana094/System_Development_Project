@@ -11,6 +11,11 @@ import storage_selection
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DB_FILE = os.path.join(BASE_DIR, "controller", "jobs.db")
+if os.environ.get('DL_CONTROLLER_STATE_ROOT'):
+    import sys
+    sys.path.insert(0,BASE_DIR)
+    from hybrid_storage.service_state import controller_state
+    DB_FILE = str(controller_state(os.path.join(BASE_DIR,'controller'))/'jobs.db')
 
 
 def get_connection(*, durable=False):

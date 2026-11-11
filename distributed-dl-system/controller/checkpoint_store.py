@@ -6,6 +6,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CHECKPOINT_DIR = os.path.join(BASE_DIR, "checkpoints")
+if os.environ.get('DL_CONTROLLER_STATE_ROOT'):
+    from hybrid_storage.service_state import checkpoint_state
+    CHECKPOINT_DIR=str(checkpoint_state(CHECKPOINT_DIR))
 
 
 os.makedirs(CHECKPOINT_DIR, exist_ok=True)

@@ -1,0 +1,2518 @@
+{
+  "schema_version": 1,
+  "phase": "14.1",
+  "recorded_at_utc": "2026-11-10T08:07:36.974218+00:00",
+  "status": "AUDIT_COMPLETE_DEPLOYMENT_BLOCKED",
+  "full_phase_14_complete": false,
+  "repository": {
+    "app_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "git_root": "/home/rana/Projects/System Project/System_Development_Project",
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "branch": "main",
+    "initial_status": "",
+    "baseline_nonignored_files": 397
+  },
+  "scope": {
+    "sudo": false,
+    "remote_config_writes": false,
+    "service_restarts": false,
+    "mount_export_firewall_changes": false,
+    "live_job_ddp_or_failure_test": false,
+    "database_open_or_migration": false,
+    "worker_runtime_download": false,
+    "tiny_isolated_cpu_import_probes": true
+  },
+  "ssh_aliases": {
+    "pi01": {
+      "exit_code": 0,
+      "resolved": {
+        "user": [
+          "pi"
+        ],
+        "hostname": [
+          "100.101.90.46"
+        ],
+        "port": [
+          "22"
+        ],
+        "identitiesonly": [
+          "no"
+        ],
+        "hostkeyalias": [
+          "192.168.10.125"
+        ],
+        "identityfile": [
+          "~/.ssh/id_rsa"
+        ]
+      }
+    },
+    "pi02": {
+      "exit_code": 0,
+      "resolved": {
+        "user": [
+          "pi"
+        ],
+        "hostname": [
+          "100.91.135.18"
+        ],
+        "port": [
+          "22"
+        ],
+        "identitiesonly": [
+          "no"
+        ],
+        "hostkeyalias": [
+          "192.168.10.150"
+        ],
+        "identityfile": [
+          "~/.ssh/id_rsa"
+        ]
+      }
+    },
+    "pi03": {
+      "exit_code": 0,
+      "resolved": {
+        "user": [
+          "pi"
+        ],
+        "hostname": [
+          "100.64.202.71"
+        ],
+        "port": [
+          "22"
+        ],
+        "identitiesonly": [
+          "no"
+        ],
+        "hostkeyalias": [
+          "192.168.10.101"
+        ],
+        "identityfile": [
+          "~/.ssh/id_rsa"
+        ]
+      }
+    }
+  },
+  "hosts": {
+    "controller": {
+      "exit_code": 0,
+      "observed": {
+        "at_utc_ns": 1794297131372978475,
+        "hostname": "rana-ROG-Strix-G513RC-G513RC",
+        "kernel": "7.0.0-42-generic",
+        "machine": "x86_64",
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.4 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "uid": 1000,
+        "gid": 1000,
+        "system_python": "3.12.3",
+        "root_metadata": {
+          "exists": true,
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o775",
+          "bytes": 4096,
+          "mtime_ns": 1794254824436926505,
+          "kind": "directory",
+          "free_bytes": 43530088448,
+          "total_bytes": 173951787008
+        },
+        "public_config": {
+          "nodes.json": {
+            "nodes": [
+              {
+                "id": "pi01",
+                "ip": "100.101.90.46",
+                "port": 5000
+              },
+              {
+                "id": "pi02",
+                "ip": "100.91.135.18",
+                "port": 5000
+              },
+              {
+                "id": "pi03",
+                "ip": "100.64.202.71",
+                "port": 5000,
+                "worker_root": "distributed-dl-system"
+              }
+            ]
+          },
+          "storage.json": {
+            "storage_backend": "legacy",
+            "worker_cache_enabled": false,
+            "storage_aware_staging": false,
+            "scheduler_policy": "resource"
+          },
+          "nfs-server.json": {
+            "schema_version": 1,
+            "server_address": "192.168.10.214",
+            "deployment_nodes": [
+              "pi02",
+              "pi03"
+            ],
+            "clients": {
+              "pi01": null,
+              "pi02": "192.168.10.150",
+              "pi03": "192.168.10.101"
+            },
+            "publisher_uid": 125,
+            "publisher_gid": 125,
+            "layout": "subdirectory"
+          },
+          "nfs-clients.json": {
+            "schema_version": 1,
+            "server_address": "192.168.10.214",
+            "deployment_nodes": [
+              "pi02",
+              "pi03"
+            ],
+            "clients": {
+              "pi01": null,
+              "pi02": "192.168.10.150",
+              "pi03": "192.168.10.101"
+            }
+          },
+          "execution_leases.json": {
+            "enabled": true,
+            "duration_seconds": 30,
+            "renew_every_seconds": 5
+          },
+          "queue_policy.json": {
+            "max_active_per_owner": 3,
+            "max_pending_per_owner": 20,
+            "aging_seconds": 300,
+            "owners": {}
+          }
+        },
+        "services": {
+          "dl-dispatcher.service": {
+            "exit_code": 0,
+            "properties": {
+              "MainPID": "1662",
+              "CPUQuotaPerSecUSec": "infinity",
+              "MemoryMax": "infinity",
+              "TasksMax": "16103",
+              "LimitNOFILE": "1048576",
+              "WorkingDirectory": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+              "User": "",
+              "Group": "",
+              "PrivateMounts": "no",
+              "NoNewPrivileges": "no",
+              "ActiveState": "active",
+              "SubState": "running",
+              "FragmentPath": "/home/rana/.config/systemd/user/dl-dispatcher.service",
+              "UnitFileState": "enabled",
+              "observed_exe": "/usr/bin/python3.12"
+            },
+            "error": null
+          },
+          "dl-student-portal.service": {
+            "exit_code": 0,
+            "properties": {
+              "MainPID": "1663",
+              "CPUQuotaPerSecUSec": "infinity",
+              "MemoryMax": "infinity",
+              "TasksMax": "16103",
+              "LimitNOFILE": "1048576",
+              "WorkingDirectory": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+              "User": "",
+              "Group": "",
+              "PrivateMounts": "no",
+              "NoNewPrivileges": "no",
+              "ActiveState": "active",
+              "SubState": "running",
+              "FragmentPath": "/home/rana/.config/systemd/user/dl-student-portal.service",
+              "UnitFileState": "enabled",
+              "observed_exe": "/usr/bin/python3.12"
+            },
+            "error": null
+          },
+          "nfs-server.service": {
+            "exit_code": 0,
+            "properties": {
+              "MainPID": "0",
+              "CPUQuotaPerSecUSec": "infinity",
+              "MemoryMax": "infinity",
+              "TasksMax": "16103",
+              "LimitNOFILE": "524288",
+              "WorkingDirectory": "",
+              "User": "",
+              "Group": "",
+              "PrivateMounts": "no",
+              "NoNewPrivileges": "no",
+              "ActiveState": "active",
+              "SubState": "exited",
+              "FragmentPath": "/usr/lib/systemd/system/nfs-server.service",
+              "UnitFileState": "enabled"
+            },
+            "error": null
+          }
+        },
+        "addresses": {
+          "exit_code": 0,
+          "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"enp4s0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"08:bf:b8:2e:df:39\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":3,\"ifname\":\"wlo1\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"noqueue\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"d8:80:83:d1:2c:39\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"altnames\":[\"wlp3s0\"],\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.214\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"wlo1\",\"valid_life_time\":5270,\"preferred_life_time\":5270},{\"family\":\"inet6\",\"local\":\"fe80::41d1:2d69:523c:d1f4\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"fq_codel\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.73.90.91\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::1f4a:5a5c\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::969d:2107:e36a:f3c3\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n",
+          "stderr": ""
+        },
+        "route_to_nfs": {
+          "exit_code": 0,
+          "stdout": "[{\"type\":\"local\",\"dst\":\"192.168.10.214\",\"dev\":\"lo\",\"table\":\"local\",\"prefsrc\":\"192.168.10.214\",\"flags\":[],\"uid\":1000,\"cache\":[\"local\"]}]\n",
+          "stderr": ""
+        },
+        "links": {
+          "lo": {
+            "operstate": "unknown\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "65536\n",
+            "carrier": "1\n"
+          },
+          "enp4s0": {
+            "operstate": "down\n",
+            "speed": "-1\n",
+            "duplex": "unknown\n",
+            "mtu": "1500\n",
+            "carrier": "0\n"
+          },
+          "wlo1": {
+            "operstate": "up\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "1500\n",
+            "carrier": "1\n"
+          },
+          "tailscale0": {
+            "operstate": "unknown\n",
+            "speed": "-1\n",
+            "duplex": "full\n",
+            "mtu": "1280\n",
+            "carrier": "1\n"
+          }
+        },
+        "nfs_mountinfo": [
+          "41 29 0:35 / /proc/sys/fs/binfmt_misc rw,relatime shared:14 - autofs systemd-1 rw,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=12837"
+        ],
+        "nfs_tcp2049": "reachable",
+        "storage_paths": {
+          "/srv/ml-shared": {
+            "exists": true,
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1794293577263650238,
+            "kind": "directory",
+            "free_bytes": 43530084352,
+            "total_bytes": 173951787008
+          },
+          "/srv/ml-shared/objects": {
+            "exists": true,
+            "uid": 125,
+            "gid": 125,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1794247504880003816,
+            "kind": "directory",
+            "free_bytes": 43530084352,
+            "total_bytes": 173951787008
+          },
+          "/srv/ml-shared/.publish": {
+            "exists": true,
+            "uid": 125,
+            "gid": 125,
+            "mode": "0o700",
+            "bytes": 4096,
+            "mtime_ns": 1794247504936006629,
+            "kind": "directory",
+            "free_bytes": 43530084352,
+            "total_bytes": 173951787008
+          },
+          "/srv/ml-shared/.nfs-setup.json": {
+            "exists": true,
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o600",
+            "bytes": 89,
+            "mtime_ns": 1794069120353430516,
+            "kind": "file"
+          }
+        },
+        "test_artifact": {
+          "verified": true,
+          "bytes": 165
+        },
+        "filesystems": {
+          "exit_code": 0,
+          "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/nvme0n1p4\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,relatime\"\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "runtimes": {
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.12.3",
+              "executable": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+              "prefix": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv",
+              "versions": {
+                "Flask": "3.1.3",
+                "requests": "2.34.2",
+                "psutil": "7.2.2",
+                "waitress": "3.0.2",
+                "torch": "2.14.1",
+                "numpy": "2.5.3",
+                "pip": "26.2.1"
+              }
+            },
+            "pip_check": {
+              "exit_code": 0,
+              "stdout": "No broken requirements found.\n",
+              "stderr": ""
+            }
+          }
+        },
+        "prepared_environment_count": {
+          "error": "FileNotFoundError"
+        },
+        "runtime_roots": {
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/controller/jobs.db": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o644",
+            "bytes": 1601536,
+            "mtime_ns": 1794169548858366510,
+            "kind": "file"
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/storage": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o775",
+            "bytes": 4096,
+            "mtime_ns": 1791932814496060643,
+            "kind": "directory",
+            "free_bytes": 43530084352,
+            "total_bytes": 173951787008
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/checkpoints": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o775",
+            "bytes": 4096,
+            "mtime_ns": 1791823577894478147,
+            "kind": "directory",
+            "free_bytes": 43530084352,
+            "total_bytes": 173951787008
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/worker-storage": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/worker-storage/environments": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/worker-storage/deployment-previous": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/storage/deployment": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/storage/backups": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/backups": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/config/worker_credentials.json": {
+            "exists": false
+          },
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/config/staging_workers.json": {
+            "exists": false
+          }
+        },
+        "backup_candidates": {
+          "worker-storage/deployment-previous": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "storage/deployment": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "storage/backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          }
+        },
+        "exports_config": {
+          "/etc/exports": "# /etc/exports: the access control list for filesystems which may be exported\n#\t\tto NFS clients.  See exports(5).\n#\n# Example for NFSv2 and NFSv3:\n# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)\n#\n# Example for NFSv4:\n# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)\n# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)\n#\n",
+          "/etc/exports.d/distributed-ml.exports": "# Managed by distributed-dl-system nfs-server v1\n/srv/ml-shared/objects 192.168.10.150(ro,sync,root_squash,subtree_check,secure,sec=sys) 192.168.10.101(ro,sync,root_squash,subtree_check,secure,sec=sys)\n"
+        },
+        "effective_exports": {
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": "exportfs: could not open /var/lib/nfs/.etab.lock for locking: errno 13 (Permission denied)\n"
+        },
+        "nfs_packages": {
+          "exit_code": 0,
+          "stdout": "nfs-common 1:2.6.4-3ubuntu5.1 install ok installed\nnfs-kernel-server 1:2.6.4-3ubuntu5.1 install ok installed\n",
+          "stderr": ""
+        },
+        "sources": {
+          "agent/agent.py": {
+            "sha256": "33395ab48ffe11433c8f91d443df63998bba46d0301ddd0a1c43a5f6585a626a",
+            "bytes": 50886
+          },
+          "agent/staging.py": {
+            "sha256": "71d456830fba4e591547098f1a4e54904cc2e9812afa82d63c5ffb2504a6d836",
+            "bytes": 21170
+          },
+          "agent/cache_storage.py": {
+            "sha256": "359acfd4e8d75d2c8851733fd3c43c57b315180941db581d8fc2677d2cffc43c",
+            "bytes": 3481
+          },
+          "agent/checkpoint_service.py": {
+            "sha256": "1f385982c7764425db5ce560083534fd4c06f62fb95c71c7740e015f6c44819f",
+            "bytes": 8020
+          },
+          "agent/checkpoint_restore_service.py": {
+            "sha256": "815cf1fbbc3d083d892ac26aefbdc1891619589449f19d1da08d5c96018f3ea2",
+            "bytes": 7897
+          },
+          "hybrid_storage/config.py": {
+            "sha256": "efb13e94b60e17b02189c94cc79e54d803e0c10db8d408b2d0167331fbda1b6e",
+            "bytes": 7958
+          },
+          "hybrid_storage/worker_cache.py": {
+            "sha256": "619d4656d7161c2c0f730274f487754696664a4dba79a5badc29e58ffeb2b272",
+            "bytes": 19316
+          },
+          "hybrid_storage/cache_registry_schema.py": {
+            "sha256": "c49ec4426e5ee663b4fcd07a704e2a232251c4e73245ba2b2dcdd32a9a01d112",
+            "bytes": 14701
+          },
+          "controller/dispatcher.py": {
+            "sha256": "cfabb53044167cffed533d5837e74a3dda4fbd54b3cdff88569450080db5434d",
+            "bytes": 37726
+          }
+        }
+      },
+      "final_services": {
+        "dl-dispatcher.service": "MainPID=1662\nExecMainStartTimestamp=Tue 2026-11-10 13:19:56 +06\nActiveState=active\n",
+        "dl-student-portal.service": "MainPID=1663\nExecMainStartTimestamp=Tue 2026-11-10 13:19:56 +06\nActiveState=active\n",
+        "/srv/ml-shared/.nfs-setup.json": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0o100600",
+          "exists": true
+        },
+        "/var/lib/distributed-ml-nfs-server": {
+          "error": "FileNotFoundError"
+        },
+        "/var/lib/distributed-ml-nfs-client": {
+          "error": "FileNotFoundError"
+        }
+      },
+      "backup_check": {
+        "/var/backups/distributed-ml-nfs": {
+          "exists": true,
+          "uid": 0,
+          "gid": 0,
+          "mode": "0o40700",
+          "listing_error": "PermissionError"
+        },
+        "/var/backups/distributed-ml-nfs-client": {
+          "error": "FileNotFoundError"
+        }
+      },
+      "nfs_protocols_read": {
+        "versions": "PermissionError"
+      }
+    },
+    "pi01": {
+      "exit_code": 0,
+      "observed": {
+        "at_utc_ns": 1794297133017783725,
+        "hostname": "pi01",
+        "kernel": "6.18.50+rpt-rpi-2712",
+        "machine": "aarch64",
+        "os_release": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"13\"\nVERSION=\"13 (trixie)\"\nVERSION_CODENAME=trixie\nDEBIAN_VERSION_FULL=13.5\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+        "uid": 1000,
+        "gid": 1000,
+        "system_python": "3.13.5",
+        "root_metadata": {
+          "exists": true,
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o775",
+          "bytes": 4096,
+          "mtime_ns": 1791963925715019645,
+          "kind": "directory",
+          "free_bytes": 6083952640,
+          "total_bytes": 30164570112
+        },
+        "public_config": {
+          "nodes.json": {
+            "nodes": [
+              {
+                "id": "pi01",
+                "ip": "192.168.10.125",
+                "port": 5000
+              },
+              {
+                "id": "pi02",
+                "ip": "192.168.10.150",
+                "port": 5000
+              },
+              {
+                "id": "pi03",
+                "ip": "192.168.10.101",
+                "port": 5000
+              }
+            ]
+          },
+          "storage.json": {
+            "error": "FileNotFoundError"
+          },
+          "nfs-server.json": {
+            "error": "FileNotFoundError"
+          },
+          "nfs-clients.json": {
+            "error": "FileNotFoundError"
+          },
+          "execution_leases.json": {
+            "enabled": true,
+            "duration_seconds": 30,
+            "renew_every_seconds": 5
+          },
+          "queue_policy.json": {
+            "error": "FileNotFoundError"
+          }
+        },
+        "services": {
+          "dl-node-agent.service": {
+            "exit_code": 0,
+            "properties": {
+              "MainPID": "1036",
+              "CPUQuotaPerSecUSec": "infinity",
+              "MemoryMax": "infinity",
+              "TasksMax": "9626",
+              "LimitNOFILE": "524288",
+              "WorkingDirectory": "/home/pi/distributed-dl-system",
+              "User": "pi",
+              "Group": "",
+              "PrivateMounts": "no",
+              "NoNewPrivileges": "no",
+              "ActiveState": "active",
+              "SubState": "running",
+              "FragmentPath": "/etc/systemd/system/dl-node-agent.service",
+              "UnitFileState": "enabled",
+              "observed_exe": "/home/pi/.local/share/uv/python/cpython-3.11.16-linux-aarch64-gnu/bin/python3.11"
+            },
+            "error": null
+          }
+        },
+        "health": {
+          "node": "pi01",
+          "status": "ONLINE",
+          "architecture": "aarch64",
+          "python": "3.11.16",
+          "execution_ownership": {
+            "protocol": 1
+          }
+        },
+        "resources": {
+          "node": "pi01",
+          "ip": "192.168.10.125",
+          "status": "ONLINE",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "cpu": {
+            "available_cores": 4,
+            "frequency_mhz": 2400.0,
+            "logical_cores": 4,
+            "physical_cores": 4,
+            "usage_percent": 43.9
+          },
+          "memory": {
+            "available_gb": 6.58,
+            "total_gb": 7.87,
+            "usage_percent": 16.4,
+            "used_gb": 1.3
+          },
+          "disk": {
+            "free_gb": 5.67,
+            "total_gb": 28.09,
+            "usage_percent": 78.9
+          },
+          "network": {
+            "download_mbps": 0,
+            "interface": "eth0",
+            "upload_mbps": 0
+          },
+          "temperature_c": 63.9,
+          "timestamp": 1794297133.329976,
+          "execution_ownership": {
+            "protocol": 1
+          }
+        },
+        "addresses": {
+          "exit_code": 0,
+          "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:9b\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.0.107\",\"prefixlen\":24,\"broadcast\":\"192.168.0.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":72068,\"preferred_life_time\":72068},{\"family\":\"inet6\",\"local\":\"fe80::3379:d336:22ba:c0a9\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"fq_codel\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:9c\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"fq_codel\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.101.90.46\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::214a:5a2f\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::37a4:d649:25f9:bcde\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"protocol\":\"kernel_ll\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n",
+          "stderr": ""
+        },
+        "route_to_nfs": {
+          "exit_code": 0,
+          "stdout": "[{\"dst\":\"192.168.10.214\",\"gateway\":\"192.168.0.1\",\"dev\":\"eth0\",\"prefsrc\":\"192.168.0.107\",\"flags\":[],\"uid\":1000,\"cache\":[]}]\n",
+          "stderr": ""
+        },
+        "links": {
+          "wlan0": {
+            "operstate": "down\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "1500\n",
+            "carrier": "0\n"
+          },
+          "tailscale0": {
+            "operstate": "unknown\n",
+            "speed": "-1\n",
+            "duplex": "full\n",
+            "mtu": "1280\n",
+            "carrier": "1\n"
+          },
+          "lo": {
+            "operstate": "unknown\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "65536\n",
+            "carrier": "1\n"
+          },
+          "eth0": {
+            "operstate": "up\n",
+            "speed": "100\n",
+            "duplex": "full\n",
+            "mtu": "1500\n",
+            "carrier": "1\n"
+          }
+        },
+        "nfs_mountinfo": [
+          "32 21 0:28 / /proc/sys/fs/binfmt_misc rw,relatime shared:12 - autofs systemd-1 rw,fd=36,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=335"
+        ],
+        "nfs_tcp2049": {
+          "error": "TimeoutError",
+          "errno": null
+        },
+        "storage_paths": {
+          "/srv/mlnfs": {
+            "exists": false
+          },
+          "/srv/mlnfs/inputs": {
+            "exists": false
+          }
+        },
+        "test_artifact": {
+          "error": "FileNotFoundError",
+          "errno": 2,
+          "verified": false
+        },
+        "filesystems": {
+          "exit_code": 0,
+          "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/mmcblk0p2\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,noatime\"\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "runtimes": {
+          "distributed-dl-system/.venv/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/.venv/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/.venv",
+              "versions": {
+                "Flask": "3.1.3",
+                "requests": "2.34.2",
+                "psutil": "7.2.2",
+                "waitress": "3.0.2",
+                "torch": "2.14.1",
+                "numpy": "2.4.6",
+                "pip": "26.2.1"
+              }
+            },
+            "pip_check": {
+              "exit_code": 1,
+              "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n",
+              "stderr": ""
+            }
+          }
+        },
+        "prepared_environment_count": {
+          "error": "FileNotFoundError"
+        },
+        "runtime_roots": {
+          "distributed-dl-system/controller/jobs.db": {
+            "exists": false
+          },
+          "distributed-dl-system/storage": {
+            "exists": false
+          },
+          "distributed-dl-system/checkpoints": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o775",
+            "bytes": 4096,
+            "mtime_ns": 1791069054264908099,
+            "kind": "directory",
+            "free_bytes": 6083952640,
+            "total_bytes": 30164570112
+          },
+          "distributed-dl-system/worker-storage": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o775",
+            "bytes": 4096,
+            "mtime_ns": 1792224205420595624,
+            "kind": "directory",
+            "free_bytes": 6083952640,
+            "total_bytes": 30164570112
+          },
+          "distributed-dl-system/worker-storage/environments": {
+            "exists": false
+          },
+          "distributed-dl-system/worker-storage/deployment-previous": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o775",
+            "bytes": 4096,
+            "mtime_ns": 1791963923736817970,
+            "kind": "directory",
+            "free_bytes": 6083952640,
+            "total_bytes": 30164570112
+          },
+          "distributed-dl-system/storage/deployment": {
+            "exists": false
+          },
+          "distributed-dl-system/storage/backups": {
+            "exists": false
+          },
+          "distributed-dl-system/backups": {
+            "exists": false
+          },
+          "distributed-dl-system/config/worker_credentials.json": {
+            "exists": false
+          },
+          "distributed-dl-system/config/staging_workers.json": {
+            "exists": false
+          }
+        },
+        "backup_candidates": {
+          "worker-storage/deployment-previous": {
+            "metadata": {
+              "exists": true,
+              "uid": 1000,
+              "gid": 1000,
+              "mode": "0o775",
+              "bytes": 4096,
+              "mtime_ns": 1791963923736817970,
+              "kind": "directory",
+              "free_bytes": 6083952640,
+              "total_bytes": 30164570112
+            },
+            "restore_tested": false,
+            "top_level_entries": [
+              {
+                "name": "agent",
+                "bytes": 4096,
+                "mode": "0o775",
+                "directory": true,
+                "mtime_ns": 1791963923734758434
+              },
+              {
+                "name": "training",
+                "bytes": 4096,
+                "mode": "0o775",
+                "directory": true,
+                "mtime_ns": 1791963923735628970
+              },
+              {
+                "name": "dl-node-agent.service",
+                "bytes": 562,
+                "mode": "0o664",
+                "directory": false,
+                "mtime_ns": 1791963923736888192
+              },
+              {
+                "name": "config",
+                "bytes": 4096,
+                "mode": "0o775",
+                "directory": true,
+                "mtime_ns": 1791963923735004896
+              }
+            ]
+          },
+          "storage/deployment": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "storage/backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          }
+        },
+        "sources": {
+          "agent/agent.py": {
+            "sha256": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+            "bytes": 46820
+          },
+          "agent/staging.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/cache_storage.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_service.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_restore_service.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/config.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/worker_cache.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/cache_registry_schema.py": {
+            "error": "FileNotFoundError"
+          },
+          "controller/dispatcher.py": {
+            "error": "FileNotFoundError"
+          }
+        }
+      },
+      "compatibility": {
+        "host": "pi01",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "runtimes": {
+            "/home/pi/distributed-dl-system/.venv": {
+              "error": "timeout"
+            }
+          },
+          "nfs_units": {
+            "exit_code": 0,
+            "stdout": "Id=ml-nfs-ready.service\nRequires=\nWants=\nBindsTo=\nAfter=\nRequiresMountsFor=\nActiveState=inactive\nSubState=dead\nUnitFileState=\n\nWhere=\nId=srv-mlnfs-inputs.automount\nRequires=\nWants=\nBindsTo=\nAfter=\nRequiresMountsFor=\nActiveState=inactive\nSubState=dead\nUnitFileState=\n\nWhere=\nWhat=\nOptions=\nTimeoutUSec=1min 30s\nId=srv-mlnfs-inputs.mount\nRequires=\nWants=\nBindsTo=\nAfter=\nRequiresMountsFor=\nActiveState=inactive\nSubState=dead\nUnitFileState=\n",
+            "stderr": ""
+          }
+        }
+      },
+      "full_mount_package_check": {
+        "host": "pi01",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "mountinfo": "20 26 0:19 / /sys rw,nosuid,nodev,noexec,relatime shared:6 - sysfs sysfs rw\n21 26 0:20 / /proc rw,relatime shared:11 - proc proc rw\n22 26 0:6 / /dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=4084976k,nr_inodes=255311,mode=755\n23 22 0:21 / /dev/pts rw,nosuid,noexec,relatime shared:3 - devpts devpts rw,gid=5,mode=600,ptmxmode=000\n24 26 0:22 / /run rw,nosuid,nodev,noexec,relatime shared:5 - tmpfs tmpfs rw,size=1651168k,mode=755\n26 1 179:2 / / rw,noatime shared:1 - ext4 /dev/mmcblk0p2 rw\n27 20 0:7 / /sys/kernel/security rw,nosuid,nodev,noexec,relatime shared:7 - securityfs securityfs rw\n28 22 0:24 / /dev/shm rw,nosuid,nodev shared:4 - tmpfs tmpfs rw\n29 20 0:25 / /sys/fs/cgroup rw,nosuid,nodev,noexec,relatime shared:8 - cgroup2 cgroup2 rw,nsdelegate,memory_recursiveprot\n30 20 0:26 / /sys/fs/pstore rw,nosuid,nodev,noexec,relatime shared:9 - pstore none rw\n31 20 0:27 / /sys/fs/bpf rw,nosuid,nodev,noexec,relatime shared:10 - bpf bpf rw,mode=700\n32 21 0:28 / /proc/sys/fs/binfmt_misc rw,relatime shared:12 - autofs systemd-1 rw,fd=36,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=335\n78 24 0:29 / /run/credentials/systemd-journald.service ro,nosuid,nodev,noexec,relatime,nosymfollow shared:14 - tmpfs tmpfs rw,size=1024k,nr_inodes=1024,mode=700,noswap\n33 20 0:12 / /sys/kernel/tracing rw,nosuid,nodev,noexec,relatime shared:18 - tracefs tracefs rw\n34 22 0:17 / /dev/mqueue rw,nosuid,nodev,noexec,relatime shared:16 - mqueue mqueue rw\n35 20 0:8 / /sys/kernel/debug rw,nosuid,nodev,noexec,relatime shared:17 - debugfs debugfs rw\n36 24 0:32 / /run/lock rw,nosuid,nodev,noexec,relatime shared:19 - tmpfs tmpfs rw,size=5120k\n37 20 0:18 / /sys/kernel/config rw,nosuid,nodev,noexec,relatime shared:20 - configfs configfs rw\n38 20 0:33 / /sys/fs/fuse/connections rw,nosuid,nodev,noexec,relatime shared:21 - fusectl fusectl rw\n40 26 0:30 / /tmp rw,nosuid,nodev shared:64 - tmpfs tmpfs rw,size=4127920k,nr_inodes=1048576\n43 26 179:1 / /boot/firmware rw,relatime shared:80 - vfat /dev/mmcblk0p1 rw,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro\n46 32 0:37 / /proc/sys/fs/binfmt_misc rw,nosuid,nodev,noexec,relatime shared:86 - binfmt_misc binfmt_misc rw\n51 24 0:36 / /run/rpc_pipefs rw,relatime shared:83 - rpc_pipefs sunrpc rw\n111 24 0:44 / /run/user/1000 rw,nosuid,nodev,relatime shared:247 - tmpfs tmpfs rw,size=825568k,nr_inodes=206392,mode=700,uid=1000,gid=1000\n275 24 0:42 / /run/credentials/getty@tty1.service ro,nosuid,nodev,noexec,relatime,nosymfollow shared:139 - tmpfs tmpfs rw,size=1024k,nr_inodes=1024,mode=700,noswap\n285 24 0:50 / /run/credentials/serial-getty@ttyAMA10.service ro,nosuid,nodev,noexec,relatime,nosymfollow shared:178 - tmpfs tmpfs rw,size=1024k,nr_inodes=1024,mode=700,noswap\n115 111 0:45 / /run/user/1000/gvfs rw,nosuid,nodev,relatime shared:170 - fuse.gvfsd-fuse gvfsd-fuse rw,user_id=1000,group_id=1000\n180 111 0:46 / /run/user/1000/doc rw,nosuid,nodev,relatime shared:194 - fuse.portal portal rw,user_id=1000,group_id=1000\n",
+          "nfs_package": {
+            "exit_code": 0,
+            "stdout": "nfs-common 1:2.8.3-1 install ok installed\n",
+            "stderr": ""
+          },
+          "service": "MainPID=1036\nActiveState=active\n"
+        },
+        "mount_admission": {
+          "ready": false,
+          "reason": "Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready"
+        },
+        "agent_pid_unchanged": true
+      },
+      "final_services_backups": {
+        "host": "pi01",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "/var/backups/distributed-ml-nfs": {
+            "error": "FileNotFoundError"
+          },
+          "/var/backups/distributed-ml-nfs-client": {
+            "error": "FileNotFoundError"
+          },
+          "/etc/systemd/system/ml-nfs-ready.service": {
+            "error": "FileNotFoundError"
+          },
+          "/etc/systemd/system/srv-mlnfs-inputs.mount": {
+            "error": "FileNotFoundError"
+          },
+          "agent_service": "MainPID=1036\nExecMainStartTimestamp=Tue 2026-11-10 08:22:12 +06\nUser=pi\nRequires=system.slice -.mount sysinit.target\nWants=network-online.target\nAfter=sysinit.target system.slice network-online.target basic.target -.mount systemd-journald.socket\nActiveState=active\n",
+          "configured_export_lines": {
+            "error": "FileNotFoundError"
+          }
+        }
+      }
+    },
+    "pi02": {
+      "exit_code": 0,
+      "observed": {
+        "at_utc_ns": 1794297131626086413,
+        "hostname": "pi02",
+        "kernel": "6.12.25+rpt-rpi-2712",
+        "machine": "aarch64",
+        "os_release": "PRETTY_NAME=\"Debian GNU/Linux 12 (bookworm)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"12\"\nVERSION=\"12 (bookworm)\"\nVERSION_CODENAME=bookworm\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+        "uid": 1000,
+        "gid": 1000,
+        "system_python": "3.11.2",
+        "root_metadata": {
+          "exists": true,
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o775",
+          "bytes": 4096,
+          "mtime_ns": 1791963934875659249,
+          "kind": "directory",
+          "free_bytes": 11457048576,
+          "total_bytes": 30796742656
+        },
+        "public_config": {
+          "nodes.json": {
+            "nodes": [
+              {
+                "id": "pi01",
+                "ip": "192.168.10.125",
+                "port": 5000
+              },
+              {
+                "id": "pi02",
+                "ip": "192.168.10.150",
+                "port": 5000
+              },
+              {
+                "id": "pi03",
+                "ip": "192.168.10.101",
+                "port": 5000
+              }
+            ]
+          },
+          "storage.json": {
+            "error": "FileNotFoundError"
+          },
+          "nfs-server.json": {
+            "error": "FileNotFoundError"
+          },
+          "nfs-clients.json": {
+            "error": "FileNotFoundError"
+          },
+          "execution_leases.json": {
+            "enabled": true,
+            "duration_seconds": 30,
+            "renew_every_seconds": 5
+          },
+          "queue_policy.json": {
+            "error": "FileNotFoundError"
+          }
+        },
+        "services": {
+          "dl-node-agent.service": {
+            "exit_code": 0,
+            "properties": {
+              "MainPID": "946",
+              "CPUQuotaPerSecUSec": "infinity",
+              "MemoryMax": "infinity",
+              "TasksMax": "9573",
+              "LimitNOFILE": "524288",
+              "WorkingDirectory": "/home/pi/distributed-dl-system",
+              "User": "pi",
+              "Group": "",
+              "PrivateMounts": "no",
+              "NoNewPrivileges": "no",
+              "ActiveState": "active",
+              "SubState": "running",
+              "FragmentPath": "/etc/systemd/system/dl-node-agent.service",
+              "UnitFileState": "enabled",
+              "observed_exe": "/home/pi/.local/share/uv/python/cpython-3.11.16-linux-aarch64-gnu/bin/python3.11"
+            },
+            "error": null
+          }
+        },
+        "health": {
+          "node": "pi02",
+          "status": "ONLINE",
+          "architecture": "aarch64",
+          "python": "3.11.16",
+          "execution_ownership": {
+            "protocol": 1
+          }
+        },
+        "resources": {
+          "node": "pi02",
+          "ip": "192.168.10.150",
+          "status": "ONLINE",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "cpu": {
+            "available_cores": 4,
+            "frequency_mhz": 2400.0,
+            "logical_cores": 4,
+            "physical_cores": 4,
+            "usage_percent": 0.0
+          },
+          "memory": {
+            "available_gb": 7.2,
+            "total_gb": 7.87,
+            "usage_percent": 8.5,
+            "used_gb": 0.67
+          },
+          "disk": {
+            "free_gb": 10.67,
+            "total_gb": 28.68,
+            "usage_percent": 60.8
+          },
+          "network": {
+            "download_mbps": 0.001,
+            "interface": "eth0",
+            "upload_mbps": 0.001
+          },
+          "temperature_c": 52.35,
+          "timestamp": 1794297131.8415139,
+          "execution_ownership": {
+            "protocol": 1
+          }
+        },
+        "addresses": {
+          "exit_code": 0,
+          "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:63:85\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.150\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":6170,\"preferred_life_time\":6170},{\"family\":\"inet6\",\"local\":\"fe80::2bcd:9e10:5d17:c7d4\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:63:87\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.91.135.18\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::b34a:8713\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::da35:a4d1:cdd8:f3c5\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n",
+          "stderr": ""
+        },
+        "route_to_nfs": {
+          "exit_code": 0,
+          "stdout": "[{\"dst\":\"192.168.10.214\",\"dev\":\"eth0\",\"prefsrc\":\"192.168.10.150\",\"flags\":[],\"uid\":1000,\"cache\":[]}]\n",
+          "stderr": ""
+        },
+        "links": {
+          "lo": {
+            "operstate": "unknown\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "65536\n",
+            "carrier": "1\n"
+          },
+          "wlan0": {
+            "operstate": "down\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "1500\n",
+            "carrier": "0\n"
+          },
+          "eth0": {
+            "operstate": "up\n",
+            "speed": "100\n",
+            "duplex": "full\n",
+            "mtu": "1500\n",
+            "carrier": "1\n"
+          },
+          "tailscale0": {
+            "operstate": "unknown\n",
+            "speed": "-1\n",
+            "duplex": "full\n",
+            "mtu": "1280\n",
+            "carrier": "1\n"
+          }
+        },
+        "nfs_mountinfo": [
+          "33 21 0:29 / /proc/sys/fs/binfmt_misc rw,relatime shared:13 - autofs systemd-1 rw,fd=29,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=2047",
+          "40 26 0:35 / /srv/mlnfs/inputs rw,relatime shared:23 - autofs systemd-1 rw,fd=49,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=555",
+          "308 26 0:48 / /mnt/nfs_share rw,relatime shared:60 - nfs4 192.168.10.150:/srv/nfs/cifar10_data rw,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.150",
+          "509 40 0:53 / /srv/mlnfs/inputs ro,nosuid,nodev,noexec,relatime shared:59 - nfs4 192.168.10.214:/srv/ml-shared/objects rw,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.214"
+        ],
+        "nfs_tcp2049": "reachable",
+        "storage_paths": {
+          "/srv/mlnfs": {
+            "exists": true,
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o700",
+            "bytes": 4096,
+            "mtime_ns": 1794069371116176050,
+            "kind": "directory",
+            "free_bytes": 11457048576,
+            "total_bytes": 30796742656
+          },
+          "/srv/mlnfs/inputs": {
+            "error": "PermissionError",
+            "errno": 13
+          }
+        },
+        "test_artifact": {
+          "error": "PermissionError",
+          "errno": 13,
+          "verified": false
+        },
+        "filesystems": {
+          "exit_code": 0,
+          "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/mmcblk0p2\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,noatime\"\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "runtimes": {
+          "distributed-dl-system/.venv/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/.venv/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/.venv",
+              "versions": {
+                "Flask": "3.1.3",
+                "requests": "2.34.2",
+                "psutil": "7.2.2",
+                "waitress": "3.0.2",
+                "torch": "2.14.1",
+                "numpy": "2.4.6",
+                "pip": "26.2.1"
+              }
+            },
+            "pip_check": {
+              "exit_code": 1,
+              "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n",
+              "stderr": ""
+            }
+          },
+          "distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30",
+              "versions": {
+                "Flask": null,
+                "requests": null,
+                "psutil": null,
+                "waitress": null,
+                "torch": "2.15.0+cpu",
+                "numpy": null,
+                "pip": "24.0"
+              }
+            },
+            "pip_check": {
+              "exit_code": 0,
+              "stdout": "No broken requirements found.\n",
+              "stderr": ""
+            }
+          },
+          "distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0",
+              "versions": {
+                "Flask": null,
+                "requests": null,
+                "psutil": null,
+                "waitress": null,
+                "torch": "2.15.0+cpu",
+                "numpy": null,
+                "pip": "24.0"
+              }
+            },
+            "pip_check": {
+              "exit_code": 0,
+              "stdout": "No broken requirements found.\n",
+              "stderr": ""
+            }
+          }
+        },
+        "prepared_environment_count": 2,
+        "runtime_roots": {
+          "distributed-dl-system/controller/jobs.db": {
+            "exists": false
+          },
+          "distributed-dl-system/storage": {
+            "exists": false
+          },
+          "distributed-dl-system/checkpoints": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1791758755966594817,
+            "kind": "directory",
+            "free_bytes": 11457069056,
+            "total_bytes": 30796742656
+          },
+          "distributed-dl-system/worker-storage": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1794050133159305383,
+            "kind": "directory",
+            "free_bytes": 11457069056,
+            "total_bytes": 30796742656
+          },
+          "distributed-dl-system/worker-storage/environments": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1794049942503250956,
+            "kind": "directory",
+            "free_bytes": 11457069056,
+            "total_bytes": 30796742656
+          },
+          "distributed-dl-system/worker-storage/deployment-previous": {
+            "exists": true,
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1791963933419659110,
+            "kind": "directory",
+            "free_bytes": 11457069056,
+            "total_bytes": 30796742656
+          },
+          "distributed-dl-system/storage/deployment": {
+            "exists": false
+          },
+          "distributed-dl-system/storage/backups": {
+            "exists": false
+          },
+          "distributed-dl-system/backups": {
+            "exists": false
+          },
+          "distributed-dl-system/config/worker_credentials.json": {
+            "exists": false
+          },
+          "distributed-dl-system/config/staging_workers.json": {
+            "exists": false
+          }
+        },
+        "backup_candidates": {
+          "worker-storage/deployment-previous": {
+            "metadata": {
+              "exists": true,
+              "uid": 1000,
+              "gid": 1000,
+              "mode": "0o755",
+              "bytes": 4096,
+              "mtime_ns": 1791963933419659110,
+              "kind": "directory",
+              "free_bytes": 11457069056,
+              "total_bytes": 30796742656
+            },
+            "restore_tested": false,
+            "top_level_entries": [
+              {
+                "name": "agent",
+                "bytes": 4096,
+                "mode": "0o755",
+                "directory": true,
+                "mtime_ns": 1791963933411659110
+              },
+              {
+                "name": "config",
+                "bytes": 4096,
+                "mode": "0o755",
+                "directory": true,
+                "mtime_ns": 1791963933411659110
+              },
+              {
+                "name": "training",
+                "bytes": 4096,
+                "mode": "0o755",
+                "directory": true,
+                "mtime_ns": 1791963933411659110
+              },
+              {
+                "name": "dl-node-agent.service",
+                "bytes": 352,
+                "mode": "0o644",
+                "directory": false,
+                "mtime_ns": 1791963933419659110
+              }
+            ]
+          },
+          "storage/deployment": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "storage/backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          }
+        },
+        "sources": {
+          "agent/agent.py": {
+            "sha256": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+            "bytes": 46820
+          },
+          "agent/staging.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/cache_storage.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_service.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_restore_service.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/config.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/worker_cache.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/cache_registry_schema.py": {
+            "error": "FileNotFoundError"
+          },
+          "controller/dispatcher.py": {
+            "error": "FileNotFoundError"
+          }
+        }
+      },
+      "compatibility": {
+        "host": "pi02",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "runtimes": {
+            "/home/pi/distributed-dl-system/.venv": {
+              "exit_code": 0,
+              "stderr": "",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/.venv",
+                "packages_sha256": "319e8400599b74cec4951959d447196111f9deff630b9287699ee0ba2ecf40b1",
+                "torch_runtime": "2.14.1+cu130",
+                "cuda_build": "13.0",
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            },
+            "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30": {
+              "exit_code": 0,
+              "stderr": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30/lib/python3.11/site-packages/torch/_subclasses/functional_tensor.py:377: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:82.)\n  cpu = _conversion_method_template(device=torch.device(\"cpu\"))\n",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30",
+                "packages_sha256": "a1fe5412f5a6b7000a5c4c4f904c3c8cb4374bc5cf1575d951a1eee621155ac8",
+                "ready_marker_present": true,
+                "marker_matches_installed_probe": true,
+                "environment_key_matches": true,
+                "torch_runtime": "2.15.0+cpu",
+                "cuda_build": null,
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            },
+            "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0": {
+              "exit_code": 0,
+              "stderr": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0/lib/python3.11/site-packages/torch/_subclasses/functional_tensor.py:377: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:82.)\n  cpu = _conversion_method_template(device=torch.device(\"cpu\"))\n",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0",
+                "packages_sha256": "a1fe5412f5a6b7000a5c4c4f904c3c8cb4374bc5cf1575d951a1eee621155ac8",
+                "ready_marker_present": true,
+                "marker_matches_installed_probe": true,
+                "environment_key_matches": true,
+                "torch_runtime": "2.15.0+cpu",
+                "cuda_build": null,
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            }
+          },
+          "nfs_units": {
+            "exit_code": 0,
+            "stdout": "Id=ml-nfs-ready.service\nRequires=-.mount srv-mlnfs-inputs.mount sysinit.target system.slice\nWants=tmp.mount\nBindsTo=\nAfter=basic.target system.slice systemd-journald.socket systemd-tmpfiles-setup.service sysinit.target tmp.mount -.mount srv-mlnfs-inputs.mount\nRequiresMountsFor=/var/tmp\nActiveState=inactive\nSubState=dead\nUnitFileState=static\n\nWhere=/srv/mlnfs/inputs\nId=srv-mlnfs-inputs.automount\nRequires=-.mount\nWants=\nBindsTo=\nAfter=local-fs-pre.target -.mount\nRequiresMountsFor=/srv/mlnfs\nActiveState=active\nSubState=running\nUnitFileState=enabled\n\nWhere=/srv/mlnfs/inputs\nWhat=192.168.10.214:/srv/ml-shared/objects\nOptions=ro,nosuid,nodev,noexec,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.214\nTimeoutUSec=15s\nId=srv-mlnfs-inputs.mount\nRequires=system.slice -.mount\nWants=network-online.target\nBindsTo=\nAfter=systemd-journald.socket -.mount network-online.target srv-mlnfs-inputs.automount remote-fs-pre.target system.slice network.target\nRequiresMountsFor=/srv/mlnfs\nActiveState=active\nSubState=mounted\nUnitFileState=static\n",
+            "stderr": ""
+          }
+        }
+      },
+      "full_mount_package_check": {
+        "host": "pi02",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "mountinfo": "20 26 0:19 / /sys rw,nosuid,nodev,noexec,relatime shared:7 - sysfs sysfs rw\n21 26 0:20 / /proc rw,relatime shared:12 - proc proc rw\n22 26 0:6 / /dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=4084288k,nr_inodes=255268,mode=755\n23 22 0:21 / /dev/pts rw,nosuid,noexec,relatime shared:3 - devpts devpts rw,gid=5,mode=620,ptmxmode=000\n24 26 0:22 / /run rw,nosuid,nodev,noexec,relatime shared:5 - tmpfs tmpfs rw,size=825728k,mode=755\n26 1 179:2 / / rw,noatime shared:1 - ext4 /dev/mmcblk0p2 rw\n27 20 0:7 / /sys/kernel/security rw,nosuid,nodev,noexec,relatime shared:8 - securityfs securityfs rw\n28 22 0:24 / /dev/shm rw,nosuid,nodev shared:4 - tmpfs tmpfs rw\n29 24 0:25 / /run/lock rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=5120k\n30 20 0:26 / /sys/fs/cgroup rw,nosuid,nodev,noexec,relatime shared:9 - cgroup2 cgroup2 rw,nsdelegate,memory_recursiveprot\n31 20 0:27 / /sys/fs/pstore rw,nosuid,nodev,noexec,relatime shared:10 - pstore pstore rw\n32 20 0:28 / /sys/fs/bpf rw,nosuid,nodev,noexec,relatime shared:11 - bpf bpf rw,mode=700\n33 21 0:29 / /proc/sys/fs/binfmt_misc rw,relatime shared:13 - autofs systemd-1 rw,fd=29,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=2047\n34 20 0:8 / /sys/kernel/debug rw,nosuid,nodev,noexec,relatime shared:14 - debugfs debugfs rw\n35 20 0:12 / /sys/kernel/tracing rw,nosuid,nodev,noexec,relatime shared:15 - tracefs tracefs rw\n36 22 0:17 / /dev/mqueue rw,nosuid,nodev,noexec,relatime shared:16 - mqueue mqueue rw\n37 20 0:18 / /sys/kernel/config rw,nosuid,nodev,noexec,relatime shared:17 - configfs configfs rw\n38 21 0:30 / /proc/fs/nfsd rw,relatime shared:18 - nfsd nfsd rw\n39 20 0:31 / /sys/fs/fuse/connections rw,nosuid,nodev,noexec,relatime shared:19 - fusectl fusectl rw\n61 24 0:32 / /run/credentials/systemd-sysusers.service ro,nosuid,nodev,noexec,relatime shared:20 - ramfs ramfs rw,mode=700\n63 24 0:33 / /run/credentials/systemd-sysctl.service ro,nosuid,nodev,noexec,relatime shared:21 - ramfs ramfs rw,mode=700\n65 24 0:34 / /run/credentials/systemd-tmpfiles-setup-dev.service ro,nosuid,nodev,noexec,relatime shared:22 - ramfs ramfs rw,mode=700\n40 26 0:35 / /srv/mlnfs/inputs rw,relatime shared:23 - autofs systemd-1 rw,fd=49,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=555\n77 26 179:1 / /boot/firmware rw,relatime shared:32 - vfat /dev/mmcblk0p1 rw,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro\n121 24 0:36 / /run/credentials/systemd-tmpfiles-setup.service ro,nosuid,nodev,noexec,relatime shared:49 - ramfs ramfs rw,mode=700\n95 33 0:37 / /proc/sys/fs/binfmt_misc rw,nosuid,nodev,noexec,relatime shared:51 - binfmt_misc binfmt_misc rw\n98 24 0:38 / /run/rpc_pipefs rw,relatime shared:53 - rpc_pipefs sunrpc rw\n308 26 0:48 / /mnt/nfs_share rw,relatime shared:60 - nfs4 192.168.10.150:/srv/nfs/cifar10_data rw,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.150\n304 24 0:45 / /run/user/1000 rw,nosuid,nodev,relatime shared:101 - tmpfs tmpfs rw,size=825712k,nr_inodes=206428,mode=700,uid=1000,gid=1000\n336 304 0:46 / /run/user/1000/gvfs rw,nosuid,nodev,relatime shared:112 - fuse.gvfsd-fuse gvfsd-fuse rw,user_id=1000,group_id=1000\n353 304 0:47 / /run/user/1000/doc rw,nosuid,nodev,relatime shared:122 - fuse.portal portal rw,user_id=1000,group_id=1000\n496 24 0:49 / /run/user/1001 rw,nosuid,nodev,relatime shared:275 - tmpfs tmpfs rw,size=825712k,nr_inodes=206428,mode=700,uid=1001,gid=1001\n509 40 0:53 / /srv/mlnfs/inputs ro,nosuid,nodev,noexec,relatime shared:59 - nfs4 192.168.10.214:/srv/ml-shared/objects rw,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=192.168.10.150,local_lock=none,addr=192.168.10.214\n",
+          "nfs_package": {
+            "exit_code": 0,
+            "stdout": "nfs-common 1:2.6.2-4+deb12u1 install ok installed\n",
+            "stderr": ""
+          },
+          "service": "MainPID=946\nActiveState=active\n"
+        },
+        "mount_admission": {
+          "ready": true,
+          "mount_id": 509,
+          "source": "192.168.10.214:/srv/ml-shared/objects",
+          "target": "/srv/mlnfs/inputs",
+          "version": "4.1",
+          "scope": "Metadata admission only; not server liveness, authorization or byte verification"
+        },
+        "agent_pid_unchanged": true
+      },
+      "final_services_backups": {
+        "host": "pi02",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "/var/backups/distributed-ml-nfs": {
+            "error": "FileNotFoundError"
+          },
+          "/var/backups/distributed-ml-nfs-client": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o700",
+            "exists": true,
+            "listing_error": "PermissionError"
+          },
+          "/etc/systemd/system/ml-nfs-ready.service": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o644",
+            "exists": true
+          },
+          "/etc/systemd/system/srv-mlnfs-inputs.mount": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o644",
+            "exists": true
+          },
+          "agent_service": "MainPID=946\nExecMainStartTimestamp=Sun 2026-11-08 19:20:33 +06\nUser=pi\nRequires=-.mount sysinit.target system.slice\nWants=network-online.target\nAfter=network-online.target systemd-journald.socket system.slice sysinit.target basic.target -.mount\nActiveState=active\n",
+          "configured_export_lines": [
+            "/srv/nfs/cifar10_data *(rw,sync,no_subtree_check,no_root_squash)"
+          ]
+        }
+      }
+    },
+    "pi03": {
+      "exit_code": 0,
+      "observed": {
+        "at_utc_ns": 1794297131855685051,
+        "hostname": "pi03",
+        "kernel": "6.12.25+rpt-rpi-2712",
+        "machine": "aarch64",
+        "os_release": "PRETTY_NAME=\"Debian GNU/Linux 12 (bookworm)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"12\"\nVERSION=\"12 (bookworm)\"\nVERSION_CODENAME=bookworm\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+        "uid": 1002,
+        "gid": 1002,
+        "system_python": "3.11.2",
+        "root_metadata": {
+          "exists": true,
+          "uid": 1002,
+          "gid": 1002,
+          "mode": "0o775",
+          "bytes": 4096,
+          "mtime_ns": 1791964102607780304,
+          "kind": "directory",
+          "free_bytes": 9281269760,
+          "total_bytes": 30808801280
+        },
+        "public_config": {
+          "nodes.json": {
+            "nodes": [
+              {
+                "id": "pi01",
+                "ip": "192.168.10.125",
+                "port": 5000
+              },
+              {
+                "id": "pi02",
+                "ip": "192.168.10.150",
+                "port": 5000
+              },
+              {
+                "id": "pi03",
+                "ip": "192.168.10.101",
+                "port": 5000
+              }
+            ]
+          },
+          "storage.json": {
+            "error": "FileNotFoundError"
+          },
+          "nfs-server.json": {
+            "error": "FileNotFoundError"
+          },
+          "nfs-clients.json": {
+            "error": "FileNotFoundError"
+          },
+          "execution_leases.json": {
+            "enabled": true,
+            "duration_seconds": 30,
+            "renew_every_seconds": 5
+          },
+          "queue_policy.json": {
+            "error": "FileNotFoundError"
+          }
+        },
+        "services": {
+          "dl-node-agent.service": {
+            "exit_code": 0,
+            "properties": {
+              "MainPID": "902",
+              "CPUQuotaPerSecUSec": "infinity",
+              "MemoryMax": "infinity",
+              "TasksMax": "9558",
+              "LimitNOFILE": "524288",
+              "WorkingDirectory": "/home/pi/distributed-dl-system",
+              "User": "pi",
+              "Group": "",
+              "PrivateMounts": "no",
+              "NoNewPrivileges": "no",
+              "ActiveState": "active",
+              "SubState": "running",
+              "FragmentPath": "/etc/systemd/system/dl-node-agent.service",
+              "UnitFileState": "enabled",
+              "observed_exe": "/home/pi/.local/share/uv/python/cpython-3.11.16-linux-aarch64-gnu/bin/python3.11"
+            },
+            "error": null
+          }
+        },
+        "health": {
+          "node": "pi03",
+          "status": "ONLINE",
+          "architecture": "aarch64",
+          "python": "3.11.16",
+          "execution_ownership": {
+            "protocol": 1
+          }
+        },
+        "resources": {
+          "node": "pi03",
+          "ip": "192.168.10.101",
+          "status": "ONLINE",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "cpu": {
+            "available_cores": 4,
+            "frequency_mhz": 2400.0,
+            "logical_cores": 4,
+            "physical_cores": 4,
+            "usage_percent": 11.1
+          },
+          "memory": {
+            "available_gb": 7.27,
+            "total_gb": 7.86,
+            "usage_percent": 7.5,
+            "used_gb": 0.59
+          },
+          "disk": {
+            "free_gb": 8.64,
+            "total_gb": 28.69,
+            "usage_percent": 68.2
+          },
+          "network": {
+            "download_mbps": 0.001,
+            "interface": "eth0",
+            "upload_mbps": 0.001
+          },
+          "temperature_c": 56.75,
+          "timestamp": 1794297132.078177,
+          "execution_ownership": {
+            "protocol": 1
+          }
+        },
+        "addresses": {
+          "exit_code": 0,
+          "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:83\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.10.101\",\"prefixlen\":24,\"broadcast\":\"192.168.10.255\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"eth0\",\"valid_life_time\":6415,\"preferred_life_time\":6415},{\"family\":\"inet6\",\"local\":\"fe80::373f:1d3d:1391:6828\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":3,\"ifname\":\"wlan0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"2c:cf:67:81:62:84\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.64.202.71\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::a04a:ca48\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::80b4:f699:b14d:da7c\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n",
+          "stderr": ""
+        },
+        "route_to_nfs": {
+          "exit_code": 0,
+          "stdout": "[{\"dst\":\"192.168.10.214\",\"dev\":\"eth0\",\"prefsrc\":\"192.168.10.101\",\"flags\":[],\"uid\":1002,\"cache\":[]}]\n",
+          "stderr": ""
+        },
+        "links": {
+          "lo": {
+            "operstate": "unknown\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "65536\n",
+            "carrier": "1\n"
+          },
+          "wlan0": {
+            "operstate": "down\n",
+            "speed": null,
+            "duplex": null,
+            "mtu": "1500\n",
+            "carrier": "0\n"
+          },
+          "eth0": {
+            "operstate": "up\n",
+            "speed": "100\n",
+            "duplex": "full\n",
+            "mtu": "1500\n",
+            "carrier": "1\n"
+          },
+          "tailscale0": {
+            "operstate": "unknown\n",
+            "speed": "-1\n",
+            "duplex": "full\n",
+            "mtu": "1280\n",
+            "carrier": "1\n"
+          }
+        },
+        "nfs_mountinfo": [
+          "33 21 0:29 / /proc/sys/fs/binfmt_misc rw,relatime shared:13 - autofs systemd-1 rw,fd=29,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=5580",
+          "39 26 0:34 / /srv/mlnfs/inputs rw,relatime shared:22 - autofs systemd-1 rw,fd=43,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=432",
+          "302 26 0:47 / /mnt/nfs_share rw,relatime shared:58 - nfs4 192.168.10.150:/srv/nfs/cifar10_data rw,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.150",
+          "508 39 0:52 / /srv/mlnfs/inputs ro,nosuid,nodev,noexec,relatime shared:282 - nfs4 192.168.10.214:/srv/ml-shared/objects rw,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.214"
+        ],
+        "nfs_tcp2049": "reachable",
+        "storage_paths": {
+          "/srv/mlnfs": {
+            "exists": true,
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o700",
+            "bytes": 4096,
+            "mtime_ns": 1794069500361321355,
+            "kind": "directory",
+            "free_bytes": 9281269760,
+            "total_bytes": 30808801280
+          },
+          "/srv/mlnfs/inputs": {
+            "error": "PermissionError",
+            "errno": 13
+          }
+        },
+        "test_artifact": {
+          "error": "PermissionError",
+          "errno": 13,
+          "verified": false
+        },
+        "filesystems": {
+          "exit_code": 0,
+          "stdout": "{\n   \"filesystems\": [\n      {\n         \"target\": \"/\",\n         \"source\": \"/dev/mmcblk0p2\",\n         \"fstype\": \"ext4\",\n         \"options\": \"rw,noatime\"\n      }\n   ]\n}\n",
+          "stderr": ""
+        },
+        "runtimes": {
+          "distributed-dl-system/.venv/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/.venv/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/.venv",
+              "versions": {
+                "Flask": "3.1.3",
+                "requests": "2.34.2",
+                "psutil": "7.2.2",
+                "waitress": "3.0.2",
+                "torch": "2.14.1",
+                "numpy": "2.4.6",
+                "pip": "26.2.1"
+              }
+            },
+            "pip_check": {
+              "exit_code": 1,
+              "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n",
+              "stderr": ""
+            }
+          },
+          "distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30",
+              "versions": {
+                "Flask": null,
+                "requests": null,
+                "psutil": null,
+                "waitress": null,
+                "torch": "2.14.1+cpu",
+                "numpy": null,
+                "pip": "24.0"
+              }
+            },
+            "pip_check": {
+              "exit_code": 0,
+              "stdout": "No broken requirements found.\n",
+              "stderr": ""
+            }
+          },
+          "distributed-dl-system/worker-storage/environments/eb831bf5a5f69712122d8d6a8de4134bc56f57876a62f602878d6658fbeb0f02/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/worker-storage/environments/eb831bf5a5f69712122d8d6a8de4134bc56f57876a62f602878d6658fbeb0f02/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/eb831bf5a5f69712122d8d6a8de4134bc56f57876a62f602878d6658fbeb0f02",
+              "versions": {
+                "Flask": null,
+                "requests": null,
+                "psutil": null,
+                "waitress": null,
+                "torch": "2.14.1+cpu",
+                "numpy": "2.4.6",
+                "pip": "24.0"
+              }
+            },
+            "pip_check": {
+              "exit_code": 0,
+              "stdout": "No broken requirements found.\n",
+              "stderr": ""
+            }
+          },
+          "distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0/bin/python": {
+            "exit_code": 0,
+            "stderr": "",
+            "metadata": {
+              "python": "3.11.16",
+              "executable": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0/bin/python",
+              "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0",
+              "versions": {
+                "Flask": null,
+                "requests": null,
+                "psutil": null,
+                "waitress": null,
+                "torch": "2.15.0+cpu",
+                "numpy": null,
+                "pip": "24.0"
+              }
+            },
+            "pip_check": {
+              "exit_code": 0,
+              "stdout": "No broken requirements found.\n",
+              "stderr": ""
+            }
+          }
+        },
+        "prepared_environment_count": 4,
+        "runtime_roots": {
+          "distributed-dl-system/controller/jobs.db": {
+            "exists": false
+          },
+          "distributed-dl-system/storage": {
+            "exists": false
+          },
+          "distributed-dl-system/checkpoints": {
+            "exists": true,
+            "uid": 1002,
+            "gid": 1002,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1791758924246032504,
+            "kind": "directory",
+            "free_bytes": 9281290240,
+            "total_bytes": 30808801280
+          },
+          "distributed-dl-system/worker-storage": {
+            "exists": true,
+            "uid": 1002,
+            "gid": 1002,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1793739018574873655,
+            "kind": "directory",
+            "free_bytes": 9281290240,
+            "total_bytes": 30808801280
+          },
+          "distributed-dl-system/worker-storage/environments": {
+            "exists": true,
+            "uid": 1002,
+            "gid": 1002,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1794049986783569564,
+            "kind": "directory",
+            "free_bytes": 9281290240,
+            "total_bytes": 30808801280
+          },
+          "distributed-dl-system/worker-storage/deployment-previous": {
+            "exists": true,
+            "uid": 1002,
+            "gid": 1002,
+            "mode": "0o755",
+            "bytes": 4096,
+            "mtime_ns": 1791964101139782213,
+            "kind": "directory",
+            "free_bytes": 9281290240,
+            "total_bytes": 30808801280
+          },
+          "distributed-dl-system/storage/deployment": {
+            "exists": false
+          },
+          "distributed-dl-system/storage/backups": {
+            "exists": false
+          },
+          "distributed-dl-system/backups": {
+            "exists": false
+          },
+          "distributed-dl-system/config/worker_credentials.json": {
+            "exists": false
+          },
+          "distributed-dl-system/config/staging_workers.json": {
+            "exists": false
+          }
+        },
+        "backup_candidates": {
+          "worker-storage/deployment-previous": {
+            "metadata": {
+              "exists": true,
+              "uid": 1002,
+              "gid": 1002,
+              "mode": "0o755",
+              "bytes": 4096,
+              "mtime_ns": 1791964101139782213,
+              "kind": "directory",
+              "free_bytes": 9281290240,
+              "total_bytes": 30808801280
+            },
+            "restore_tested": false,
+            "top_level_entries": [
+              {
+                "name": "agent",
+                "bytes": 4096,
+                "mode": "0o755",
+                "directory": true,
+                "mtime_ns": 1791964101135782218
+              },
+              {
+                "name": "config",
+                "bytes": 4096,
+                "mode": "0o755",
+                "directory": true,
+                "mtime_ns": 1791964101135782218
+              },
+              {
+                "name": "training",
+                "bytes": 4096,
+                "mode": "0o755",
+                "directory": true,
+                "mtime_ns": 1791964101135782218
+              },
+              {
+                "name": "dl-node-agent.service",
+                "bytes": 352,
+                "mode": "0o644",
+                "directory": false,
+                "mtime_ns": 1791964101139782213
+              }
+            ]
+          },
+          "storage/deployment": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "storage/backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          },
+          "backups": {
+            "metadata": {
+              "exists": false
+            },
+            "restore_tested": false
+          }
+        },
+        "sources": {
+          "agent/agent.py": {
+            "sha256": "4d510093da9302348feb132d4bb7ab2870fda0ed1d18692b296cab517fcc429a",
+            "bytes": 46820
+          },
+          "agent/staging.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/cache_storage.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_service.py": {
+            "error": "FileNotFoundError"
+          },
+          "agent/checkpoint_restore_service.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/config.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/worker_cache.py": {
+            "error": "FileNotFoundError"
+          },
+          "hybrid_storage/cache_registry_schema.py": {
+            "error": "FileNotFoundError"
+          },
+          "controller/dispatcher.py": {
+            "error": "FileNotFoundError"
+          }
+        }
+      },
+      "compatibility": {
+        "host": "pi03",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "runtimes": {
+            "/home/pi/distributed-dl-system/.venv": {
+              "exit_code": 0,
+              "stderr": "",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/.venv",
+                "packages_sha256": "319e8400599b74cec4951959d447196111f9deff630b9287699ee0ba2ecf40b1",
+                "torch_runtime": "2.14.1+cu130",
+                "cuda_build": "13.0",
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            },
+            "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30": {
+              "exit_code": 0,
+              "stderr": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30/lib/python3.11/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)\n  cpu = _conversion_method_template(device=torch.device(\"cpu\"))\n",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/1e87896816be8d4212bb6e5a1f00dad9d6cc32bedfdcaca87cb705f5fc1c1d30",
+                "packages_sha256": "5a389ac89ed1d6d33eab32bf39dcc323df12f429e61ca8d43f8b144dd75fcb37",
+                "ready_marker_present": true,
+                "marker_matches_installed_probe": true,
+                "environment_key_matches": true,
+                "torch_runtime": "2.14.1+cpu",
+                "cuda_build": null,
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            },
+            "/home/pi/distributed-dl-system/worker-storage/environments/eb831bf5a5f69712122d8d6a8de4134bc56f57876a62f602878d6658fbeb0f02": {
+              "exit_code": 0,
+              "stderr": "",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/eb831bf5a5f69712122d8d6a8de4134bc56f57876a62f602878d6658fbeb0f02",
+                "packages_sha256": "8e078170b5f5f533a4c8fe4445e02b27cc1a1ef0617b3cf65bf946a3a9dae1d3",
+                "ready_marker_present": true,
+                "marker_matches_installed_probe": true,
+                "environment_key_matches": true,
+                "torch_runtime": "2.14.1+cpu",
+                "cuda_build": null,
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            },
+            "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0": {
+              "exit_code": 0,
+              "stderr": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0/lib/python3.11/site-packages/torch/_subclasses/functional_tensor.py:377: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:82.)\n  cpu = _conversion_method_template(device=torch.device(\"cpu\"))\n",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/f3beb7675ded399131014547a52223c1493067ea099e2b69db6a64351149b7e0",
+                "packages_sha256": "a1fe5412f5a6b7000a5c4c4f904c3c8cb4374bc5cf1575d951a1eee621155ac8",
+                "ready_marker_present": true,
+                "marker_matches_installed_probe": true,
+                "environment_key_matches": true,
+                "torch_runtime": "2.15.0+cpu",
+                "cuda_build": null,
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            },
+            "/home/pi/distributed-dl-system/worker-storage/environments/fb37cb92d4a5428f4b9cb0676690c529fbcf90320fbfda68cb911706a56422e2": {
+              "exit_code": 0,
+              "stderr": "/home/pi/distributed-dl-system/worker-storage/environments/fb37cb92d4a5428f4b9cb0676690c529fbcf90320fbfda68cb911706a56422e2/lib/python3.11/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)\n  cpu = _conversion_method_template(device=torch.device(\"cpu\"))\n",
+              "probe": {
+                "python": "3.11.16",
+                "prefix": "/home/pi/distributed-dl-system/worker-storage/environments/fb37cb92d4a5428f4b9cb0676690c529fbcf90320fbfda68cb911706a56422e2",
+                "packages_sha256": "5a389ac89ed1d6d33eab32bf39dcc323df12f429e61ca8d43f8b144dd75fcb37",
+                "ready_marker_present": true,
+                "marker_matches_installed_probe": true,
+                "environment_key_matches": true,
+                "torch_runtime": "2.14.1+cpu",
+                "cuda_build": null,
+                "gloo_available": true,
+                "cpu_probe_sum": 3.0
+              }
+            }
+          },
+          "nfs_units": {
+            "exit_code": 0,
+            "stdout": "Id=ml-nfs-ready.service\nRequires=srv-mlnfs-inputs.mount system.slice sysinit.target -.mount\nWants=tmp.mount\nBindsTo=\nAfter=system.slice srv-mlnfs-inputs.mount tmp.mount sysinit.target systemd-tmpfiles-setup.service basic.target systemd-journald.socket -.mount\nRequiresMountsFor=/var/tmp\nActiveState=inactive\nSubState=dead\nUnitFileState=static\n\nWhere=/srv/mlnfs/inputs\nId=srv-mlnfs-inputs.automount\nRequires=-.mount\nWants=\nBindsTo=\nAfter=local-fs-pre.target -.mount\nRequiresMountsFor=/srv/mlnfs\nActiveState=active\nSubState=running\nUnitFileState=enabled\n\nWhere=/srv/mlnfs/inputs\nWhat=192.168.10.214:/srv/ml-shared/objects\nOptions=ro,nosuid,nodev,noexec,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.214\nTimeoutUSec=15s\nId=srv-mlnfs-inputs.mount\nRequires=-.mount system.slice\nWants=network-online.target\nBindsTo=\nAfter=srv-mlnfs-inputs.automount system.slice network-online.target -.mount remote-fs-pre.target network.target systemd-journald.socket\nRequiresMountsFor=/srv/mlnfs\nActiveState=active\nSubState=mounted\nUnitFileState=static\n",
+            "stderr": ""
+          }
+        }
+      },
+      "full_mount_package_check": {
+        "host": "pi03",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "mountinfo": "20 26 0:19 / /sys rw,nosuid,nodev,noexec,relatime shared:7 - sysfs sysfs rw\n21 26 0:20 / /proc rw,relatime shared:12 - proc proc rw\n22 26 0:6 / /dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=4078208k,nr_inodes=254888,mode=755\n23 22 0:21 / /dev/pts rw,nosuid,noexec,relatime shared:3 - devpts devpts rw,gid=5,mode=620,ptmxmode=000\n24 26 0:22 / /run rw,nosuid,nodev,noexec,relatime shared:5 - tmpfs tmpfs rw,size=824512k,mode=755\n26 1 179:2 / / rw,noatime shared:1 - ext4 /dev/mmcblk0p2 rw\n27 20 0:7 / /sys/kernel/security rw,nosuid,nodev,noexec,relatime shared:8 - securityfs securityfs rw\n28 22 0:24 / /dev/shm rw,nosuid,nodev shared:4 - tmpfs tmpfs rw\n29 24 0:25 / /run/lock rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=5120k\n30 20 0:26 / /sys/fs/cgroup rw,nosuid,nodev,noexec,relatime shared:9 - cgroup2 cgroup2 rw,nsdelegate,memory_recursiveprot\n31 20 0:27 / /sys/fs/pstore rw,nosuid,nodev,noexec,relatime shared:10 - pstore pstore rw\n32 20 0:28 / /sys/fs/bpf rw,nosuid,nodev,noexec,relatime shared:11 - bpf bpf rw,mode=700\n33 21 0:29 / /proc/sys/fs/binfmt_misc rw,relatime shared:13 - autofs systemd-1 rw,fd=29,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=5580\n34 22 0:17 / /dev/mqueue rw,nosuid,nodev,noexec,relatime shared:14 - mqueue mqueue rw\n35 20 0:8 / /sys/kernel/debug rw,nosuid,nodev,noexec,relatime shared:15 - debugfs debugfs rw\n36 20 0:12 / /sys/kernel/tracing rw,nosuid,nodev,noexec,relatime shared:16 - tracefs tracefs rw\n37 20 0:30 / /sys/fs/fuse/connections rw,nosuid,nodev,noexec,relatime shared:17 - fusectl fusectl rw\n38 20 0:18 / /sys/kernel/config rw,nosuid,nodev,noexec,relatime shared:18 - configfs configfs rw\n59 24 0:31 / /run/credentials/systemd-sysctl.service ro,nosuid,nodev,noexec,relatime shared:19 - ramfs ramfs rw,mode=700\n61 24 0:32 / /run/credentials/systemd-sysusers.service ro,nosuid,nodev,noexec,relatime shared:20 - ramfs ramfs rw,mode=700\n63 24 0:33 / /run/credentials/systemd-tmpfiles-setup-dev.service ro,nosuid,nodev,noexec,relatime shared:21 - ramfs ramfs rw,mode=700\n39 26 0:34 / /srv/mlnfs/inputs rw,relatime shared:22 - autofs systemd-1 rw,fd=43,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=432\n75 26 179:1 / /boot/firmware rw,relatime shared:31 - vfat /dev/mmcblk0p1 rw,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro\n117 24 0:35 / /run/credentials/systemd-tmpfiles-setup.service ro,nosuid,nodev,noexec,relatime shared:47 - ramfs ramfs rw,mode=700\n92 33 0:36 / /proc/sys/fs/binfmt_misc rw,nosuid,nodev,noexec,relatime shared:49 - binfmt_misc binfmt_misc rw\n95 24 0:37 / /run/rpc_pipefs rw,relatime shared:51 - rpc_pipefs sunrpc rw\n302 26 0:47 / /mnt/nfs_share rw,relatime shared:58 - nfs4 192.168.10.150:/srv/nfs/cifar10_data rw,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.150\n298 24 0:44 / /run/user/1000 rw,nosuid,nodev,relatime shared:99 - tmpfs tmpfs rw,size=824496k,nr_inodes=206124,mode=700,uid=1000,gid=1000\n330 24 0:45 / /run/user/105 rw,nosuid,nodev,relatime shared:110 - tmpfs tmpfs rw,size=824496k,nr_inodes=206124,mode=700,uid=105,gid=111\n347 330 0:46 / /run/user/105/gvfs rw,nosuid,nodev,relatime shared:120 - fuse.gvfsd-fuse gvfsd-fuse rw,user_id=105,group_id=111\n508 39 0:52 / /srv/mlnfs/inputs ro,nosuid,nodev,noexec,relatime shared:282 - nfs4 192.168.10.214:/srv/ml-shared/objects rw,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=192.168.10.101,local_lock=none,addr=192.168.10.214\n487 24 0:48 / /run/user/1002 rw,nosuid,nodev,relatime shared:272 - tmpfs tmpfs rw,size=824496k,nr_inodes=206124,mode=700,uid=1002,gid=1002\n",
+          "nfs_package": {
+            "exit_code": 0,
+            "stdout": "nfs-common 1:2.6.2-4+deb12u1 install ok installed\n",
+            "stderr": ""
+          },
+          "service": "MainPID=902\nActiveState=active\n"
+        },
+        "mount_admission": {
+          "ready": true,
+          "mount_id": 508,
+          "source": "192.168.10.214:/srv/ml-shared/objects",
+          "target": "/srv/mlnfs/inputs",
+          "version": "4.1",
+          "scope": "Metadata admission only; not server liveness, authorization or byte verification"
+        },
+        "agent_pid_unchanged": true
+      },
+      "final_services_backups": {
+        "host": "pi03",
+        "exit_code": 0,
+        "stderr": "",
+        "observed": {
+          "/var/backups/distributed-ml-nfs": {
+            "error": "FileNotFoundError"
+          },
+          "/var/backups/distributed-ml-nfs-client": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o700",
+            "exists": true,
+            "listing_error": "PermissionError"
+          },
+          "/etc/systemd/system/ml-nfs-ready.service": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o644",
+            "exists": true
+          },
+          "/etc/systemd/system/srv-mlnfs-inputs.mount": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o644",
+            "exists": true
+          },
+          "agent_service": "MainPID=902\nExecMainStartTimestamp=Sun 2026-11-08 19:20:32 +06\nUser=pi\nRequires=sysinit.target -.mount system.slice\nWants=network-online.target\nAfter=-.mount systemd-journald.socket basic.target sysinit.target network-online.target system.slice\nActiveState=active\n",
+          "configured_export_lines": {
+            "error": "FileNotFoundError"
+          }
+        }
+      }
+    }
+  },
+  "controller_config_check": {
+    "runtime": "legacy",
+    "settings": {
+      "scheduler_policy": "resource",
+      "storage_aware_staging": false,
+      "storage_backend": "legacy",
+      "worker_cache_enabled": false
+    }
+  },
+  "source_review": {
+    "all_three_workers_selected": true,
+    "all_three_pi_acceptance_proven": false,
+    "apply_ready": false,
+    "blockers": [
+      "Reviewed OS AND network containment, termination/quiescence and trusted bootstrap required",
+      "Protected local roots and separately provisioned credentials required",
+      "Fresh worker/controller identity, disk, RO NFS mount and dependency compatibility required",
+      "Exact deployment/system/service changes and rollback require explicit approval"
+    ],
+    "dependencies": "Requirements only; no wheels/weights supplied and no Internet runtime download allowed",
+    "activation": "No SSH, extraction, install, migration, mount, service or config action"
+  },
+  "controller_to_worker_api": [
+    {
+      "node": "pi01",
+      "health": {
+        "node": "pi01",
+        "status": "ONLINE",
+        "architecture": "aarch64",
+        "python": "3.11.16",
+        "execution_ownership": {
+          "protocol": 1
+        },
+        "request_elapsed_ns": 281554659
+      },
+      "resources": {
+        "node": "pi01",
+        "node_state": "IDLE",
+        "slots": {
+          "available": 1,
+          "total": 1
+        },
+        "cpu": {
+          "available_cores": 4,
+          "frequency_mhz": 2400.0,
+          "logical_cores": 4,
+          "physical_cores": 4,
+          "usage_percent": 46.2
+        },
+        "memory": {
+          "available_gb": 6.59,
+          "total_gb": 7.87,
+          "usage_percent": 16.3,
+          "used_gb": 1.28
+        },
+        "timestamp": 1794297404.8508515,
+        "request_elapsed_ns": 476077659
+      }
+    },
+    {
+      "node": "pi02",
+      "health": {
+        "node": "pi02",
+        "status": "ONLINE",
+        "architecture": "aarch64",
+        "python": "3.11.16",
+        "execution_ownership": {
+          "protocol": 1
+        },
+        "request_elapsed_ns": 8505361
+      },
+      "resources": {
+        "node": "pi02",
+        "node_state": "IDLE",
+        "slots": {
+          "available": 1,
+          "total": 1
+        },
+        "cpu": {
+          "available_cores": 4,
+          "frequency_mhz": 1600.0,
+          "logical_cores": 4,
+          "physical_cores": 4,
+          "usage_percent": 0.0
+        },
+        "memory": {
+          "available_gb": 7.24,
+          "total_gb": 7.87,
+          "usage_percent": 8.1,
+          "used_gb": 0.64
+        },
+        "timestamp": 1794297404.3659978,
+        "request_elapsed_ns": 208577240
+      }
+    },
+    {
+      "node": "pi03",
+      "health": {
+        "node": "pi03",
+        "status": "ONLINE",
+        "architecture": "aarch64",
+        "python": "3.11.16",
+        "execution_ownership": {
+          "protocol": 1
+        },
+        "request_elapsed_ns": 9193362
+      },
+      "resources": {
+        "node": "pi03",
+        "node_state": "IDLE",
+        "slots": {
+          "available": 1,
+          "total": 1
+        },
+        "cpu": {
+          "available_cores": 4,
+          "frequency_mhz": 1500.0,
+          "logical_cores": 4,
+          "physical_cores": 4,
+          "usage_percent": 0.0
+        },
+        "memory": {
+          "available_gb": 7.31,
+          "total_gb": 7.86,
+          "usage_percent": 7.0,
+          "used_gb": 0.55
+        },
+        "timestamp": 1794297404.393265,
+        "request_elapsed_ns": 207254501
+      }
+    }
+  ],
+  "pi01_import_retry": {
+    "error": "40-second SSH import timeout; runtime remains unverified"
+  },
+  "pi01_post_probe_process_check": {
+    "exit_code": 0,
+    "stdout": "{\"exact_owned_probe_matches\": [], \"signals_sent\": false}\n",
+    "stderr": ""
+  },
+  "tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_config.py test_storage_selection.py test_deployment_review.py test_nfs_client_setup.py",
+    "passed": 72,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "test_files": {
+      "test_storage_config.py": 17,
+      "test_storage_selection.py": 21,
+      "test_deployment_review.py": 6,
+      "test_nfs_client_setup.py": 28
+    },
+    "live_acceptance_run": false
+  },
+  "api_db_config_runtime_changes": [],
+  "blockers": [
+    {
+      "id": "B1",
+      "issue": "Production controller and worker bootstrap does not construct trusted hybrid runtime; controller gate rejects cache/locality/bandwidth execution.",
+      "required": "Implement and test reviewed explicit bootstrap and lifecycle wiring before enabling flags; preserve legacy in-flight jobs."
+    },
+    {
+      "id": "B2",
+      "issue": "Production untrusted-code containment, peer-only DDP networking, termination/quiescence, protected roots and separately provisioned credentials are not validated.",
+      "required": "Review enforceable OS/network boundary and least-privilege trusted staging/checkpoint providers; do not expose NFS or credentials to training."
+    },
+    {
+      "id": "B3",
+      "issue": "pi01 LAN is 192.168.0.107; configured NFS server 192.168.10.214:2049 times out; input mount and client units absent.",
+      "required": "Approve verified reachable topology and narrowly scoped export/client setup for pi01; never infer its old HostKeyAlias is a current IP."
+    },
+    {
+      "id": "B4",
+      "issue": "All three agent pip checks fail; pi01 torch import timed out; sampled cached training versions differ.",
+      "required": "Prepare pinned compatible offline ARM CPU dependencies, verify pi01 import and a complete three-rank compatibility group; no runtime Internet transfer."
+    },
+    {
+      "id": "B5",
+      "issue": "No reviewed aggregate disk/resource budgets; pi01 has only 6083952640 free bytes at probe.",
+      "required": "Budget cache, workspaces, temporary copies, checkpoints, environments and free reserve separately per worker; enforce limits without deleting user data."
+    },
+    {
+      "id": "B6",
+      "issue": "No verified consistent application-state backup or tested restore point found in queried locations; privileged NFS backup directories unreadable.",
+      "required": "Plan unique SQLite-consistent local backup plus matching manifests/checkpoints/objects/config/source/credential recovery and isolated restore verification."
+    },
+    {
+      "id": "B7",
+      "issue": "Legacy deploy bundle omits hybrid_storage; installer replaces its one previous snapshot and can use Internet pip installs.",
+      "required": "Prepare reviewed idempotent dry-run-first all-three-node delivery with immutable release/snapshot identities and rollback; do not execute old installer."
+    },
+    {
+      "id": "B8",
+      "issue": "pi02 has unrelated wildcard rw no_root_squash CIFAR export configured; pi02/pi03 have a legacy rw NFS share mounted.",
+      "required": "Review ownership/users and isolation/exposure; do not remove or reconfigure an unrelated existing service without explicit approval."
+    },
+    {
+      "id": "B9",
+      "issue": "Fresh effective export table, privileged client TEST reads/RO-write denial, reboot/boot behavior and complete hybrid job acceptance remain unverified.",
+      "required": "After exact plan approval, verify all three nodes and roll back failed acceptance safely; retain legacy fallback and all data."
+    },
+    {
+      "id": "B10",
+      "issue": "Phase13 native controlled comparisons, physical faults and several physical timing/bandwidth measurements remain pending.",
+      "required": "Keep evaluation claims limited to retained measurements; arrange approved isolated idle window before collecting missing physical results."
+    }
+  ],
+  "limitations": [
+    "Observations are point-in-time, not maintenance-window approval.",
+    "Source files and service PIDs do not prove loaded in-memory source versions.",
+    "Full mountinfo checks supersede earlier filtered-NFS-only mount checks.",
+    "exportfs returned 0 but permission-denied stderr and empty output; effective table unknown.",
+    "Controller nfsd versions read denied; actual pi02/pi03 negotiated mounts are NFS4.1.",
+    "Source-only previous snapshots are not verified application-state backups; external backups unknown.",
+    "No hardware throughput or live job/recovery/DDP/reboot/restore acceptance in this subphase."
+  ],
+  "raw_evidence_files": [
+    {
+      "path": "reports/phase14-1-readiness/all-three-source-review.json",
+      "bytes": 32691,
+      "sha256": "456cd653f29579ee8673aad51881a6fb4568cb0c7e99bb44c4fd8ad0a4666111"
+    },
+    {
+      "path": "reports/phase14-1-readiness/baseline.json",
+      "bytes": 43676,
+      "sha256": "f1f28ff3990498ae4e3fb0eb22f91bfcd1ac6ec3d4b0e77d7726778b8dfb1c36"
+    },
+    {
+      "path": "reports/phase14-1-readiness/captured-mount-admission.json",
+      "bytes": 670,
+      "sha256": "47ab3a2f44b251cccebd8b6258f1ed7fa6a02c91c7f938d040da1aa687332380"
+    },
+    {
+      "path": "reports/phase14-1-readiness/compatibility_probe.py",
+      "bytes": 2524,
+      "sha256": "1c29e847069a83217a76c5e24681b08b1a8588ce66040f13fc1ff6f225515a0e"
+    },
+    {
+      "path": "reports/phase14-1-readiness/controller-backups.json",
+      "bytes": 241,
+      "sha256": "dc83c7a4f54c0b2039f2af5eed3353859a180d5bbe5c72b1b7fea9d33ab28db6"
+    },
+    {
+      "path": "reports/phase14-1-readiness/controller-config-check.json",
+      "bytes": 160,
+      "sha256": "1a1a25b1ba826a1156402119a77f83b9a3f485e05b53c078575cd67903eb17de"
+    },
+    {
+      "path": "reports/phase14-1-readiness/controller-final-services.json",
+      "bytes": 467,
+      "sha256": "c19755420eeaf53f35fcc3c2f44d93867cb4d5025f74750093327535e944b9f5"
+    },
+    {
+      "path": "reports/phase14-1-readiness/controller-initial.json",
+      "bytes": 17234,
+      "sha256": "1ffb010b8ee5c4244d63eaacdc5fb0674cfd5008a3a201cce0eb03ae18ca3d22"
+    },
+    {
+      "path": "reports/phase14-1-readiness/controller-nfs-protocols.json",
+      "bytes": 32,
+      "sha256": "72c3b28d12fd78a6e33aafa87dfda25c4bab1498d46b0092cedf0606b81b11a9"
+    },
+    {
+      "path": "reports/phase14-1-readiness/controller-to-worker-api.json",
+      "bytes": 2373,
+      "sha256": "ae5256da43573613703ff55d34f9e6d7835077d7ad33ea71265ee103cc1f694a"
+    },
+    {
+      "path": "reports/phase14-1-readiness/host_probe.py",
+      "bytes": 8596,
+      "sha256": "79881d08ab78f4c9b9a4337ecb36b5f25690452891a7cc2e9ffb0d237c8de501"
+    },
+    {
+      "path": "reports/phase14-1-readiness/local-tests.log",
+      "bytes": 12035,
+      "sha256": "7d854e66c419a411aca4624e33aaea4c71356d51acdaf02b5c5a785e7a90652a"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-compatibility.json",
+      "bytes": 742,
+      "sha256": "ebda503e10797fd305ef42e3bde4ca6c0da5d1151f0c88e8e66a1aeeceb187d9"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-final-services-backups.json",
+      "bytes": 806,
+      "sha256": "4cb7cf079862845efa56e956c334fe98933d071e80219881c5e745733834d625"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-full-mount-package-check.json",
+      "bytes": 3496,
+      "sha256": "0513b2c4880dd3d7affc294b34eb10e65cbe7f268a87e9aa936d6cd0f957af6d"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-import-retry.json",
+      "bytes": 74,
+      "sha256": "e9dac795a53e4ec52c1ff2d05cbdb8512e3bdc291a8a9272a655e7f39dffaac9"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-initial.json",
+      "bytes": 13453,
+      "sha256": "8e906eca80309b30c48256e5892d39dea3e0630c6255c402de7230631fe3c057"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-probe-process-check.json",
+      "bytes": 115,
+      "sha256": "0c4dffac3642510be0d45f3a1a8d93cd82998365e69731cb23bcd37c99292fa0"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi01-runtime-retry-code.txt",
+      "bytes": 240,
+      "sha256": "d5efeb846e66eecb405c5bca52551235b5dfb59f393e553f2b1d2c5191aee5b8"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi02-compatibility.json",
+      "bytes": 4179,
+      "sha256": "4f57ae25399016ef68c811ba8c2ebab933c701d0254a695151b7ee71ba3cb50e"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi02-final-services-backups.json",
+      "bytes": 1008,
+      "sha256": "7ed4622524fabf50ab18bd0c63e52ca8a3fca3c1a2ec4c097cd3f09444b344b5"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi02-full-mount-package-check.json",
+      "bytes": 4413,
+      "sha256": "e082c8bdee321e409b90b6ff2c1faa1ddddf9fa5944454ff40935412d082fb0f"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi02-initial.json",
+      "bytes": 16369,
+      "sha256": "18e97beb5084e0746e433c905925814f034c62298543cba914ed53dfc85c8064"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi03-compatibility.json",
+      "bytes": 6120,
+      "sha256": "7b86fbc237b61ad8b2d50d8609effb3f1f57777597d0bd196eef44924b7db087"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi03-final-services-backups.json",
+      "bytes": 970,
+      "sha256": "c1b8d7c47678843f5c066ee0df4b1835a2b7faf8ca3bd2eacee4907c7244ec7b"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi03-full-mount-package-check.json",
+      "bytes": 4360,
+      "sha256": "9d441c8b1855789d3c56076b89cbc3ae1be2c7f89dd65bc30eb6d78dac8c209b"
+    },
+    {
+      "path": "reports/phase14-1-readiness/pi03-initial.json",
+      "bytes": 17308,
+      "sha256": "ac434068431ce33646e08de407e4b5be37697ea7b5b9f57437863a844699770a"
+    },
+    {
+      "path": "reports/phase14-1-readiness/run_readonly.py",
+      "bytes": 1669,
+      "sha256": "360971302abb68a0d15a4fd2ff00453772e8c593e389f5abeb81e57a2b9d7df9"
+    },
+    {
+      "path": "reports/phase14-1-readiness/ssh-aliases.json",
+      "bytes": 1059,
+      "sha256": "7f7da2891ea158c4f57f6934b43734757fb868e1c98027a4378d9d639c3541d4"
+    }
+  ],
+  "delivery_files": [
+    "docs/storage/57-production-readiness.md",
+    "docs/storage/57-production-readiness-evidence.json",
+    "docs/storage/implementation-progress.md"
+  ],
+  "rollback": {
+    "patch": "reports/phase14-1-readiness/14.1.patch",
+    "verification": "reports/phase14-1-readiness/source-verification.json",
+    "instruction": "Review patch and reverse-check first; reverse-apply only when these exact documentation edits remain unchanged. No runtime or data rollback needed."
+  }
+}

@@ -193,3 +193,36 @@ PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/benchmarks/storage_e
 See [13.4 reproduction, actual charts and measurement gaps](../docs/storage/13-experiments.md).
 NFS wire bytes, first-step/checkpoint timings and full recovery latency cannot be
 reconstructed from old payload counters or whole-test durations.
+
+## Hybrid delivery preparation (14.2, offline only)
+
+`hybrid_deploy.py plan --output <new-absolute-local-directory>` prepares a private
+all-three-Pi source/config review, unique backup namespaces and migration/restart/
+rollback plan; `verify --output ...` checks it without SSH or DB/service changes.
+`apply --output ...` always returns REFUSED/exit3; production integration and
+readiness gates remain unresolved. Do not use the legacy cluster installer as a
+hybrid deploy shortcut. Exact commands/results: [14.2 playbook](../docs/storage/58-deployment-playbook.md).
+
+## Readiness checks and new private DB recovery points
+
+`storage_readiness.py backup-db --source <absolute-local-db> --output <NEW-private-directory>`
+backs up a read-only LOCAL SQLite source through SQLite and verifies a separate
+restored copy; never restores/migrates live state. Outputs contain private data.
+`print-worker-program` emits the stdlib-only read probe for explicitly approved
+sudo checks, without remote file installation or service/config changes.
+See [scope, exact commands, results and remaining blockers](../docs/storage/60-readiness-closeout.md).
+
+## Reviewed source installation toolkit — Phase 14.2 continuation
+
+`hybrid_install.py inspect-program --host controller|pi01|pi02|pi03` prints a
+standalone read-only inventory program. `prepare --inventory <absolute-json>
+--output <new-absolute-directory>` builds all four private host kits; `verify
+--output ...` checks hashes/drift. Neither deploys or opens the live SQLite DB.
+Host `run.py dry-run|install|migrate|rollback` has separate explicit guards and
+approval requirements. The shipped approval example is invalid by design.
+No package download, sudo, SSH mutation or service restart occurs in preparation.
+Exact unit/config changes are zero and legacy defaults stay active.
+
+See [61 installation tooling](../docs/storage/61-installation-tooling.md) before
+any use. The original `hybrid_deploy.py apply` refusal remains compatible; this
+new workflow does not imply hybrid activation or completed14.3 acceptance.

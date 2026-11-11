@@ -9,6 +9,7 @@ Commands in these guides run from the repository root unless stated otherwise.
 | Guide | Purpose |
 |---|---|
 | [Architecture](architecture.md) | Components, job lifecycle and code reading order |
+| [Supervisor demo](storage/14-supervisor-demo.md) | Ten-minute walkthrough and measured two-Pi v8 results |
 | [Project map](project-map.md) | File-by-file responsibilities and optional components |
 | [Website](student-interface.md) | Startup, accounts, dashboard, uploads and walkthroughs |
 | [Training examples](training-examples.md) | Run regression, binary classification and CNN jobs |

@@ -124,7 +124,9 @@ def require_local_read(db):
         raise base.RegistryError('Staging barrier requires one named controller-local DB')
     path=Path(main)
     with _directory(path.parent) as parent:
-        fd=os.open(path.name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=parent)
+        # Never open/close an ordinary descriptor behind SQLite's VFS. O_PATH
+        # preserves its process-wide POSIX locks while allowing fstat/mnt_id.
+        fd=os.open(path.name,os.O_PATH|os.O_NOFOLLOW|os.O_CLOEXEC,dir_fd=parent)
         try:
             if not stat.S_ISREG(os.fstat(fd).st_mode):raise base.RegistryError('Staging DB is not regular')
             require_local_fd(fd)

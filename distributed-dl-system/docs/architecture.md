@@ -1,8 +1,54 @@
 # Architecture and code reading order
 
 The controller owns submission records, input snapshots, scheduling and recovery.
-Each worker runs an HTTP agent that launches training in a separate process group.
-The browser portal calls the same controller services used by the command line.
+Two profiles share the job and checkpoint models. The v8 hybrid pilot uses an
+explicit protected runtime. The legacy profile is the default for a fresh checkout.
+
+## Deployed hybrid pilot v8
+
+```mermaid
+flowchart LR
+    Student[Student browser] --> Portal
+    subgraph Controller[Controller laptop]
+        Portal[Owner-checked portal] --> Publish[Verify and publish immutable SHA-256 objects]
+        Publish --> CAS[Input-only NFS export]
+        Publish --> DB[(Local SQLite jobs and manifests<br/>leases and signed cache inventory)]
+        DB --> Schedule[Fair queue and resource filters<br/>locality breaks eligible resource ties]
+        Collector[Trusted checkpoint validation<br/>and result collection] --> Commits[Local committed checkpoints and results]
+        Commits -->|Latest valid checkpoint| Schedule
+        Commits --> Portal
+    end
+    subgraph Workers[pi02 and pi03 on private Ethernet]
+        Mount[Read-only NFS 4.1 mount] --> Stage[Trusted agent verifies missing objects]
+        Stage --> Cache[Persistent local cache]
+        Cache --> Workspace[Private per-attempt inputs]
+        subgraph Sandbox[Isolated training per worker or DDP rank]
+            Train[Training with local inputs] --> Outputs[Private checkpoint candidates and results]
+        end
+        Workspace --> Train
+    end
+    CAS -->|Read-only inputs| Mount
+    Schedule -->|Reserve, lease, stage, then launch| Stage
+    Stage -->|Authenticated inventory| DB
+    Outputs -->|Trusted worker service and fenced publication| Collector
+    Schedule -->|Trusted restore on a fresh attempt| Workspace
+```
+
+Both DDP ranks must stage their authorized input set and have valid leases before
+launch. The sandbox receives private projected inputs and outputs. Trusted host
+services own the NFS mount, cache and credentials. The `root_squash` export is
+restricted to the two verified LAN workers. Application authorization and the
+worker isolation boundary enforce student access. The controller, its local DB
+and its NFS service remain a single point of failure.
+
+See the [v8 deployment evidence](storage/64-v8-pilot-deployment.md) and
+[supervisor demo](storage/14-supervisor-demo.md). The
+[Phase 1 design](storage/01-hybrid-architecture.md) records the original proposal.
+
+## Legacy job lifecycle
+
+In the legacy profile, the worker HTTP agent launches training in a separate
+process group. Browser submissions and CLI tools share controller job state.
 
 ```mermaid
 flowchart LR
@@ -17,8 +63,6 @@ flowchart LR
     Central --> Dispatch
     Agent --> Results[Logs and results]
 ```
-
-## Job lifecycle
 
 1. **Submission — `controller/submit_job.py`, `job_store.py`.** Validate the
    request and insert its type, configuration and QUEUED state in one SQLite

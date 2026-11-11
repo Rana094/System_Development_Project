@@ -36,7 +36,8 @@ def main():
             if (ROOT / "README.md").exists():
                 shutil.copy2(ROOT / "README.md", sandbox / "README.md")
             env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
-            for name in ("DL_STORAGE_ROOT", "DL_LOCAL_WORKER_ROOT", "PYTHONPATH"):
+            for name in ("DL_STORAGE_ROOT", "DL_LOCAL_WORKER_ROOT", "PYTHONPATH",
+                         "DL_CONTROLLER_STATE_ROOT", "DL_AGENT_STATE_ROOT", "DL_NODES_CONFIG"):
                 env.pop(name, None)
             print("Running from a temporary source copy; live databases/runtime roots excluded.", flush=True)
             return subprocess.run([sys.executable, str(sandbox / "tools/run_tests.py"), *args.tests],

@@ -1,15 +1,23 @@
 """Choose an eligible idle worker by lowest CPU usage, then greatest available RAM."""
 
 from pathlib import Path
+import os
 import json
 import requests
 from scheduler_metrics import begin_selection
 
 CONFIG_FILE = Path(__file__).resolve().parents[1] / "config/nodes.json"
+if os.environ.get('DL_NODES_CONFIG'):
+    CONFIG_FILE=Path(os.environ['DL_NODES_CONFIG'])
 
 
 def load_nodes():
     """Read the configured worker inventory used by this process."""
+    if os.environ.get('DL_NODES_CONFIG'):
+        from hybrid_storage.linux_boundary import protected_json
+        value=protected_json(CONFIG_FILE)
+        if set(value)!={'nodes'} or not isinstance(value['nodes'],list):raise ValueError('Invalid protected worker inventory')
+        return value['nodes']
     with open(CONFIG_FILE, "r") as file:
         return json.load(file)["nodes"]
 

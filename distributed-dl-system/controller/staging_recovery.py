@@ -185,6 +185,7 @@ class StagingRecovery:
                     self.ensure_cleanup(stage[0])
                     self.registry.db.execute("UPDATE hybrid_cleanup_ranks SET phase='QUIESCENT',updated_at_ns=MAX(updated_at_ns,?) WHERE stage_id=?",(time.time_ns(),stage[0]))
                 from job_artifacts import collect
+                collect = getattr(self,'result_collector',collect)
                 for rank,node,_,_ in members:
                     collect({**job,'node_id':node['id'],'node_ip':node['ip']},rank if len(members)>1 else None)
                 self._finishing.add(stage[0])

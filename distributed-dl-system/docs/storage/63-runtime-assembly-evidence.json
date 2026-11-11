@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "at_utc": "2026-11-10T18:29:31.246954+00:00",
+  "phase": "14.3",
+  "status": "NOT_PASSED",
+  "selected_workers": [
+    "pi02",
+    "pi03"
+  ],
+  "deferred_workers": [
+    "pi01"
+  ],
+  "pi01_is_blocker": false,
+  "baseline": {
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "files": 425,
+    "sha256": "60f599dda56b8916584f38454c8e4606c3e5045a2fa54ac4829bd60947006060"
+  },
+  "source": {
+    "modified_existing": [
+      "controller/dispatcher.py",
+      "docs/storage/implementation-progress.md"
+    ],
+    "added": [
+      "hybrid_storage/runtime_bootstrap.py",
+      "tests/test_runtime_bootstrap.py",
+      "docs/storage/63-runtime-assembly.md",
+      "docs/storage/63-runtime-assembly-evidence.json"
+    ],
+    "sha256": {
+      "controller/dispatcher.py": "aa6d9cfa8ae7f003262065ba06886cd704c2cb9bfd0ec5897ba3881eaec67a37",
+      "hybrid_storage/runtime_bootstrap.py": "a5552a675a79210bcacf4bc1ae8a1acb672c35a7921adc03bf303604c4ac6f1d",
+      "tests/test_runtime_bootstrap.py": "78993ec2caedffd643b8be2ae4f4448ba19a2afb1ba4b913f98f88a107b2d740"
+    },
+    "unintended_baseline_source_changes": []
+  },
+  "legacy_config": {
+    "storage_backend": "legacy",
+    "worker_cache_enabled": false,
+    "storage_aware_staging": false,
+    "scheduler_policy": "resource"
+  },
+  "schema_changes": false,
+  "new_routes": false,
+  "tests": {
+    "local_broad": {
+      "files": 13,
+      "tests": 250,
+      "exit_code": 0,
+      "counts": [
+        21,
+        17,
+        38,
+        25,
+        34,
+        16,
+        18,
+        15,
+        17,
+        20,
+        7,
+        6,
+        16
+      ],
+      "log": "reports/phase14-3-runtime/regression.log"
+    },
+    "local_final_startup": {
+      "tests": 28,
+      "exit_code": 0,
+      "log": "reports/phase14-3-runtime/transport-runtime-tests.log"
+    },
+    "note": "Broad iteration: 250 cases including 21 startup cases. Final endpoint/no-redirect guarded startup: 28 cases locally and on each Pi. Repeated executions are not distinct cases."
+  },
+  "workers": {
+    "pi02": {
+      "lan_ip": "192.168.10.150",
+      "component_tests": 28,
+      "component_test_exit_code": 0,
+      "temporary_source_root": "/tmp/dl-phase14-3-runtime-h6jg_46q",
+      "production_deployment": false,
+      "original_service_pid": 946,
+      "original_service_restart": false,
+      "nfs_version": "4.1",
+      "test_bytes": 165,
+      "sha256_verified": true,
+      "read_only_write_open_errno": 30,
+      "bytes_written": 0,
+      "live_hybrid_inventory": "NOT_RUN",
+      "live_training": "NOT_RUN",
+      "live_ddp": "NOT_RUN",
+      "boot": "NOT_RUN",
+      "source_sha256": "fcc5e6172d83a2593cc88ef0df511a2ec13370e2978adf41edbe64e0ea889e64"
+    },
+    "pi03": {
+      "lan_ip": "192.168.10.101",
+      "component_tests": 28,
+      "component_test_exit_code": 0,
+      "temporary_source_root": "/tmp/dl-phase14-3-runtime-qjoqhskb",
+      "production_deployment": false,
+      "original_service_pid": 902,
+      "original_service_restart": false,
+      "nfs_version": "4.1",
+      "test_bytes": 165,
+      "sha256_verified": true,
+      "read_only_write_open_errno": 30,
+      "bytes_written": 0,
+      "live_hybrid_inventory": "NOT_RUN",
+      "live_training": "NOT_RUN",
+      "live_ddp": "NOT_RUN",
+      "boot": "NOT_RUN",
+      "source_sha256": "fcc5e6172d83a2593cc88ef0df511a2ec13370e2978adf41edbe64e0ea889e64"
+    }
+  },
+  "production_deployment": false,
+  "live_migration": false,
+  "service_restarts": false,
+  "remote_mutation_scope": "223 source files in new private temporary roots plus disposable test fixtures only",
+  "launch_boundary": "Interface only; no production Linux implementation supplied",
+  "blockers": [
+    "Production Linux containment/lifecycle provider and enabled worker entry point missing",
+    "Portal immutable intake/offline preparation and protected result collection not wired",
+    "Protected service identities/keys/roots, durable drain, clean service environment and reviewed activation not provisioned",
+    "Controller noninteractive sudo authentication unavailable",
+    "Live hybrid inventory/training/cancel/recovery/DDP/boot acceptance not run"
+  ],
+  "raw_artifacts": {
+    "baseline.json": "60f599dda56b8916584f38454c8e4606c3e5045a2fa54ac4829bd60947006060",
+    "before-transport-guard-evidence.json": "e605560bd4a37c26976685e6de96687a9c557c0f053449ca7cf1a7e22a15fd04",
+    "capabilities.py": "0675e24aaafa56bf876ad358d27632e63928fbd2647e01139ed23845b540d69b",
+    "continuation.patch": "916d3a49c80a242b75d294ac44d63fdebc879604c61313df723b4ccf757dd536",
+    "controller-sudo.json": "d4400f724a7eeccbb2de18839eab89ccb7da3de6a4892add8614695f00584764",
+    "final-runtime-tests.json": "d6db589e45bbc78366217e5508c242e5f30f053daca31853674bcc533d972b09",
+    "final-runtime-tests.log": "158c51e64950239cb76a6d74df9aa9f65ab6df855896bb15fefea01f2828a3b8",
+    "pi-unit-source.tar.gz": "465e61c43e30c6fe07ce7694e4e23a912a0ddfe12e9a382e83998e53b3c345c8",
+    "pi-unit-validation-plan.json": "41bfc28bd1e7c4f97c7df023a770e83ad1c8ddcb2d56d8db731fb7d95d461eb7",
+    "pi02-after-validation.json": "e101fb5c93a5376d15b6e4977364e8649a48a56b9992e1b3838495094315388a",
+    "pi02-boundary-capabilities.json": "10b23fbc686c9dbf052e3ca5761ed674ac9f6766693219546bac9967c4c8fc30",
+    "pi02-capabilities.json": "937372e57418a26ae9fa33b63c465065de71fcc09b876fd6c186147533a4ffad",
+    "pi02-nfs-permissions.json": "a3b2882aee1b111121b88f0395c8c580a74314a7a32010cc5dc7e795d4b45d0a",
+    "pi02-unit-result.json": "07692f709c1a225b43344690ddc8b08b168a25c59c26773ffeea13bc7795c300",
+    "pi03-after-validation.json": "4ca5beec16b9b200baa01303bd832c39e1f34169d4fafe73d77e82d58147463e",
+    "pi03-boundary-capabilities.json": "ebac55ebd9ecb44f6ca643cf923433c772ef536d75ef11c094922a1610063324",
+    "pi03-capabilities.json": "2b4d896765a275a178824434210d860aef60f9cd058f90c8a0f8979d7df57ff4",
+    "pi03-nfs-permissions.json": "3b7a836785a624a3a9206cdf67a00f6036069849e9e69120e7b9c7831e2919ef",
+    "pi03-unit-result.json": "b82fabeef252dd87662efe4f85665c633a01ec040223f476237ab510db6429c3",
+    "regression.json": "4192e28f389d58f275efd0a4bccb4262d827dc139ae05b20880f948538a21e43",
+    "regression.log": "b9c38b889fb206f8ce91d68b55cfec26925d11d8ad93eb405b4294f42f9400f4",
+    "rollback-check.json": "09c883091acf570811027a3013e87e10ddbb49d8c47398e346ac92517c3e0d3d",
+    "run-pi-unit-validation.py": "d1e642cfae910fc50510a929ddf248442b3632f86159604c2b408fbaff300105",
+    "transport-final/pi-unit-source.tar.gz": "fcc5e6172d83a2593cc88ef0df511a2ec13370e2978adf41edbe64e0ea889e64",
+    "transport-final/pi-unit-validation-plan.json": "0382bb87ac598f4844ac1c668d1a460036cfc4b6079d6d1ad619078b73be45f7",
+    "transport-final/pi02-after-validation.json": "a35fa12cc65de40b5f9c8740d748bbf030fbbd7114690c4f4ec118e4f9a664a2",
+    "transport-final/pi02-unit-result.json": "2ac4ea4decafd5df311bc456d00aaac3c3339375ae8817b0a0c70b1e22d6d27a",
+    "transport-final/pi03-after-validation.json": "8f03f30fda0e932bce1eb38531a42b2dd2a0fdaa679ebd928592e2a4921c4d52",
+    "transport-final/pi03-unit-result.json": "ed23943b896b87f8e5c8b7a7d529d60547f9c0f74c266c0e590c62251bcd1cb8",
+    "transport-final/run-pi-unit-validation.py": "d1e642cfae910fc50510a929ddf248442b3632f86159604c2b408fbaff300105",
+    "transport-runtime-tests.json": "857b5fd26d3242b0443c89a1c434a52b3263f15a0ab03812909c14873743ec0e",
+    "transport-runtime-tests.log": "6301b71b1a832eaa296316b6b6b3a74b1bdccbeb1127dc4f80051b1569de9843"
+  },
+  "controller_is_single_point_of_failure": true,
+  "transport": {
+    "exact_selected_endpoint_allowlist": true,
+    "redirects": false,
+    "environment_proxies": false
+  },
+  "rollback_evidence": "reports/phase14-3-runtime/rollback-check-final.json",
+  "previous_iteration_evidence": "reports/phase14-3-runtime/before-transport-guard-evidence.json"
+}

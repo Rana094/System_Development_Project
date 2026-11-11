@@ -1,0 +1,913 @@
+{
+  "schema_version": 1,
+  "phase": "14.2",
+  "at_utc": "2026-11-10T17:14:20.420755+00:00",
+  "status": "EXECUTABLE_LEGACY_PRESERVING_DELIVERY_TOOLING_LOCAL_ACCEPTANCE_PASS",
+  "delivery_tooling_implemented": true,
+  "hybrid_runtime_implemented_by_this_change": false,
+  "live_apply_ready": false,
+  "phase14_3_run": false,
+  "repository": {
+    "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "baseline_original_files": 413,
+    "previous_changes_preserved": true
+  },
+  "scope": {
+    "new_files": [
+      "hybrid_storage/deployment_executor.py",
+      "hybrid_storage/deployment_migrations.py",
+      "hybrid_storage/deployment_toolkit.py",
+      "tools/hybrid_install.py",
+      "tests/test_deployment_executor.py",
+      "tests/test_deployment_migrations.py",
+      "tests/test_deployment_toolkit.py",
+      "docs/storage/61-installation-tooling.md",
+      "docs/storage/61-installation-tooling-evidence.json"
+    ],
+    "modified_existing_documents": [
+      "docs/storage/58-deployment-playbook.md",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md",
+      "tools/README.md"
+    ],
+    "unit_changes": [],
+    "active_config_changes": [],
+    "api_changes": [],
+    "job_state_changes": [],
+    "flags": "legacy/OFF/resource unchanged",
+    "new_cli": "tools/hybrid_install.py; protected host run.py inspect|dry-run|install|migrate|rollback",
+    "old_cli": "tools/hybrid_deploy.py apply remains refused; unchanged"
+  },
+  "review": {
+    "status": "VERIFIED_INSTALL_TOOLKIT_NOT_APPLIED",
+    "executor_implemented": true,
+    "selected_workers": [
+      "pi01",
+      "pi02",
+      "pi03"
+    ],
+    "apply_ready": false,
+    "hybrid_activation": false,
+    "kit_sha256": "cef5f6f443f0a20c3232cc219645fa86395e346fe40c089be99b1b84b31ce293",
+    "snapshot_id": "snap-20261110T170756Z-34c52925118fb87e",
+    "live_readiness_verified": false
+  },
+  "all_host_preview": {
+    "hosts": [
+      {
+        "changed_existing_source_files": 0,
+        "controller_db_budget_check": "controller-dry-run.json",
+        "gid": 1000,
+        "host": "controller",
+        "new_source_files": 0,
+        "observed_free_bytes": 43456036864,
+        "payload_verified_locally": true,
+        "pi_host_install_or_runtime_dry_run_executed": false,
+        "plan_sha256": "f9375dc113763c9c199bc0dd795ee0176fe2178cc507f41475a6d83c224e62cf",
+        "source_budget_fits_observed_free": true,
+        "source_files": 124,
+        "source_only_budget_bytes": 541559144,
+        "uid": 1000
+      },
+      {
+        "changed_existing_source_files": 2,
+        "controller_db_budget_check": "NOT_APPLICABLE_NO_WORKER_DB_MIGRATIONS",
+        "gid": 1000,
+        "host": "pi01",
+        "new_source_files": 63,
+        "observed_free_bytes": 5537841152,
+        "payload_verified_locally": true,
+        "pi_host_install_or_runtime_dry_run_executed": false,
+        "plan_sha256": "364d61c27722ab73b68db3bd3327b3fa22c555135e6235ca7bb0e668c9dddce6",
+        "source_budget_fits_observed_free": true,
+        "source_files": 86,
+        "source_only_budget_bytes": 538804060,
+        "uid": 1000
+      },
+      {
+        "changed_existing_source_files": 2,
+        "controller_db_budget_check": "NOT_APPLICABLE_NO_WORKER_DB_MIGRATIONS",
+        "gid": 1000,
+        "host": "pi02",
+        "new_source_files": 63,
+        "observed_free_bytes": 11457773568,
+        "payload_verified_locally": true,
+        "pi_host_install_or_runtime_dry_run_executed": false,
+        "plan_sha256": "551b84b12fecb51c6a5e2859ca0e0ac0e1ad16149cd6930bd5d1cc948354fbca",
+        "source_budget_fits_observed_free": true,
+        "source_files": 86,
+        "source_only_budget_bytes": 538804060,
+        "uid": 1000
+      },
+      {
+        "changed_existing_source_files": 2,
+        "controller_db_budget_check": "NOT_APPLICABLE_NO_WORKER_DB_MIGRATIONS",
+        "gid": 1002,
+        "host": "pi03",
+        "new_source_files": 63,
+        "observed_free_bytes": 9283325952,
+        "payload_verified_locally": true,
+        "pi_host_install_or_runtime_dry_run_executed": false,
+        "plan_sha256": "6a89f266f3f9cf84b600de375612378f0119ae8d7a8a3d5e265380c4c4a9ca57",
+        "source_budget_fits_observed_free": true,
+        "source_files": 86,
+        "source_only_budget_bytes": 538804060,
+        "uid": 1002
+      }
+    ],
+    "new_remote_mutations": false,
+    "private_runtime_data_route_validated": false,
+    "schema_version": 1,
+    "scope": "LOCAL_PAYLOAD_VALIDATION_AND_READONLY_HOST_INVENTORY_BASED_PREVIEW"
+  },
+  "operations": {
+    "deploy_during_phase14_2": false,
+    "hosts": [
+      {
+        "approval_required": true,
+        "config_changes": "NONE: preserve existing config and credentials; legacy/OFF/resource only",
+        "dry_run_argv": [
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+          "-I",
+          "-B",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/run.py",
+          "dry-run",
+          "--plan",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/host-plan.json",
+          "--payload",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/payload"
+        ],
+        "execute": false,
+        "host": "controller",
+        "install_argv": [
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+          "-I",
+          "-B",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/run.py",
+          "install",
+          "--plan",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/host-plan.json",
+          "--payload",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/payload",
+          "--approval",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/install-approval.json"
+        ],
+        "interpreter": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+        "migrate_argv": [
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+          "-I",
+          "-B",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/run.py",
+          "migrate",
+          "--plan",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/host-plan.json",
+          "--approval",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/migrate-approval.json"
+        ],
+        "protected_kit_directory": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller",
+        "rollback_argv": [
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+          "-I",
+          "-B",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/run.py",
+          "rollback",
+          "--plan",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/host-plan.json",
+          "--approval",
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.hybrid-deploy/kits/snap-20261110T170756Z-34c52925118fb87e/controller/rollback-approval.json"
+        ],
+        "service_changes": "NONE: preserve exact unit/ExecStart/User/Group/drop-ins and enablement",
+        "start_argv": [
+          [
+            "systemctl",
+            "--user",
+            "start",
+            "dl-dispatcher.service"
+          ],
+          [
+            "systemctl",
+            "--user",
+            "start",
+            "dl-student-portal.service"
+          ]
+        ],
+        "stop_argv": [
+          [
+            "systemctl",
+            "--user",
+            "stop",
+            "dl-dispatcher.service"
+          ],
+          [
+            "systemctl",
+            "--user",
+            "stop",
+            "dl-student-portal.service"
+          ]
+        ]
+      },
+      {
+        "approval_required": true,
+        "config_changes": "NONE: preserve existing config and credentials; legacy/OFF/resource only",
+        "dry_run_argv": [
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/run.py",
+          "dry-run",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/host-plan.json",
+          "--payload",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/payload"
+        ],
+        "execute": false,
+        "host": "pi01",
+        "install_argv": [
+          "sudo",
+          "--",
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/run.py",
+          "install",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/host-plan.json",
+          "--payload",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/payload",
+          "--approval",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/install-approval.json"
+        ],
+        "interpreter": "/home/pi/distributed-dl-system/.venv/bin/python",
+        "migrate_argv": null,
+        "protected_kit_directory": "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01",
+        "rollback_argv": [
+          "sudo",
+          "--",
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/run.py",
+          "rollback",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/host-plan.json",
+          "--approval",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi01/rollback-approval.json"
+        ],
+        "service_changes": "NONE: preserve exact unit/ExecStart/User/Group/drop-ins and enablement",
+        "start_argv": [
+          [
+            "sudo",
+            "--",
+            "systemctl",
+            "start",
+            "dl-node-agent.service"
+          ]
+        ],
+        "stop_argv": [
+          [
+            "sudo",
+            "--",
+            "systemctl",
+            "stop",
+            "dl-node-agent.service"
+          ]
+        ]
+      },
+      {
+        "approval_required": true,
+        "config_changes": "NONE: preserve existing config and credentials; legacy/OFF/resource only",
+        "dry_run_argv": [
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/run.py",
+          "dry-run",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/host-plan.json",
+          "--payload",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/payload"
+        ],
+        "execute": false,
+        "host": "pi02",
+        "install_argv": [
+          "sudo",
+          "--",
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/run.py",
+          "install",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/host-plan.json",
+          "--payload",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/payload",
+          "--approval",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/install-approval.json"
+        ],
+        "interpreter": "/home/pi/distributed-dl-system/.venv/bin/python",
+        "migrate_argv": null,
+        "protected_kit_directory": "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02",
+        "rollback_argv": [
+          "sudo",
+          "--",
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/run.py",
+          "rollback",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/host-plan.json",
+          "--approval",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi02/rollback-approval.json"
+        ],
+        "service_changes": "NONE: preserve exact unit/ExecStart/User/Group/drop-ins and enablement",
+        "start_argv": [
+          [
+            "sudo",
+            "--",
+            "systemctl",
+            "start",
+            "dl-node-agent.service"
+          ]
+        ],
+        "stop_argv": [
+          [
+            "sudo",
+            "--",
+            "systemctl",
+            "stop",
+            "dl-node-agent.service"
+          ]
+        ]
+      },
+      {
+        "approval_required": true,
+        "config_changes": "NONE: preserve existing config and credentials; legacy/OFF/resource only",
+        "dry_run_argv": [
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/run.py",
+          "dry-run",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/host-plan.json",
+          "--payload",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/payload"
+        ],
+        "execute": false,
+        "host": "pi03",
+        "install_argv": [
+          "sudo",
+          "--",
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/run.py",
+          "install",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/host-plan.json",
+          "--payload",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/payload",
+          "--approval",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/install-approval.json"
+        ],
+        "interpreter": "/home/pi/distributed-dl-system/.venv/bin/python",
+        "migrate_argv": null,
+        "protected_kit_directory": "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03",
+        "rollback_argv": [
+          "sudo",
+          "--",
+          "/home/pi/distributed-dl-system/.venv/bin/python",
+          "-I",
+          "-B",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/run.py",
+          "rollback",
+          "--plan",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/host-plan.json",
+          "--approval",
+          "/var/lib/distributed-ml-delivery/snap-20261110T170756Z-34c52925118fb87e/pi03/rollback-approval.json"
+        ],
+        "service_changes": "NONE: preserve exact unit/ExecStart/User/Group/drop-ins and enablement",
+        "start_argv": [
+          [
+            "sudo",
+            "--",
+            "systemctl",
+            "start",
+            "dl-node-agent.service"
+          ]
+        ],
+        "stop_argv": [
+          [
+            "sudo",
+            "--",
+            "systemctl",
+            "stop",
+            "dl-node-agent.service"
+          ]
+        ]
+      }
+    ],
+    "nfs_routing_changes": [],
+    "private_data_only": true,
+    "rollback": "Per-host run.py rollback with distinct exact fresh approval; retains additive DB and all data",
+    "rollback_order": [
+      "pi03",
+      "pi02",
+      "pi01",
+      "controller"
+    ],
+    "schema_version": 1,
+    "start_order": [
+      "pi01",
+      "pi02",
+      "pi03",
+      "controller"
+    ],
+    "start_requires": "Source verify, controller migration completion, reviewed acceptance/reopen procedure; never enable or reboot automatically",
+    "stop_order": [
+      "controller",
+      "pi01",
+      "pi02",
+      "pi03"
+    ],
+    "stop_requires": "Explicit later approval plus closed admission, drained jobs/leases/reservations, no descendants; never use IDLE alone"
+  },
+  "kit_files": 396,
+  "snapshot_id": "snap-20261110T170756Z-34c52925118fb87e",
+  "inspection": {
+    "scope": "Source/unit hashes and host ownership/disk/service metadata, no SQLite connection or sudo",
+    "all_four_results": [
+      {
+        "host": "controller",
+        "argv": [
+          "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/.controller-venv/bin/python",
+          "-I",
+          "-B",
+          "-"
+        ],
+        "exit_code": 0,
+        "program_sha256": "f8bdbd07de2c43e706b73a5e935826c68babc364aca2d2916822f2a738c84028",
+        "stdout_sha256": "b2d06ce9e386befda6c124ed99bbdfa544a3132309b91e116ba4f8e38fa89699",
+        "sudo": false,
+        "writes": false
+      },
+      {
+        "host": "pi01",
+        "argv": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "PermitLocalCommand=no",
+          "-o",
+          "ConnectTimeout=5",
+          "pi01",
+          "python3 -I -B -"
+        ],
+        "exit_code": 0,
+        "program_sha256": "6f3f5acc894a35d6a31c1478118eca71d5db3702c5433386fbcdfdeaeee1ad0c",
+        "stdout_sha256": "e2afe8e6afb8111ad378c4e1f5fc84e3d0651e9dba1c96ba5e51a72b2383f5c1",
+        "sudo": false,
+        "writes": false
+      },
+      {
+        "host": "pi02",
+        "argv": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "PermitLocalCommand=no",
+          "-o",
+          "ConnectTimeout=5",
+          "pi02",
+          "python3 -I -B -"
+        ],
+        "exit_code": 0,
+        "program_sha256": "afbebbf737c189d271585b62204b48403ac57ad5702d8e907b2cb300f490f044",
+        "stdout_sha256": "71aeb9d65f17bb7a2e791f9c095e4506bcfce1f7f2cb630ea2964d6d08094b99",
+        "sudo": false,
+        "writes": false
+      },
+      {
+        "host": "pi03",
+        "argv": [
+          "ssh",
+          "-T",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-o",
+          "UpdateHostKeys=no",
+          "-o",
+          "ControlMaster=no",
+          "-o",
+          "ControlPath=none",
+          "-o",
+          "PermitLocalCommand=no",
+          "-o",
+          "ConnectTimeout=5",
+          "pi03",
+          "python3 -I -B -"
+        ],
+        "exit_code": 0,
+        "program_sha256": "8d2a75f746b9a1df00148d140792bd61ae20de44e43c17a45c257d8ce80da0bd",
+        "stdout_sha256": "efcacf1e7a867e4e9dcb79ba4829f7ccb143bfc2ec0e4dce90b303c5b1066e97",
+        "sudo": false,
+        "writes": false
+      }
+    ],
+    "initial_sandbox_denial_retained": true,
+    "pi02_active_mainpid0_not_health_acceptance": true
+  },
+  "dry_run": {
+    "controller": {
+      "status": "DRY_RUN_ONLY",
+      "host": "controller",
+      "plan_sha256": "f9375dc113763c9c199bc0dd795ee0176fe2178cc507f41475a6d83c224e62cf",
+      "files": 124,
+      "required_free_bytes": 2695448936,
+      "observed_free_bytes": 43462180864,
+      "service_unit_changes": [],
+      "active_config_changes": [],
+      "hybrid_activation": false,
+      "readiness_gate_ids": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "B10"
+      ],
+      "mutations": false
+    },
+    "all_pi_payloads_verified_locally": true,
+    "remote_pi_host_dry_runs_executed": false,
+    "capacity": "Point-in-time inventory-based previews only; not reserved storage/training quotas"
+  },
+  "repeatability": {
+    "files": 396,
+    "same_bytes_modes_mtimes": true,
+    "status": "PASS",
+    "verified": {
+      "apply_ready": false,
+      "executor_implemented": true,
+      "hybrid_activation": false,
+      "kit_sha256": "cef5f6f443f0a20c3232cc219645fa86395e346fe40c089be99b1b84b31ce293",
+      "live_readiness_verified": false,
+      "selected_workers": [
+        "pi01",
+        "pi02",
+        "pi03"
+      ],
+      "snapshot_id": "snap-20261110T170756Z-34c52925118fb87e",
+      "status": "VERIFIED_INSTALL_TOOLKIT_NOT_APPLIED"
+    }
+  },
+  "negative_cli": {
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "stderr": "Deployment refused: Exact fresh per-host/action approval and all-three maintenance attestation required\n",
+    "deployment_namespace_created": false,
+    "sudo_or_remote_operations": false
+  },
+  "tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_config.py test_storage_selection.py test_deployment_review.py test_nfs_client_setup.py test_delivery_plan.py test_state_backup.py test_readiness_probe.py test_deployment_executor.py test_deployment_migrations.py test_deployment_toolkit.py",
+    "pass": 139,
+    "fail": 0,
+    "errors": 0,
+    "skips": 0,
+    "files": {
+      "test_storage_config.py": 17,
+      "test_storage_selection.py": 21,
+      "test_deployment_review.py": 6,
+      "test_nfs_client_setup.py": 28,
+      "test_delivery_plan.py": 16,
+      "test_state_backup.py": 10,
+      "test_readiness_probe.py": 7,
+      "test_deployment_executor.py": 20,
+      "test_deployment_migrations.py": 7,
+      "test_deployment_toolkit.py": 7
+    },
+    "fixture_only_mutations": true,
+    "initial_failures": [
+      "Fixture assertion omitted preexisting registry job",
+      "Read-only WAL recovery open changed SHM mtime; verified closed backup now immutable-only, never live DB",
+      "Stronger symlink guard changed expected exception type"
+    ],
+    "actual_systemd_exec_identity_regression_covered": true
+  },
+  "security": {
+    "private_runtime_data_only": true,
+    "all_three_required": true,
+    "controller_runs_as_audited_user": true,
+    "worker_root_requires_later_explicit_approval": true,
+    "exact_host_action_plan_hash_approval_max_age_seconds": 600,
+    "approval_example_invalid": true,
+    "receipts_are_operator_attestations_not_signed_or_automated_readiness_proofs": true,
+    "service_cgroups_must_be_quiescent": true,
+    "units_config_enablement_preserved": true,
+    "no_internet_package_install": true,
+    "no_live_db_immutable_mode": true,
+    "snapshot_immutable_read_only_after_closed_backup_verification_and_empty_wal": true,
+    "no_live_db_restore_or_downmigration": true,
+    "new_files_quarantined_on_rollback": true,
+    "dropins_unsupported_fail_closed": true,
+    "trusted_parent_and_administrator_assumption": true
+  },
+  "untested": [
+    "Real sudo worker ownership installation",
+    "Production coordinated backups/migrations/rollback",
+    "Pi host-side staged installer execution",
+    "Hybrid production bootstrap/isolation",
+    "All-three jobs/cancellation/failure/checkpoint recovery/DDP",
+    "Mount failure and service boot",
+    "Runtime dependency compatibility and training/cache budgets"
+  ],
+  "remaining_14_1_gates": [
+    "Verified local/private bidirectional pi01 runtime data route; Internet relay fallback declined",
+    "Compatible offline service/training dependencies",
+    "Coordinated files/checkpoints/off-host recovery",
+    "Trusted hybrid bootstrap, OS/network containment and maintenance/quiescence providers"
+  ],
+  "live_changes": {
+    "sudo": false,
+    "remote_write_or_stage": false,
+    "service_operations": false,
+    "sqlite_connection_backup_migration_restore": false,
+    "nfs_exports_mounts_routes_firewall": false,
+    "worker_environment_or_packages": false,
+    "training_or_hardware_fault_test": false,
+    "stash_reset_commit": false,
+    "authoritative_files_removed_or_overwritten": false
+  },
+  "source_fingerprints": [
+    {
+      "path": "hybrid_storage/deployment_executor.py",
+      "bytes": 26615,
+      "sha256": "a5d1aa1788392c0e92a50825cfacd4994f6c6fe9a2348f1d5f52b99b6e58885d"
+    },
+    {
+      "path": "hybrid_storage/deployment_migrations.py",
+      "bytes": 8155,
+      "sha256": "7ecd193f881f2b281b50af4892668c374e329ca0c436e3f46a89a67ae208f4bc"
+    },
+    {
+      "path": "hybrid_storage/deployment_toolkit.py",
+      "bytes": 12707,
+      "sha256": "95c4c7dbffb3d5ba7118f2d38fba095d3705f97437c100b41065c3cbe5e2e72e"
+    },
+    {
+      "path": "tools/hybrid_install.py",
+      "bytes": 329,
+      "sha256": "3c234da7534e41da46f44845f55d28058f58e7a5a9215699e727a558f226c3d8"
+    },
+    {
+      "path": "tests/test_deployment_executor.py",
+      "bytes": 16013,
+      "sha256": "6e26eab39f80b14c7afa057b72023621bfc8a04cb136cd691db77a7c51322e1d"
+    },
+    {
+      "path": "tests/test_deployment_migrations.py",
+      "bytes": 5980,
+      "sha256": "29052fcf89643b31ad842b9b0ec8f1db091b890985a4a7488b8558d9c0e45553"
+    },
+    {
+      "path": "tests/test_deployment_toolkit.py",
+      "bytes": 7426,
+      "sha256": "be3ec73a0357058081bdc398960ee00b21d1e4396367ae79d31a536b366bafb4"
+    },
+    {
+      "path": "docs/storage/61-installation-tooling.md",
+      "bytes": 18794,
+      "sha256": "240379a994fa55ba773598bf8914f599c65419d44e3515286793a390bd5175cd"
+    },
+    {
+      "path": "docs/storage/58-deployment-playbook.md",
+      "bytes": 16665,
+      "sha256": "8777de2be8243cd991b3838ce18f8459199664309d7458ba23728cb7b516644e"
+    },
+    {
+      "path": "docs/storage/implementation-progress.md",
+      "bytes": 191764,
+      "sha256": "526ff93a43ae883b1346db1306ed11d249440d3983e1586535effb0315792beb"
+    },
+    {
+      "path": "hybrid_storage/README.md",
+      "bytes": 41957,
+      "sha256": "49c7e84559c0c9579977c3a3e87a29ab250765951b79502035a57eb6776ae36a"
+    },
+    {
+      "path": "tools/README.md",
+      "bytes": 12472,
+      "sha256": "2a23c969d43ad6ba6548987c0ff9876f90e2b405fc766c582cb36e78cad015b2"
+    }
+  ],
+  "raw_evidence_files": [
+    {
+      "path": "reports/phase14-2-completion/acceptance-local-tests.log",
+      "bytes": 23645,
+      "sha256": "d62d4ec2b1c62a5c40691dcd379f2d2bb7ee5a7f1f92a45cf25c2639e6cb6c8b"
+    },
+    {
+      "path": "reports/phase14-2-completion/executor-initial.log",
+      "bytes": 2652,
+      "sha256": "2e768af64a02db48fc9b51128a4c9cab41c81f3534bef5b6a923a556b1136c3c"
+    },
+    {
+      "path": "reports/phase14-2-completion/new-tests-initial.log",
+      "bytes": 6783,
+      "sha256": "0255cdd20ce5bfa67d974767d9d345919582320fd5134d955e48ba98ff8fd213"
+    },
+    {
+      "path": "reports/phase14-2-completion/new-tests-corrected.log",
+      "bytes": 2546,
+      "sha256": "a16223ea5692e6089ef77b1514d601665d2bde42bca33af8a7691042691fdf90"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-tests.log",
+      "bytes": 24369,
+      "sha256": "a75a2908eb9948129955fa22767bc4590da5f0ae659b84c4792edcb6dc016627"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-new-tests.log",
+      "bytes": 6717,
+      "sha256": "1309514e77bf5e9a64ae7cf9560d1e263a413f5d99a7ed987c964dbdf020a6c0"
+    },
+    {
+      "path": "reports/phase14-2-completion/kit-prepare.json",
+      "bytes": 384,
+      "sha256": "a31db9590153c126e30db78af5993e96cb3e244c85bda0c99062dc39e131c306"
+    },
+    {
+      "path": "reports/phase14-2-completion/controller-dry-run.json",
+      "bytes": 475,
+      "sha256": "9fb2aba806b58ac41198ff78666c8a6945fa4aae9d3d2afdd986500e227061ec"
+    },
+    {
+      "path": "reports/phase14-2-completion/invalid-approval-cli.json",
+      "bytes": 245,
+      "sha256": "71cddce030de6854f402a193ed235742cbecbb47d65cbac26605eb184d1d1631"
+    },
+    {
+      "path": "reports/phase14-2-completion/repeatability.json",
+      "bytes": 499,
+      "sha256": "bdb3a11f7e62a1a497fe98400975bea39a7f087194b64ae0655d3d32561abeaf"
+    },
+    {
+      "path": "reports/phase14-2-completion/all-host-preview.json",
+      "bytes": 2483,
+      "sha256": "b870d5621f61493c546553a084dd03d66344fd97bbedf114f60da88b77b16824"
+    },
+    {
+      "path": "reports/phase14-2-completion/collect_inventory.py",
+      "bytes": 2073,
+      "sha256": "c1d791f682e07a407a5645c4405ad96c51f9d453dbe153589b9d117226dea34f"
+    },
+    {
+      "path": "reports/phase14-2-completion/baseline.json",
+      "bytes": 46199,
+      "sha256": "ee00c90944edd4abdbe47ada5083ae3b3a5ee3e2cd5fccc7948ec1c4a5fe750c"
+    },
+    {
+      "path": "reports/phase14-2-completion/write_evidence.py",
+      "bytes": 7729,
+      "sha256": "7c3e480423ee16a4e9b522ad6c28b57d87e22ca5530a3247f53e7c68eae30497"
+    },
+    {
+      "path": "reports/phase14-2-completion/verify_source.py",
+      "bytes": 3285,
+      "sha256": "bbdb5524d98461cdf2de24510ae6b8a6b959a9cc0002082d509d82d627465465"
+    },
+    {
+      "path": "reports/phase14-2-completion/review/KIT.json",
+      "bytes": 163091,
+      "sha256": "cef5f6f443f0a20c3232cc219645fa86395e346fe40c089be99b1b84b31ce293"
+    },
+    {
+      "path": "reports/phase14-2-completion/review/OPERATIONS.json",
+      "bytes": 12566,
+      "sha256": "d2f82aafe597f0dc820048d143b5832bdbaa093b49aee7e3fa13dcd02d8ec374"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/controller-inspect.py",
+      "bytes": 66607,
+      "sha256": "f8bdbd07de2c43e706b73a5e935826c68babc364aca2d2916822f2a738c84028"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/controller-inspection-result.json",
+      "bytes": 400,
+      "sha256": "bf646b75689113885c5ded5b4873fd1be9287c59d5b0a658f6a3c28f45eaeac0"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/controller-inventory.json",
+      "bytes": 29190,
+      "sha256": "b2d06ce9e386befda6c124ed99bbdfa544a3132309b91e116ba4f8e38fa89699"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi01-inspect.py",
+      "bytes": 65308,
+      "sha256": "6f3f5acc894a35d6a31c1478118eca71d5db3702c5433386fbcdfdeaeee1ad0c"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi01-inspection-result.json",
+      "bytes": 552,
+      "sha256": "aa4a3e8b18933f79f0340140cf9bebd743fea8b9755551c37e1004d2e301587b"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi01-inventory.json",
+      "bytes": 9110,
+      "sha256": "e2afe8e6afb8111ad378c4e1f5fc84e3d0651e9dba1c96ba5e51a72b2383f5c1"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi02-inspect.py",
+      "bytes": 65308,
+      "sha256": "afbebbf737c189d271585b62204b48403ac57ad5702d8e907b2cb300f490f044"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi02-inspection-result.json",
+      "bytes": 552,
+      "sha256": "61134086cc55043e23592fc0834743ac1e20faa134a01b2ed075b29602b291fa"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi02-inventory.json",
+      "bytes": 9083,
+      "sha256": "71aeb9d65f17bb7a2e791f9c095e4506bcfce1f7f2cb630ea2964d6d08094b99"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi03-inspect.py",
+      "bytes": 65308,
+      "sha256": "8d2a75f746b9a1df00148d140792bd61ae20de44e43c17a45c257d8ce80da0bd"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi03-inspection-result.json",
+      "bytes": 552,
+      "sha256": "aa868aaa1d1fe18a7ad9558249f4f567010ff688f9987b3540ec5dcaf9eb181c"
+    },
+    {
+      "path": "reports/phase14-2-completion/final-readonly/pi03-inventory.json",
+      "bytes": 9108,
+      "sha256": "efcacf1e7a867e4e9dcb79ba4829f7ccb143bfc2ec0e4dce90b303c5b1066e97"
+    },
+    {
+      "path": "reports/phase14-2-completion/review/controller/host-plan.json",
+      "bytes": 50486,
+      "sha256": "f9375dc113763c9c199bc0dd795ee0176fe2178cc507f41475a6d83c224e62cf"
+    },
+    {
+      "path": "reports/phase14-2-completion/review/pi01/host-plan.json",
+      "bytes": 23328,
+      "sha256": "364d61c27722ab73b68db3bd3327b3fa22c555135e6235ca7bb0e668c9dddce6"
+    },
+    {
+      "path": "reports/phase14-2-completion/review/pi02/host-plan.json",
+      "bytes": 23301,
+      "sha256": "551b84b12fecb51c6a5e2859ca0e0ac0e1ad16149cd6930bd5d1cc948354fbca"
+    },
+    {
+      "path": "reports/phase14-2-completion/review/pi03/host-plan.json",
+      "bytes": 23326,
+      "sha256": "6a89f266f3f9cf84b600de375612378f0119ae8d7a8a3d5e265380c4c4a9ca57"
+    }
+  ],
+  "rollback": {
+    "development_patch": "reports/phase14-2-completion/tooling.patch",
+    "verification": "reports/phase14-2-completion/source-verification.json",
+    "actual_reverse_application_only_in_new_disposable_copy": true,
+    "live_source_rollback_command": "protected host run.py rollback --plan <exact-host-plan> --approval <fresh-per-action-receipt>",
+    "automatic_db_restore": false,
+    "retain_all_reports_snapshots_and_data": true,
+    "runtime_rollback_needed_this_turn": false
+  },
+  "acceptance": {
+    "14_2_legacy_preserving_delivery_tooling": "PASS",
+    "hybrid_enabled_deployment_readiness": "BLOCKED_NOT_CLAIMED",
+    "14_3": "NOT_RUN"
+  },
+  "stop": "No deployment authorization inferred; STOP before live staging, sudo, installation or service operations."
+}

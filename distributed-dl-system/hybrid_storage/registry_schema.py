@@ -116,7 +116,10 @@ def connection_ready(db):
         raise RegistryError("Registry connections must not have temporary schema objects")
     path = Path(main)
     with _directory(path.parent) as parent:
-        fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+        # Linux O_PATH is metadata-only: closing an ordinary DB descriptor here
+        # would cancel ALL this process's POSIX SQLite locks on that inode,
+        # including locks held by other live connections/threads.
+        fd = os.open(path.name, os.O_PATH | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
         try:
             if not stat.S_ISREG(os.fstat(fd).st_mode):
                 raise RegistryError("Registry main path is not a regular file")

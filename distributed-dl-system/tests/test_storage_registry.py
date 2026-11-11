@@ -281,6 +281,18 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual(self.db.execute('SELECT COUNT(*) FROM storage_artifact_owners').fetchone()[0], 2)
         self.assertEqual(len(list(self.objects.glob('sha256/*/*'))), 1)
 
+    def test_object_directories_are_nfs_traversable_despite_service_umask(self):
+        data=b'data';prefix=hashlib.sha256(data).hexdigest()[:2]
+        algorithm=self.objects/'sha256';algorithm.mkdir(mode=0o755)
+        restricted=algorithm/prefix;restricted.mkdir(mode=0o700)
+        previous=os.umask(0o077)
+        try:artifact=self.artifact(self.registry(),data=data)
+        finally:os.umask(previous)
+        self.assertEqual(artifact.sha256,hashlib.sha256(data).hexdigest())
+        self.assertEqual(algorithm.stat().st_mode & 0o777,0o755)
+        self.assertEqual(restricted.stat().st_mode & 0o777,0o755)
+        self.assertEqual((self.objects/artifact.key).stat().st_mode & 0o777,0o444)
+
     def test_known_digest_alone_cannot_register_source_or_dataset_for_another_owner(self):
         registry = self.registry()
         artifact = self.artifact(registry)

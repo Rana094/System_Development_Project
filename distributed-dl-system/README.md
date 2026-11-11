@@ -9,6 +9,7 @@ collects results, and resumes supported jobs from validated checkpoints after a 
 | I want to… | Read this |
 |---|---|
 | Start the website and submit training | [Website guide](docs/student-interface.md) |
+| Present or verify the v8 pilot | [10-minute supervisor demo](docs/storage/14-supervisor-demo.md) · [Deployment evidence](docs/storage/64-v8-pilot-deployment.md) |
 | Understand the folders and files | [Project map](docs/project-map.md) |
 | Understand how the system works | [Architecture](docs/architecture.md) |
 | Install or move the system to another machine | [Deployment](docs/deployment.md) |
@@ -16,7 +17,20 @@ collects results, and resumes supported jobs from validated checkpoints after a 
 | Find a demo, benchmark or comparison command | [Tools](tools/README.md) |
 | Find a specific feature guide | [Documentation index](docs/README.md) |
 
-## Start the existing installation
+## Hybrid pilot on the controller and two Pis
+
+The v8 pilot validated read-only NFS inputs, persistent worker caches, signed
+cache inventory, lease-fenced checkpoint recovery and two-rank DDP on `pi02`
+and `pi03`. Open [the pilot portal](http://192.168.10.214:8081/) from the private
+LAN. The pilot uses its own systemd units and local SQLite state. `pi01` was
+deferred. A fresh checkout still defaults to legacy storage and resource-only
+scheduling. See [the deployed architecture](docs/architecture.md#deployed-hybrid-pilot-v8).
+
+## Start the legacy installation
+
+Use these commands when operating the legacy profile. On the pilot hosts, use
+the [reviewed rollback procedure](docs/storage/64-v8-pilot-deployment.md#commands-and-rollback)
+before switching back to legacy services.
 
 From this repository's root directory:
 
@@ -43,6 +57,7 @@ distributed-dl-system/
 ├── config/             Worker inventory, policies and dependencies
 ├── docs/               Feature guides, architecture and file map
 ├── examples/           Job manifests, training projects and sample data
+├── hybrid_storage/     Immutable inputs, NFS staging, cache, inventory and protected runtime
 ├── tests/              Isolated regression checks
 ├── tools/
 │   ├── cluster_setup.py  Installation and cluster inspection

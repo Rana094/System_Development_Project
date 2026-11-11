@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "phase": "14.3",
+  "at_utc": "2026-11-10T17:31:25.060973+00:00",
+  "status": "PREFLIGHT_AND_SCOPE_SUPPORT_COMPLETE_HYBRID_DEPLOYMENT_BLOCKED",
+  "phase14_3_complete": false,
+  "live_deployment_started": false,
+  "user_scope": {
+    "selected_workers": [
+      "pi02",
+      "pi03"
+    ],
+    "deferred_workers": [
+      "pi01"
+    ],
+    "explicit_user_instruction": "p1 is one different; currently complete without pi1; pi2 and3 connected using router",
+    "all_three_default_unchanged": true,
+    "no_new_pi01_contact": true,
+    "runtime_private_data_only": true
+  },
+  "implemented": {
+    "existing_files_changed": [
+      "hybrid_storage/deployment_executor.py",
+      "hybrid_storage/deployment_toolkit.py",
+      "docs/storage/implementation-progress.md"
+    ],
+    "new_files": [
+      "tests/test_deployment_scope.py",
+      "docs/storage/62-two-node-deployment-preflight.md",
+      "docs/storage/62-two-node-deployment-preflight-evidence.json"
+    ],
+    "api_config_schema_state_changes": [],
+    "cli_added": "prepare/inspect-program --workers pi02 pi03",
+    "guard": "Per-plan selected worker receipts; old all_three_workers receipt allowed only for all-three plans; all other safety gates retained",
+    "pi01_gate_B3_deferred_only": true
+  },
+  "repository": {
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "branch": "main",
+    "baseline_files": 422,
+    "prior_changes_preserved": true
+  },
+  "actual_preflight": {
+    "controller": {
+      "hostname": "rana-ROG-Strix-G513RC-G513RC",
+      "uid": 1000,
+      "gid": 1000,
+      "source_files": 124,
+      "candidate_missing_source_files": 0,
+      "aggregate_job_counts": {
+        "active": 0,
+        "no_maintenance_fence_proven": true,
+        "nonterminal_hybrid_staging": 0,
+        "reservations": 0,
+        "unexpired_nonrevoked_leases": 0
+      }
+    },
+    "pi02": {
+      "hostname": "pi02",
+      "uid": 1000,
+      "gid": 1000,
+      "source_files": 86,
+      "candidate_missing_source_files": 63,
+      "health": {
+        "health": {
+          "architecture": "aarch64",
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "node": "pi02",
+          "python": "3.11.16",
+          "status": "ONLINE"
+        },
+        "resources": {
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "node": "pi02",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "status": "ONLINE"
+        }
+      },
+      "pip_check": {
+        "exit_code": 1,
+        "stderr": "",
+        "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n"
+      },
+      "nfs_tcp": {
+        "reachable": true
+      },
+      "mount_admission": {
+        "identity": {
+          "mount_id": 509,
+          "ready": true,
+          "scope": "Metadata admission only; not server liveness, authorization or byte verification",
+          "source": "192.168.10.214:/srv/ml-shared/objects",
+          "target": "/srv/mlnfs/inputs",
+          "version": "4.1"
+        },
+        "ok": true
+      },
+      "namespace_capability": {
+        "exit_code": 0,
+        "not_production_containment_acceptance": true,
+        "stderr": ""
+      }
+    },
+    "pi03": {
+      "hostname": "pi03",
+      "uid": 1002,
+      "gid": 1002,
+      "source_files": 86,
+      "candidate_missing_source_files": 63,
+      "health": {
+        "health": {
+          "architecture": "aarch64",
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "node": "pi03",
+          "python": "3.11.16",
+          "status": "ONLINE"
+        },
+        "resources": {
+          "execution_ownership": {
+            "protocol": 1
+          },
+          "node": "pi03",
+          "node_state": "IDLE",
+          "slots": {
+            "available": 1,
+            "total": 1
+          },
+          "status": "ONLINE"
+        }
+      },
+      "pip_check": {
+        "exit_code": 1,
+        "stderr": "",
+        "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n"
+      },
+      "nfs_tcp": {
+        "reachable": true
+      },
+      "mount_admission": {
+        "identity": {
+          "mount_id": 508,
+          "ready": true,
+          "scope": "Metadata admission only; not server liveness, authorization or byte verification",
+          "source": "192.168.10.214:/srv/ml-shared/objects",
+          "target": "/srv/mlnfs/inputs",
+          "version": "4.1"
+        },
+        "ok": true
+      },
+      "namespace_capability": {
+        "exit_code": 0,
+        "not_production_containment_acceptance": true,
+        "stderr": ""
+      }
+    }
+  },
+  "review": {
+    "status": "VERIFIED_INSTALL_TOOLKIT_NOT_APPLIED",
+    "executor_implemented": true,
+    "selected_workers": [
+      "pi02",
+      "pi03"
+    ],
+    "deferred_workers": [
+      "pi01"
+    ],
+    "apply_ready": false,
+    "hybrid_activation": false,
+    "kit_sha256": "8080ded9ffdfece9492fb4a093f7087fcbc52bb92b0504f0061a9e2bf12d0855",
+    "snapshot_id": "snap-20261110T172854Z-cfb739d256781427",
+    "live_readiness_verified": false
+  },
+  "controller_dry_run": {
+    "status": "DRY_RUN_ONLY",
+    "host": "controller",
+    "plan_sha256": "e1a454b5414cb7d5f52a25d0d7d0061c68307d488dfa219a791fecb0fb816e66",
+    "files": 124,
+    "required_free_bytes": 2695456876,
+    "observed_free_bytes": 43443707904,
+    "service_unit_changes": [],
+    "active_config_changes": [],
+    "hybrid_activation": false,
+    "readiness_gate_ids": [
+      "B1",
+      "B2",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8",
+      "B9",
+      "B10"
+    ],
+    "mutations": false
+  },
+  "tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_deployment_executor.py test_deployment_toolkit.py test_deployment_scope.py test_delivery_plan.py",
+    "pass": 49,
+    "fail": 0,
+    "errors": 0,
+    "skips": 0,
+    "files": {
+      "test_deployment_executor.py": 20,
+      "test_deployment_toolkit.py": 7,
+      "test_deployment_scope.py": 6,
+      "test_delivery_plan.py": 16
+    },
+    "prior_139_tests_not_all_rerun": true,
+    "live_hybrid_acceptance_not_run": true
+  },
+  "engineering_remaining": [
+    "Construct and pass controller registry/CheckpointDispatch/inventory runtime into real dispatcher/control loops",
+    "Attach trusted worker staging/inventory/checkpoint services with enforceable separate-identity mount/network/cgroup isolation and terminate/quiescent providers",
+    "Prepare clean pinned offline service and compatible CPU training environments; both service pip checks still fail",
+    "Implement maintenance admission/drain and coordinated state recovery plus concrete privileged host provisioning"
+  ],
+  "recommendation": "Separate two-node pilot state/ports/disposable jobs before switching existing student services; proposal only",
+  "manual_engineering": "Reviewed privileged service/job identities, protected roots, controller publication, namespace/network/cgroup launcher installation will be needed after implementing/testing concrete runtime code. Interactive sudo may require operator terminal; no password requested.",
+  "not_run": [
+    "Pi payload transfer/install",
+    "Sudo or service stop/start",
+    "Live schema migration or DB backup/restore",
+    "Authenticated runtime cache inventory",
+    "Cold/warm hybrid job execution or cancellation",
+    "Worker fault and committed checkpoint recovery",
+    "2-rank DDP/full-group recovery",
+    "Privileged TEST hash/EROFS recheck or permission/boot acceptance"
+  ],
+  "live_changes": {
+    "controller_sqlite_query_only_aggregate_read": true,
+    "temporary_unprivileged_namespace_true_probe": true,
+    "database_writes_or_migration": false,
+    "remote_files_packages_config": false,
+    "nfs_mount_exports_routes_firewall": false,
+    "service_restart": false,
+    "sudo": false,
+    "training_or_fault_test": false,
+    "reset_stash_commit": false
+  },
+  "source_fingerprints": [
+    {
+      "path": "hybrid_storage/deployment_executor.py",
+      "bytes": 27486,
+      "sha256": "e4cda46d3f9f234ee53879126d926da6c0068c743b03c0558235a00de595e522"
+    },
+    {
+      "path": "hybrid_storage/deployment_toolkit.py",
+      "bytes": 13821,
+      "sha256": "407c1abcd8fed5244dac7da2b7143b6d0a987e9fbaf4d46660009f59c77da7c8"
+    },
+    {
+      "path": "docs/storage/implementation-progress.md",
+      "bytes": 194440,
+      "sha256": "86376fb0fb6a5e804820db315851d87fd5792d73b3884a00971ee69d0086e0ce"
+    },
+    {
+      "path": "tests/test_deployment_scope.py",
+      "bytes": 4911,
+      "sha256": "5006278d718d5021036824bc40b15457e550c5b267fe88499ded5f2266e6d1af"
+    },
+    {
+      "path": "docs/storage/62-two-node-deployment-preflight.md",
+      "bytes": 10538,
+      "sha256": "f4c2d3cd436700fba5133527a6a86b1cad6fcc78caea8d62e193e18dca9171c0"
+    }
+  ],
+  "raw_evidence_files": [
+    {
+      "path": "reports/phase14-3-two-node/final-tests.log",
+      "bytes": 8732,
+      "sha256": "af539656d4907bc6341395c693a282e5c6e64b4be315930c96bf0092a5742232"
+    },
+    {
+      "path": "reports/phase14-3-two-node/local-tests.log",
+      "bytes": 8732,
+      "sha256": "59a38d046b2b7f194608d64ce7737d9993a69191411620732825a72419ac81bf"
+    },
+    {
+      "path": "reports/phase14-3-two-node/probe_selected.py",
+      "bytes": 5112,
+      "sha256": "00ad039ac035533b0464cb3162076d28224928eab1c0cb9370579bfc37b3cc85"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-kit.json",
+      "bytes": 412,
+      "sha256": "3a7ea401728da7356221263fc1f854ff6dd20ac1f38936d9997cfcd7cfcbdaa8"
+    },
+    {
+      "path": "reports/phase14-3-two-node/controller-dry-run.json",
+      "bytes": 465,
+      "sha256": "744d124b9a50ca8afabe2a4d780432f721fdea61f7be3a0bdb00448a7e9366be"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-review/KIT.json",
+      "bytes": 138291,
+      "sha256": "8080ded9ffdfece9492fb4a093f7087fcbc52bb92b0504f0061a9e2bf12d0855"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-review/OPERATIONS.json",
+      "bytes": 10084,
+      "sha256": "06462de2f7030feddd670fc26c08eb80e3b01dbe25c372ac6d13cbf75232e23f"
+    },
+    {
+      "path": "reports/phase14-3-two-node/baseline.json",
+      "bytes": 47576,
+      "sha256": "35c91f6ac667679211b1bc42d58259288a67caed308dc23014dcb5155168726f"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/controller-probe.py",
+      "bytes": 70598,
+      "sha256": "9710b58f7c2f5951bcd3b5cb20dc4781c000dacb46075e73e3f7e0fa8c66b83f"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/controller-result.json",
+      "bytes": 313,
+      "sha256": "e5fcfc8f205bd165826e43bb2b6ec4b1bbd42b58b498d9d339d44d5895d2ecab"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/controller-preflight.json",
+      "bytes": 31362,
+      "sha256": "7c352c3250d10291b8c01a72035a1a883924156f4bef995cfe5fa2997f7189ec"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/pi02-probe.py",
+      "bytes": 69299,
+      "sha256": "3879b9fb6b2ef785fef01311ee31e2864fc36349546ccd352f142a079bcabf27"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/pi02-result.json",
+      "bytes": 465,
+      "sha256": "39d03a09c776d81c74af4129ba22a3889de82e3333bbe0f8cb180f068731bf13"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/pi02-preflight.json",
+      "bytes": 12043,
+      "sha256": "8efd6b11ae68b23cc7dac2bd0a4c06ae4da037cea1cff26400afabfe6fef4319"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/pi03-probe.py",
+      "bytes": 69299,
+      "sha256": "1b5f3e2104f5b5a25cec3294ede446d79ec756ba990d6d9815cf3382b6cea12e"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/pi03-result.json",
+      "bytes": 465,
+      "sha256": "3238f968e70219d55019b19669cd84f7275f5b34dd1ac1a24a4a66efe463589b"
+    },
+    {
+      "path": "reports/phase14-3-two-node/final-readonly/pi03-preflight.json",
+      "bytes": 12068,
+      "sha256": "263d56678b541f3bc396cc321deb757d256445a54f9ea809adfe414cc6509be5"
+    }
+  ],
+  "rollback": {
+    "patch": "reports/phase14-3-two-node/scope.patch",
+    "verification": "reports/phase14-3-two-node/source-verification.json",
+    "actual_reverse_apply_only_in_disposable_copy": true,
+    "no_runtime_rollback_needed": true,
+    "retain_all_reports_and_private_recovery_files": true
+  },
+  "acceptance": {
+    "two_node_scope_and_readonly_preflight": "PASS",
+    "hybrid_deployment_and_acceptance": "FAIL_BLOCKED_NOT_RUN"
+  },
+  "central_server_spof": true,
+  "stop": "Pi01 deferred; bootstrap/isolation/dependency engineering remains. Do not claim legacy source installation is completed hybrid acceptance."
+}

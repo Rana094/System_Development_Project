@@ -8,6 +8,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "jobs.db"
+import os
+if os.environ.get('DL_CONTROLLER_STATE_ROOT'):
+    from hybrid_storage.service_state import controller_state
+    DB_PATH=controller_state(BASE_DIR)/'jobs.db'
 
 
 def get_connection():

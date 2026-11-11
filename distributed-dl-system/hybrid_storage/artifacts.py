@@ -67,7 +67,17 @@ def _child_directory(parent: int, name: str) -> Iterator[int]:
         pass
     fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
     try:
-        _protected_directory(fd)
+        info=_protected_directory(fd)
+        mode=stat.S_IMODE(info.st_mode)
+        if mode not in (0o700,0o755):
+            raise PermissionError("Artifact object directory has an unexpected mode")
+        # Explicit fchmod is required because the protected service runs with
+        # UMask=0077. NFS clients need read/traverse access to immutable input
+        # objects, while writes remain restricted to the trusted publisher.
+        if mode!=0o755:os.fchmod(fd,0o755)
+        info=_protected_directory(fd)
+        if stat.S_IMODE(info.st_mode)!=0o755:
+            raise PermissionError("Artifact object directory is not NFS-readable")
         # Also sync on retry: a prior mkdir may have succeeded before fsync failed.
         os.fsync(parent)
         yield fd

@@ -1,0 +1,1248 @@
+{
+  "schema_version": 1,
+  "phase": "14.1-closeout-continuation",
+  "at_utc": "2026-11-10T16:14:43.659308+00:00",
+  "status": "PARTIAL_VERIFICATION_COMPLETE_READINESS_BLOCKED",
+  "phase14_1_fully_complete": false,
+  "phase14_2_fully_complete": false,
+  "phase14_3_deployment_run": false,
+  "user_constraints": {
+    "pi01_current_network_preserved": true,
+    "all_three_required": true,
+    "no_internet_dependent_runtime_transfers": true,
+    "protected_read_approval_received": true,
+    "approval_scope": "Only metadata and existing public TEST artifact hash/zero-byte write-open denial; no config/service/routing/install permission",
+    "runtime_network_choice_explicitly_reaffirmed": "LOCAL_PRIVATE_ONLY; no Internet Tailscale dataset/checkpoint/DDP fallback"
+  },
+  "repository": {
+    "application_root": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system",
+    "head": "7e88b8414b00d3169916e70495ce14d86f24e05b",
+    "initial_status": " M docs/storage/implementation-progress.md\n M hybrid_storage/README.md\n M tools/README.md\n?? docs/storage/57-production-readiness-evidence.json\n?? docs/storage/57-production-readiness.md\n?? docs/storage/58-deployment-playbook.md\n?? docs/storage/58-deployment-preparation-evidence.json\n?? docs/storage/59-deployment-preflight-evidence.json\n?? docs/storage/59-deployment-preflight.md\n?? hybrid_storage/delivery_plan.py\n?? tests/test_delivery_plan.py\n?? tools/hybrid_deploy.py\n",
+    "baseline_original_files": 406
+  },
+  "backup": {
+    "coordinated_filesystem_backup": false,
+    "files": {
+      "restored.sqlite": {
+        "bytes": 1601536,
+        "sha256": "5e9fc64bf5c3f2fac165b7493c36ef2c82436476ad7e03f7bd0976d769572144"
+      },
+      "snapshot.sqlite": {
+        "bytes": 1601536,
+        "sha256": "5e9fc64bf5c3f2fac165b7493c36ef2c82436476ad7e03f7bd0976d769572144"
+      }
+    },
+    "live_restore": false,
+    "logical_sha256": "c35bfc655accca2eef07227a72c402c0d4dec6004d1c955361f9c8d1da0abd0f",
+    "off_host_redundancy": false,
+    "restored_copy_verified": true,
+    "schema_version": 1,
+    "scope": "DATABASE_ONLY_LOCAL_RECOVERY_POINT",
+    "source": "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/controller/jobs.db",
+    "source_identity": [
+      66308,
+      2753827
+    ],
+    "source_open_mode": "ro",
+    "table_counts": {
+      "distributed_attempts": 34,
+      "execution_leases": 53,
+      "job_attempts": 164,
+      "job_environments": 218,
+      "job_ranks": 71,
+      "job_storage_bindings": 0,
+      "jobs": 150,
+      "node_generations": 3,
+      "owner_service": 12,
+      "portal_preparation": 23,
+      "recovery_events": 1806,
+      "resource_reservations": 0,
+      "sqlite_sequence": 2
+    },
+    "user_version": 0,
+    "verified_at_ns": 1794326164674927266
+  },
+  "backup_limits": {
+    "db_only": true,
+    "off_host": false,
+    "coordinated_artifact_checkpoint_recovery": false,
+    "private_sqlite_files_ignored_and_not_embedded": true,
+    "live_db_open_mode": "ro",
+    "live_db_restore_or_migration": false
+  },
+  "migration_rehearsal": {
+    "scope": "NEW_CLONE_OF_VERIFIED_LIVE_DB_BACKUP_ONLY",
+    "live_database_modified": false,
+    "backup_snapshot_unchanged": true,
+    "legacy_tables_preserved": {
+      "jobs": {
+        "rows": 150,
+        "sha256": "8e56d9e456ea568a203f630027e721c1adb6b92393f7ded19325377eb43fca9b"
+      },
+      "job_attempts": {
+        "rows": 164,
+        "sha256": "83cf5b7440f363a456a6f1455ffbea5aa84394cb018eb078fa7692fb524ed75c"
+      },
+      "sqlite_sequence": {
+        "rows": 2,
+        "sha256": "d48e316bd5eee34941726b214814a6f33a8598edee9e1b89236bb6eb7c72efed"
+      },
+      "recovery_events": {
+        "rows": 1806,
+        "sha256": "a1cc4a510b91350a5150cc023277da926a3c5edde2f0636acc571d51f2f01258"
+      },
+      "job_environments": {
+        "rows": 218,
+        "sha256": "8da526490bcce8e88b128d0a908f9f914f3ada5c7778412033f85ca68bc0ce46"
+      },
+      "owner_service": {
+        "rows": 12,
+        "sha256": "bbc05ba6390ac60f9a03db64a1e8fa5eae11d226b92730c9bd0408ec9504f80f"
+      },
+      "resource_reservations": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "distributed_attempts": {
+        "rows": 34,
+        "sha256": "a6549fd7e791e5cef527054ffccabbbe62ab8bdcf21b370fdfdbba46bc8e44ee"
+      },
+      "job_ranks": {
+        "rows": 71,
+        "sha256": "fb588261d6c1316b0943d47fefd2735c01835e98d5ad003c186ad8241d827c53"
+      },
+      "node_generations": {
+        "rows": 3,
+        "sha256": "0b8097f0885d8c3743705d279493b88c740fe93874e1a62cdc15e2ccee9b359f"
+      },
+      "execution_leases": {
+        "rows": 53,
+        "sha256": "154b4ec17dfae91a5b09e41dcb3240cbe23c3bccc36e1f1ef8808ad499a89aff"
+      },
+      "portal_preparation": {
+        "rows": 23,
+        "sha256": "928242e20da5f9e5cd7bef313f10765785596d1356a68adb83015bfdf755be4a"
+      },
+      "job_storage_bindings": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "user_version_preserved": 0,
+    "passes": [
+      {
+        "migrations": [
+          {
+            "module": "hybrid_storage.registry_schema",
+            "result": {
+              "version": 1,
+              "checksum": "1906692b1dc06556082da7ae65074995846a2e2692f3a3d9d9433aaefd98af22"
+            }
+          },
+          {
+            "module": "hybrid_storage.cache_registry_schema",
+            "result": {
+              "version": 1,
+              "checksum": "e697fc1f0fc273053371c4166b0990d6f8ee497aeccf6b6a6ed6f685478d14fc"
+            }
+          },
+          {
+            "module": "hybrid_storage.staging_schema",
+            "result": {
+              "version": 1,
+              "checksum": "7a866b1ae0018d956a60e25b44a319dfc39de1a745328403320b98ad85707fdb"
+            }
+          },
+          {
+            "module": "hybrid_storage.cleanup_schema",
+            "result": {
+              "version": 1,
+              "checksum": "e6963ae1f9b86dd87f5fd766c1206afb90a75c01c6c635b32583eb516245e95c"
+            }
+          },
+          {
+            "module": "hybrid_storage.checkpoint_schema",
+            "result": {
+              "version": 1,
+              "checksum": "f6daea358292dacf365eb8f3fd3097b0cac89ef20c95ac787a781ea8f87e5a10"
+            }
+          },
+          {
+            "module": "hybrid_storage.restore_schema",
+            "result": {
+              "version": 1,
+              "checksum": "f9924c3251ec9c94b8bac3a95426acb3e3b8937c6067d3e7b78a00917407a383"
+            }
+          }
+        ],
+        "fingerprint": {
+          "logical_sha256": "e5e56fb23a7921108e65227c0c59102688e53f5c1e555b4a830482e5c71ad186",
+          "table_counts": {
+            "cache_registry_entries": 0,
+            "cache_registry_events": 0,
+            "cache_registry_identities": 0,
+            "cache_registry_migrations": 1,
+            "cache_registry_sessions": 0,
+            "cache_registry_workers": 0,
+            "distributed_attempts": 34,
+            "execution_leases": 53,
+            "hybrid_checkpoint_heads": 0,
+            "hybrid_checkpoint_migrations": 1,
+            "hybrid_checkpoint_publications": 0,
+            "hybrid_checkpoint_store": 0,
+            "hybrid_cleanup_migrations": 1,
+            "hybrid_cleanup_ranks": 0,
+            "hybrid_restore_attempts": 0,
+            "hybrid_restore_migrations": 1,
+            "hybrid_restore_ranks": 0,
+            "hybrid_schema_migrations": 1,
+            "hybrid_staging_attempts": 0,
+            "hybrid_staging_migrations": 1,
+            "hybrid_staging_ranks": 0,
+            "job_attempts": 164,
+            "job_environments": 218,
+            "job_ranks": 71,
+            "job_storage_bindings": 0,
+            "jobs": 150,
+            "node_generations": 3,
+            "owner_service": 12,
+            "portal_preparation": 23,
+            "recovery_events": 1806,
+            "resource_reservations": 0,
+            "sqlite_sequence": 2,
+            "storage_artifact_owners": 0,
+            "storage_artifacts": 0,
+            "storage_dataset_readers": 0,
+            "storage_dataset_versions": 0,
+            "storage_datasets": 0,
+            "storage_job_inputs": 0,
+            "storage_manifest_entries": 0,
+            "storage_manifest_owners": 0,
+            "storage_manifests": 0
+          },
+          "user_version": 0
+        }
+      },
+      {
+        "migrations": [
+          {
+            "module": "hybrid_storage.registry_schema",
+            "result": {
+              "version": 1,
+              "checksum": "1906692b1dc06556082da7ae65074995846a2e2692f3a3d9d9433aaefd98af22"
+            }
+          },
+          {
+            "module": "hybrid_storage.cache_registry_schema",
+            "result": {
+              "version": 1,
+              "checksum": "e697fc1f0fc273053371c4166b0990d6f8ee497aeccf6b6a6ed6f685478d14fc"
+            }
+          },
+          {
+            "module": "hybrid_storage.staging_schema",
+            "result": {
+              "version": 1,
+              "checksum": "7a866b1ae0018d956a60e25b44a319dfc39de1a745328403320b98ad85707fdb"
+            }
+          },
+          {
+            "module": "hybrid_storage.cleanup_schema",
+            "result": {
+              "version": 1,
+              "checksum": "e6963ae1f9b86dd87f5fd766c1206afb90a75c01c6c635b32583eb516245e95c"
+            }
+          },
+          {
+            "module": "hybrid_storage.checkpoint_schema",
+            "result": {
+              "version": 1,
+              "checksum": "f6daea358292dacf365eb8f3fd3097b0cac89ef20c95ac787a781ea8f87e5a10"
+            }
+          },
+          {
+            "module": "hybrid_storage.restore_schema",
+            "result": {
+              "version": 1,
+              "checksum": "f9924c3251ec9c94b8bac3a95426acb3e3b8937c6067d3e7b78a00917407a383"
+            }
+          }
+        ],
+        "fingerprint": {
+          "logical_sha256": "e5e56fb23a7921108e65227c0c59102688e53f5c1e555b4a830482e5c71ad186",
+          "table_counts": {
+            "cache_registry_entries": 0,
+            "cache_registry_events": 0,
+            "cache_registry_identities": 0,
+            "cache_registry_migrations": 1,
+            "cache_registry_sessions": 0,
+            "cache_registry_workers": 0,
+            "distributed_attempts": 34,
+            "execution_leases": 53,
+            "hybrid_checkpoint_heads": 0,
+            "hybrid_checkpoint_migrations": 1,
+            "hybrid_checkpoint_publications": 0,
+            "hybrid_checkpoint_store": 0,
+            "hybrid_cleanup_migrations": 1,
+            "hybrid_cleanup_ranks": 0,
+            "hybrid_restore_attempts": 0,
+            "hybrid_restore_migrations": 1,
+            "hybrid_restore_ranks": 0,
+            "hybrid_schema_migrations": 1,
+            "hybrid_staging_attempts": 0,
+            "hybrid_staging_migrations": 1,
+            "hybrid_staging_ranks": 0,
+            "job_attempts": 164,
+            "job_environments": 218,
+            "job_ranks": 71,
+            "job_storage_bindings": 0,
+            "jobs": 150,
+            "node_generations": 3,
+            "owner_service": 12,
+            "portal_preparation": 23,
+            "recovery_events": 1806,
+            "resource_reservations": 0,
+            "sqlite_sequence": 2,
+            "storage_artifact_owners": 0,
+            "storage_artifacts": 0,
+            "storage_dataset_readers": 0,
+            "storage_dataset_versions": 0,
+            "storage_datasets": 0,
+            "storage_job_inputs": 0,
+            "storage_manifest_entries": 0,
+            "storage_manifest_owners": 0,
+            "storage_manifests": 0
+          },
+          "user_version": 0
+        }
+      }
+    ],
+    "quick_check": "ok",
+    "foreign_key_violations": 0,
+    "idempotent_second_pass": true
+  },
+  "root_probes": {
+    "pi01": {
+      "host": "pi01",
+      "argv": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=4",
+        "-o",
+        "ConnectionAttempts=1",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "-o",
+        "PermitLocalCommand=no",
+        "pi01",
+        "sudo -n /usr/bin/python3 -I -B - --role worker --source 192.168.10.214:/srv/ml-shared/objects --privileged --verify-test-input"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"at_utc_ns\": 1794326794855748518,\n  \"role\": \"worker\",\n  \"hostname\": \"pi01\",\n  \"euid\": 0,\n  \"privileged\": true,\n  \"read_only_probe\": true,\n  \"writes_or_config_changes\": false,\n  \"live_restore\": false,\n  \"source\": \"192.168.10.214:/srv/ml-shared/objects\",\n  \"mount_admission\": {\n    \"ok\": false,\n    \"error\": \"MountNotReady\",\n    \"errno\": null,\n    \"reason\": \"Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready\"\n  },\n  \"setup_backup_journal\": {\n    \"ok\": false,\n    \"error\": \"FileNotFoundError\",\n    \"errno\": 2,\n    \"reason\": \"[Errno 2] No such file or directory: 'distributed-ml-nfs-client'\"\n  },\n  \"public_test_object\": {\n    \"ok\": false,\n    \"reason\": \"No matching RO NFS input mount; no ordinary-directory fallback\"\n  }\n}\n",
+      "stderr": "",
+      "observed": {
+        "schema_version": 1,
+        "at_utc_ns": 1794326794855748518,
+        "role": "worker",
+        "hostname": "pi01",
+        "euid": 0,
+        "privileged": true,
+        "read_only_probe": true,
+        "writes_or_config_changes": false,
+        "live_restore": false,
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "mount_admission": {
+          "ok": false,
+          "error": "MountNotReady",
+          "errno": null,
+          "reason": "Exact input NFS mount absent or shadowed; an ordinary directory/autofs is not ready"
+        },
+        "setup_backup_journal": {
+          "ok": false,
+          "error": "FileNotFoundError",
+          "errno": 2,
+          "reason": "[Errno 2] No such file or directory: 'distributed-ml-nfs-client'"
+        },
+        "public_test_object": {
+          "ok": false,
+          "reason": "No matching RO NFS input mount; no ordinary-directory fallback"
+        }
+      }
+    },
+    "pi02": {
+      "host": "pi02",
+      "argv": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=4",
+        "-o",
+        "ConnectionAttempts=1",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "-o",
+        "PermitLocalCommand=no",
+        "pi02",
+        "sudo -n /usr/bin/python3 -I -B - --role worker --source 192.168.10.214:/srv/ml-shared/objects --privileged --verify-test-input"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"at_utc_ns\": 1794326793408201277,\n  \"role\": \"worker\",\n  \"hostname\": \"pi02\",\n  \"euid\": 0,\n  \"privileged\": true,\n  \"read_only_probe\": true,\n  \"writes_or_config_changes\": false,\n  \"live_restore\": false,\n  \"source\": \"192.168.10.214:/srv/ml-shared/objects\",\n  \"mount_admission\": {\n    \"ok\": true,\n    \"value\": {\n      \"ready\": true,\n      \"mount_id\": 509,\n      \"source\": \"192.168.10.214:/srv/ml-shared/objects\",\n      \"target\": \"/srv/mlnfs/inputs\",\n      \"version\": \"4.1\",\n      \"scope\": \"Metadata admission only; not server liveness, authorization or byte verification\"\n    }\n  },\n  \"setup_backup_journal\": {\n    \"ok\": true,\n    \"value\": {\n      \"uid\": 0,\n      \"gid\": 0,\n      \"mode\": \"0o700\",\n      \"entry_names\": [\n        \"20261107T163611Z-aa9fb01d3f8d46df9303f4af954c50de\",\n        \"guard-fix-e7eaa06c6b904b96a2e9b80d61a6aca2\"\n      ],\n      \"contents_read\": false,\n      \"restore_verified\": false\n    }\n  },\n  \"public_test_object\": {\n    \"ok\": true,\n    \"value\": {\n      \"sha256\": \"0cb28871cf66d68026f61a434086adfca958eb18c1353bd76fde4151a687e897\",\n      \"bytes\": 165,\n      \"hash_verified\": true,\n      \"bytes_written\": 0,\n      \"write_open_attempted\": true,\n      \"read_only_write_denial_verified\": true,\n      \"write_open_errno\": 30\n    }\n  }\n}\n",
+      "stderr": "",
+      "observed": {
+        "schema_version": 1,
+        "at_utc_ns": 1794326793408201277,
+        "role": "worker",
+        "hostname": "pi02",
+        "euid": 0,
+        "privileged": true,
+        "read_only_probe": true,
+        "writes_or_config_changes": false,
+        "live_restore": false,
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "mount_admission": {
+          "ok": true,
+          "value": {
+            "ready": true,
+            "mount_id": 509,
+            "source": "192.168.10.214:/srv/ml-shared/objects",
+            "target": "/srv/mlnfs/inputs",
+            "version": "4.1",
+            "scope": "Metadata admission only; not server liveness, authorization or byte verification"
+          }
+        },
+        "setup_backup_journal": {
+          "ok": true,
+          "value": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o700",
+            "entry_names": [
+              "20261107T163611Z-aa9fb01d3f8d46df9303f4af954c50de",
+              "guard-fix-e7eaa06c6b904b96a2e9b80d61a6aca2"
+            ],
+            "contents_read": false,
+            "restore_verified": false
+          }
+        },
+        "public_test_object": {
+          "ok": true,
+          "value": {
+            "sha256": "0cb28871cf66d68026f61a434086adfca958eb18c1353bd76fde4151a687e897",
+            "bytes": 165,
+            "hash_verified": true,
+            "bytes_written": 0,
+            "write_open_attempted": true,
+            "read_only_write_denial_verified": true,
+            "write_open_errno": 30
+          }
+        }
+      }
+    },
+    "pi03": {
+      "host": "pi03",
+      "argv": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=4",
+        "-o",
+        "ConnectionAttempts=1",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "-o",
+        "PermitLocalCommand=no",
+        "pi03",
+        "sudo -n /usr/bin/python3 -I -B - --role worker --source 192.168.10.214:/srv/ml-shared/objects --privileged --verify-test-input"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": 1,\n  \"at_utc_ns\": 1794326793631576427,\n  \"role\": \"worker\",\n  \"hostname\": \"pi03\",\n  \"euid\": 0,\n  \"privileged\": true,\n  \"read_only_probe\": true,\n  \"writes_or_config_changes\": false,\n  \"live_restore\": false,\n  \"source\": \"192.168.10.214:/srv/ml-shared/objects\",\n  \"mount_admission\": {\n    \"ok\": true,\n    \"value\": {\n      \"ready\": true,\n      \"mount_id\": 508,\n      \"source\": \"192.168.10.214:/srv/ml-shared/objects\",\n      \"target\": \"/srv/mlnfs/inputs\",\n      \"version\": \"4.1\",\n      \"scope\": \"Metadata admission only; not server liveness, authorization or byte verification\"\n    }\n  },\n  \"setup_backup_journal\": {\n    \"ok\": true,\n    \"value\": {\n      \"uid\": 0,\n      \"gid\": 0,\n      \"mode\": \"0o700\",\n      \"entry_names\": [\n        \"20261107T163820Z-d07750c147bf42aeaa6d368450dad0c4\"\n      ],\n      \"contents_read\": false,\n      \"restore_verified\": false\n    }\n  },\n  \"public_test_object\": {\n    \"ok\": true,\n    \"value\": {\n      \"sha256\": \"0cb28871cf66d68026f61a434086adfca958eb18c1353bd76fde4151a687e897\",\n      \"bytes\": 165,\n      \"hash_verified\": true,\n      \"bytes_written\": 0,\n      \"write_open_attempted\": true,\n      \"read_only_write_denial_verified\": true,\n      \"write_open_errno\": 30\n    }\n  }\n}\n",
+      "stderr": "",
+      "observed": {
+        "schema_version": 1,
+        "at_utc_ns": 1794326793631576427,
+        "role": "worker",
+        "hostname": "pi03",
+        "euid": 0,
+        "privileged": true,
+        "read_only_probe": true,
+        "writes_or_config_changes": false,
+        "live_restore": false,
+        "source": "192.168.10.214:/srv/ml-shared/objects",
+        "mount_admission": {
+          "ok": true,
+          "value": {
+            "ready": true,
+            "mount_id": 508,
+            "source": "192.168.10.214:/srv/ml-shared/objects",
+            "target": "/srv/mlnfs/inputs",
+            "version": "4.1",
+            "scope": "Metadata admission only; not server liveness, authorization or byte verification"
+          }
+        },
+        "setup_backup_journal": {
+          "ok": true,
+          "value": {
+            "uid": 0,
+            "gid": 0,
+            "mode": "0o700",
+            "entry_names": [
+              "20261107T163820Z-d07750c147bf42aeaa6d368450dad0c4"
+            ],
+            "contents_read": false,
+            "restore_verified": false
+          }
+        },
+        "public_test_object": {
+          "ok": true,
+          "value": {
+            "sha256": "0cb28871cf66d68026f61a434086adfca958eb18c1353bd76fde4151a687e897",
+            "bytes": 165,
+            "hash_verified": true,
+            "bytes_written": 0,
+            "write_open_attempted": true,
+            "read_only_write_denial_verified": true,
+            "write_open_errno": 30
+          }
+        }
+      }
+    }
+  },
+  "controller_root_probe": {
+    "status": "PASS_USER_TERMINAL_EVIDENCE",
+    "initial_sudo_attempt": {
+      "host": "controller",
+      "argv": [
+        "sudo",
+        "-n",
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-1-closeout/probe-program.py",
+        "--role",
+        "controller",
+        "--privileged",
+        "--verify-test-input"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "sudo: a password is required\n"
+    },
+    "reason": "User supplied successful approved root output; original sudo-auth failure retained as history",
+    "manual_command": "sudo /usr/bin/python3 -I -B '/home/rana/Projects/System Project/System_Development_Project/distributed-dl-system/reports/phase14-1-closeout/probe-program-v2.py' --role controller --privileged --verify-test-input",
+    "provenance": "user_terminal_paste; not independently rerun by assistant",
+    "observed": {
+      "schema_version": 1,
+      "at_utc_ns": 1794328589631656861,
+      "role": "controller",
+      "hostname": "rana-ROG-Strix-G513RC-G513RC",
+      "euid": 0,
+      "privileged": true,
+      "read_only_probe": true,
+      "writes_or_config_changes": false,
+      "live_restore": false,
+      "metadata_files": {
+        "/etc/exports": {
+          "ok": true,
+          "value": "# /etc/exports: the access control list for filesystems which may be exported\n#\t\tto NFS clients.  See exports(5).\n#\n# Example for NFSv2 and NFSv3:\n# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)\n#\n# Example for NFSv4:\n# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)\n# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)\n#\n"
+        },
+        "/etc/exports.d/distributed-ml.exports": {
+          "ok": true,
+          "value": "# Managed by distributed-dl-system nfs-server v1\n/srv/ml-shared/objects 192.168.10.150(ro,sync,root_squash,subtree_check,secure,sec=sys) 192.168.10.101(ro,sync,root_squash,subtree_check,secure,sec=sys)\n"
+        },
+        "/var/lib/nfs/etab": {
+          "ok": true,
+          "value": "/srv/ml-shared/objects\t192.168.10.150(ro,sync,wdelay,hide,nocrossmnt,secure,root_squash,no_all_squash,subtree_check,secure_locks,acl,no_pnfs,anonuid=65534,anongid=65534,sec=sys,ro,secure,root_squash,no_all_squash)\n/srv/ml-shared/objects\t192.168.10.101(ro,sync,wdelay,hide,nocrossmnt,secure,root_squash,no_all_squash,subtree_check,secure_locks,acl,no_pnfs,anonuid=65534,anongid=65534,sec=sys,ro,secure,root_squash,no_all_squash)\n"
+        },
+        "/proc/fs/nfsd/versions": {
+          "ok": true,
+          "value": "-3 +4 -4.0 +4.1 +4.2\n"
+        }
+      },
+      "setup_backup_journal": {
+        "ok": true,
+        "value": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0o700",
+          "entry_names": [
+            "20261107T163200Z-595b927d8093447da0013bcfc169799a"
+          ],
+          "contents_read": false,
+          "restore_verified": false
+        }
+      },
+      "public_test_object": {
+        "ok": true,
+        "value": {
+          "sha256": "0cb28871cf66d68026f61a434086adfca958eb18c1353bd76fde4151a687e897",
+          "bytes": 165,
+          "hash_verified": true,
+          "bytes_written": 0,
+          "write_open_attempted": false,
+          "read_only_write_denial_verified": false
+        }
+      }
+    },
+    "program_sha256_at_recording": "bbb74d404940307d6067c16cad915fc04ad2ca7cc3bc0f5c3d215bed1fb2138c",
+    "consistency_checks": {
+      "identity_and_readonly_scope": true,
+      "all_four_metadata_reads_ok": true,
+      "main_exports_comments_only": true,
+      "only_known_hosts_and_input_root_exported": true,
+      "effective_ro_root_squash_secure_sys": true,
+      "declared_export_matches_hosts": true,
+      "nfs41_42_enabled_v3_v40_disabled": true,
+      "journal_metadata_only_not_restore_proof": true,
+      "test_object_verified_read_only_no_controller_write_test": true
+    },
+    "assistant_reran_root_probe": false,
+    "remaining_limits": [
+      "User-supplied evidence, not cryptographically attested execution",
+      "Point-in-time only; not proof of pi01 connectivity, throughput, recovery or production readiness",
+      "Journal names only; contents and restore not verified"
+    ]
+  },
+  "initial_worker_probe_failure": {
+    "cause": "No-follow traversal rejected /proc/self kernel link",
+    "fix": "Numeric current PID /proc/<pid>/mountinfo; no no-follow relaxation",
+    "regression_test_added": true,
+    "original_program_and_failures_retained": true
+  },
+  "routes_dependencies": {
+    "pi01": {
+      "host": "pi01",
+      "exit_code": 0,
+      "stderr": "",
+      "observed": {
+        "hostname": "pi01",
+        "nfs_tcp": {
+          "192.168.10.214": "TimeoutError",
+          "100.73.90.91": "ConnectionRefusedError"
+        },
+        "route_192.168.10.214": "[{\"dst\":\"192.168.10.214\",\"gateway\":\"192.168.0.1\",\"dev\":\"eth0\",\"prefsrc\":\"192.168.0.107\",\"flags\":[],\"uid\":1000,\"cache\":[]}]\n",
+        "route_100.73.90.91": "[{\"dst\":\"100.73.90.91\",\"dev\":\"tailscale0\",\"table\":\"52\",\"prefsrc\":\"100.101.90.46\",\"flags\":[],\"uid\":1000,\"cache\":[]}]\n",
+        "pip_check": {
+          "returncode": 1,
+          "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n",
+          "stderr": ""
+        },
+        "wheel_cache": {
+          "/home/pi/.cache/pip/wheels": {
+            "exists": false
+          },
+          "/home/pi/.cache/uv/wheels-v5": {
+            "exists": false
+          }
+        }
+      }
+    },
+    "pi02": {
+      "host": "pi02",
+      "exit_code": 0,
+      "stderr": "",
+      "observed": {
+        "hostname": "pi02",
+        "nfs_tcp": {
+          "192.168.10.214": "reachable",
+          "100.73.90.91": "ConnectionRefusedError"
+        },
+        "route_192.168.10.214": "[{\"dst\":\"192.168.10.214\",\"dev\":\"eth0\",\"prefsrc\":\"192.168.10.150\",\"flags\":[],\"uid\":1000,\"cache\":[]}]\n",
+        "route_100.73.90.91": "[{\"dst\":\"100.73.90.91\",\"dev\":\"tailscale0\",\"table\":\"52\",\"prefsrc\":\"100.91.135.18\",\"flags\":[],\"uid\":1000,\"cache\":[]}]\n",
+        "pip_check": {
+          "returncode": 1,
+          "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n",
+          "stderr": ""
+        },
+        "wheel_cache": {
+          "/home/pi/.cache/pip/wheels": {
+            "exists": false
+          },
+          "/home/pi/.cache/uv/wheels-v5": {
+            "exists": false
+          }
+        }
+      }
+    },
+    "pi03": {
+      "host": "pi03",
+      "exit_code": 0,
+      "stderr": "",
+      "observed": {
+        "hostname": "pi03",
+        "nfs_tcp": {
+          "192.168.10.214": "reachable",
+          "100.73.90.91": "ConnectionRefusedError"
+        },
+        "route_192.168.10.214": "[{\"dst\":\"192.168.10.214\",\"dev\":\"eth0\",\"prefsrc\":\"192.168.10.101\",\"flags\":[],\"uid\":1002,\"cache\":[]}]\n",
+        "route_100.73.90.91": "[{\"dst\":\"100.73.90.91\",\"dev\":\"tailscale0\",\"table\":\"52\",\"prefsrc\":\"100.64.202.71\",\"flags\":[],\"uid\":1002,\"cache\":[]}]\n",
+        "pip_check": {
+          "returncode": 1,
+          "stdout": "nvidia-cusparselt-cu13 0.8.1 is not supported on this platform\n",
+          "stderr": ""
+        },
+        "wheel_cache": {
+          "/home/pi/.cache/pip/wheels": {
+            "exists": false
+          },
+          "/home/pi/.cache/uv/wheels-v5": {
+            "exists": false
+          }
+        }
+      }
+    }
+  },
+  "network_path_observations": [
+    {
+      "argv": [
+        "tailscale",
+        "ping",
+        "--c",
+        "3",
+        "--timeout",
+        "2s",
+        "100.101.90.46"
+      ],
+      "exit_code": 1,
+      "stdout": "pong from pi01 (100.101.90.46) via DERP(sin) in 114ms\npong from pi01 (100.101.90.46) via DERP(sin) in 121ms\npong from pi01 (100.101.90.46) via DERP(sin) in 117ms\n",
+      "stderr": "direct connection not established\n",
+      "scope": "Three small path-discovery pings maximum; not throughput benchmark"
+    },
+    {
+      "from": "pi02",
+      "to": "100.101.90.46",
+      "argv": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=4",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "-o",
+        "PermitLocalCommand=no",
+        "pi02",
+        "tailscale ping --c 3 --timeout 2s 100.101.90.46"
+      ],
+      "exit_code": 1,
+      "stdout": "pong from pi01 (100.101.90.46) via DERP(sin) in 231ms\npong from pi01 (100.101.90.46) via DERP(sin) in 105ms\npong from pi01 (100.101.90.46) via DERP(sin) in 105ms\n",
+      "stderr": "direct connection not established\n",
+      "scope": "At most3 tiny path-discovery pings; no bandwidth/DDP benchmark"
+    },
+    {
+      "from": "pi03",
+      "to": "100.101.90.46",
+      "argv": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=4",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "-o",
+        "PermitLocalCommand=no",
+        "pi03",
+        "tailscale ping --c 3 --timeout 2s 100.101.90.46"
+      ],
+      "exit_code": 1,
+      "stdout": "pong from pi01 (100.101.90.46) via DERP(sin) in 250ms\npong from pi01 (100.101.90.46) via DERP(sin) in 113ms\npong from pi01 (100.101.90.46) via DERP(sin) in 113ms\n",
+      "stderr": "direct connection not established\n",
+      "scope": "At most3 tiny path-discovery pings; no bandwidth/DDP benchmark"
+    },
+    {
+      "from": "pi02",
+      "to": "100.64.202.71",
+      "argv": [
+        "ssh",
+        "-T",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=4",
+        "-o",
+        "StrictHostKeyChecking=yes",
+        "-o",
+        "UpdateHostKeys=no",
+        "-o",
+        "ControlMaster=no",
+        "-o",
+        "ControlPath=none",
+        "-o",
+        "PermitLocalCommand=no",
+        "pi02",
+        "tailscale ping --c 3 --timeout 2s 100.64.202.71"
+      ],
+      "exit_code": 0,
+      "stdout": "pong from pi03 (100.64.202.71) via 192.168.10.101:41641 in 2ms\n",
+      "stderr": "",
+      "scope": "At most3 tiny path-discovery pings; no bandwidth/DDP benchmark"
+    }
+  ],
+  "network_proposal": {
+    "schema_version": 1,
+    "status": "PROPOSAL_ONLY_ROUTE_NOT_VERIFIED",
+    "apply_ready": false,
+    "user_preference": "Keep pi01 on its current network",
+    "nfs_server": "192.168.10.214",
+    "pi01_lan": "192.168.0.107",
+    "all_three_nodes": [
+      "pi01",
+      "pi02",
+      "pi03"
+    ],
+    "existing_pi02_pi03_unit_bytes_unchanged": {
+      "pi02": true,
+      "pi03": true
+    },
+    "active_config_modified": false,
+    "nfs_bind_change": false,
+    "use_internet_dependent_nfs": false,
+    "required_route": "Private locally routed path preserving source IPv4 between192.168.0.107 and192.168.10.214, in both directions; no SNAT shared gateway export",
+    "observed_gateways_not_proposed_new_routes": {
+      "controller": "192.168.10.1",
+      "pi01": "192.168.0.1"
+    },
+    "unresolved": [
+      "Verified private bidirectional no-SNAT path between pi01 and controller, including actual router topology and next hops",
+      "Approval for any proposed route, export, mount or device change",
+      "Fresh route/TCP verification and pi01 mounted TEST read/hash/EROFS proof before all-three acceptance"
+    ],
+    "approved_changes": [],
+    "proposals": {
+      "nfs-server-all-three.proposed.json": "112e7fd7222b0bc698a6a7b9085ec17d8668ab8ce180f08fb910d009540df46d",
+      "nfs-clients-all-three.proposed.json": "49c968e04c685090cfdcbbbb14cdef99474239ab04c2f9787398755ba86d1ea4",
+      "exports.proposed": "00102d28125976c2dfb113cc3185263db27e430f2d43a5e780d61bae26cb5f6f",
+      "nfs-client-preview.json": "ee98b414dfe4a5cc31040be24c8de24bd83f40d38b4cad67e5cadde8877280aa"
+    },
+    "user_network_decision": {
+      "provenance": "explicit user reply in this turn",
+      "runtime_data_transfers": "LOCAL_PRIVATE_ONLY",
+      "internet_tailscale_for_pi01_data_or_ddp": false,
+      "new_deployment_or_network_approval": false
+    }
+  },
+  "network_caveats": [
+    "Tiny path pings, not throughput/DDP benchmark; no speedup or slowdown number claimed",
+    "Current pi01 paths observed via DERP(sin); pi02 to pi03 direct LAN",
+    "No NFS relay workaround, NFS bind change or router next hop fabricated",
+    "No new Pi01 physical/private route verified; requirement/topology input still needed"
+  ],
+  "primary_references": [
+    "https://tailscale.com/docs/reference/connection-types",
+    "https://docs.pytorch.org/tutorials/intermediate/ddp_tutorial.html"
+  ],
+  "tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .controller-venv/bin/python tools/run_tests.py --isolated test_storage_config.py test_storage_selection.py test_deployment_review.py test_nfs_client_setup.py test_delivery_plan.py test_state_backup.py test_readiness_probe.py",
+    "final_pass": 105,
+    "final_fail": 0,
+    "final_errors": 0,
+    "final_skips": 0,
+    "files": {
+      "test_storage_config.py": 17,
+      "test_storage_selection.py": 21,
+      "test_deployment_review.py": 6,
+      "test_nfs_client_setup.py": 28,
+      "test_delivery_plan.py": 16,
+      "test_state_backup.py": 10,
+      "test_readiness_probe.py": 7
+    },
+    "earlier_pass": 104,
+    "real_probe_failure_after_earlier_tests": "/proc/self rejected; fixed with new portable proc PID regression",
+    "live_job_ddp_outage_bandwidth_tests": false,
+    "controller_evidence_update": {
+      "unit_suite_rerun": false,
+      "historical_105_test_results_preserved": true,
+      "supplied_json_consistency_checks_pass": 9,
+      "new_hardware_tests": false
+    }
+  },
+  "changes": {
+    "new_files": [
+      "hybrid_storage/state_backup.py",
+      "hybrid_storage/readiness_probe.py",
+      "tools/storage_readiness.py",
+      "tests/test_state_backup.py",
+      "tests/test_readiness_probe.py",
+      "docs/storage/60-readiness-closeout.md",
+      "docs/storage/60-readiness-closeout-evidence.json"
+    ],
+    "existing_appends": [
+      "hybrid_storage/README.md",
+      "tools/README.md",
+      "docs/storage/implementation-progress.md"
+    ],
+    "api_schema_config_startup_changes": []
+  },
+  "live_changes": {
+    "new_private_local_db_recovery_copies": true,
+    "read_only_live_database_source": true,
+    "approved_sudo_read_probes": true,
+    "sudo_config": false,
+    "service_restart": false,
+    "exports_mounts_routes_firewall_permissions_changed": false,
+    "worker_package_install": false,
+    "deployment": false,
+    "user_data_deleted_or_overwritten": false,
+    "stash_reset_commit": false
+  },
+  "source_fingerprints": [
+    {
+      "path": "hybrid_storage/state_backup.py",
+      "bytes": 7961,
+      "sha256": "79ec4d8fe71f24231e65f799d3147d1730da9effbcc08b38cb7687f8bdbcfb87"
+    },
+    {
+      "path": "hybrid_storage/readiness_probe.py",
+      "bytes": 5935,
+      "sha256": "f251c3b5e024f2f8852372c8941f2bfd598f7d4628f7b1ce5b81766cdd91c82c"
+    },
+    {
+      "path": "tools/storage_readiness.py",
+      "bytes": 1803,
+      "sha256": "c9acb257040f1f93139820e731605da76b629683d8b91edde61fa62f00887fb0"
+    },
+    {
+      "path": "tests/test_state_backup.py",
+      "bytes": 6223,
+      "sha256": "9f36fb403d5784d131fc86847f2015317755fbbb23f33cfe85c1f950712c8419"
+    },
+    {
+      "path": "tests/test_readiness_probe.py",
+      "bytes": 5598,
+      "sha256": "ca5d97fdcfb24c683df6dfd9f19473462e8177f5df405e7fd834fd5c1e4c4d48"
+    },
+    {
+      "path": "docs/storage/60-readiness-closeout.md",
+      "bytes": 14341,
+      "sha256": "21a3f9c648c4d6f3e944e8792e92607337067a9134a77171d6f756eefd2c50ce"
+    },
+    {
+      "path": "hybrid_storage/README.md",
+      "bytes": 40706,
+      "sha256": "7c93c306c93d37056ca88a377767d8693c1323c21e92765e6692953f0f44a047"
+    },
+    {
+      "path": "tools/README.md",
+      "bytes": 11548,
+      "sha256": "627b7117bc59b6404593a174c3f992963b3f76eba5f33bce81dcd5912ea28cc4"
+    },
+    {
+      "path": "docs/storage/implementation-progress.md",
+      "bytes": 188054,
+      "sha256": "5df42349934568a6ed61ef4e6cbf0186eed59fe0c5382e8d447687180ec786f7"
+    }
+  ],
+  "raw_evidence_files": [
+    {
+      "path": "reports/phase14-1-closeout/baseline.json",
+      "bytes": 45174,
+      "sha256": "920e688738eff10cd3e65d437bee14caa870af5b99618dc7b73eb32d2cb68ff4"
+    },
+    {
+      "path": "reports/phase14-1-closeout/check_worker_paths.py",
+      "bytes": 1128,
+      "sha256": "485bc150cb428ede9c6af5fd48e86644e7809d7da3a145de2d42b51a6cbb9521"
+    },
+    {
+      "path": "reports/phase14-1-closeout/controller-ip.json",
+      "bytes": 1350,
+      "sha256": "e5c948c333f4339ebe787a7ecbb222442f669e9f030da0becdf82ae6dce7a850"
+    },
+    {
+      "path": "reports/phase14-1-closeout/controller-protected.json",
+      "bytes": 403,
+      "sha256": "661c4f76aa1c8b16596fcee7940e05221e138d038bc1af0fb747d6ef22147df7"
+    },
+    {
+      "path": "reports/phase14-1-closeout/controller-ss.json",
+      "bytes": 1195,
+      "sha256": "07b1c4255a6a8d64f921fd2ca08b52e58f87ecf2b955f45db7a9a27ab3697938"
+    },
+    {
+      "path": "reports/phase14-1-closeout/db-backup-result.json",
+      "bytes": 269,
+      "sha256": "9290c260ef69e33a0e1062a5db6cfb94afa92b41a0576688ef4adab8e2a9457b"
+    },
+    {
+      "path": "reports/phase14-1-closeout/exports.proposed",
+      "bytes": 266,
+      "sha256": "00102d28125976c2dfb113cc3185263db27e430f2d43a5e780d61bae26cb5f6f"
+    },
+    {
+      "path": "reports/phase14-1-closeout/final-local-tests-proc-fixed.log",
+      "bytes": 17933,
+      "sha256": "0609b104b7ce242bbe99ba28694afc84f8bf74d2ff53cfa1362f09a0b2e67601"
+    },
+    {
+      "path": "reports/phase14-1-closeout/final-local-tests.log",
+      "bytes": 17748,
+      "sha256": "373f3276067dc7f576f627a518b9b71aa3b4d3aa50bf59cf6aaf6b55d9337eaa"
+    },
+    {
+      "path": "reports/phase14-1-closeout/migration-rehearsal-result.json",
+      "bytes": 8291,
+      "sha256": "b5fa5749c811d999ec9b3b68473e0a8a3571dcece37a7e8f74a35935359a9936"
+    },
+    {
+      "path": "reports/phase14-1-closeout/migration-rehearsal.sqlite",
+      "bytes": 1994752,
+      "sha256": "d4c9210d0c77d45adff443fa1e3d71cb17da0a0012b1a753f1696650ded1ad29"
+    },
+    {
+      "path": "reports/phase14-1-closeout/network-review.json",
+      "bytes": 1548,
+      "sha256": "f0cefc88eef45ae1d02be9a8e31b71cce32c7fc748653cfcc0049e73d865e2d7"
+    },
+    {
+      "path": "reports/phase14-1-closeout/network-review.md",
+      "bytes": 1374,
+      "sha256": "88548d2ca2f1189d6b61b6a54dbf13038b94ea6d68bbe8e5d302a38ab052aad1"
+    },
+    {
+      "path": "reports/phase14-1-closeout/new-tests-initial.log",
+      "bytes": 2904,
+      "sha256": "557b2e456bca15b97368927b336f36d8057127192e9f84404e5e4c0a1c6fb72f"
+    },
+    {
+      "path": "reports/phase14-1-closeout/new-tests-proc-fixed.log",
+      "bytes": 3089,
+      "sha256": "72898f30403b9e9382c270fde25b4326df0fd61c543489137be8bd9d3a73f038"
+    },
+    {
+      "path": "reports/phase14-1-closeout/nfs-client-preview.json",
+      "bytes": 21632,
+      "sha256": "ee98b414dfe4a5cc31040be24c8de24bd83f40d38b4cad67e5cadde8877280aa"
+    },
+    {
+      "path": "reports/phase14-1-closeout/nfs-clients-all-three.proposed.json",
+      "bytes": 236,
+      "sha256": "49c968e04c685090cfdcbbbb14cdef99474239ab04c2f9787398755ba86d1ea4"
+    },
+    {
+      "path": "reports/phase14-1-closeout/nfs-server-all-three.proposed.json",
+      "bytes": 312,
+      "sha256": "112e7fd7222b0bc698a6a7b9085ec17d8668ab8ce180f08fb910d009540df46d"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi01-protected-v2.json",
+      "bytes": 2267,
+      "sha256": "056cc69a7065eba4994768c2995be2adfcba345ddb481a316b4dfd9000962f63"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi01-protected.json",
+      "bytes": 923,
+      "sha256": "7ba11a63387b613e6b4fc00bdb1626a7ead0ddf7a8c2a9c30c8780b90eb90ae4"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi01-routes-dependencies.json",
+      "bytes": 880,
+      "sha256": "1f60855e07d7773dde752ba7070e4614192972faa8d03892977c2daccc294002"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi01-tailscale-path.json",
+      "bytes": 447,
+      "sha256": "e12e0ca22038efbb989715db6bfd6c7f4bb4b5ad80f33bd80a1bdf706d7f2867"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi02-protected-v2.json",
+      "bytes": 3356,
+      "sha256": "1bed01e66fdd42f7b2e71f9e2e0bed231132adfaca99a7bdfc653c57b91224b9"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi02-protected.json",
+      "bytes": 923,
+      "sha256": "bc6bbf1b4f5f5d7f43bc754783c29ae93903aa2806fd9d6a38514addb4cd33e7"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi02-routes-dependencies.json",
+      "bytes": 850,
+      "sha256": "e9d20834a4fdfa4d6fed9a2371faefa5f0f341ca2971160944600d77fd25422d"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi02-to-100.101.90.46-path.json",
+      "bytes": 727,
+      "sha256": "25a8c618848406fb67666f1dbd7acd193494a64b0e41c667d4f27ed086aceaa3"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi02-to-100.64.202.71-path.json",
+      "bytes": 591,
+      "sha256": "2bfb55a0ad1640b934ae4eed73a2ca511efaf5fa4ce172a143cae449adb9ad6e"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi03-protected-v2.json",
+      "bytes": 3243,
+      "sha256": "9e0081d504d651505e052fcc35fe9834e051b6626e2bfc6517ed70c254d00098"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi03-protected.json",
+      "bytes": 923,
+      "sha256": "ff642ec9a3ad79d3ab2e2f183630d6e1e9bbb9df6877876da1ac81ec2ff2b483"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi03-routes-dependencies.json",
+      "bytes": 850,
+      "sha256": "e6a07423238727e6035a8305a3d7237de9d4bef887fb15b29163323152ca8507"
+    },
+    {
+      "path": "reports/phase14-1-closeout/pi03-to-100.101.90.46-path.json",
+      "bytes": 727,
+      "sha256": "54418f9b5a0fbfcb0caf0f489782ab71890a40f4f28a859b7156eda6e6dd2ef0"
+    },
+    {
+      "path": "reports/phase14-1-closeout/prepare_network_review.py",
+      "bytes": 4062,
+      "sha256": "4d32162d01607bbedd606e2e8f45026eda233484e8a00373f3e48cea5a1f9d36"
+    },
+    {
+      "path": "reports/phase14-1-closeout/probe-program-v2.py",
+      "bytes": 11945,
+      "sha256": "bbb74d404940307d6067c16cad915fc04ad2ca7cc3bc0f5c3d215bed1fb2138c"
+    },
+    {
+      "path": "reports/phase14-1-closeout/probe-program.py",
+      "bytes": 11768,
+      "sha256": "89e34d9692de883e7465571a8e5bbac6e7d4c771406c38058c9291d0447abd73"
+    },
+    {
+      "path": "reports/phase14-1-closeout/protected-read-plan-v2.json",
+      "bytes": 2984,
+      "sha256": "52662df355523a64ca505365dcb70db0cc313778bdb840f32c957283cde207bf"
+    },
+    {
+      "path": "reports/phase14-1-closeout/protected-read-plan.json",
+      "bytes": 2824,
+      "sha256": "a2780e50bd3fbfa3fde7fdab659c74cac3a7716508fe004e6bc509a135eb8b94"
+    },
+    {
+      "path": "reports/phase14-1-closeout/protected-read-review.md",
+      "bytes": 3312,
+      "sha256": "f326d95c331c230cf79273296ad6dd7e90f29243c7e188d14d4c6dd89ff3c902"
+    },
+    {
+      "path": "reports/phase14-1-closeout/rehearse_actual_backup.py",
+      "bytes": 2648,
+      "sha256": "74b578919732a69c60840ca8db6e78e79d3986870b8e7b8a78d3e65f1d0b294b"
+    },
+    {
+      "path": "reports/phase14-1-closeout/route_probe.py",
+      "bytes": 2176,
+      "sha256": "c4b9f77f380ee1070b20745562302a8739b728bb1f1582c9898a67c943fbeec9"
+    },
+    {
+      "path": "reports/phase14-1-closeout/run_privileged_checks.py",
+      "bytes": 1523,
+      "sha256": "293cd5138c074375fa684681ab84e33ce46140a15df28f7748c6b625aaf683b4"
+    },
+    {
+      "path": "reports/phase14-1-closeout/run_privileged_checks_v2.py",
+      "bytes": 1519,
+      "sha256": "4cfe43b7d82a7a68a52f381af530b2749452f11aabeb514e6fe0fa33d2793d8e"
+    },
+    {
+      "path": "reports/phase14-1-closeout/write_evidence.py",
+      "bytes": 5703,
+      "sha256": "ccef84d9d041021c7ea3ca0157e73e0e31e1ed28be86d4f293fb6b876da3b5c2"
+    },
+    {
+      "path": "reports/phase14-1-closeout/db-recovery-01/backup.json",
+      "bytes": 1226,
+      "sha256": "6863cce50e072ee44aeaf87851d41c3e62b7e5290fcaa3cb891b8ecdd2cf8b40"
+    },
+    {
+      "path": "reports/phase14-1-controller-verification/controller-user-terminal.json",
+      "bytes": 2231,
+      "sha256": "d073d52344899865249fd92f9f73692ecfbb181875e7e1b28817f5d1df5e5c95"
+    },
+    {
+      "path": "reports/phase14-1-controller-verification/validation.json",
+      "bytes": 2625,
+      "sha256": "8a612cc15118c3ad6079e5513fc538b899d2967f646833c4e5651a2f24aee480"
+    },
+    {
+      "path": "reports/phase14-1-controller-verification/record_controller.py",
+      "bytes": 6387,
+      "sha256": "6ff48922dfbd106c3a85d2001f9781fd20247f0fcd8db4e9a3f47ceb5abb4dde"
+    },
+    {
+      "path": "reports/phase14-1-controller-verification/update_evidence.py",
+      "bytes": 3745,
+      "sha256": "15550da00878950946948d1960fb01123679a039623b8b72c95104f8d32860d5"
+    },
+    {
+      "path": "reports/phase14-1-controller-verification/verify_documentation.py",
+      "bytes": 3765,
+      "sha256": "552aad17ede6e7c7ed0df5cfadb8b3cd0f5a32843d85e689c3184571c82d68a8"
+    },
+    {
+      "path": "reports/phase14-1-controller-verification/baseline.json",
+      "bytes": 46199,
+      "sha256": "16f44c0b670ea63390729eaaedee3ce6a865a88a2215eb110cdaeba50710c78e"
+    }
+  ],
+  "remaining": [
+    "Verified local/private bidirectional NFS and training/DDP data path to pi01; Internet relay fallback explicitly declined",
+    "Clean offline compatible service/training dependencies and complete three-worker runtime group",
+    "Coordinated application-files/checkpoints/off-host recovery plan",
+    "Trusted production runtime/bootstrap/containment and actual applying installer with concrete unit/config deltas"
+  ],
+  "rollback": {
+    "source_patch": "reports/phase14-1-closeout/closeout.patch",
+    "verification": "reports/phase14-1-closeout/source-verification.json",
+    "live_service_rollback_required": false,
+    "retain_all_private_backups_and_reports": true
+  },
+  "stop": "14.1 readiness blocked on verified private pi01 data route and other gates; 14.2 applying installer unfinished; 14.3 not run. Controller terminal evidence no longer pending.",
+  "controller_evidence_update_at_utc": "2026-11-10T16:42:45.533609+00:00",
+  "documentation_update": {
+    "files": [
+      "docs/storage/60-readiness-closeout.md",
+      "docs/storage/60-readiness-closeout-evidence.json",
+      "docs/storage/implementation-progress.md",
+      "hybrid_storage/README.md"
+    ],
+    "runtime_api_config_schema_changes": [],
+    "report_directory": "reports/phase14-1-controller-verification",
+    "rollback_patch": "reports/phase14-1-controller-verification/documentation-update.patch",
+    "verification": "reports/phase14-1-controller-verification/source-verification.json",
+    "earlier_closeout_patch_is_historical_recheck_before_use": true
+  }
+}

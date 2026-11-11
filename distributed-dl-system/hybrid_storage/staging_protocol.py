@@ -18,11 +18,12 @@ from .workspaces import AttemptIdentity, WorkspacePlan
 STAGE_PATH = '/jobs/stage'
 START_PATH = '/jobs/start'
 CONTROL_PATH = '/jobs/staging-control'
+PREPARE_PATH = '/jobs/prepare'
 HEADER = 'X-DL-Staging-MAC'
 
 
 def signature(key, path, raw, *, reply_to=None):
-    if not isinstance(key, Credential) or path not in (STAGE_PATH, START_PATH, CONTROL_PATH):
+    if not isinstance(key, Credential) or path not in (STAGE_PATH, START_PATH, CONTROL_PATH, PREPARE_PATH):
         raise AuthenticationError('Unsupported authenticated control action')
     context = encoded(dict(protocol='dl-staging-v1', method='POST', path=path,
                            worker=key.worker, key_id=key.key_id,

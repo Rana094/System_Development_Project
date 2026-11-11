@@ -53,9 +53,17 @@ CONTROLLER_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = CONTROLLER_DIR.parent
 
 DB_PATH = CONTROLLER_DIR / "jobs.db"
+STATE_DIR = CONTROLLER_DIR
+if os.environ.get('DL_CONTROLLER_STATE_ROOT'):
+    from hybrid_storage.service_state import controller_state
+    STATE_DIR = controller_state(CONTROLLER_DIR)
+    DB_PATH = STATE_DIR / 'jobs.db'
 
 
 CENTRAL_CHECKPOINT_DIR = PROJECT_DIR / "checkpoints"
+if os.environ.get('DL_CONTROLLER_STATE_ROOT'):
+    from hybrid_storage.service_state import checkpoint_state
+    CENTRAL_CHECKPOINT_DIR = checkpoint_state(CENTRAL_CHECKPOINT_DIR)
 
 CENTRAL_CHECKPOINT_DIR.mkdir(
     parents=True,
@@ -1211,16 +1219,28 @@ def reconcile_scheduled_jobs(*, storage_runtime=None):
             )
 
 
-def main():
+def main(*, storage_runtime=None, storage_settings=None):
     """Hold a single-controller lock and repeatedly reconcile, monitor and dispatch work."""
     import sys
     sys.path.insert(0, str(PROJECT_DIR))
     from hybrid_storage.config import load_config, require_controller_config
-    require_controller_config(load_config(PROJECT_DIR / "config/storage.json"))
+    settings = load_config(PROJECT_DIR / "config/storage.json") if storage_settings is None else storage_settings
+    from hybrid_storage.runtime_bootstrap import ControllerRuntime, dispatcher_cycle
+    if storage_runtime is None:
+        if storage_settings is not None:raise ValueError('Settings override requires an explicit trusted runtime')
+        require_controller_config(settings)
+    else:
+        from job_store import DB_FILE
+        if (not isinstance(storage_runtime, ControllerRuntime) or not storage_runtime._started
+                or storage_runtime.settings != settings):
+            raise ValueError('Explicit started runtime must match controller configuration')
+        main_db = next(row[2] for row in storage_runtime.registry.db.execute('PRAGMA database_list') if row[1] == 'main')
+        if Path(main_db).resolve() != Path(DB_FILE).resolve() or Path(main_db).resolve() != DB_PATH.resolve():
+            raise ValueError('Hybrid dispatcher and registry must own the same LOCAL database')
 
     import fcntl
 
-    lock = open(CONTROLLER_DIR / ".dispatcher.lock", "w")
+    lock = open(STATE_DIR / ".dispatcher.lock", "w")
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
@@ -1249,15 +1269,14 @@ def main():
 
     print()
 
-    while True:
-
-        reconcile_cancellations()
-        reconcile_scheduled_jobs()
-        monitor_running_jobs()
-
-        dispatch_queued_jobs()
-
-        time.sleep(DISPATCH_INTERVAL)
+    try:
+        while True:
+            dispatcher_cycle(sys.modules[__name__], storage_runtime)
+            time.sleep(DISPATCH_INTERVAL)
+    finally:
+        if storage_runtime is not None:
+            storage_runtime.close()
+        lock.close()
 
 
 if __name__ == "__main__":

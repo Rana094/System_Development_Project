@@ -620,3 +620,50 @@ staging records, plus session/sequence/heartbeat-matched NFS observations.
 Unknown/stale telemetry cannot imply healthy/eligible cache. Mount identity is
 not an I/O availability test. Controller/parser must be upgraded before workers
 opt into v3. See [the contract, security, tests and rollback](../docs/storage/50-admin-storage-observability.md).
+
+## All-three-Pi delivery preparation — Phase 14.2
+
+`delivery_plan.py` and `tools/hybrid_deploy.py` prepare/verify a private offline
+review with complete role source bundles, exact config/audit hashes, unique
+snapshot namespaces, additive migration order, service ordering and rollback.
+`plan --output <new-absolute-directory>` is always a dry run; repeating a complete
+unchanged output verifies/reuses it byte-for-byte. `verify --output ...` performs
+local validation only. `apply --output ...` always refuses (exit3); no deployment
+executor, network/DB access or service operations. All three Pis are mandatory.
+Live bootstrap/containment/NFS/dependency/backup gates remain unresolved, and
+legacy/OFF/resource stays active. See [14.2 playbook](../docs/storage/58-deployment-playbook.md).
+
+## Explicit readiness and recovery-point checks
+
+`state_backup.py` creates only a NEW private LOCAL SQLite recovery point and a
+separately verified restored copy; source mode=ro, no live restore/migration API.
+WAL-aware backup, size/free-space/deadline bounds, all-table content/user_version
+comparison and quick/FK checks. It is DB-only, not coordinated app-file recovery
+or off-host redundancy. Recovery copies contain private data; keep ignored/private.
+`readiness_probe.py` supports approved protected NFS metadata and the existing
+public TEST hash/zero-byte write-open-denial check; never changes exports/mounts.
+`tools/storage_readiness.py` wraps both and emits a standalone read-only program.
+Exact scope/results, supplied controller terminal verification and pi01 DERP path:
+[readiness closeout](../docs/storage/60-readiness-closeout.md). These tools do not
+enable production hybrid execution or make the old delivery review apply-ready.
+The user retained local/private-only runtime data transfers; pi01's current
+relayed path does not satisfy that requirement. No Internet data fallback enabled.
+
+## Executable source delivery — Phase 14.2 continuation
+
+`deployment_toolkit.py` / `tools/hybrid_install.py` produce a private all-three-Pi
+kit from fresh read-only host inventories. Each host has exact source preimages,
+payload, launcher and operation argv. `deployment_executor.py` supplies explicit
+approval-bound, locked, journaled source install and rollback; no service stop or
+start is automatic. Partial installs resume only verified bytes; rollback restores
+backups and quarantines release-created files, preserving jobs/cache/checkpoints.
+`deployment_migrations.py` separately backs up/restores/rehearses on LOCAL SQLite
+before additive idle-controller migrations; never restores a live DB automatically.
+
+Unit/config changes are explicitly zero: legacy/OFF/resource and exact existing
+service definitions remain. Protected roots, quiescent services and later exact
+approval are mandatory. This adds delivery tooling, not hybrid bootstrap/isolation
+or production enablement. Old `hybrid_deploy.py apply` still refuses; use the new
+reviewed workflow rather than bypassing it. Actual scope,139 local tests, all-host
+read-only inventory, dry run, limitations and rollback:
+[installation tooling](../docs/storage/61-installation-tooling.md).
